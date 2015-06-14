@@ -3,6 +3,6 @@
 // requires
 var router = require('express').Router();
 
-router.use('/local', require('./local'));
+router.use('/', require('./local'));
 
 module.exports = router;
