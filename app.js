@@ -13,7 +13,7 @@ require('./config/express')(app);
 require('./routes')(app);
 
 // mongodb
-mongoose.connect(config.mongodb);
+mongoose.connect(config.MONGODB);
 
 // start app
 var port = process.env.PORT || 8080;

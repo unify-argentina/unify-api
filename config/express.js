@@ -7,6 +7,7 @@ var compression = require('compression');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var cookieParser = require('cookie-parser');
+var expressValidator = require('express-validator');
 
 module.exports = function(app) {	
 	app.use(compression());
@@ -14,4 +15,5 @@ module.exports = function(app) {
 	app.use(bodyParser.json());
 	app.use(methodOverride());
 	app.use(cookieParser());
+	app.use(expressValidator());
 };
