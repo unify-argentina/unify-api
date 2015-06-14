@@ -8,7 +8,12 @@ var userSchema = mongoose.Schema({
 	
     name: String,
     email: String,
-    password: String
+    password: String,
+
+	facebook: {
+		id: String,
+		token: String
+	}
 });
 
 userSchema.pre('save', function(next) {
