@@ -2,15 +2,18 @@
 
 // requires
 var router = require('express').Router();
-var User = require('../api/user');
+var User = require('../api/user/user.model.js');
+var jwt = require('./jwt');
 
-router.post('login', function(req, res) {
-	req.assert('email', 'Email is not valid').isEmail();
-	req.assert('password', 'Password cannot be blank').notEmpty();
-	var errors = req.validationErrors();
+// '/auth/login'
+router.post('/login', function(req, res) {
+	
+	req.assert('email', 'required').notEmpty();
+	req.assert('email', 'valid email required').isEmail();
+	req.assert('password', '6 to 20 characters required').len(6, 20);
 
-	if (errors) {
-		return res.status(401).send({ message: 'Missing fields: email and/or password' });
+	if (req.validationErrors()) {
+		return res.status(401).send({ errors: req.validationErrors() });
 	}
 
 	User.findOne({ email: req.body.email }, function(err, user) {
@@ -21,7 +24,7 @@ router.post('login', function(req, res) {
 			if (!isMatch) {
 				return res.status(401).send({ message: 'Wrong password' });
 			}
-			res.send({ token: createJWT(user) });
+			res.send({ token: jwt.createJWT(user) });
 		});
 	});
 });
