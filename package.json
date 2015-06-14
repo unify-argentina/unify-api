@@ -1,0 +1,7 @@
+{
+  "name": "unify-api",
+  "version": "0.0.1",
+  "description": "This is the unify API",
+  "main": "app.js",
+  "author": "Joel Márquez"
+}
