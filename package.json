@@ -3,5 +3,9 @@
   "version": "0.0.1",
   "description": "This is the unify API",
   "main": "app.js",
-  "author": "Joel Márquez"
+  "author": "Joel Márquez",
+  "dependencies": {
+    "express": "^4.12.4",
+    "mongoose": "^4.0.5"
+  }
 }
