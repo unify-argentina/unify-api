@@ -9,7 +9,8 @@ var config = require('./config/config');
 
 // express app
 var app = express();
-//require('./config/express')(app);
+require('./config/express')(app);
+require('./routes')(app);
 
 // mongodb
 mongoose.connect(config.mongodb);
