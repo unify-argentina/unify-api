@@ -10,19 +10,19 @@ var jwt = require('./jwt');
 router.post('/login', function (req, res) {
 
   process.nextTick(function () {
-    req.assert('email', 'required').notEmpty();
-    req.assert('email', 'valid email required').isEmail();
-    req.assert('password', '6 to 20 characters required').len(6, 20);
+    req.assert('email', 'Required').notEmpty();
+    req.assert('email', 'Valid email required').isEmail();
+    req.assert('password', 'Required').notEmpty();
 
     if (req.validationErrors()) {
       return res.status(401).send({errors: req.validationErrors()});
     }
 
-    User.findOne({email: email}, function (err, user) {
+    User.findOne({email: req.body.email}, function (err, user) {
       if (!user) {
-        return res.status(401).send({message: 'User doesn\'t exist'});
+        return res.status(401).send({message: "User doesn't exist"});
       }
-      user.comparePassword(password, function (err, isMatch) {
+      user.comparePassword(req.body.password, function (err, isMatch) {
         if (!isMatch) {
           return res.status(401).send({message: 'Wrong password'});
         }
