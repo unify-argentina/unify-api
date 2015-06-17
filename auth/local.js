@@ -36,11 +36,11 @@ router.post('/login', function (req, res) {
 router.post('/signup', function (req, res) {
 
   process.nextTick(function () {
-    req.assert('email', 'required').notEmpty();
-    req.assert('email', 'valid email required').isEmail();
-    req.assert('name', 'required').notEmpty();
-    req.assert('password', '6 to 20 characters required').len(6, 20);
-    req.assert('confirmpassword', '6 to 20 characters required').len(6, 20);
+    req.assert('email', 'Required').notEmpty();
+    req.assert('email', 'Valid email required').isEmail();
+    req.assert('name', 'Required').notEmpty();
+    req.assert('password', 'Required').notEmpty();
+    req.assert('confirm_password', 'Confirm password must be equal to password').equals(req.body.password);
 
     if (req.validationErrors()) {
       return res.status(401).send({errors: req.validationErrors()});
