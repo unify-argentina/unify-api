@@ -18,3 +18,4 @@ mongoose.connect(config.MONGODB);
 // start app
 var port = process.env.PORT || 8080;
 app.listen(port);
+console.log('Unify API started at port ' + port);
