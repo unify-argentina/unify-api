@@ -15,32 +15,63 @@ describe('Authentication', function() {
     user.name = 'Juan Losa';
     user.email = 'unify.argentina@gmail.com';
     user.password = 'This is not my real password';
-    user.save();
-    done();
+    user.save(done);
   });
 
-  describe('Login', function() {
-    it('should not allow to post empty data', function(done) {
+  after(function(done) {
+    User.find({ email: 'unify.argentina@gmail.com' }).remove(done);
+  })
+
+  describe('/auth/login', function() {
+    it('should not allow to login with empty data', function(done) {
       request(API_URL)
         .post(LOGIN_PATH)
         .send({})
         .end(function(err, data) {
           data.res.statusCode.should.equal(401);
-          data.res.statusMessage.should.equal('Unauthorized');
+          var errors = data.res.body.errors;
+          var error1 = errors[0];
+          error1.param.should.equal('email');
+          error1.msg.should.equal('Required');
+          var error1 = errors[1];
+          error1.param.should.equal('email');
+          error1.msg.should.equal('Valid email required');
+          var error1 = errors[2];
+          error1.param.should.equal('password');
+          error1.msg.should.equal('Required');
+          var error1 = errors[3];
+          error1.param.should.equal('password');
+          error1.msg.should.equal('Only alphanumeric characters are allowed');
           done();
         });
     });
 
-    it('should not allow to post wrong data', function(done) {
+    it('should not allow to login with wrong data', function(done) {
       request(API_URL)
         .post(LOGIN_PATH)
         .send({
-          email: 'asdasds',
+          email: 'a',
           password: 's'
         })
         .end(function(err, data) {
           data.res.statusCode.should.equal(401);
-          data.res.statusMessage.should.equal('Unauthorized');
+          var error = data.res.body.errors[0];
+          error.param.should.equal('email');
+          error.msg.should.equal('Valid email required');
+          done();
+        });
+    });
+
+    it('should not allow to login with injection data', function(done) {
+      request(API_URL)
+        .post(LOGIN_PATH)
+        .send({
+          "email":"unify.argentina@gmail.com",
+          "password": {"$gt": "undefined"}
+        })
+        .end(function(err, data) {
+          data.res.statusCode.should.equal(401);
+          data.res.body.errors[0].msg.should.equal("You're trying to send object data types");
           done();
         });
     });
@@ -54,8 +85,7 @@ describe('Authentication', function() {
         })
         .end(function(err, data) {
           data.res.statusCode.should.equal(401);
-          data.res.statusMessage.should.equal('Unauthorized');
-          data.res.body.message.should.equal("User doesn't exist");
+          data.res.body.errors[0].msg.should.equal("User doesn't exist");
           done();
         });
     });
@@ -69,8 +99,7 @@ describe('Authentication', function() {
         })
         .end(function(err, data) {
           data.res.statusCode.should.equal(401);
-          data.res.statusMessage.should.equal('Unauthorized');
-          data.res.body.message.should.equal('Wrong password');
+          data.res.body.errors[0].msg.should.equal('Wrong password');
           done();
         });
     });
@@ -84,7 +113,6 @@ describe('Authentication', function() {
         })
         .end(function(err, data) {
           data.res.statusCode.should.equal(200);
-          data.res.statusMessage.should.equal('OK');
           data.res.body.token.should.be.type('string');
           done();
         });

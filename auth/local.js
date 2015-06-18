@@ -13,18 +13,23 @@ router.post('/login', function (req, res) {
     req.assert('email', 'Required').notEmpty();
     req.assert('email', 'Valid email required').isEmail();
     req.assert('password', 'Required').notEmpty();
+    req.assert('password', 'Only alphanumeric characters are allowed').isAscii();
 
     if (req.validationErrors()) {
       return res.status(401).send({errors: req.validationErrors()});
     }
 
+    if (typeof req.body.email === 'object' || typeof req.body.password === 'object') {
+      return res.status(401).send({errors: [{msg: "You're trying to send object data types"}]});
+    }
+
     User.findOne({email: req.body.email}, function (err, user) {
       if (!user) {
-        return res.status(401).send({message: "User doesn't exist"});
+        return res.status(401).send({errors: [{msg: "User doesn't exist"}]});
       }
       user.comparePassword(req.body.password, function (err, isMatch) {
         if (!isMatch) {
-          return res.status(401).send({message: 'Wrong password'});
+          return res.status(401).send({errors: [{msg: 'Wrong password'}]});
         }
         res.send({token: jwt.createJWT(user)});
       });
@@ -39,16 +44,24 @@ router.post('/signup', function (req, res) {
     req.assert('email', 'Required').notEmpty();
     req.assert('email', 'Valid email required').isEmail();
     req.assert('name', 'Required').notEmpty();
+    req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
     req.assert('password', 'Required').notEmpty();
+    req.assert('password', 'Only alphanumeric characters are allowed').isAscii();
+    req.assert('confirm_password', 'Required').notEmpty();
     req.assert('confirm_password', 'Confirm password must be equal to password').equals(req.body.password);
 
     if (req.validationErrors()) {
       return res.status(401).send({errors: req.validationErrors()});
     }
 
+    if (typeof req.body.email === 'object' || req.body.name === 'object' ||
+      typeof req.body.password === 'object' || typeof req.body.confirm_password === 'object') {
+      return res.status(401).send({errors: [{msg: "You're trying to send object data types"}]});
+    }
+
     User.findOne({email: req.body.email}, function (err, existingUser) {
       if (existingUser) {
-        return res.status(409).send({message: 'Email is already taken'});
+        return res.status(409).send({errors: [{param: 'email', msg: 'Email is already taken'}]});
       }
       var user = new User({
         email: req.body.email,
@@ -57,7 +70,7 @@ router.post('/signup', function (req, res) {
       });
       user.save(function (err) {
         if (err) {
-          return res.status(401).send({message: 'Error saving data'});
+          return res.status(401).send({errors: [{msg: 'Error saving data' + err}]});
         }
         res.send({token: jwt.createJWT(user)});
       });
