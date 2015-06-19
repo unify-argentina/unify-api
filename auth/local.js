@@ -7,7 +7,7 @@ var jwt = require('./jwt');
 
 
 /**
- * @api {post} /auth/login Login attempt
+ * @api {post} /auth/login Login
  * @apiName Login
  * @apiGroup Authentication
  *
@@ -46,7 +46,18 @@ router.post('/login', function (req, res) {
   });
 });
 
-// '/auth/signup'
+/**
+ * @api {post} /auth/signup Signup
+ * @apiName Signup
+ * @apiGroup Authentication
+ *
+ * @apiParam {String} email User email
+ * @apiParam {String} name User name
+ * @apiParam {String} password User password, must be at least 6 characters of length
+ * @apiParam {String} confirm_password Same as password, they must be identical
+ *
+ * @apiSuccess {String} token Valid access token
+ */
 router.post('/signup', function (req, res) {
 
   process.nextTick(function () {
