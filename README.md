@@ -7,7 +7,7 @@ http://www.unifyargentina.com.ar
 ## Instrucciones
 
 1. Bajar el git https://git-scm.com/downloads
-2. Clonar el repo `git clone https://<username>@bitbucket.org/unifyargentina/unify.git`
+2. Clonar el repo `git clone https://<username>@bitbucket.org/unifyargentina/unify-api.git`
 3. Instalar Node JS -> https://nodejs.org/
 4. Instalar los módulos `npm install` (Ejecutar este comando en la carpeta donde clonaste)
 5. Instalar Mongo DB -> https://www.mongodb.org/downloads
