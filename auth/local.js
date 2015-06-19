@@ -6,7 +6,16 @@ var User = require('../api/user/user.model.js');
 var jwt = require('./jwt');
 
 
-// '/auth/login'
+/**
+ * @api {post} /auth/login Login attempt
+ * @apiName Login
+ * @apiGroup Authentication
+ *
+ * @apiParam {String} email User email
+ * @apiParam {String} password User password
+ *
+ * @apiSuccess {String} token Valid access token
+ */
 router.post('/login', function (req, res) {
 
   process.nextTick(function () {
@@ -45,8 +54,7 @@ router.post('/signup', function (req, res) {
     req.assert('email', 'Valid email required').isEmail();
     req.assert('name', 'Required').notEmpty();
     req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
-    req.assert('password', 'Required').notEmpty();
-    req.assert('password', 'Only alphanumeric characters are allowed').isAscii();
+    req.assert('password', 'Password should have at least 6 characters of length').len(6, 100);
     req.assert('confirm_password', 'Required').notEmpty();
     req.assert('confirm_password', 'Confirm password must be equal to password').equals(req.body.password);
 
