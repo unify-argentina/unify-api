@@ -3,8 +3,8 @@ define({
   "version": "0.0.1",
   "description": "This is the documentation of the Unify API",
   "title": "Unify API",
-  "url": "http://api.unifyme.io/api",
-  "sampleUrl": "http://api.unifyme.io/api",
+  "url": "http://localhost:8080",
+  "sampleUrl": "http://localhost:8080",
   "template": {
     "withCompare": true,
     "withGenerator": true
@@ -12,7 +12,7 @@ define({
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2015-06-19T03:49:02.497Z",
+    "time": "2015-06-20T04:09:23.342Z",
     "url": "http://apidocjs.com",
     "version": "0.13.1"
   }

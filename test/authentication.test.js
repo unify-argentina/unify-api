@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var config = require('../config/config');
 var User = require('../api/user/user.model');
 
-var API_URL = 'http://localhost:8080';
+var API_URL = 'http://localhost:8080/api';
 var LOGIN_PATH = '/auth/login';
 var SIGNUP_PATH = '/auth/signup';
 

@@ -2,12 +2,12 @@
 
 // requires
 var router = require('express').Router();
-var User = require('../api/user/user.model.js');
+var User = require('../user/user.model.js');
 var jwt = require('./jwt');
 
 
 /**
- * @api {post} /auth/login Login
+ * @api {post} /api/auth/login Login
  * @apiName Login
  * @apiGroup Authentication
  *
@@ -15,6 +15,12 @@ var jwt = require('./jwt');
  * @apiParam {String} password User password
  *
  * @apiSuccess {String} token Valid access token
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NTg0ZTc0MGRkOTlkNDllMzQ0MGRkM2IiLCJpYXQiOjE0MzQ3NzMzMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
+ *     }
  */
 router.post('/login', function (req, res) {
 
@@ -47,7 +53,7 @@ router.post('/login', function (req, res) {
 });
 
 /**
- * @api {post} /auth/signup Signup
+ * @api {post} /api/auth/signup Signup
  * @apiName Signup
  * @apiGroup Authentication
  *
@@ -57,6 +63,12 @@ router.post('/login', function (req, res) {
  * @apiParam {String} confirm_password Same as password, they must be identical
  *
  * @apiSuccess {String} token Valid access token
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NTg0ZTc0MGRkOTlkNDllMzQ0MGRkM2IiLCJpYXQiOjE0MzQ3NzMzMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
+ *     }
  */
 router.post('/signup', function (req, res) {
 

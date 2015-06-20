@@ -1,7 +1,35 @@
 define({ "api": [
   {
+    "type": "get",
+    "url": "/api",
+    "title": "Version",
+    "name": "Version",
+    "group": "API",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "version",
+            "description": "<p>Current API version</p> "
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "api/index.js",
+    "groupTitle": "API",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api"
+      }
+    ]
+  },
+  {
     "type": "post",
-    "url": "/auth/login",
+    "url": "/api/auth/login",
     "title": "Login",
     "name": "Login",
     "group": "Authentication",
@@ -36,20 +64,27 @@ define({ "api": [
             "description": "<p>Valid access token</p> "
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NTg0ZTc0MGRkOTlkNDllMzQ0MGRkM2IiLCJpYXQiOjE0MzQ3NzMzMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
     },
     "version": "0.0.0",
-    "filename": "auth/local.js",
+    "filename": "api/auth/local.js",
     "groupTitle": "Authentication",
     "sampleRequest": [
       {
-        "url": "http://api.unifyme.io/api/auth/login"
+        "url": "http://localhost:8080/api/auth/login"
       }
     ]
   },
   {
     "type": "post",
-    "url": "/auth/signup",
+    "url": "/api/auth/signup",
     "title": "Signup",
     "name": "Signup",
     "group": "Authentication",
@@ -98,14 +133,21 @@ define({ "api": [
             "description": "<p>Valid access token</p> "
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NTg0ZTc0MGRkOTlkNDllMzQ0MGRkM2IiLCJpYXQiOjE0MzQ3NzMzMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
     },
     "version": "0.0.0",
-    "filename": "auth/local.js",
+    "filename": "api/auth/local.js",
     "groupTitle": "Authentication",
     "sampleRequest": [
       {
-        "url": "http://api.unifyme.io/api/auth/signup"
+        "url": "http://localhost:8080/api/auth/signup"
       }
     ]
   }

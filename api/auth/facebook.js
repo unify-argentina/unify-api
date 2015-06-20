@@ -2,11 +2,11 @@
 
 // requires
 var router = require('express').Router();
-var User = require('../api/user/user.model.js');
+var User = require('../user/user.model.js');
 var jwt = require('./jwt');
-var config = require('../config/config');
+var config = require('../../config/config');
 
-// 'auth/facebook'
+// '/api/auth/facebook'
 router.post('/facebook', function(req, res) {
     var accessTokenUrl = 'https://graph.facebook.com/v2.3/oauth/access_token';
     var graphApiUrl = 'https://graph.facebook.com/v2.3/me';
