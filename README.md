@@ -16,11 +16,13 @@
 ##Testing
 
 Se utilizará como herramienta para realizar tests unitarios de los servicios de la API [Mocha](http://mochajs.org/):
+
 1. Instalarlo ejecutando `sudo npm install -g mocha` (en Windows no es necesario el sudo).
 2. Sobre el directorio principal de la API, levantar Mongo DB, levantar la API, y ejecutar `mocha` desde la terminal. Deberían aparecer los resultados de todos los tests.
 
 ##Documentar los servicios
 
 Se utilizará como herramienta para la documentación de la API [apiDoc](http://apidocjs.com/). Es una herramienta **open source** que permite de una forma muy fácil documentar los distintos servicios que ofrece la API, los parámetros que recibe y los parámetros que devuelve:
+
 1. Instalarla ejecutando `sudo npm install -g apidoc`.
 2. Sobre el directorio principal de la API, ejecutar `apidoc -i auth/ -o doc/` para documentar en el directorio `doc/` los servicios que se encuentren en el directorio `auth/`. Lo mismo si queremos documentar en el directorio `doc/` los servicios que se encuentren en el directorio `api/`, deberemos ejecutar `apidoc -i auth/ -o doc/`.
