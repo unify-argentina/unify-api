@@ -38,7 +38,7 @@ router.post('/login', function (req, res) {
       return res.status(401).send({errors: [{msg: "You're trying to send object data types"}]});
     }
 
-    User.findOne({email: req.body.email}, function (err, user) {
+    User.findOne({email: req.body.email}, '+password', function (err, user) {
       if (!user) {
         return res.status(401).send({errors: [{msg: "User doesn't exist"}]});
       }
