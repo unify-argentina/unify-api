@@ -8,18 +8,17 @@ var jwt = require('./jwt');
 
 /**
  * @api {post} /api/auth/login Login
- * @apiName Login
- * @apiGroup Authentication
+ * @apiGroup Autenticacion
  *
- * @apiParam {String} email User email
- * @apiParam {String} password User password
+ * @apiParam {String} email Email del usuario
+ * @apiParam {String} password Password del usuario
  *
- * @apiSuccess {String} token Valid access token
+ * @apiSuccess {String} token Token de acceso valido
  *
- * @apiSuccessExample Success-Response:
+ * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *     {
- *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NTg0ZTc0MGRkOTlkNDllMzQ0MGRkM2IiLCJpYXQiOjE0MzQ3NzMzMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
+ *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
  *     }
  */
 router.post('/login', function (req, res) {
@@ -54,20 +53,19 @@ router.post('/login', function (req, res) {
 
 /**
  * @api {post} /api/auth/signup Signup
- * @apiName Signup
- * @apiGroup Authentication
+ * @apiGroup Autenticacion
  *
- * @apiParam {String} email User email
- * @apiParam {String} name User name
- * @apiParam {String} password User password, must be at least 6 characters of length
- * @apiParam {String} confirm_password Same as password, they must be identical
+ * @apiParam {String} email Email del usuario
+ * @apiParam {String} name Nombre del usuario
+ * @apiParam {String} password Password del usuario, debera tener 6 caracteres como minimo
+ * @apiParam {String} confirm_password Tiene que ser igual que el password
  *
- * @apiSuccess {String} token Valid access token
+ * @apiSuccess {String} token Token de acceso valido
  *
- * @apiSuccessExample Success-Response:
+ * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *     {
- *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NTg0ZTc0MGRkOTlkNDllMzQ0MGRkM2IiLCJpYXQiOjE0MzQ3NzMzMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
+ *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
  *     }
  */
 router.post('/signup', function (req, res) {

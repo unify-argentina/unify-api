@@ -6,10 +6,15 @@ var pjson = require('../package.json');
 
 /**
  * @api {get} /api Version
- * @apiName Version
  * @apiGroup API
  *
- * @apiSuccess {String} version Current API version
+ * @apiSuccess {String} version Version actual de la API
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "version": "0.0.1"
+ *     }
  */
 router.get('/', function(req, res) {
 
