@@ -19,5 +19,6 @@ module.exports = function (app) {
   app.use(bodyParser.json());
   app.use(expressValidator());
   app.use(methodOverride());
+  app.use(morgan('dev'));
   app.use(cookieParser());
 };
