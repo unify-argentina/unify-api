@@ -36,7 +36,7 @@
   },
   {
     "type": "post",
-    "url": "/api/auth/login",
+    "url": "/auth/login",
     "title": "Login",
     "group": "Autenticacion",
     "parameter": {
@@ -82,16 +82,16 @@
     "version": "0.0.0",
     "filename": "api/auth/local.js",
     "groupTitle": "Autenticacion",
-    "name": "PostApiAuthLogin",
+    "name": "PostAuthLogin",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/auth/login"
+        "url": "http://localhost:8080/auth/login"
       }
     ]
   },
   {
     "type": "post",
-    "url": "/api/auth/signup",
+    "url": "/auth/signup",
     "title": "Signup",
     "group": "Autenticacion",
     "parameter": {
@@ -151,10 +151,10 @@
     "version": "0.0.0",
     "filename": "api/auth/local.js",
     "groupTitle": "Autenticacion",
-    "name": "PostApiAuthSignup",
+    "name": "PostAuthSignup",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/auth/signup"
+        "url": "http://localhost:8080/auth/signup"
       }
     ]
   }
