@@ -1,3 +1,8 @@
+/*
+* Este módulo se encarga de manejar la versión de la API, así como también
+* de indicar el camino de todas las rutas de la API
+* @author Joel Márquez
+* */
 'use strict';
 
 // requires

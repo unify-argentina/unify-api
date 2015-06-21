@@ -1,3 +1,8 @@
+/*
+* Este módulo se encarga de manejar las rutas de autenticación, que van dirigidas
+* vía /api/auth
+* @author Joel Márquez
+* */
 'use strict';
 
 // requires

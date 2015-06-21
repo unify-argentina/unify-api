@@ -1,3 +1,7 @@
+/*
+* Este módulo se encarga de configurar express, con todos sus componentes
+* @author Joel Márquez
+* */
 'use strict';
 
 // requires

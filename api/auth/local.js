@@ -1,10 +1,15 @@
+/*
+* Este módulo maneja todo lo que es la autenticación de los usuarios, así como también
+* los manejos de contraseñas, el reset y el update de las mismas y de los datos de los
+* usuarios
+* @author Joel Márquez
+* */
 'use strict';
 
 // requires
 var router = require('express').Router();
-var User = require('../user/user.model.js');
+var User = require('../user/user.js');
 var jwt = require('./jwt');
-
 
 /**
  * @api {post} /api/auth/login Login

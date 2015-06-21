@@ -1,8 +1,14 @@
+/*
+* Tests de autenticación
+* @author Joel Márquez
+* */
+'use strict';
+
 var should = require('should');
 var request = require('supertest');
 var mongoose = require('mongoose');
 var config = require('../config/config');
-var User = require('../api/user/user.model');
+var User = require('../api/user/user.js');
 
 var API_URL = 'http://localhost:8080/api';
 var LOGIN_PATH = '/auth/login';
@@ -10,7 +16,9 @@ var SIGNUP_PATH = '/auth/signup';
 
 describe('Authentication', function() {
 
+  // Antes de comenzar, creamos la cuenta con la cual vamos a hacer los tests de login
   before(function(done) {
+    console.log('Connecting to db ' + config.MONGODB_TEST);
     mongoose.connect(config.MONGODB);
     var user = new User();
     user.name = 'Juan Losa';
@@ -19,8 +27,9 @@ describe('Authentication', function() {
     user.save(done);
   });
 
+  // Al finalizar los tests, debemos borrar todas las cuentas de la base
   after(function(done) {
-    User.find({ email: 'unify.argentina@gmail.com' }).remove(done);
+    User.remove({}, done);
   });
 
   describe('/auth/signup', function() {

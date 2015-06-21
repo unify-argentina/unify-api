@@ -1,3 +1,10 @@
+/*
+* Este es el modelo de un usuario de Unify, con sus atributos y sus métodos
+* para comparar una contraseña, así como también para antes de guardar un usuario,
+* generar un hash de la contraseña y almacenar este valor en vez de la contraseña
+* real del usuario
+* @author Joel Márquez
+* */
 'use strict';
 
 // requires
@@ -18,6 +25,9 @@ var userSchema = mongoose.Schema({
   }
 });
 
+/**
+ *
+ * */
 userSchema.pre('save', function (next) {
   var user = this;
   if (!user.isModified('password')) {

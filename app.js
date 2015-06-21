@@ -1,3 +1,10 @@
+/*
+* Este es el módulo principal, el cual importa el módulo de express y lo configura
+* con el módulo de rutas, y también importa el módulo de mongoose para conectarse
+* a la base de datos de MongoDB. Por último, levanta la API en el puerto 8080 o en
+* el que se le pase por parámetro
+* @author Joel Márquez
+* */
 'use strict';
 
 // requires
