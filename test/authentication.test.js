@@ -20,7 +20,6 @@ describe('Authentication', function() {
   // Antes de comenzar, creamos la cuenta con la cual vamos a hacer los tests de login
   before(function(done) {
     mongoose.connect(config.MONGODB_TEST);
-    console.log('Test started connected at ' + config.MONGODB_TEST);
     var user = new User();
     user.name = 'Juan Losa';
     user.email = 'unify.argentina@gmail.com';
@@ -28,10 +27,12 @@ describe('Authentication', function() {
     user.save(done);
   });
 
-  // Al finalizar los tests, debemos borrar todas las cuentas de la base
+  // Al finalizar los tests, debemos borrar todas las cuentas de la base y desconectarnos de la base
   after(function(done) {
     User.remove({}, function(err) {
-      Circle.remove({}, done);
+      Circle.remove({}, function(err) {
+        mongoose.connection.close(done);
+      });
     });
   });
 
