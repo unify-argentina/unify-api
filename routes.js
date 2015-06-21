@@ -6,8 +6,11 @@
 
 module.exports = function (app) {
 
-  //Main route
+  // Rutas principales
   app.use('/api', require('./api'));
+
+  // Rutas de autenticación
+  app.use('/auth', require('./api/auth'));
 
   app.get('/', function(req, res) {
     res.send('Welcome to the Unify API!');
