@@ -6,9 +6,9 @@
 'use strict';
 
 // requires
-var router = require('express').Router();
+var authRoutes = require('express').Router();
 
-router.use('/', require('./local'));
-router.use('/facebook', require('./facebook'));
+authRoutes.use('/', require('./local'));
+authRoutes.use('/facebook', require('./facebook'));
 
-module.exports = router;
+module.exports = authRoutes;

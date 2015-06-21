@@ -9,6 +9,7 @@ var request = require('supertest');
 var mongoose = require('mongoose');
 var config = require('../config/config');
 var User = require('../api/user/user.js');
+var Circle = require('../api/circle/circle.js');
 
 var API_URL = 'http://localhost:8080';
 var LOGIN_PATH = '/auth/login';
@@ -18,8 +19,8 @@ describe('Authentication', function() {
 
   // Antes de comenzar, creamos la cuenta con la cual vamos a hacer los tests de login
   before(function(done) {
-    console.log('Connecting to db ' + config.MONGODB_TEST);
-    mongoose.connect(config.MONGODB);
+    mongoose.connect(config.MONGODB_TEST);
+    console.log('Test started connected at ' + config.MONGODB_TEST);
     var user = new User();
     user.name = 'Juan Losa';
     user.email = 'unify.argentina@gmail.com';
@@ -29,7 +30,9 @@ describe('Authentication', function() {
 
   // Al finalizar los tests, debemos borrar todas las cuentas de la base
   after(function(done) {
-    User.remove({}, done);
+    User.remove({}, function(err) {
+      Circle.remove({}, done);
+    });
   });
 
   describe('/auth/signup', function() {

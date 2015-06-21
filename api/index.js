@@ -6,8 +6,11 @@
 'use strict';
 
 // requires
-var router = require('express').Router();
+var apiRoutes = require('express').Router();
 var pjson = require('../package.json');
+var jwt = require('./auth/jwt');
+var moment = require('moment');
+var config = require('../config/config');
 
 /**
  * @api {get} /api Version
@@ -21,14 +24,37 @@ var pjson = require('../package.json');
  *       "version": "0.0.1"
  *     }
  */
-router.get('/', function(req, res) {
+apiRoutes.get('/', function(req, res) {
 
   process.nextTick(function() {
     res.send({version: pjson.version});
   });
 });
 
-// Authentication route
-router.use('/auth', require('./auth'));
+// Este método verifica que en el request haya un JSON Web Token no vencido, si no lo hay
+// o ya venció, devuelve un error
+apiRoutes.use(function(req, res, next) {
+  if (!req.headers.authorization) {
+    return res.status(401).send({ errors: [{ msg: 'Please make sure your request has an Authorization header' }] });
+  }
+  var token = req.headers.authorization.split(' ')[1];
 
-module.exports = router;
+  var payload = null;
+  try {
+    payload = jwt.decode(token, config.TOKEN_SECRET);
+  }
+  catch (err) {
+    return res.status(401).send({ errors: [{ msg: err.message }] });
+  }
+
+  if (payload.exp <= moment().unix()) {
+    return res.status(401).send({ errors: [{ msg: 'Token has expired' }] });
+  }
+  req.user = payload.sub;
+  next();
+});
+
+// Rutas de los círculos
+apiRoutes.use('/user', require('./user'));
+
+module.exports = apiRoutes;

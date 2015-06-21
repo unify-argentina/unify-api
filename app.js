@@ -21,6 +21,7 @@ require('./routes')(app);
 
 // mongodb
 mongoose.connect(config.MONGODB);
+console.log('Connected to MongoDB at ' + config.MONGODB);
 
 // start app
 var port = process.env.PORT || 8080;

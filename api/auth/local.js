@@ -7,12 +7,12 @@
 'use strict';
 
 // requires
-var router = require('express').Router();
+var localRoutes = require('express').Router();
 var User = require('../user/user.js');
 var jwt = require('./jwt');
 
 /**
- * @api {post} /api/auth/login Login
+ * @api {post} /auth/login Login
  * @apiGroup Autenticacion
  *
  * @apiParam {String} email Email del usuario
@@ -26,7 +26,7 @@ var jwt = require('./jwt');
  *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
  *     }
  */
-router.post('/login', function (req, res) {
+localRoutes.post('/login', function (req, res) {
 
   process.nextTick(function () {
     req.assert('email', 'Required').notEmpty();
@@ -39,16 +39,16 @@ router.post('/login', function (req, res) {
     }
 
     if (typeof req.body.email === 'object' || typeof req.body.password === 'object') {
-      return res.status(401).send({ errors: [{ msg: "You're trying to send object data types"}] });
+      return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
     }
 
     User.findOne({email: req.body.email}, '+password', function (err, user) {
       if (!user) {
-        return res.status(401).send({ errors: [{ msg: "User doesn't exist"}] });
+        return res.status(401).send({ errors: [{ msg: "User doesn't exist" }] });
       }
       user.comparePassword(req.body.password, function (err, isMatch) {
         if (!isMatch) {
-          return res.status(401).send({ errors: [{ msg: 'Wrong password'}] });
+          return res.status(401).send({ errors: [{ msg: 'Wrong password' }] });
         }
         res.send({ token: jwt.createJWT(user) });
       });
@@ -57,7 +57,7 @@ router.post('/login', function (req, res) {
 });
 
 /**
- * @api {post} /api/auth/signup Signup
+ * @api {post} /auth/signup Signup
  * @apiGroup Autenticacion
  *
  * @apiParam {String} email Email del usuario
@@ -73,7 +73,7 @@ router.post('/login', function (req, res) {
  *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
  *     }
  */
-router.post('/signup', function (req, res) {
+localRoutes.post('/signup', function (req, res) {
 
   process.nextTick(function () {
     req.assert('email', 'Required').notEmpty();
@@ -90,12 +90,12 @@ router.post('/signup', function (req, res) {
 
     if (typeof req.body.email === 'object' || typeof req.body.name === 'object' ||
       typeof req.body.password === 'object' || typeof req.body.confirm_password === 'object') {
-      return res.status(401).send({ errors: [{ msg: "You're trying to send object data types"}] });
+      return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
     }
 
     User.findOne({email: req.body.email}, function (err, existingUser) {
       if (existingUser) {
-        return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken'}] });
+        return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
       var user = new User({
         email: req.body.email,
@@ -104,7 +104,7 @@ router.post('/signup', function (req, res) {
       });
       user.save(function (err) {
         if (err) {
-          return res.status(401).send({ errors: [{msg: 'Error saving data' + err}] });
+          return res.status(401).send({ errors: [{msg: 'Error saving data' + err }] });
         }
         res.status(200).send({ token: jwt.createJWT(user) });
       });
@@ -112,4 +112,4 @@ router.post('/signup', function (req, res) {
   });
 });
 
-module.exports = router;
+module.exports = localRoutes;
