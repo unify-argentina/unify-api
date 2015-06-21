@@ -13,6 +13,23 @@
 7. Levantar la **API** ejecutando `node app.js`, o si quieren que en cada cambio que le hagan a la API se vuelva a levantar automáticamente, deberán instalar [Nodemon](http://nodemon.io).
 8. La **API** debería estar levantada en la ruta [`http://localhost:8080`](http://localhost:8080).
 
+##Heroku
+
+Para configurar la aplicación para que se puedan probar los cambios en Heroku, seguir los siguientes pasos:
+
+1. Instalar [Heroku Toolbet](https://toolbelt.heroku.com/).
+2.	Ejecutar `heroku login` e ingresar con la cuenta de unify de heroku: `unify.argentina@gmail.com`.
+3.	Una vez que hayamos hecho login, sobre el directorio de `unify-api/` ejecutar el siguiente comando: `heroku git:remote -a api-unify`. 
+4.	Verificar que efectivamente se haya agregado el remote de heroku a la configuración del repositorio de git. Para esto, abrir el archivo `.git/config`, y ver que al final se encuentre esto:
+`[remote "heroku"]
+	url = https://git.heroku.com/api-unify.git
+	fetch = +refs/heads/*:refs/remotes/heroku/*`
+
+Si se quiere hacer algún cambio y probarlo en **Heroku**, seguir estos pasos:
+
+1. Hacer algún cambio y hacer un commit. Una vez probado localmente ese cambio y su **correcto funcionamiento**, hacer un `git push heroku master`. 
+2. Cuando termine de compilar los cambios, ingresar a [`api-unify.herokuapp.com/api`](http://api-unify.herokuapp.com/api) y verificar que esté levantada y funcionando correctamente.
+
 ##Testing
 
 Se utilizará como herramienta para realizar tests unitarios de los servicios de la API [Mocha](http://mochajs.org/):
