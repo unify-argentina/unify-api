@@ -8,7 +8,7 @@
 // requires
 var apiRoutes = require('express').Router();
 var pjson = require('../package.json');
-var jwt = require('./auth/jwt');
+var jwt = require('jsonwebtoken');
 var moment = require('moment');
 var config = require('../config/config');
 
@@ -41,7 +41,7 @@ apiRoutes.use(function(req, res, next) {
 
   var payload = null;
   try {
-    payload = jwt.decode(token, config.TOKEN_SECRET);
+    payload = jwt.verify(token, config.TOKEN_SECRET);
   }
   catch (err) {
     return res.status(401).send({ errors: [{ msg: err.message }] });

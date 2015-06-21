@@ -17,14 +17,12 @@ var SIGNUP_PATH = '/auth/signup';
 
 describe('Authentication', function() {
 
-  // Antes de comenzar, creamos la cuenta con la cual vamos a hacer los tests de login
+  // Antes de comenzar, borramos todas las cuentas por las dudas y creamos la cuenta con la cual vamos a hacer los tests de login
   before(function(done) {
     mongoose.connect(config.MONGODB_TEST);
-    var user = new User();
-    user.name = 'Juan Losa';
-    user.email = 'unify.argentina@gmail.com';
-    user.password = 'This is not my real password';
-    user.save(done);
+    User.remove({}, function(err) {
+      User.create({ name: 'Juan Losa', email: 'unify.argentina@gmail.com', password: 'This is not my real password' }, done);
+    });
   });
 
   // Al finalizar los tests, debemos borrar todas las cuentas de la base y desconectarnos de la base
