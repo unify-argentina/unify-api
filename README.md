@@ -30,6 +30,15 @@ Si se quiere hacer algún cambio y probarlo en **Heroku**, seguir estos pasos:
 1. Hacer algún cambio y hacer un commit. Una vez probado localmente ese cambio y su **correcto funcionamiento**, hacer un `git push heroku master`. 
 2. Cuando termine de compilar los cambios, ingresar a [`api-unify.herokuapp.com/api`](http://api-unify.herokuapp.com/api) y verificar que esté levantada y funcionando correctamente.
 
+##Desarrollo
+
+Siempre que se haga un nuevo cambio:
+
+1. Probar que funcione correctamente en el entorno de desarrollo local.
+2. Hacer los tests correspondientes para validar dicha funcionalidad.
+3. Para commitear, si el issue se llama _#1: Autenticación con Facebook_, el commit será `git commit -m "#1: Autenticación con Facebook"`. 
+4. Por último, hacer un `git push` y luego un `git push heroku master` para subir el cambio también a **Heroku**.
+
 ##Testing
 
 Se utilizará como herramienta para realizar tests unitarios de los servicios de la API [Mocha](http://mochajs.org/):

@@ -8,4 +8,8 @@ module.exports = function (app) {
 
   //Main route
   app.use('/api', require('./api'));
+
+  app.get('/', function(req, res) {
+    res.send('Welcome to the Unify API!');
+  });
 };
