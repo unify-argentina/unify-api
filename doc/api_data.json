@@ -157,5 +157,66 @@
         "url": "http://localhost:8080/auth/signup"
       }
     ]
+  },
+  {
+    "type": "get",
+    "url": "/api/user/:id",
+    "title": "Obtener Usuario",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del usuario</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "user",
+            "description": "<p>Usuario</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n\n{\n   \"user\": {\n     \"mainCircle\":\"558748787f0a76cc4ca02a35\",\n     \"email\":\"90joelmarquez@gmail.com\",\n     \"name\":\"Joel\",\n     \"_id\":\"558748767f0a76cc4ca02a34\",\n     \"__v\":0\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "GetApiUserId",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:id"
+      }
+    ]
   }
 ]
