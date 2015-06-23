@@ -25,5 +25,6 @@ console.log('Connected to MongoDB at ' + config.MONGODB);
 
 // start app
 var port = process.env.PORT || 8080;
-app.listen(port);
-console.log('Unify API started at port ' + port);
+app.listen(port, function() {
+  console.log('Unify API started at port ' + port);
+});
