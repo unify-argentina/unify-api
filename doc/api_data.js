@@ -36,6 +36,68 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/auth/facebook",
+    "title": "Facebook login",
+    "group": "Autenticacion",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Código de autorización de Facebook</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "clientId",
+            "description": "<p>Id de la app</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "redirectUri",
+            "description": "<p>La uri a la cual se va a redireccionar</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/facebook.js",
+    "groupTitle": "Autenticacion",
+    "name": "PostAuthFacebook",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/facebook"
+      }
+    ]
+  },
+  {
+    "type": "post",
     "url": "/auth/login",
     "title": "Login",
     "group": "Autenticacion",

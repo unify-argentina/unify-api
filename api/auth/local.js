@@ -42,7 +42,7 @@ localRoutes.post('/login', function (req, res) {
       return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
     }
 
-    User.findOne({email: req.body.email}, '+password', function (err, user) {
+    User.findOne({ email: req.body.email }, '+password', function (err, user) {
       if (!user) {
         return res.status(401).send({ errors: [{ msg: "User doesn't exist" }] });
       }
@@ -93,14 +93,15 @@ localRoutes.post('/signup', function (req, res) {
       return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
     }
 
-    User.findOne({email: req.body.email}, function (err, existingUser) {
+    User.findOne({ email: req.body.email }, function (err, existingUser) {
       if (existingUser) {
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
       var user = new User({
         email: req.body.email,
         name: req.body.name,
-        password: req.body.password
+        password: req.body.password,
+        validLocalUser: true
       });
       user.save(function (err) {
         if (err) {

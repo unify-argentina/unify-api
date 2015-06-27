@@ -19,3 +19,7 @@ module.exports.createJWT = function (user) {
   };
   return jwt.sign(payload, config.TOKEN_SECRET);
 };
+
+module.exports.verify = function(token, tokenSecret) {
+  return jwt.verify(token, tokenSecret);
+};

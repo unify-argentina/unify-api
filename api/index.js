@@ -8,7 +8,7 @@
 // requires
 var apiRoutes = require('express').Router();
 var pjson = require('../package.json');
-var jwt = require('jsonwebtoken');
+var jwt = require('./auth/jwt');
 var moment = require('moment');
 var config = require('../config/config');
 

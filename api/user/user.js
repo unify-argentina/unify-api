@@ -18,39 +18,40 @@ var userSchema = mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true, select: false },
+  validLocalUser: { type: Boolean, default: false },
   birthDate: Date,
   mainCircle: { type: ObjectId, ref: 'Circle' },
 
   facebook: {
-    id: { type: String, index: true },
+    id: { type: String, index: true, select: false },
     email: String,
-    accessToken: String,
+    accessToken: { type: String, select: false },
     picture: String,
     displayName: String
   },
 
   twitter: {
-    id: { type: String, index: true },
+    id: { type: String, index: true, select: false },
     email: String,
-    accessToken: String,
+    accessToken: { type: String, select: false },
     picture: String,
     displayName: String,
     userName: String
   },
 
   instagram: {
-    id: { type: String, index: true },
+    id: { type: String, index: true, select: false },
     email: String,
-    accessToken: String,
+    accessToken: { type: String, select: false },
     picture: String,
     displayName: String,
     userName: String
   },
 
   google: {
-    id: { type: String, index: true },
+    id: { type: String, index: true, select: false },
     email: String,
-    accessToken: String,
+    accessToken: { type: String, select: false },
     picture: String,
     displayName: String
   }
