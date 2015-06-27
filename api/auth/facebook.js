@@ -96,7 +96,7 @@ var linkFacebookData = function(unifyUser, facebookProfile, accessToken) {
   unifyUser.facebook.displayName = facebookProfile.name;
 };
 
-// Maneja el caso de un autorizado con un token de Unify
+// Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, token, facebookProfile, accessToken) {
   User.findOne({ 'facebook.id': facebookProfile.id }, function (err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo token
@@ -121,7 +121,7 @@ var handleAuthenticatedUser = function(res, token, facebookProfile, accessToken)
   });
 };
 
-// Maneja el caso de un usuario no autorizado
+// Maneja el caso de un usuario no autenticado
 var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
   User.findOne({ 'facebook.id': facebookProfile.id }, function (err, existingFacebookUser) {
     // Si encuentra a uno con el id de facebook, es un usuario registrado con Facebook
