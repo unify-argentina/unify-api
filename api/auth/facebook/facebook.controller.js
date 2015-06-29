@@ -1,37 +1,20 @@
 /*
-* Este módulo se encarga de manejar la autenticación del usuario vía Facebook
-* @author Joel Márquez
-* */
+ * Este módulo se encarga de manejar la autenticación del usuario vía Facebook
+ * @author Joel Márquez
+ * */
 'use strict';
 
 // requires
-var router = require('express').Router();
-var User = require('../user/user.js');
-var jwt = require('./jwt');
+var User = require('../../user/user.model');
+var jwt = require('./../util/jwt');
 var request = require('request');
-var config = require('../../config/config');
+var config = require('../../../config');
 
 // constants
 var ACCESS_TOKEN_URL = 'https://graph.facebook.com/v2.3/oauth/access_token';
 var GRAPH_USER_URL = 'https://graph.facebook.com/v2.3/me';
 
-/**
- * @api {post} /auth/facebook Facebook login
- * @apiGroup Autenticacion
- *
- * @apiParam {String} code Código de autorización de Facebook
- * @apiParam {String} clientId Id de la app
- * @apiParam {String} redirectUri La uri a la cual se va a redireccionar
- *
- * @apiSuccess {String} token Token de acceso valido
- *
- * @apiSuccessExample Respuesta valida
- *     HTTP/1.1 200 OK
- *     {
- *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
- *     }
- */
-router.post('/', function (req, res) {
+module.exports.linkAccount = function (req, res) {
 
   process.nextTick(function() {
     // Primero intercambiamos el código de autorización para obtener el access token
@@ -57,7 +40,7 @@ router.post('/', function (req, res) {
       });
     });
   });
-});
+};
 
 // Devuelve los parámetros necesarios para el intercambio del accessToken
 var getFacebookParams = function(req) {
@@ -150,5 +133,3 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
     }
   });
 };
-
-module.exports = router;

@@ -8,7 +8,7 @@
 // requires
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
-var config = require('../../config/config');
+var config = require('../../../config');
 
 // Este método crea un JSON Web Token
 module.exports.createJWT = function (user) {

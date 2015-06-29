@@ -6,9 +6,9 @@
 
 var assert = require('assert');
 var mongoose = require('mongoose');
-var config = require('../config/config');
-var User = require('../api/user/user.js');
-var Circle = require('../api/circle/circle.js');
+var config = require('../config');
+var User = require('../api/user/user.model');
+var Circle = require('../api/circle/circle.model');
 
 describe('User', function() {
 

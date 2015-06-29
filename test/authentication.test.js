@@ -7,11 +7,11 @@
 var should = require('should');
 var request = require('supertest');
 var mongoose = require('mongoose');
-var config = require('../config/config');
-var User = require('../api/user/user.js');
-var Circle = require('../api/circle/circle.js');
+var config = require('../config');
+var User = require('../api/user/user.model');
+var Circle = require('../api/circle/circle.model');
 
-var API_URL = 'http://localhost:8080';
+var API_URL = 'http://localhost:8000';
 var LOGIN_PATH = '/auth/login';
 var SIGNUP_PATH = '/auth/signup';
 

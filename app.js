@@ -12,7 +12,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 
 // import config
-var config = require('./config/config');
+var config = require('./config');
 
 // express app
 var app = express();

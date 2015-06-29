@@ -10,7 +10,7 @@
 // requires
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
-var Circle = require('../circle/circle.js');
+var Circle = require('../circle/circle.model');
 var bcrypt = require('bcryptjs');
 
 var userSchema = mongoose.Schema({
