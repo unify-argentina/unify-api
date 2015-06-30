@@ -5,11 +5,24 @@
 'use strict';
 
 module.exports = {
+  // Mongo DB
   MONGODB: process.env.MONGODB || 'mongodb://localhost:27017/unify-dev',
   MONGODB_TEST: process.env.MONGODB || 'mongodb://localhost:27017/unify-test',
+
+  // Json Web Token
   TOKEN_SECRET: process.env.TOKEN_SECRET || 'Token',
+
+  // Facebook
   FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || 'FACEBOOK secret',
+
+  // Twitter
   TWITTER_SECRET: process.env.TWITTER_SECRET || 'TWITTER secret',
+  TWITTER_KEY: process.env.TWITTER_KEY || 'TWITTER key',
+  TWITTER_CALLBACK: process.env.TWITTER_CALLBACK || 'http://127.0.0.1:8080/auth/twitter/callback',
+
+  // Instagram
   INSTAGRAM_SECRET: process.env.INSTAGRAM_SECRET || 'INSTAGRAM secret',
+
+  // Google
   GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'GOOGLE secret'
 };

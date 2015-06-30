@@ -14,6 +14,7 @@ var config = require('../../../config');
 var ACCESS_TOKEN_URL = 'https://graph.facebook.com/v2.3/oauth/access_token';
 var GRAPH_USER_URL = 'https://graph.facebook.com/v2.3/me';
 
+// Maneja la lógica principal del login con Facebook
 module.exports.linkAccount = function (req, res) {
 
   process.nextTick(function() {
@@ -42,50 +43,12 @@ module.exports.linkAccount = function (req, res) {
   });
 };
 
-// Devuelve los parámetros necesarios para el intercambio del accessToken
-var getFacebookParams = function(req) {
-  return {
-    code: req.body.code,
-    client_id: req.body.clientId,
-    client_secret: config.FACEBOOK_SECRET,
-    redirect_uri: req.body.redirectUri
-  };
-};
-
-// Devuelve la url de la imagen del perfil del usuario con id = profileId
-var getFacebookPicture = function(profileId) {
-  return 'https://graph.facebook.com/v2.3/' + profileId + '/picture?type=large';
-};
-
-// Salva el usuario en la base de datos
-var saveUser = function(res, user) {
-  user.save(function (err) {
-    if (err) {
-      return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
-    }
-    else {
-      var token = jwt.createJWT(user);
-      return res.send({ token: token });
-    }
-  });
-};
-
-// Copia los datos de Facebook en la cuenta de Unify
-var linkFacebookData = function(unifyUser, facebookProfile, accessToken) {
-  unifyUser.facebook.id = facebookProfile.id;
-  unifyUser.facebook.email = facebookProfile.email;
-  unifyUser.facebook.accessToken = accessToken;
-  unifyUser.facebook.picture = getFacebookPicture(facebookProfile.id);
-  unifyUser.facebook.displayName = facebookProfile.name;
-};
-
 // Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, token, facebookProfile, accessToken) {
   User.findOne({ 'facebook.id': facebookProfile.id }, function (err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo token
     if (existingUser) {
-      var newToken = jwt.createJWT(existingUser);
-      return res.send({ token: newToken });
+      return res.send({ token: jwt.createJWT(existingUser) });
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Facebook
     else {
@@ -110,8 +73,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
     // Si encuentra a uno con el id de facebook, es un usuario registrado con Facebook
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingFacebookUser) {
-      var token = jwt.createJWT(existingFacebookUser);
-      return res.send({ token: token });
+      return res.send({ token: jwt.createJWT(existingFacebookUser) });
     }
     else {
       User.findOne({ 'email': facebookProfile.email }, function(err, existingUnifyUser) {
@@ -132,4 +94,40 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
       });
     }
   });
+};
+
+// Salva el usuario en la base de datos y devuelve un Json Web Token si todo salió bien
+var saveUser = function(res, user) {
+  user.save(function (err) {
+    if (err) {
+      return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
+    }
+    else {
+      return res.send({ token: jwt.createJWT(user) });
+    }
+  });
+};
+
+// Copia los datos de Facebook en la cuenta de Unify
+var linkFacebookData = function(unifyUser, facebookProfile, accessToken) {
+  unifyUser.facebook.id = facebookProfile.id;
+  unifyUser.facebook.email = facebookProfile.email;
+  unifyUser.facebook.accessToken = accessToken;
+  unifyUser.facebook.picture = getFacebookPicture(facebookProfile.id);
+  unifyUser.facebook.displayName = facebookProfile.name;
+};
+
+// Devuelve los parámetros necesarios para el intercambio del accessToken
+var getFacebookParams = function(req) {
+  return {
+    code: req.body.code,
+    client_id: req.body.clientId,
+    client_secret: config.FACEBOOK_SECRET,
+    redirect_uri: req.body.redirectUri
+  };
+};
+
+// Devuelve la url de la imagen del perfil del usuario con id = profileId
+var getFacebookPicture = function(profileId) {
+  return 'https://graph.facebook.com/v2.3/' + profileId + '/picture?type=large';
 };

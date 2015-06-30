@@ -10,5 +10,6 @@ var authRoutes = require('express').Router();
 
 authRoutes.use('/', require('./local'));
 authRoutes.use('/facebook', require('./facebook'));
+authRoutes.use('/twitter', require('./twitter'));
 
 module.exports = authRoutes;

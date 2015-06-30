@@ -13,6 +13,6 @@ var config = require('../../../config');
 module.exports.linkAccount = function (req, res) {
 
   process.nextTick(function() {
-  
+
   });
 };

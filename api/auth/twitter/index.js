@@ -9,5 +9,6 @@ var twitterRouter = require('express').Router();
 var twitterController = require('./twitter.controller');
 
 twitterRouter.post('/', twitterController.linkAccount);
+twitterRouter.get('/callback', twitterController.handleCallback);
 
 module.exports = twitterRouter;
