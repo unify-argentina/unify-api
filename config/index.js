@@ -18,7 +18,7 @@ module.exports = {
   // Twitter
   TWITTER_SECRET: process.env.TWITTER_SECRET || 'TWITTER secret',
   TWITTER_KEY: process.env.TWITTER_KEY || 'TWITTER key',
-  TWITTER_CALLBACK: process.env.TWITTER_CALLBACK || 'http://127.0.0.1:8080/auth/twitter/callback',
+  TWITTER_CALLBACK: process.env.TWITTER_CALLBACK || 'http://localhost:9000',
 
   // Instagram
   INSTAGRAM_SECRET: process.env.INSTAGRAM_SECRET || 'INSTAGRAM secret',

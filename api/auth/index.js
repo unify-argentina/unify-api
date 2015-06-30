@@ -8,8 +8,13 @@
 // requires
 var authRoutes = require('express').Router();
 
+// /auth
 authRoutes.use('/', require('./local'));
+// /auth/facebook
 authRoutes.use('/facebook', require('./facebook'));
+// /auth/twitter
 authRoutes.use('/twitter', require('./twitter'));
+// /auth/instagram
+authRoutes.use('/instagram', require('./instagram'));
 
 module.exports = authRoutes;

@@ -16,7 +16,7 @@ var bcrypt = require('bcryptjs');
 var userSchema = mongoose.Schema({
 
   name: { type: String, required: true },
-  email: { type: String, unique: true, lowercase: true },
+  email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true, select: false },
   validLocalUser: { type: Boolean, default: false },
   birthDate: Date,
@@ -40,7 +40,6 @@ var userSchema = mongoose.Schema({
 
   instagram: {
     id: { type: String, index: true, select: false },
-    email: String,
     accessToken: { type: String, select: false },
     picture: String,
     displayName: String,
