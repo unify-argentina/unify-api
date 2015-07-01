@@ -4,32 +4,46 @@
 * */
 'use strict';
 
+// requires
 var should = require('should');
 var request = require('supertest');
 var mongoose = require('mongoose');
 var config = require('../config');
+
+// models
 var User = require('../api/user/user.model');
 var Circle = require('../api/circle/circle.model');
 
+// constants
 var API_URL = 'http://localhost:8000';
 var LOGIN_PATH = '/auth/login';
 var SIGNUP_PATH = '/auth/signup';
 
+var defaultUser = function() {
+  return {
+    name: 'Juan Losa',
+    email: 'unify.argentina@gmail.com',
+    password: 'This is not my real password'
+  };
+};
+
 describe('Authentication', function() {
 
-  // Antes de comenzar, borramos todas las cuentas por las dudas y creamos la cuenta con la cual vamos a hacer los tests de login
+  // Antes de comenzar, nos aseguramos de que exista la cuenta con la que vamos a probar el login
   before(function(done) {
     mongoose.connect(config.MONGODB_TEST);
-    User.remove({}, function(err) {
-      User.create({ name: 'Juan Losa', email: 'unify.argentina@gmail.com', password: 'This is not my real password' }, done);
-    });
+    User.create(defaultUser(), done);
   });
 
   // Al finalizar los tests, debemos borrar todas las cuentas de la base y desconectarnos de la base
   after(function(done) {
-    User.remove({}, function(err) {
-      Circle.remove({}, function(err) {
-        mongoose.connection.close(done);
+    User.findOne({ email: 'unify.argentina@gmail.com' }, function(err, user) {
+      user.remove(function(err) {
+        User.findOne({ email: 'unexistentemail@gmail.com' }, function(err, user) {
+          user.remove(function(err) {
+            mongoose.connection.close(done);
+          });
+        });
       });
     });
   });
@@ -66,6 +80,7 @@ describe('Authentication', function() {
 
     it('should not allow to signup with wrong data', function(done) {
       request(API_URL)
+
         .post(SIGNUP_PATH)
         .send({
           email: 'a',

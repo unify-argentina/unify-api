@@ -64,19 +64,32 @@ userSchema.pre('save', function (next) {
   bcrypt.genSalt(10, function (err, salt) {
     bcrypt.hash(user.password, salt, function (err, hash) {
       user.password = hash;
-      if (user.mainCircle === undefined) {
-        var mainCircle = new Circle();
-        mainCircle.name = 'Main Circle';
-        mainCircle.save(function(err) {
-          user.mainCircle = mainCircle;
-          next();
-        });
-      }
-      else {
-        next();
-      }
+      next();
     });
   });
+});
+
+// Recién cuando el usuario haya sido creado exitosamente creamos el círculo principal
+userSchema.post('save', function(user, next) {
+  if (user.mainCircle === undefined) {
+    var mainCircle = new Circle();
+    mainCircle.name = 'Main Circle';
+    mainCircle.save(function(err) {
+      user.mainCircle = mainCircle;
+      user.save(function(err) {
+        next();
+      });
+    });
+  }
+  else {
+    next();
+  }
+});
+
+// Este 'hook' se encarga de eliminar el círculo principal del usuario cuando este se elimina
+userSchema.pre('remove', function(next) {
+  Circle.remove({ _id: this.mainCircle }).exec();
+  next();
 });
 
 // Este método compara la password que se pasa por parámetro con la hasheada
