@@ -5,11 +5,13 @@
 'use strict';
 
 // requires
-var User = require('../../user/user.model');
 var jwt = require('./../util/jwt');
 var request = require('request');
 var config = require('../../../config');
 var randomstring = require('randomstring');
+
+// modelos
+var User = require('../../user/user.model');
 
 // constantes
 var ACCESS_TOKEN_URL = 'https://graph.facebook.com/v2.3/oauth/access_token';

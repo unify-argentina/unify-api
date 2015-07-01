@@ -5,14 +5,16 @@
 'use strict';
 
 // requires
-var User = require('../../user/user.model');
 var jwt = require('./../util/jwt');
 var request = require('request');
 var config = require('../../../config');
 var qs = require('querystring');
 var randomstring = require('randomstring');
 
-// Constantes
+// modelos
+var User = require('../../user/user.model');
+
+// constantes
 var REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token';
 var ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token';
 var PROFILE_URL = 'https://api.twitter.com/1.1/users/show.json?screen_name=';

@@ -10,11 +10,11 @@ var request = require('supertest');
 var mongoose = require('mongoose');
 var config = require('../config');
 
-// models
+// modelos
 var User = require('../api/user/user.model');
 var Circle = require('../api/circle/circle.model');
 
-// constants
+// constantes
 var API_URL = 'http://localhost:8000';
 var LOGIN_PATH = '/auth/login';
 var SIGNUP_PATH = '/auth/signup';

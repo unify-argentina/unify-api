@@ -5,15 +5,18 @@
 'use strict';
 
 // requires
-var User = require('../../user/user.model');
 var jwt = require('./../util/jwt');
 var request = require('request');
 var config = require('../../../config');
 var randomstring = require('randomstring');
 
-var ACCESS_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
+// modelos
+var User = require('../../user/user.model');
 
 // constantes
+var ACCESS_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
+
+// Maneja la lógica principal del login con Instagram
 module.exports.linkAccount = function (req, res) {
 
   process.nextTick(function() {
