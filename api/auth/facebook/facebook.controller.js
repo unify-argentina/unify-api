@@ -9,6 +9,7 @@ var User = require('../../user/user.model');
 var jwt = require('./../util/jwt');
 var request = require('request');
 var config = require('../../../config');
+var randomstring = require('randomstring');
 
 // constantes
 var ACCESS_TOKEN_URL = 'https://graph.facebook.com/v2.3/oauth/access_token';
@@ -92,7 +93,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
           var user = new User();
           user.name = facebookProfile.name;
           user.email = facebookProfile.email;
-          user.password = 'facebook'; // FIXME
+          user.password = randomstring.generate(20);
           linkFacebookData(user, facebookProfile, accessToken);
           return saveUser(res, user);
         }
