@@ -108,7 +108,10 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, accessToken) {
     else {
       var user = new User();
       user.name = twitterProfile.name;
-      user.email = randomstring.generate(10) + '@gmail.com';
+      // Le ponemos este email para que si llegara a vincular la cuenta con facebook,
+      // use ese email. Tiene que ser distinto sí o sí ya que en MongoDB tenemos una
+      // restricción de que el email tiene que ser único
+      user.email = 'no-email' + randomstring.generate(10) + '@gmail.com';
       user.password = randomstring.generate(20);
       linkTwitterData(user, twitterProfile, accessToken);
       return saveUser(res, user);
