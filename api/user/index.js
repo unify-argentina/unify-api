@@ -13,7 +13,7 @@ var User = require('./user.model.js');
 // coincida con el user que está en el request, previamente validado con el Json Web Token
 userRoutes.param('user_id', function(req, res, next, userId) {
   // Validamos nosql injection
-  if (typeof req.params.id === 'object') {
+  if (typeof userId === 'object') {
     return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
   }
 
