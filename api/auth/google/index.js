@@ -9,5 +9,6 @@ var googleRouter = require('express').Router();
 var googleController = require('./google.controller');
 
 googleRouter.post('/', googleController.linkAccount);
+googleRouter.post('/unlink', googleController.unlinkAccount);
 
 module.exports = googleRouter;

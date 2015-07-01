@@ -17,6 +17,14 @@ var User = require('../../user/user.model');
 var ACCESS_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token';
 var PEOPLE_API_URL = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
 
+// Desconecta la cuenta de Google de la de Unify
+module.exports.unlinkAccount = function (req, res) {
+
+  process.nextTick(function () {
+
+  });
+};
+
 // Maneja la lógica principal del login con Google
 module.exports.linkAccount = function (req, res) {
 
@@ -51,7 +59,13 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, accessTok
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Google
     else {
-      var payload = jwt.verify(unifyToken, config.TOKEN_SECRET);
+      var payload = null;
+      try {
+        payload = jwt.verify(unifyToken, config.TOKEN_SECRET);
+      }
+      catch(err) {
+        return res.status(401).send({ errors: [{ msg: err.message }] });
+      }
       User.findById(payload.sub, function (err, user) {
         if (!user) {
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });

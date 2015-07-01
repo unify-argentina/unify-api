@@ -82,7 +82,13 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessTo
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Twitter
     else {
-      var payload = jwt.verify(unifyToken, config.TOKEN_SECRET);
+      var payload = null;
+      try {
+        payload = jwt.verify(unifyToken, config.TOKEN_SECRET);
+      }
+      catch(err) {
+        return res.status(401).send({ errors: [{ msg: err.message }] });
+      }
       User.findById(payload.sub, function (err, user) {
         if (!user) {
           return res.status(400).send({errors: [{msg: 'User not found'}]});
