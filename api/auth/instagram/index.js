@@ -8,6 +8,22 @@
 var instagramRouter = require('express').Router();
 var instagramController = require('./instagram.controller');
 
+/**
+ * @api {post} /auth/instagram Instagram login
+ * @apiGroup Autenticacion
+ *
+ * @apiParam {String} code Código de autorización de Instagram
+ * @apiParam {String} clientId Id de la app
+ * @apiParam {String} redirectUri La uri a la cual se va a redireccionar
+ *
+ * @apiSuccess {String} token Token de acceso valido
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
+ *     }
+ */
 instagramRouter.post('/', instagramController.linkAccount);
 
 module.exports = instagramRouter;

@@ -35,6 +35,61 @@ define({ "api": [
     ]
   },
   {
+    "type": "get",
+    "url": "/auth/twitter/callback",
+    "title": "Twitter login callback",
+    "group": "Autenticacion",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "oauth_token",
+            "description": "<p>Oauth token para obtener el request token</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "oauth_verifier",
+            "description": "<p>Oauth verificador para obtener el request token</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/twitter/index.js",
+    "groupTitle": "Autenticacion",
+    "name": "GetAuthTwitterCallback",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/twitter/callback"
+      }
+    ]
+  },
+  {
     "type": "post",
     "url": "/auth/facebook",
     "title": "Facebook login",
@@ -93,6 +148,68 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:8080/auth/facebook"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/auth/instagram",
+    "title": "Instagram login",
+    "group": "Autenticacion",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Código de autorización de Instagram</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "clientId",
+            "description": "<p>Id de la app</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "redirectUri",
+            "description": "<p>La uri a la cual se va a redireccionar</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/instagram/index.js",
+    "groupTitle": "Autenticacion",
+    "name": "PostAuthInstagram",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/instagram"
       }
     ]
   },
@@ -231,6 +348,61 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:8080/auth/signup"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/auth/twitter",
+    "title": "Twitter login",
+    "group": "Autenticacion",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "oauth_token",
+            "description": "<p>Oauth token para obtener el request token</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "oauth_verifier",
+            "description": "<p>Oauth verificador para obtener el request token</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/twitter/index.js",
+    "groupTitle": "Autenticacion",
+    "name": "PostAuthTwitter",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/twitter"
       }
     ]
   },

@@ -85,6 +85,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessTo
         if (!user) {
           return res.status(400).send({errors: [{msg: 'User not found'}]});
         }
+        // Si existe un usuario de Unify, vinculamos su cuenta con la de Twitter
         else {
           linkTwitterData(user, twitterProfile, accessToken);
           return saveUser(res, user);
@@ -150,8 +151,8 @@ var getAccessTokenParams = function(req) {
   return {
     consumer_key: config.TWITTER_KEY,
     consumer_secret: config.TWITTER_SECRET,
-    token: req.query.oauth_token,
-    verifier: req.query.oauth_verifier
+    token: req.query.oauth_token || req.body.oauth_token,
+    verifier: req.query.oauth_verifier || req.body.oauth_verifier
   };
 };
 
