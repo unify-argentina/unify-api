@@ -9,8 +9,6 @@
 var apiRoutes = require('express').Router();
 var pjson = require('../package.json');
 var jwt = require('./auth/util/jwt');
-var moment = require('moment');
-var config = require('../config');
 
 /**
  * @api {get} /api Version
@@ -33,29 +31,7 @@ apiRoutes.get('/', function(req, res) {
 
 // Este método verifica que en el request haya un JSON Web Token no vencido, si no lo hay
 // o ya venció, devuelve un error
-apiRoutes.use(function(req, res, next) {
-
-  process.nextTick(function() {
-    if (!req.headers.authorization) {
-      return res.status(401).send({ errors: [{ msg: 'Please make sure your request has an Authorization header' }] });
-    }
-    var token = req.headers.authorization.split(' ')[1];
-
-    var payload = null;
-    try {
-      payload = jwt.verify(token, config.TOKEN_SECRET);
-    }
-    catch (err) {
-      return res.status(401).send({ errors: [{ msg: err.message }] });
-    }
-
-    if (payload.exp <= moment().unix()) {
-      return res.status(401).send({ errors: [{ msg: 'Token has expired' }] });
-    }
-    req.user = payload.sub;
-    next();
-  });
-});
+apiRoutes.use(jwt.ensureAuthenticated);
 
 // Rutas de los usuarios
 apiRoutes.use('/user', require('./user'));

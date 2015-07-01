@@ -63,7 +63,7 @@ var handleTokenRequest = function(req, res) {
 
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
-          handleAuthenticatedUser(res, req.headers.authorization.split(' ')[1], profile, accessToken.oauth_token);
+          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, accessToken.oauth_token);
         }
         // Si no tiene el header de authorization, es porque es un nuevo usuario
         else {
