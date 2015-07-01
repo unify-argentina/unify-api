@@ -21,7 +21,15 @@ var PEOPLE_API_URL = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect
 module.exports.unlinkAccount = function (req, res) {
 
   process.nextTick(function () {
-
+    User.findOne({ _id: req.user }, function(err, user) {
+      if (err) {
+        return res.status(400).send({ errors: [{ msg: 'User not found' }]});
+      }
+      else {
+        user.google = {};
+        return saveUser(res, user);
+      }
+    });
   });
 };
 

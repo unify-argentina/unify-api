@@ -7,6 +7,7 @@
 // requires
 var instagramRouter = require('express').Router();
 var instagramController = require('./instagram.controller');
+var jwt = require('../util/jwt');
 
 /**
  * @api {post} /auth/instagram Instagram login
@@ -25,5 +26,7 @@ var instagramController = require('./instagram.controller');
  *     }
  */
 instagramRouter.post('/', instagramController.linkAccount);
+
+instagramRouter.post('/unlink', jwt.ensureAuthenticated, instagramController.unlinkAccount);
 
 module.exports = instagramRouter;

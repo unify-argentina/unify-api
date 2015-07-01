@@ -16,6 +16,22 @@ var User = require('../../user/user.model');
 // constantes
 var ACCESS_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
 
+// Desconecta la cuenta de Instagram de la de Unify
+module.exports.unlinkAccount = function (req, res) {
+
+  process.nextTick(function () {
+    User.findOne({ _id: req.user }, function(err, user) {
+      if (err) {
+        return res.status(400).send({ errors: [{ msg: 'User not found' }]});
+      }
+      else {
+        user.instagram = {};
+        return saveUser(res, user);
+      }
+    });
+  });
+};
+
 // Maneja la lógica principal del login con Instagram
 module.exports.linkAccount = function (req, res) {
 

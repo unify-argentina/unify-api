@@ -19,6 +19,22 @@ var REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token';
 var ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token';
 var PROFILE_URL = 'https://api.twitter.com/1.1/users/show.json?screen_name=';
 
+// Desconecta la cuenta de Twitter de la de Unify
+module.exports.unlinkAccount = function (req, res) {
+
+  process.nextTick(function () {
+    User.findOne({ _id: req.user }, function(err, user) {
+      if (err) {
+        return res.status(400).send({ errors: [{ msg: 'User not found' }]});
+      }
+      else {
+        user.twitter = {};
+        return saveUser(res, user);
+      }
+    });
+  });
+};
+
 // Maneja el callback
 module.exports.handleCallback = function(req, res) {
 

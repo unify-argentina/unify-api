@@ -7,6 +7,7 @@
 // requires
 var twitterRouter = require('express').Router();
 var twitterController = require('./twitter.controller');
+var jwt = require('../util/jwt');
 
 /**
  * @api {post} /auth/twitter Twitter login
@@ -41,5 +42,7 @@ twitterRouter.post('/', twitterController.linkAccount);
  *     }
  */
 twitterRouter.get('/callback', twitterController.handleCallback);
+
+twitterRouter.post('/unlink', jwt.ensureAuthenticated, twitterController.unlinkAccount);
 
 module.exports = twitterRouter;

@@ -17,6 +17,22 @@ var User = require('../../user/user.model');
 var ACCESS_TOKEN_URL = 'https://graph.facebook.com/v2.3/oauth/access_token';
 var GRAPH_USER_URL = 'https://graph.facebook.com/v2.3/me';
 
+// Desconecta la cuenta de Facebook de la de Unify
+module.exports.unlinkAccount = function (req, res) {
+
+  process.nextTick(function () {
+    User.findOne({ _id: req.user }, function(err, user) {
+      if (err) {
+        return res.status(400).send({ errors: [{ msg: 'User not found' }]});
+      }
+      else {
+        user.facebook = {};
+        return saveUser(res, user);
+      }
+    });
+  });
+};
+
 // Maneja la lógica principal del login con Facebook
 module.exports.linkAccount = function (req, res) {
 

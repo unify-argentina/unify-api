@@ -7,8 +7,10 @@
 // requires
 var googleRouter = require('express').Router();
 var googleController = require('./google.controller');
+var jwt = require('../util/jwt');
 
 googleRouter.post('/', googleController.linkAccount);
-googleRouter.post('/unlink', googleController.unlinkAccount);
+
+googleRouter.post('/unlink', jwt.ensureAuthenticated, googleController.unlinkAccount);
 
 module.exports = googleRouter;

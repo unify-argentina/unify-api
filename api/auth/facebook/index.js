@@ -7,6 +7,7 @@
 // requires
 var facebookRouter = require('express').Router();
 var facebookController = require('./facebook.controller');
+var jwt = require('../util/jwt');
 
 /**
  * @api {post} /auth/facebook Facebook login
@@ -25,5 +26,7 @@ var facebookController = require('./facebook.controller');
  *     }
  */
 facebookRouter.post('/', facebookController.linkAccount);
+
+facebookRouter.post('/unlink', jwt.ensureAuthenticated, facebookController.unlinkAccount);
 
 module.exports = facebookRouter;
