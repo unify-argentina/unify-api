@@ -8,27 +8,36 @@ var circleRoutes = require('express').Router();
 var circleController = require('./circle.controller');
 
 /**
- * @api {get} /api/user/:id/circle Crear un círculo
- * @apiGroup Círculos
+ * @api {get} /api/user/:id/circle Crear un circulo
+ * @apiGroup Circulos
  *
  * @apiHeader {String} Authorization Bearer token
  *
  * @apiParam {String} id Id del usuario
+ * @apiParam {String} name Nombre del circulo a crear
+ * @apiParam {String} parent_id Id del circulo padre
  *
- * @apiSuccess {Object} circle Círculo creado
+ * @apiParamExample {json} Ejemplo de request
+ *    {
+ *      "name":"Amigos",
+ *      "parent_id":"55936a0460bb409c379800b7"
+ *    }
+ *
+ * @apiSuccess {Object} circle Circulo creado
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *
- *     {
- *        "circle": {
- *          "mainCircle":"558748787f0a76cc4ca02a35",
- *          "email":"90joelmarquez@gmail.com",
- *          "name":"Joel",
- *          "_id":"558748767f0a76cc4ca02a34",
- *          "__v":0
- *        }
- *     }
+ *    {
+ *      "circle": {
+ *        "__v":0,
+ *        "parent":
+ *        "55936a0460bb409c379800b7",
+ *        "name":"Amigos",
+ *        "_id":"55936a8960bb409c379800b8",
+ *        "contacts":[]
+ *      }
+ *    }
  */
 circleRoutes.post('/', circleController.createCircle);
 

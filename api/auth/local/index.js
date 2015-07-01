@@ -15,6 +15,12 @@ var localController = require('./local.controller');
  * @apiParam {String} email Email del usuario
  * @apiParam {String} password Password del usuario
  *
+ * @apiParamExample {json} Ejemplo de request
+ *    {
+ *      "email":"unify.argentina@gmail.com",
+ *      "password":"hola1234",
+ *    }
+ *
  * @apiSuccess {String} token Token de acceso valido
  *
  * @apiSuccessExample Respuesta valida
@@ -33,6 +39,14 @@ localRoutes.post('/login', localController.login);
  * @apiParam {String} name Nombre del usuario
  * @apiParam {String} password Password del usuario, debera tener 6 caracteres como minimo
  * @apiParam {String} confirm_password Tiene que ser igual que el password
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *    {
+ *      "email":"unify.argentina@gmail.com",
+ *      "name":"Juan Losa",
+ *      "confirm_password":"hola1234",
+ *      "password":"hola1234"
+ *    }
  *
  * @apiSuccess {String} token Token de acceso valido
  *

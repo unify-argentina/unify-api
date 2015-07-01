@@ -87,7 +87,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "api/auth/facebook.js",
+    "filename": "api/auth/facebook/index.js",
     "groupTitle": "Autenticacion",
     "name": "PostAuthFacebook",
     "sampleRequest": [
@@ -119,7 +119,14 @@ define({ "api": [
             "description": "<p>Password del usuario</p> "
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"email\":\"unify.argentina@gmail.com\",\n  \"password\":\"hola1234\",\n}",
+          "type": "json"
+        }
+      ]
     },
     "success": {
       "fields": {
@@ -142,7 +149,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "api/auth/local.js",
+    "filename": "api/auth/local/index.js",
     "groupTitle": "Autenticacion",
     "name": "PostAuthLogin",
     "sampleRequest": [
@@ -188,7 +195,14 @@ define({ "api": [
             "description": "<p>Tiene que ser igual que el password</p> "
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"email\":\"unify.argentina@gmail.com\",\n  \"name\":\"Juan Losa\",\n  \"confirm_password\":\"hola1234\",\n  \"password\":\"hola1234\"\n}",
+          "type": "json"
+        }
+      ]
     },
     "success": {
       "fields": {
@@ -211,12 +225,94 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "api/auth/local.js",
+    "filename": "api/auth/local/index.js",
     "groupTitle": "Autenticacion",
     "name": "PostAuthSignup",
     "sampleRequest": [
       {
         "url": "http://localhost:8080/auth/signup"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/api/user/:id/circle",
+    "title": "Crear un circulo",
+    "group": "Circulos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Nombre del circulo a crear</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "parent_id",
+            "description": "<p>Id del circulo padre</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"name\":\"Amigos\",\n  \"parent_id\":\"55936a0460bb409c379800b7\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "circle",
+            "description": "<p>Circulo creado</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\": {\n    \"__v\":0,\n    \"parent\":\n    \"55936a0460bb409c379800b7\",\n    \"name\":\"Amigos\",\n    \"_id\":\"55936a8960bb409c379800b8\",\n    \"contacts\":[]\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/circle/index.js",
+    "groupTitle": "Circulos",
+    "name": "GetApiUserIdCircle",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:id/circle"
       }
     ]
   },
