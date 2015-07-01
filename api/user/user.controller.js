@@ -19,7 +19,10 @@ module.exports.getUserById = function(req, res) {
     // Si el req.user, ya habiendo pasado por la verificación del token es el mismo
     // que el del req.params.id, enviamos el user
     if (req.user === req.params.id) {
-      User.findOne({ _id: req.params.id }, function(err, user) {
+      User
+        .findOne({ _id: req.params.id })
+        .populate('mainCircle')
+        .exec(function(err, user) {
         if (err) {
           res.status(401).send({ errors: [{ msg: 'Error finding user with id ' + req.params.id }] });
         }

@@ -19,7 +19,7 @@ var API_URL = 'http://localhost:8000';
 var USERS_PATH = '/api/user/';
 var LOGIN_PATH = '/auth/login';
 
-describe.only('Users API', function() {
+describe('Users API', function() {
 
   before(function(done) {
     mongoose.connect(config.MONGODB_TEST);
@@ -105,10 +105,10 @@ describe.only('Users API', function() {
             .end(function(err, data) {
               data.res.statusCode.should.equal(200);
               var jsonUser = data.res.body.user;
-              jsonUser._id = user._id;
-              jsonUser.email = user.email;
-              jsonUser.mainCircle = user.mainCircle;
-              jsonUser.name = user.name;
+              jsonUser._id.should.equal(user._id.toString());
+              jsonUser.email.should.equal(user.email);
+              jsonUser.name.should.equal(user.name);
+              jsonUser.mainCircle.name.should.equal(jsonUser.mainCircle.name);
               done();
             });
         });
