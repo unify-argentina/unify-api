@@ -16,5 +16,7 @@ authRoutes.use('/facebook', require('./facebook'));
 authRoutes.use('/twitter', require('./twitter'));
 // /auth/instagram
 authRoutes.use('/instagram', require('./instagram'));
+// /auth/google
+authRoutes.use('/google', require('./google'));
 
 module.exports = authRoutes;
