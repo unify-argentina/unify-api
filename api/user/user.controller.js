@@ -73,3 +73,10 @@ module.exports.updateUser = function (req, res) {
     });
   });
 };
+
+module.exports.getFriends = function (req, res) {
+
+  process.nextTick(function () {
+
+  });
+};
