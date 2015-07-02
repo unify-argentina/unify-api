@@ -7,9 +7,12 @@
 'use strict';
 
 // requires
-var User = require('../../user/user.model');
 var jwt = require('./../util/jwt');
 
+// modelos
+var User = require('../../user/user.model');
+
+// Maneja la lógica necesaria para el login de un usuario Unify
 module.exports.login = function (req, res) {
 
   process.nextTick(function () {
@@ -39,12 +42,15 @@ module.exports.login = function (req, res) {
         if (!isMatch) {
           return res.status(401).send({ errors: [{ msg: 'Wrong password' }] });
         }
-        res.send({ token: jwt.createJWT(user) });
+        else {
+          res.send({ token: jwt.createJWT(user) });
+        }
       });
     });
   });
 };
 
+// Maneja la lógica necesaria para el signup de un usuario Unify
 module.exports.signup = function (req, res) {
 
   process.nextTick(function () {
@@ -80,9 +86,11 @@ module.exports.signup = function (req, res) {
       });
       user.save(function (err) {
         if (err) {
-          return res.status(401).send({ errors: [{msg: 'Error saving data' + err }] });
+          return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
         }
-        res.send({ token: jwt.createJWT(user) });
+        else {
+          res.send({ token: jwt.createJWT(user) });
+        }
       });
     });
   });

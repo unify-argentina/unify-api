@@ -7,6 +7,8 @@
 // requires
 var userRoutes = require('express').Router();
 var userController = require('./user.controller');
+
+// modelos
 var User = require('./user.model.js');
 
 // Esto lo que hace es verificar que cada vez que se envíe un user_id como parámetro en una ruta,
@@ -28,12 +30,12 @@ userRoutes.param('user_id', function(req, res, next, userId) {
 });
 
 /**
- * @api {get} /api/user/:id Obtener Usuario
+ * @api {get} /api/user/:user_id Obtener Usuario
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token
  *
- * @apiParam {String} id Id del usuario
+ * @apiParam {String} user_id Id del usuario
  *
  * @apiSuccess {Object} user Usuario
  *
@@ -43,14 +45,51 @@ userRoutes.param('user_id', function(req, res, next, userId) {
  *     {
  *        "user": {
  *          "mainCircle":"558748787f0a76cc4ca02a35",
- *          "email":"90joelmarquez@gmail.com",
- *          "name":"Joel",
+ *          "email":"unify.argentina@gmail.com",
+ *          "name":"Juan Losa",
  *          "_id":"558748767f0a76cc4ca02a34",
  *          "__v":0
  *        }
  *     }
  */
 userRoutes.get('/:user_id', userController.getUserById);
+
+/**
+ * @api {post} /api/user/:user_id Actualizar Usuario
+ * @apiGroup Usuarios
+ *
+ * @apiHeader {String} Authorization Bearer token
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} email Email del usuario
+ * @apiParam {String} name Nombre del usuario
+ * @apiParam {String} password Password del usuario, debera tener 6 caracteres como minimo
+ * @apiParam {String} confirm_password Tiene que ser igual que el password
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *    {
+ *      "email":"unify.argentina@gmail.com",
+ *      "name":"Juan Losa",
+ *      "confirm_password":"hola1234",
+ *      "password":"hola1234"
+ *    }
+ *
+ * @apiSuccess {Object} user Usuario
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *
+ *     {
+ *        "user": {
+ *          "mainCircle":"558748787f0a76cc4ca02a35",
+ *          "email":"unify.argentina@gmail.com",
+ *          "name":"Juan Losa",
+ *          "_id":"558748767f0a76cc4ca02a34",
+ *          "__v":0
+ *        }
+ *     }
+ */
+userRoutes.post('/:user_id', userController.updateUser);
 
 userRoutes.use('/:user_id/circle', require('../circle'));
 

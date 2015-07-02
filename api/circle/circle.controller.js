@@ -7,6 +7,7 @@
 // requires
 var Circle = require('./circle.model');
 
+// Crea un círculo
 module.exports.createCircle = function(req, res) {
 
   process.nextTick(function() {
@@ -23,14 +24,17 @@ module.exports.createCircle = function(req, res) {
       return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
     }
 
+    // TODO verificar que el parent_id pertenezca al req.user
     var circle = new Circle();
     circle.name = req.body.name;
     circle.parent = req.body.parent_id;
     circle.save(function(err) {
       if (err) {
-        return res.status(401).send({ errors: [{ msg: 'Error saving data' + err }] });
+        return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
       }
-      res.status(200).send({ circle: circle });
+      else {
+        res.status(200).send({ circle: circle });
+      }
     });
   });
 };

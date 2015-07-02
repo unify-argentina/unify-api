@@ -36,6 +36,81 @@
   },
   {
     "type": "post",
+    "url": "/auth/link",
+    "title": "Link",
+    "group": "Autenticacion",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password del usuario, debera tener 6 caracteres como minimo</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"email\":\"unify.argentina@gmail.com\",\n  \"password\":\"hola1234\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/local/index.js",
+    "groupTitle": "Autenticacion",
+    "name": "PostAuthLink",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/link"
+      }
+    ]
+  },
+  {
+    "type": "post",
     "url": "/auth/login",
     "title": "Login",
     "group": "Autenticacion",
@@ -552,7 +627,7 @@
   },
   {
     "type": "get",
-    "url": "/api/user/:id",
+    "url": "/api/user/:user_id",
     "title": "Obtener Usuario",
     "group": "Usuarios",
     "header": {
@@ -575,7 +650,7 @@
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": false,
-            "field": "id",
+            "field": "user_id",
             "description": "<p>Id del usuario</p> "
           }
         ]
@@ -596,7 +671,7 @@
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n\n{\n   \"user\": {\n     \"mainCircle\":\"558748787f0a76cc4ca02a35\",\n     \"email\":\"90joelmarquez@gmail.com\",\n     \"name\":\"Joel\",\n     \"_id\":\"558748767f0a76cc4ca02a34\",\n     \"__v\":0\n   }\n}",
+          "content": "HTTP/1.1 200 OK\n\n{\n   \"user\": {\n     \"mainCircle\":\"558748787f0a76cc4ca02a35\",\n     \"email\":\"unify.argentina@gmail.com\",\n     \"name\":\"Juan Losa\",\n     \"_id\":\"558748767f0a76cc4ca02a34\",\n     \"__v\":0\n   }\n}",
           "type": "json"
         }
       ]
@@ -604,10 +679,106 @@
     "version": "0.0.0",
     "filename": "api/user/index.js",
     "groupTitle": "Usuarios",
-    "name": "GetApiUserId",
+    "name": "GetApiUserUser_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:id"
+        "url": "http://localhost:8080/api/user/:user_id"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/api/user/:user_id",
+    "title": "Actualizar Usuario",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Nombre del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password del usuario, debera tener 6 caracteres como minimo</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "confirm_password",
+            "description": "<p>Tiene que ser igual que el password</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"email\":\"unify.argentina@gmail.com\",\n  \"name\":\"Juan Losa\",\n  \"confirm_password\":\"hola1234\",\n  \"password\":\"hola1234\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "user",
+            "description": "<p>Usuario</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n\n{\n   \"user\": {\n     \"mainCircle\":\"558748787f0a76cc4ca02a35\",\n     \"email\":\"unify.argentina@gmail.com\",\n     \"name\":\"Juan Losa\",\n     \"_id\":\"558748767f0a76cc4ca02a34\",\n     \"__v\":0\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "PostApiUserUser_id",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id"
       }
     ]
   }

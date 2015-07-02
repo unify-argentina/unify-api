@@ -7,6 +7,7 @@
 // requires
 var localRoutes = require('express').Router();
 var localController = require('./local.controller');
+var jwt = require('../util/jwt');
 
 /**
  * @api {post} /auth/login Login

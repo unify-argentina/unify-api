@@ -37,18 +37,12 @@ describe('Authentication', function() {
 
   // Al finalizar los tests, debemos borrar todas las cuentas de la base y desconectarnos de la base
   after(function(done) {
-    User.findOne({ email: 'unify.argentina@gmail.com' }, function(err, user) {
-      user.remove(function(err) {
-        User.findOne({ email: 'unexistentemail@gmail.com' }, function(err, user) {
-          user.remove(function(err) {
-            mongoose.connection.close(done);
-          });
-        });
-      });
+    User.remove().exec(function (err) {
+      mongoose.connection.close(done);
     });
   });
 
-  describe('/auth/signup', function() {
+  describe('POST /auth/signup', function() {
     it('should not allow to signup with empty data', function(done) {
       request(API_URL)
         .post(SIGNUP_PATH)
@@ -80,7 +74,6 @@ describe('Authentication', function() {
 
     it('should not allow to signup with wrong data', function(done) {
       request(API_URL)
-
         .post(SIGNUP_PATH)
         .send({
           email: 'a',
@@ -154,7 +147,7 @@ describe('Authentication', function() {
     });
   });
 
-  describe('/auth/login', function() {
+  describe('POST /auth/login', function() {
     it('should not allow to login with empty data', function(done) {
       request(API_URL)
         .post(LOGIN_PATH)

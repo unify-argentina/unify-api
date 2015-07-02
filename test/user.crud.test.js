@@ -34,12 +34,7 @@ describe('User', function() {
 
   // Al finalizar cada test, borramos todas las cuentas de la base
   afterEach(function(done) {
-    User.find({}, function(err, users) {
-      users.forEach(function(user) {
-        user.remove();
-      });
-      done();
-    });
+    User.remove().exec(done);
   });
 
   // Al finalizar todos los tests, nos desconectamos de la base
@@ -79,10 +74,10 @@ describe('User', function() {
   it('should remove asociated main user circle when removing a user instance', function(done) {
     User.create({ name: 'Juan Losa', email: 'unify.argentina@gmail.com', password: 'Holaja' }, function (err, user) {
       Circle.count({}, function(err, count) {
-        count.should.equal(1);
+        var oldCount = count;
         user.remove(function(err) {
           Circle.count({}, function(err, count) {
-            count.should.equal(0);
+            count.should.equal(oldCount - 1);
             done();
           });
         });
