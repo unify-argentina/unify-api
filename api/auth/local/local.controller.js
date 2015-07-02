@@ -36,16 +36,18 @@ module.exports.login = function (req, res) {
       if (!user) {
         return res.status(401).send({ errors: [{ msg: "User doesn't exist" }] });
       }
-      // Si lo encontramos comparamos passwords
-      user.comparePassword(req.body.password, function (err, isMatch) {
-        // Si coincide, enviamos el token con el id del usuario loggeado
-        if (!isMatch) {
-          return res.status(401).send({ errors: [{ msg: 'Wrong password' }] });
-        }
-        else {
-          res.send({ token: jwt.createJWT(user) });
-        }
-      });
+      else {
+        // Si lo encontramos comparamos passwords
+        user.comparePassword(req.body.password, function (err, isMatch) {
+          // Si coincide, enviamos el token con el id del usuario loggeado
+          if (!isMatch) {
+            return res.status(401).send({errors: [{msg: 'Wrong password'}]});
+          }
+          else {
+            res.send({token: jwt.createJWT(user)});
+          }
+        });
+      }
     });
   });
 };
@@ -78,20 +80,22 @@ module.exports.signup = function (req, res) {
       if (existingUser) {
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
-      var user = new User({
-        email: req.body.email,
-        name: req.body.name,
-        password: req.body.password,
-        validLocalUser: true
-      });
-      user.save(function (err) {
-        if (err) {
-          return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
-        }
-        else {
-          res.send({ token: jwt.createJWT(user) });
-        }
-      });
+      else {
+        var user = new User({
+          email: req.body.email,
+          name: req.body.name,
+          password: req.body.password,
+          validLocalUser: true
+        });
+        user.save(function (err) {
+          if (err) {
+            return res.status(401).send({errors: [{msg: 'Error saving data ' + err}]});
+          }
+          else {
+            res.send({token: jwt.createJWT(user)});
+          }
+        });
+      }
     });
   });
 };

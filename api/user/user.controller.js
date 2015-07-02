@@ -5,6 +5,10 @@
 'use strict';
 
 // requires
+var facebookFriends = require('../auth/facebook/facebook.friends.controller');
+var async = require('async');
+
+// modelos
 var User = require('./user.model.js');
 
 // Se encarga de obtener el usuario en base al id que se le pase por parámetro
@@ -56,27 +60,99 @@ module.exports.updateUser = function (req, res) {
         User.findOne({ _id: req.user })
           .populate('mainCircle')
           .exec(function (err, user) {
-          user.email = req.body.email;
-          user.password = req.body.password;
-          user.name = req.body.name || user.name;
-          user.save(function(err) {
-            if (err) {
-              return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
+            if (err || !user) {
+              return res.status(400).send({ errors: [{ msg: 'User not found' }] });
             }
             else {
-              user.password = undefined;
-              return res.send({ user: user });
+              user.email = req.body.email;
+              user.password = req.body.password;
+              user.name = req.body.name || user.name;
+              user.save(function (err) {
+                if (err) {
+                  return res.status(401).send({errors: [{msg: 'Error saving data ' + err}]});
+                }
+                else {
+                  user.password = undefined;
+                  return res.send({user: user});
+                }
+              });
             }
-          });
         });
       }
     });
   });
 };
 
+// Se encarga de devolver los amigos de las redes sociales que tenga conectadas
 module.exports.getFriends = function (req, res) {
 
   process.nextTick(function () {
+    User.findOne({ _id: req.user }, selectFields(), function (err, user) {
+      if (err || !user) {
+        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+      }
+      else {
+        // Una vez que encontramos al usuario, mandamos a consultar los amigos por cada red social que tenga
+        // asociada el usuario
+        async.parallel({
+          facebook: function(callback) {
+            if (hasLinkedAccount(user, 'facebook')) {
+              facebookFriends.getFriends(user.facebook.accessToken, user.facebook.id, function (err, results) {
+                callback(err, results);
+              });
+            }
+            // Si no tiene linkeada la cuenta de Facebook, no devolvemos nada
+            else {
+              callback(null, undefined);
+            }
+          },
+          instagram: function(callback) {
+            // Si no tiene linkeada la cuenta de Instagram, no devolvemos nada
+            callback(null, undefined);
+          },
+          twitter: function(callback) {
+            // Si no tiene linkeada la cuenta de Twitter, no devolvemos nada
+            callback(null, undefined);
+          }
+        },
+        // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
+        function(err, results) {
+          if (err) {
+            return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user friends' }] });
+          }
+          else {
+            sendFriendsResponseFromResults(res, results);
+          }
+        });
+      }
+    });
+  });
+};
 
+// Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
+var selectFields = function() {
+  return 'facebook.id facebook.accessToken twitter.id twitter.accessToken ' +
+    'instagram.id instagram.accessToken google.id google.accessToken';
+};
+
+// Chequea que el usuario efectivamente tenga la cuenta asociada
+var hasLinkedAccount = function(user, account) {
+  return user[account] && user[account].accessToken && user[account].id;
+};
+
+// Envía al cliente los amigos del usuario
+var sendFriendsResponseFromResults = function(res, results) {
+  var friends = {};
+  if (results.facebook) {
+    friends.facebook = results.facebook;
+  }
+  if (results.instagram) {
+    friends.instagram = results.instagram;
+  }
+  if (results.twitter) {
+    friends.twitter = results.twitter;
+  }
+  res.send({
+    friends: friends
   });
 };

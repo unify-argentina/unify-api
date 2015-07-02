@@ -21,7 +21,7 @@ module.exports.unlinkAccount = function (req, res) {
 
   process.nextTick(function () {
     User.findOne({ _id: req.user }, function(err, user) {
-      if (err) {
+      if (err || !user) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});
       }
       else {
