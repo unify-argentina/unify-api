@@ -6,7 +6,7 @@
 
 // requires
 var twitterRouter = require('express').Router();
-var twitterController = require('./twitter.controller');
+var twitterController = require('./twitter.login.controller');
 var jwt = require('../util/jwt');
 
 /**

@@ -6,7 +6,7 @@
 
 // requires
 var googleRouter = require('express').Router();
-var googleController = require('./google.controller');
+var googleController = require('./google.login.controller');
 var jwt = require('../util/jwt');
 
 /**

@@ -6,7 +6,7 @@
 
 // requires
 var instagramRouter = require('express').Router();
-var instagramController = require('./instagram.controller');
+var instagramController = require('./instagram.login.controller');
 var jwt = require('../util/jwt');
 
 /**

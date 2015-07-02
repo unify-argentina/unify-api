@@ -6,7 +6,7 @@
 
 // requires
 var facebookRouter = require('express').Router();
-var facebookController = require('./facebook.controller');
+var facebookController = require('./facebook.login.controller');
 var jwt = require('../util/jwt');
 
 /**
