@@ -26,7 +26,7 @@ module.exports.unlinkAccount = function (req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});
       }
       else {
-        user.facebook = {};
+        user.facebook = undefined;
         return saveUser(res, user);
       }
     });

@@ -17,7 +17,9 @@ module.exports.createJWT = function (user) {
     iat: moment().unix(),
     exp: moment().add(30, 'days').unix()
   };
-  return jwt.sign(payload, config.TOKEN_SECRET);
+  var token = jwt.sign(payload, config.TOKEN_SECRET);
+  console.log('Generated token=' + token + ' for user with id=' + user._id);
+  return token;
 };
 
 // Este método verifica y desencripta el JSON Web Token

@@ -25,7 +25,7 @@ module.exports.unlinkAccount = function (req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});
       }
       else {
-        user.instagram = {};
+        user.instagram = undefined;
         return saveUser(res, user);
       }
     });

@@ -28,7 +28,7 @@ module.exports.unlinkAccount = function (req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});
       }
       else {
-        user.twitter = {};
+        user.twitter = undefined;
         return saveUser(res, user);
       }
     });
