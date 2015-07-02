@@ -11,7 +11,7 @@ var jwt = require('../util/jwt');
 
 /**
  * @api {post} /auth/facebook Facebook login
- * @apiGroup Autenticacion
+ * @apiGroup Social
  *
  * @apiParam {String} code Código de autorización de Facebook
  * @apiParam {String} clientId Id de la app

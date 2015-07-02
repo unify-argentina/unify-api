@@ -11,7 +11,7 @@ var jwt = require('../util/jwt');
 
 /**
  * @api {post} /auth/instagram Instagram login
- * @apiGroup Autenticacion
+ * @apiGroup Social
  *
  * @apiParam {String} code Código de autorización de Instagram
  * @apiParam {String} clientId Id de la app

@@ -11,7 +11,7 @@ var jwt = require('../util/jwt');
 
 /**
  * @api {post} /auth/twitter Twitter login
- * @apiGroup Autenticacion
+ * @apiGroup Social
  *
  * @apiParam {String} oauth_token Oauth token para obtener el request token
  * @apiParam {String} oauth_verifier Oauth verificador para obtener el request token
@@ -28,7 +28,7 @@ twitterRouter.post('/', twitterController.linkAccount);
 
 /**
  * @api {get} /auth/twitter/callback Twitter login callback
- * @apiGroup Autenticacion
+ * @apiGroup Social
  *
  * @apiParam {String} oauth_token Oauth token para obtener el request token
  * @apiParam {String} oauth_verifier Oauth verificador para obtener el request token
