@@ -9,17 +9,18 @@ var util = require('util');
 var request = require('request');
 var async = require('async');
 
-// constantes
-var GRAPH_FRIENDS_URL = 'https://graph.facebook.com/v2.3/%s/friends?access_token=%s';
-
 // Devuelve los amigos de Facebook del usuario loggeado
 module.exports.getFriends = function (accessToken, facebookId, callback) {
+
+  var url = util.format('https://graph.facebook.com/v2.3/%s/friends', facebookId),
+      qs = { access_token: accessToken };
+
   // TODO chequear que si viene un paging, se haga
   // Le pega a la API de Facebook y en el response, si fue exitoso, van a estar los amigos
-  request.get(util.format(GRAPH_FRIENDS_URL, facebookId, accessToken), function(err, response) {
+  request.get({ url: url, qs: qs, json: true }, function(err, response) {
     // Parseamos el body para tener un JSON, y después lo mapeamos para que sea homogéneo
     // a las 3 redes sociales
-    async.map(JSON.parse(response.body).data, mapUser, function(err, results) {
+    async.map(response.body.data, mapUser, function(err, results) {
       callback(err, results);
     });
   });

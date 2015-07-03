@@ -6,6 +6,7 @@
 
 // requires
 var facebookFriends = require('../auth/facebook/facebook.friends.controller');
+var instagramFriends = require('../auth/instagram/instagram.friends.controller');
 var async = require('async');
 
 // modelos
@@ -107,8 +108,15 @@ module.exports.getFriends = function (req, res) {
             }
           },
           instagram: function(callback) {
+            if (hasLinkedAccount(user, 'instagram')) {
+              instagramFriends.getFriends(user.instagram.accessToken, user.instagram.id, function(err, results) {
+                callback(err, results);
+              });
+            }
             // Si no tiene linkeada la cuenta de Instagram, no devolvemos nada
-            callback(null, undefined);
+            else {
+              callback(null, undefined);
+            }
           },
           twitter: function(callback) {
             // Si no tiene linkeada la cuenta de Twitter, no devolvemos nada
