@@ -32,7 +32,10 @@ var userSchema = mongoose.Schema({
 
   twitter: {
     id: { type: String, index: true, select: false },
-    accessToken: { type: String, select: false },
+    accessToken: {
+      token: { type: String, select: false },
+      tokenSecret: { type: String, select: false }
+    },
     picture: String,
     displayName: String,
     userName: String
@@ -97,6 +100,16 @@ userSchema.methods.comparePassword = function (password, done) {
   bcrypt.compare(password, this.password, function (err, isMatch) {
     done(err, isMatch);
   });
+};
+
+// Chequea que el usuario efectivamente tenga la cuenta asociada
+userSchema.methods.hasLinkedAccount = function(account) {
+  var hasFields = this[account] && this[account].accessToken && this[account].id;
+  // El access token de Twitter es un objeto con dos campos
+  if (account === 'twitter') {
+    hasFields = hasFields && this.twitter.accessToken.token && this.twitter.accessToken.tokenSecret;
+  }
+  return hasFields;
 };
 
 module.exports = mongoose.model('User', userSchema);

@@ -79,11 +79,11 @@ var handleTokenRequest = function(req, res) {
 
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
-          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, accessToken.oauth_token);
+          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, accessToken);
         }
         // Si no tiene el header de authorization, es porque es un nuevo usuario
         else {
-          handleNotAuthenticatedUser(res, profile, accessToken.oauth_token);
+          handleNotAuthenticatedUser(res, profile, accessToken);
         }
       });
   });
@@ -158,7 +158,8 @@ var saveUser = function(res, user) {
 // Copia los datos de Twitter en la cuenta de Unify
 var linkTwitterData = function(unifyUser, twitterProfile, accessToken) {
   unifyUser.twitter.id = twitterProfile.id;
-  unifyUser.twitter.accessToken = accessToken;
+  unifyUser.twitter.accessToken.token = accessToken.oauth_token;
+  unifyUser.twitter.accessToken.tokenSecret = accessToken.oauth_token_secret;
   unifyUser.twitter.picture = twitterProfile.profile_image_url.replace('_normal', '');
   unifyUser.twitter.displayName = twitterProfile.name;
   unifyUser.twitter.userName = twitterProfile.screen_name;

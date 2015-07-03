@@ -7,6 +7,7 @@
 // requires
 var facebookFriends = require('../auth/facebook/facebook.friends.controller');
 var instagramFriends = require('../auth/instagram/instagram.friends.controller');
+var twitterFriends = require('../auth/twitter/twitter.friends.controller');
 var async = require('async');
 
 // modelos
@@ -97,7 +98,7 @@ module.exports.getFriends = function (req, res) {
         // asociada el usuario
         async.parallel({
           facebook: function(callback) {
-            if (hasLinkedAccount(user, 'facebook')) {
+            if (user.hasLinkedAccount('facebook')) {
               facebookFriends.getFriends(user.facebook.accessToken, user.facebook.id, function (err, results) {
                 callback(err, results);
               });
@@ -108,7 +109,7 @@ module.exports.getFriends = function (req, res) {
             }
           },
           instagram: function(callback) {
-            if (hasLinkedAccount(user, 'instagram')) {
+            if (user.hasLinkedAccount('instagram')) {
               instagramFriends.getFriends(user.instagram.accessToken, user.instagram.id, function(err, results) {
                 callback(err, results);
               });
@@ -119,8 +120,15 @@ module.exports.getFriends = function (req, res) {
             }
           },
           twitter: function(callback) {
+            if (user.hasLinkedAccount('twitter')) {
+              twitterFriends.getFriends(user.twitter.accessToken, user.twitter.id, function(err, results) {
+                callback(err, results);
+              });
+            }
             // Si no tiene linkeada la cuenta de Twitter, no devolvemos nada
-            callback(null, undefined);
+            else {
+              callback(null, undefined);
+            }
           }
         },
         // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
@@ -139,13 +147,8 @@ module.exports.getFriends = function (req, res) {
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 var selectFields = function() {
-  return 'facebook.id facebook.accessToken twitter.id twitter.accessToken ' +
-    'instagram.id instagram.accessToken google.id google.accessToken';
-};
-
-// Chequea que el usuario efectivamente tenga la cuenta asociada
-var hasLinkedAccount = function(user, account) {
-  return user[account] && user[account].accessToken && user[account].id;
+  return 'facebook.id facebook.accessToken twitter.id twitter.accessToken.token ' +
+    'twitter.accessToken.tokenSecret instagram.id instagram.accessToken google.id google.accessToken';
 };
 
 // Envía al cliente los amigos del usuario
