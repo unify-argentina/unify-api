@@ -91,6 +91,64 @@ userRoutes.get('/:user_id', userController.getUserById);
  */
 userRoutes.post('/:user_id', userController.updateUser);
 
+/**
+ * @api {get} /api/user/:user_id/friends Obtener los amigos del Usuario
+ * @apiGroup Usuarios
+ *
+ * @apiHeader {String} Authorization Bearer token
+ *
+ * @apiParam {String} user_id Id del usuario
+ *
+ * @apiSuccess {Object} friends Listado de amigos de las redes sociales
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *
+ *    {
+ *      "friends":{
+ *        "facebook":[
+ *          {
+ *            "id":"10205153877979641",
+ *            "name":"Alejo García",
+ *            "picture":"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large"
+ *          },
+ *          {
+ *            "id":"104412116557897",
+ *            "name":"Juan Losa",
+ *            "picture":"https://graph.facebook.com/v2.3/104412116557897/picture?type=large"
+ *          }
+ *        ],
+ *        "instagram":[
+ *          {
+ *            "id":"230447982",
+ *            "name":"Repost",
+ *            "picture":"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xtp1/t51.2885-19/10693785_639461172835582_689422232_a.jpg",
+ *            "username":"repostapp"
+ *          },
+ *          {
+ *            "id":"1038713199",
+ *            "name":"All Blacks",
+ *            "picture":"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xap1/t51.2885-19/10475163_569454579827180_1557590857_a.jpg",
+ *            "username":"allblacks"
+ *          }
+ *        ],
+ *        "twitter":[
+ *          {
+ *            "id":"211089576",
+ *            "name":"Wunderlist",
+ *            "picture":"http://pbs.twimg.com/profile_images/494884573428207616/BjPVVsRm_normal.png",
+ *            "username":"Wunderlist"
+ *          },
+ *          {
+ *            "id":"525264466",
+ *            "name":"Papa Francisco",
+ *            "picture":"http://pbs.twimg.com/profile_images/507819548834148352/jyx1JOS-_normal.jpeg",
+ *            "username":"Pontifex_es"
+ *          }
+ *        ]
+ *      }
+ *    }
+ */
 userRoutes.get('/:user_id/friends', userController.getFriends);
 
 userRoutes.use('/:user_id/circle', require('../circle'));

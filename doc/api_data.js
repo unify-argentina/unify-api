@@ -36,81 +36,6 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/auth/link",
-    "title": "Link",
-    "group": "Autenticacion",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "email",
-            "description": "<p>Email del usuario</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "password",
-            "description": "<p>Password del usuario, debera tener 6 caracteres como minimo</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo de request",
-          "content": "{\n  \"email\":\"unify.argentina@gmail.com\",\n  \"password\":\"hola1234\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/local/index.js",
-    "groupTitle": "Autenticacion",
-    "name": "PostAuthLink",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/link"
-      }
-    ]
-  },
-  {
-    "type": "post",
     "url": "/auth/login",
     "title": "Login",
     "group": "Autenticacion",
@@ -683,6 +608,67 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:8080/api/user/:user_id"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/api/user/:user_id/friends",
+    "title": "Obtener los amigos del Usuario",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "friends",
+            "description": "<p>Listado de amigos de las redes sociales</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"friends\":{\n    \"facebook\":[\n      {\n        \"id\":\"10205153877979641\",\n        \"name\":\"Alejo García\",\n        \"picture\":\"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large\"\n      },\n      {\n        \"id\":\"104412116557897\",\n        \"name\":\"Juan Losa\",\n        \"picture\":\"https://graph.facebook.com/v2.3/104412116557897/picture?type=large\"\n      }\n    ],\n    \"instagram\":[\n      {\n        \"id\":\"230447982\",\n        \"name\":\"Repost\",\n        \"picture\":\"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xtp1/t51.2885-19/10693785_639461172835582_689422232_a.jpg\",\n        \"username\":\"repostapp\"\n      },\n      {\n        \"id\":\"1038713199\",\n        \"name\":\"All Blacks\",\n        \"picture\":\"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xap1/t51.2885-19/10475163_569454579827180_1557590857_a.jpg\",\n        \"username\":\"allblacks\"\n      }\n    ],\n    \"twitter\":[\n      {\n        \"id\":\"211089576\",\n        \"name\":\"Wunderlist\",\n        \"picture\":\"http://pbs.twimg.com/profile_images/494884573428207616/BjPVVsRm_normal.png\",\n        \"username\":\"Wunderlist\"\n      },\n      {\n        \"id\":\"525264466\",\n        \"name\":\"Papa Francisco\",\n        \"picture\":\"http://pbs.twimg.com/profile_images/507819548834148352/jyx1JOS-_normal.jpeg\",\n        \"username\":\"Pontifex_es\"\n      }\n    ]\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "GetApiUserUser_idFriends",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/friends"
       }
     ]
   },
