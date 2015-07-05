@@ -9,32 +9,71 @@ var request = require('request');
 var async = require('async');
 var config = require('../../../config');
 
+// constantes
+var TWITTER_USER_FOLLOWS_URL = 'https://api.twitter.com/1.1/friends/list.json';
+
+// Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Twitter
+var users = [];
+
 // Devuelve las personas a las que sigue en Instagram el usuario loggeado
 module.exports.getFriends = function(accessToken, twitterId, callback) {
-  // TODO chequear que si viene un paging, se haga
-  // Le pega a la API de Twitter y en el response, si fue exitoso, van a estar las personas a las que sigue
 
-  var oauth = {
-      consumer_key: config.TWITTER_KEY,
-      consumer_secret: config.TWITTER_SECRET,
-      token: accessToken.token,
-      token_secret: accessToken.tokenSecret
-    },
-    url = 'https://api.twitter.com/1.1/friends/list.json',
-    qs = {
-      cursor: -1,
-      user_id: twitterId,
-      skip_status: true,
-      include_user_entities: false
-    };
-
-  request.get({ url: url, oauth: oauth, qs: qs, json: true }, function(err, response) {
-    // Parseamos el body para tener un JSON, y después lo mapeamos para que sea homogéneo
-    // a las 3 redes sociales
-    async.map(response.body.users, mapUser, function(err, results) {
-      callback(err, results);
-    });
+  getTwitterData(TWITTER_USER_FOLLOWS_URL, -1, accessToken, twitterId, function(err, twitterUsers) {
+    if (err) {
+      callback(err, null);
+    }
+    else {
+      // Mapeamos los usuarios para que sean homogéneos a las 3 redes sociales
+      async.map(twitterUsers, mapUser, function (err, mappedUsers) {
+        var result = {
+          count: mappedUsers.length,
+          list: mappedUsers
+        };
+        callback(err, result);
+      });
+    }
   });
+};
+
+// Le pega a la API de Twitter y en el response, si fue exitoso, van a estar las personas a las que sigue de
+// forma paginada, por lo que será recursiva hasta que ya no haya paginado
+var getTwitterData = function(url, cursor, accessToken, twitterId, callback) {
+
+  var qs = {
+    cursor: cursor,
+    user_id: twitterId,
+    // La cantidad máxima de usuarios por request permitida por la API de Twitter
+    // https://dev.twitter.com/rest/reference/get/friends/list
+    count: 200,
+    skip_status: true,
+    include_user_entities: false
+  };
+
+  request.get({ url: url, oauth: getOauthParam(accessToken), qs: qs, json: true }, function(err, response) {
+    if (err || (response.body.errors && response.body.errors.length > 0)) {
+      callback(err ? err : response.body.errors[0].message, null);
+    }
+    // Si hay un paginado, vuelvo a llamar a la función
+    else if (response.body.next_cursor !== 0) {
+      users.push.apply(users, response.body.users);
+      getTwitterData(TWITTER_USER_FOLLOWS_URL, response.body.next_cursor, accessToken, twitterId, callback);
+    }
+    // Sino, ya tengo los usuarios y los devuelvo en el callback
+    else {
+      users.push.apply(users, response.body.users);
+      callback(null, users);
+    }
+  });
+};
+
+// Devuelve los parámetros necesarios de OAuth para hacer el request autenticado
+var getOauthParam = function(accessToken) {
+  return {
+    consumer_key: config.TWITTER_KEY,
+    consumer_secret: config.TWITTER_SECRET,
+    token: accessToken.token,
+    token_secret: accessToken.tokenSecret
+  };
 };
 
 // Recibe un objeto de usuario de Twitter y devuelve uno homogéneo a las 3 redes sociales

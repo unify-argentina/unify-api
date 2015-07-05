@@ -106,46 +106,56 @@ userRoutes.post('/:user_id', userController.updateUser);
  *
  *    {
  *      "friends":{
- *        "facebook":[
- *          {
- *            "id":"10205153877979641",
- *            "name":"Alejo García",
- *            "picture":"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large"
- *          },
- *          {
- *            "id":"104412116557897",
- *            "name":"Juan Losa",
- *            "picture":"https://graph.facebook.com/v2.3/104412116557897/picture?type=large"
- *          }
- *        ],
- *        "instagram":[
- *          {
- *            "id":"230447982",
- *            "name":"Repost",
- *            "picture":"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xtp1/t51.2885-19/10693785_639461172835582_689422232_a.jpg",
- *            "username":"repostapp"
- *          },
- *          {
- *            "id":"1038713199",
- *            "name":"All Blacks",
- *            "picture":"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xap1/t51.2885-19/10475163_569454579827180_1557590857_a.jpg",
- *            "username":"allblacks"
- *          }
- *        ],
- *        "twitter":[
- *          {
- *            "id":"211089576",
- *            "name":"Wunderlist",
- *            "picture":"http://pbs.twimg.com/profile_images/494884573428207616/BjPVVsRm_normal.png",
- *            "username":"Wunderlist"
- *          },
- *          {
- *            "id":"525264466",
- *            "name":"Papa Francisco",
- *            "picture":"http://pbs.twimg.com/profile_images/507819548834148352/jyx1JOS-_normal.jpeg",
- *            "username":"Pontifex_es"
- *          }
- *        ]
+ *        "facebook":{
+ *          "count":1,
+ *          "list":[
+ *            {
+ *              "id":"104412116557897",
+ *              "name":"Juan Losa",
+ *              "picture":"https://graph.facebook.com/v2.3/104412116557897/picture?type=large"
+ *            }
+ *          ]
+ *        },
+ *        "instagram":{
+ *          "count":2,
+ *          "list":[
+ *            {
+ *              "id":"1442169810",
+ *              "name":"marcelo tinelli",
+ *              "picture":"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11312440_693266217444492_2069397433_a.jpg",
+ *              "username":"cuervotinelli1"
+ *            },
+ *            {
+ *              "id":"1786223786",
+ *              "name":"Cucina Paradiso",
+ *              "picture":"https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xfp1/t51.2885-19/11055552_724116127706536_885942678_a.jpg",
+ *              "username":"cucinaparadisoba"
+ *            }
+ *          ]
+ *        },
+ *        "twitter":{
+ *          "count":3,
+ *          "list":[
+ *            {
+ *              "id":"2399412002",
+ *              "name":"StackCareersUK",
+ *              "picture":"http://pbs.twimg.com/profile_images/565838781853351937/P4RG_KjM_normal.png",
+ *              "username":"StackCareersUK"
+ *            },
+ *            {
+ *              "id":"1887042901",
+ *              "name":"Preguntados",
+ *              "picture":"http://pbs.twimg.com/profile_images/459753435336695808/y8G4IVrX_normal.png",
+ *              "username":"Preguntados_app"
+ *            },
+ *            {
+ *              "id":"211089576",
+ *              "name":"Wunderlist",
+ *              "picture":"http://pbs.twimg.com/profile_images/494884573428207616/BjPVVsRm_normal.png",
+ *              "username":"Wunderlist"
+ *            }
+ *          ]
+ *        }
  *      }
  *    }
  */
