@@ -81,7 +81,7 @@ var mapUser = function(twitterUser, callback) {
   var user = {
     id: twitterUser.id_str,
     name: twitterUser.name,
-    picture: twitterUser.profile_image_url,
+    picture: twitterUser.profile_image_url.replace('_normal', '_bigger'),
     username: twitterUser.screen_name
   };
   callback(null, user);

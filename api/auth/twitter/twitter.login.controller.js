@@ -160,7 +160,7 @@ var linkTwitterData = function(unifyUser, twitterProfile, accessToken) {
   unifyUser.twitter.id = twitterProfile.id;
   unifyUser.twitter.accessToken.token = accessToken.oauth_token;
   unifyUser.twitter.accessToken.tokenSecret = accessToken.oauth_token_secret;
-  unifyUser.twitter.picture = twitterProfile.profile_image_url.replace('_normal', '');
+  unifyUser.twitter.picture = twitterProfile.profile_image_url.replace('_normal', '_bigger');
   unifyUser.twitter.displayName = twitterProfile.name;
   unifyUser.twitter.userName = twitterProfile.screen_name;
 };
