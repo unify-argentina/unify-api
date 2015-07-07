@@ -66,18 +66,21 @@ module.exports.signup = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
+      console.log('Validation errors: ' + req.validationErrors());
       return res.status(401).send({ errors: req.validationErrors() });
     }
 
     // Validamos nosql injection
     if (typeof req.body.email === 'object' || typeof req.body.name === 'object' ||
       typeof req.body.password === 'object' || typeof req.body.confirm_password === 'object') {
+      console.log('Injection data');
       return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
     }
 
     // Si no encontramos un usuario, creamos un usuario nuevo y le generamos un token con el id del usuario
     User.findOne({ email: req.body.email }, function (err, existingUser) {
       if (existingUser) {
+        console.log('Email already taken: ' + req.body.email);
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
       else {
@@ -89,7 +92,8 @@ module.exports.signup = function (req, res) {
         });
         user.save(function (err) {
           if (err) {
-            return res.status(401).send({errors: [{msg: 'Error saving data ' + err}]});
+            console.log('Error saving data: ' + err);
+            return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
           }
           else {
             res.send({token: jwt.createJWT(user)});
