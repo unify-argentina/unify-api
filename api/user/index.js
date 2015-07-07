@@ -34,6 +34,10 @@ userRoutes.param('user_id', function(req, res, next, userId) {
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
  *
  * @apiParam {String} user_id Id del usuario
  *
@@ -59,6 +63,10 @@ userRoutes.get('/:user_id', userController.getUserById);
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
  *
  * @apiParam {String} user_id Id del usuario
  * @apiParam {String} email Email del usuario
@@ -96,6 +104,10 @@ userRoutes.post('/:user_id', userController.updateUser);
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
  *
  * @apiParam {String} user_id Id del usuario
  *

@@ -8,6 +8,7 @@
 
 // requires
 var jwt = require('./../util/jwt');
+var logger = require('../../../config/logger')(__filename);
 
 // modelos
 var User = require('../../user/user.model');
@@ -23,17 +24,20 @@ module.exports.login = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
       return res.status(401).send({ errors: req.validationErrors() });
     }
 
     // Validamos nosql injection
     if (typeof req.body.email === 'object' || typeof req.body.password === 'object') {
+      logger.warn('No SQL injection - email: ' + req.body.email + ' password: ' + req.body.password);
       return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
     }
 
     // Si no encontramos un usuario, no existe, error
     User.findOne({ email: req.body.email }, '+password', function (err, user) {
       if (!user) {
+        logger.warn('User not found: ' + req.body.email);
         return res.status(401).send({ errors: [{ msg: "User doesn't exist" }] });
       }
       else {
@@ -41,9 +45,11 @@ module.exports.login = function (req, res) {
         user.comparePassword(req.body.password, function (err, isMatch) {
           // Si coincide, enviamos el token con el id del usuario loggeado
           if (!isMatch) {
+            logger.warn('Wrong password for user: ' + user.toString());
             return res.status(401).send({errors: [{msg: 'Wrong password'}]});
           }
           else {
+            logger.info('User logged in successfully: ' + user.toString());
             res.send({token: jwt.createJWT(user)});
           }
         });
@@ -66,21 +72,22 @@ module.exports.signup = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
-      console.log('Validation errors: ' + req.validationErrors());
+      logger.warn('Validation errors: ' + req.validationErrors());
       return res.status(401).send({ errors: req.validationErrors() });
     }
 
     // Validamos nosql injection
     if (typeof req.body.email === 'object' || typeof req.body.name === 'object' ||
       typeof req.body.password === 'object' || typeof req.body.confirm_password === 'object') {
-      console.log('Injection data');
+      logger.warn('No SQL injection - email: ' + req.body.email + ' password: ' + req.body.password +
+                  ' name: ' + req.body.name + ' confirmPassword: ' + req.body.confirm_password);
       return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
     }
 
     // Si no encontramos un usuario, creamos un usuario nuevo y le generamos un token con el id del usuario
     User.findOne({ email: req.body.email }, function (err, existingUser) {
       if (existingUser) {
-        console.log('Email already taken: ' + req.body.email);
+        logger.warn('User already exists: ' + existingUser);
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
       else {
@@ -92,7 +99,7 @@ module.exports.signup = function (req, res) {
         });
         user.save(function (err) {
           if (err) {
-            console.log('Error saving data: ' + err);
+            logger.error(err);
             return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
           }
           else {

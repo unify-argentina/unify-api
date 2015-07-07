@@ -8,6 +8,7 @@
 var util = require('util');
 var request = require('request');
 var async = require('async');
+var logger = require('../../../config/logger')(__filename);
 
 // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Facebook
 var users = [];
@@ -28,6 +29,7 @@ module.exports.getFriends = function (accessToken, facebookId, callback) {
           count: mappedUsers.length,
           list: mappedUsers
         };
+        logger.info('Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }
@@ -38,8 +40,10 @@ module.exports.getFriends = function (accessToken, facebookId, callback) {
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
 var getFacebookData = function(url, callback) {
 
+  logger.info('URL: ' + url);
   request.get({ url: url, json: true }, function(err, response) {
     if (err || response.body.error) {
+      logger.error('Error: ' + err ? err : response.body.error.message);
       callback(err ? err : response.body.error.message, null);
     }
     // Si hay un paginado, vuelvo a llamar a la función

@@ -112,4 +112,8 @@ userSchema.methods.hasLinkedAccount = function(account) {
   return hasFields;
 };
 
+userSchema.methods.toString = function() {
+  return 'Name: ' + this.name + ' email: ' + this.email + ' id: ' + this._id;
+};
+
 module.exports = mongoose.model('User', userSchema);

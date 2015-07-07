@@ -9,6 +9,7 @@ var facebookFriends = require('../auth/facebook/facebook.friends.controller');
 var instagramFriends = require('../auth/instagram/instagram.friends.controller');
 var twitterFriends = require('../auth/twitter/twitter.friends.controller');
 var async = require('async');
+var logger = require('../../config/logger')(__filename);
 
 // modelos
 var User = require('./user.model.js');
@@ -22,9 +23,11 @@ module.exports.getUserById = function(req, res) {
       .populate('mainCircle')
       .exec(function(err, user) {
         if (err) {
+          logger.error('Unable to find user with id: ' + req.params.user_id);
           return res.status(401).send({ errors: [{ msg: 'Error finding user with id ' + req.params.id }] });
         }
         else {
+          logger.info('Get user by id: ' + req.params.user_id);
           return res.status(200).send({ user: user });
         }
       });
@@ -43,18 +46,21 @@ module.exports.updateUser = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
       return res.status(401).send({ errors: req.validationErrors() });
     }
 
     // Validamos nosql injection
     if (typeof req.body.email === 'object' || (typeof req.body.name && typeof req.body.name === 'object') ||
       typeof req.body.password === 'object' || typeof req.body.confirm_password === 'object') {
+      logger.warn('No SQL injection - email: ' + req.body.email + ' password: ' + req.body.password);
       return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
     }
 
     // Si no encontramos un usuario con ese email, está disponible
     User.findOne({ email: req.body.email }, function (err, existingUser) {
       if (existingUser) {
+        logger.info('User already exists: ' + existingUser);
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
       else {
@@ -63,6 +69,7 @@ module.exports.updateUser = function (req, res) {
           .populate('mainCircle')
           .exec(function (err, user) {
             if (err || !user) {
+              logger.warn('User not found: ' + req.user);
               return res.status(400).send({ errors: [{ msg: 'User not found' }] });
             }
             else {
@@ -71,11 +78,13 @@ module.exports.updateUser = function (req, res) {
               user.name = req.body.name || user.name;
               user.save(function (err) {
                 if (err) {
-                  return res.status(401).send({errors: [{msg: 'Error saving data ' + err}]});
+                  logger.error(err);
+                  return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
                 }
                 else {
                   user.password = undefined;
-                  return res.send({user: user});
+                  logger.info('Updated user: ' + user.toString());
+                  return res.send({ user: user });
                 }
               });
             }
@@ -91,11 +100,13 @@ module.exports.getFriends = function (req, res) {
   process.nextTick(function () {
     User.findOne({ _id: req.user }, selectFields(), function (err, user) {
       if (err || !user) {
+        logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
         // Una vez que encontramos al usuario, mandamos a consultar los amigos por cada red social que tenga
         // asociada el usuario
+        logger.info('Searching for friends');
         async.parallel({
           facebook: function(callback) {
             if (user.hasLinkedAccount('facebook')) {
@@ -105,7 +116,7 @@ module.exports.getFriends = function (req, res) {
             }
             // Si no tiene linkeada la cuenta de Facebook, no devolvemos nada
             else {
-              callback(null, undefined);
+              callback(null, null);
             }
           },
           instagram: function(callback) {
@@ -116,7 +127,7 @@ module.exports.getFriends = function (req, res) {
             }
             // Si no tiene linkeada la cuenta de Instagram, no devolvemos nada
             else {
-              callback(null, undefined);
+              callback(null, null);
             }
           },
           twitter: function(callback) {
@@ -127,13 +138,14 @@ module.exports.getFriends = function (req, res) {
             }
             // Si no tiene linkeada la cuenta de Twitter, no devolvemos nada
             else {
-              callback(null, undefined);
+              callback(null, null);
             }
           }
         },
         // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
         function(err, results) {
           if (err) {
+            logger.warn('Error searching friends ' + err);
             return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user friends' }] });
           }
           else {

@@ -43,6 +43,24 @@ twitterRouter.post('/', twitterController.linkAccount);
  */
 twitterRouter.get('/callback', twitterController.handleCallback);
 
+/**
+ * @api {post} /auth/twitter/unlink Twitter unlink
+ * @apiGroup Social
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiSuccess {String} token Token de acceso valido
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
+ *     }
+ */
 twitterRouter.post('/unlink', jwt.ensureAuthenticated, twitterController.unlinkAccount);
 
 module.exports = twitterRouter;

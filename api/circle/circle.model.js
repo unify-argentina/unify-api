@@ -15,4 +15,8 @@ var circleSchema = mongoose.Schema({
   contacts: [{ type: ObjectId, ref: 'Contact' }]
 });
 
+circleSchema.methods.toString = function() {
+  return 'Name: ' + this.name + ' parent: ' + this.parent;
+};
+
 module.exports = mongoose.model('Circle', circleSchema);

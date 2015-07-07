@@ -12,6 +12,10 @@ var circleController = require('./circle.controller');
  * @apiGroup Circulos
  *
  * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
  *
  * @apiParam {String} id Id del usuario
  * @apiParam {String} name Nombre del circulo a crear
