@@ -16,22 +16,7 @@ var Contact = require('../contact/contact.model');
 module.exports.createCircle = function(req, res) {
 
   process.nextTick(function() {
-    req.assert('name', 'Required').notEmpty();
-    req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
-    req.assert('parent_id', 'Required').notEmpty();
-    req.assert('parent_id', 'Only alphanumeric characters are allowed').isAscii();
-
-    // Validamos errores
-    if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
-      return res.status(401).send({ errors: req.validationErrors()});
-    }
-
-    // Validamos nosql injection
-    if (typeof req.body.name === 'object' || typeof req.body.parent_id === 'object') {
-      logger.warn('No SQL injection - name: ' + req.body.name+ ' parentId: ' + req.body.parent_id);
-      return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
-    }
+    validateParams(req, res);
 
     // Primero encontramos al usuario loggeado
     User.findOne({ _id: req.user }, function(err, user) {
@@ -44,23 +29,10 @@ module.exports.createCircle = function(req, res) {
         user.hasCircleWithId(req.body.parent_id, function(success, foundCircle) {
           if (success) {
             var circle = new Circle();
-            circle.name = req.body.name;
-            circle.parent = req.body.parent_id;
-            var ancestors = foundCircle.ancestors;
-            ancestors.push(req.body.parent_id);
-            circle.ancestors = ancestors;
-            circle.save(function(err) {
-              if (err) {
-                logger.err(err);
-                return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
-              }
-              else {
-                logger.debug('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
-                return res.status(200).send({ circle: circle });
-              }
-            });
+            saveCircleData(req, res, circle, foundCircle);
           }
           else {
+            logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
             return res.status(401).send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
           }
         });
@@ -82,5 +54,81 @@ module.exports.getCircleById = function(req, res) {
         return res.status(200).send({ circle: circle });
       }
     });
+  });
+};
+
+// Se encarga de actualizar el circulo en base al id que se le pase por parámetro
+module.exports.updateCircle = function (req, res) {
+
+  process.nextTick(function () {
+    validateParams(req, res);
+
+    // Encontramos el círculo pasado por parámetro para cambiarle el parent y el nombre
+    Circle.findOne({ _id: req.circle }, function(err, circle) {
+      if (err || !circle) {
+        logger.warn('Circle not found: ' + req.circle);
+        return res.status(400).send({ errors: [{ msg: 'Circle not found' }] });
+      }
+      else {
+        // Luego encontramos al usuario y chequeamos que el parent_id pertenezca a un círculo del usuario
+        User.findOne({ _id: req.user }, function(err, user) {
+          if (err || !user) {
+            logger.warn('User not found: ' + req.user);
+            return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+          }
+          else {
+            // Luego, si el parent_id existe y pertenece al usuario loggeado, actualizamos el subcírculo
+            user.hasCircleWithId(req.body.parent_id, function(success, foundCircle) {
+              if (success) {
+                saveCircleData(req, res, circle, foundCircle);
+              }
+              else {
+                return res.status(401)
+                  .send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+};
+
+// Valida que los parámetros sean correctos
+var validateParams = function(req, res) {
+  req.assert('name', 'Required').notEmpty();
+  req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
+  req.assert('parent_id', 'Required').notEmpty();
+  req.assert('parent_id', 'Only alphanumeric characters are allowed').isAscii();
+
+  // Validamos errores
+  if (req.validationErrors()) {
+    logger.warn('Validation errors: ' + req.validationErrors());
+    return res.status(401).send({ errors: req.validationErrors()});
+  }
+
+  // Validamos nosql injection
+  if (typeof req.body.name === 'object' || typeof req.body.parent_id === 'object') {
+    logger.warn('No SQL injection - name: ' + req.body.name+ ' parentId: ' + req.body.parent_id);
+    return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
+  }
+};
+
+// Salva el círculo pasado por parámetro y lo envía al cliente
+var saveCircleData = function(req, res, circle, foundCircle) {
+  circle.name = req.body.name;
+  circle.parent = req.body.parent_id;
+  var ancestors = foundCircle.ancestors;
+  ancestors.push(req.body.parent_id);
+  circle.ancestors = ancestors;
+  circle.save(function(err) {
+    if (err) {
+      logger.err(err);
+      return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
+    }
+    else {
+      logger.debug('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
+      return res.status(200).send({ circle: circle });
+    }
   });
 };

@@ -113,4 +113,6 @@ circleRoutes.post('/', circleController.createCircle);
  */
 circleRoutes.get('/:circle_id', circleController.getCircleById);
 
+circleRoutes.put('/:circle_id', circleController.updateCircle);
+
 module.exports = circleRoutes;
