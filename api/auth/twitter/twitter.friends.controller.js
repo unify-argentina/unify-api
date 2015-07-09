@@ -25,7 +25,7 @@ module.exports.getFriends = function(accessToken, twitterId, callback) {
     }
     else {
       // Mapeamos los usuarios para que sean homogéneos a las 3 redes sociales
-      async.map(twitterUsers, mapUser, function (err, mappedUsers) {
+      async.map(twitterUsers, mapUser, function(err, mappedUsers) {
         var result = {
           count: mappedUsers.length,
           list: mappedUsers

@@ -5,9 +5,9 @@
 'use strict';
 
 // TODO
-module.exports.createContact = function (req, res) {
+module.exports.createContact = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     return res.sendStatus(200);
   });
 };

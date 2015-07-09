@@ -60,13 +60,13 @@ var userSchema = mongoose.Schema({
 });
 
 // Este 'hook' se encarga de hacer un hash de la password para guardarla
-userSchema.pre('save', function (next) {
+userSchema.pre('save', function(next) {
   var user = this;
   if (!user.isModified('password')) {
     return next();
   }
-  bcrypt.genSalt(10, function (err, salt) {
-    bcrypt.hash(user.password, salt, function (err, hash) {
+  bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(user.password, salt, function(err, hash) {
       user.password = hash;
       next();
     });
@@ -103,8 +103,8 @@ userSchema.pre('remove', function(next) {
 });
 
 // Este método compara la password que se pasa por parámetro con la hasheada
-userSchema.methods.comparePassword = function (password, done) {
-  bcrypt.compare(password, this.password, function (err, isMatch) {
+userSchema.methods.comparePassword = function(password, done) {
+  bcrypt.compare(password, this.password, function(err, isMatch) {
     done(err, isMatch);
   });
 };

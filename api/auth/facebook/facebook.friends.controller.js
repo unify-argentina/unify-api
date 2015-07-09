@@ -14,7 +14,7 @@ var logger = require('../../../config/logger');
 var users = [];
 
 // Devuelve los amigos de Facebook del usuario loggeado
-module.exports.getFriends = function (accessToken, facebookId, callback) {
+module.exports.getFriends = function(accessToken, facebookId, callback) {
 
   var url = util.format('https://graph.facebook.com/v2.3/%s/friends?access_token=%s&limit=1000', facebookId, accessToken);
 

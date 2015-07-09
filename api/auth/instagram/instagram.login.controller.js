@@ -17,9 +17,9 @@ var User = require('../../user/user.model');
 var ACCESS_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
 
 // Desconecta la cuenta de Instagram de la de Unify
-module.exports.unlinkAccount = function (req, res) {
+module.exports.unlinkAccount = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});
@@ -33,7 +33,7 @@ module.exports.unlinkAccount = function (req, res) {
 };
 
 // Maneja la lógica principal del login con Instagram
-module.exports.linkAccount = function (req, res) {
+module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
     // Intercambiamos el código de autorización para obtener el access token
@@ -69,7 +69,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
       catch(err) {
         return res.status(401).send({ errors: [{ msg: err.message }] });
       }
-      User.findById(payload.sub, function (err, user) {
+      User.findById(payload.sub, function(err, user) {
         if (err || !user) {
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
@@ -109,7 +109,7 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, accessToken) {
 
 // Salva el usuario en la base de datos y devuelve un Json Web Token si todo salió bien
 var saveUser = function(res, user) {
-  user.save(function (err) {
+  user.save(function(err) {
     if (err) {
       return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }

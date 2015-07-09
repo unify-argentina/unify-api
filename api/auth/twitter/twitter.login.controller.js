@@ -20,9 +20,9 @@ var ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token';
 var PROFILE_URL = 'https://api.twitter.com/1.1/users/show.json?screen_name=';
 
 // Desconecta la cuenta de Twitter de la de Unify
-module.exports.unlinkAccount = function (req, res) {
+module.exports.unlinkAccount = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});
@@ -44,7 +44,7 @@ module.exports.handleCallback = function(req, res) {
 };
 
 // Chequea que el request tenga el oauth token y el oauth verifier, sino los tiene los pide
-module.exports.linkAccount = function (req, res) {
+module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
     // Request inicial del cliente
@@ -91,7 +91,7 @@ var handleTokenRequest = function(req, res) {
 
 // Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessToken) {
-  User.findOne({ 'twitter.id': twitterProfile.id }, function (err, existingUser) {
+  User.findOne({ 'twitter.id': twitterProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
       return res.send({ token: jwt.createJWT(existingUser) });
@@ -105,7 +105,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessTo
       catch(err) {
         return res.status(401).send({ errors: [{ msg: err.message }] });
       }
-      User.findById(payload.sub, function (err, user) {
+      User.findById(payload.sub, function(err, user) {
         if (err || !user) {
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
@@ -145,7 +145,7 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, accessToken) {
 
 // Salva el usuario en la base de datos y devuelve un Json Web Token si todo salió bien
 var saveUser = function(res, user) {
-  user.save(function (err) {
+  user.save(function(err) {
     if (err) {
       return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }

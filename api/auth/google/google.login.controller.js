@@ -18,9 +18,9 @@ var ACCESS_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token';
 var PEOPLE_API_URL = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
 
 // Desconecta la cuenta de Google de la de Unify
-module.exports.unlinkAccount = function (req, res) {
+module.exports.unlinkAccount = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -34,7 +34,7 @@ module.exports.unlinkAccount = function (req, res) {
 };
 
 // Maneja la lógica principal del login con Google
-module.exports.linkAccount = function (req, res) {
+module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
     // Primero intercambiamos el código de autorización para obtener el access token
@@ -74,7 +74,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, accessTok
       catch(err) {
         return res.status(401).send({ errors: [{ msg: err.message }] });
       }
-      User.findById(payload.sub, function (err, user) {
+      User.findById(payload.sub, function(err, user) {
         if (err || !user) {
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
@@ -123,7 +123,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, accessToken) {
 
 // Salva el usuario en la base de datos y devuelve un Json Web Token si todo salió bien
 var saveUser = function(res, user) {
-  user.save(function (err) {
+  user.save(function(err) {
     if (err) {
       return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }

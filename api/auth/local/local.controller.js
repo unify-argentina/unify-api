@@ -14,9 +14,9 @@ var logger = require('../../../config/logger');
 var User = require('../../user/user.model');
 
 // Maneja la lógica necesaria para el login de un usuario Unify
-module.exports.login = function (req, res) {
+module.exports.login = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     req.assert('email', 'Required').notEmpty();
     req.assert('email', 'Valid email required').isEmail();
     req.assert('password', 'Required').notEmpty();
@@ -35,14 +35,14 @@ module.exports.login = function (req, res) {
     }
 
     // Si no encontramos un usuario, no existe, error
-    User.findOne({ email: req.body.email }, '+password', function (err, user) {
+    User.findOne({ email: req.body.email }, '+password', function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.body.email);
         return res.status(401).send({ errors: [{ msg: "User doesn't exist" }] });
       }
       else {
         // Si lo encontramos comparamos passwords
-        user.comparePassword(req.body.password, function (err, isMatch) {
+        user.comparePassword(req.body.password, function(err, isMatch) {
           // Si coincide, enviamos el token con el id del usuario loggeado
           if (!isMatch) {
             logger.warn('Wrong password for user: ' + user.toString());
@@ -59,9 +59,9 @@ module.exports.login = function (req, res) {
 };
 
 // Maneja la lógica necesaria para el signup de un usuario Unify
-module.exports.signup = function (req, res) {
+module.exports.signup = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     req.assert('email', 'Required').notEmpty();
     req.assert('email', 'Valid email required').isEmail();
     req.assert('name', 'Required').notEmpty();
@@ -85,7 +85,7 @@ module.exports.signup = function (req, res) {
     }
 
     // Si no encontramos un usuario, creamos un usuario nuevo y le generamos un token con el id del usuario
-    User.findOne({ email: req.body.email }, function (err, existingUser) {
+    User.findOne({ email: req.body.email }, function(err, existingUser) {
       if (existingUser) {
         logger.warn('User already exists: ' + existingUser);
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
@@ -97,7 +97,7 @@ module.exports.signup = function (req, res) {
           password: req.body.password,
           validLocalUser: true
         });
-        user.save(function (err) {
+        user.save(function(err) {
           if (err) {
             logger.error(err);
             return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });

@@ -34,7 +34,7 @@ module.exports.createCircle = function(req, res) {
     }
 
     // Primero encontramos al usuario loggeado
-    User.findOne({ _id: req.user }, function (err, user) {
+    User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -70,9 +70,9 @@ module.exports.createCircle = function(req, res) {
 };
 
 // Devuelve el círculo pedido
-module.exports.getCircleById = function (req, res) {
+module.exports.getCircleById = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     Circle.findOne({ _id: req.circle }, function(err, circle) {
       if (err || !circle) {
         logger.warn('Circle not found: ' + req.circle);

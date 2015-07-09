@@ -35,9 +35,9 @@ module.exports.getUserById = function(req, res) {
 };
 
 // Se encarga de actualizar el usuario en base al id que se le pase por parámetro
-module.exports.updateUser = function (req, res) {
+module.exports.updateUser = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     req.assert('email', 'Required').notEmpty();
     req.assert('email', 'Valid email required').isEmail();
     req.assert('password', 'Password should have at least 6 characters of length').len(6, 100);
@@ -58,7 +58,7 @@ module.exports.updateUser = function (req, res) {
     }
 
     // Si no encontramos un usuario con ese email, está disponible
-    User.findOne({ email: req.body.email }, function (err, existingUser) {
+    User.findOne({ email: req.body.email }, function(err, existingUser) {
       if (existingUser) {
         logger.debug('User already exists: ' + existingUser);
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
@@ -67,7 +67,7 @@ module.exports.updateUser = function (req, res) {
         // Encontramos un usuario con el id del token y le actualizamos los datos
         User.findOne({ _id: req.user })
           .populate('mainCircle')
-          .exec(function (err, user) {
+          .exec(function(err, user) {
             if (err || !user) {
               logger.warn('User not found: ' + req.user);
               return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -76,7 +76,7 @@ module.exports.updateUser = function (req, res) {
               user.email = req.body.email;
               user.password = req.body.password;
               user.name = req.body.name || user.name;
-              user.save(function (err) {
+              user.save(function(err) {
                 if (err) {
                   logger.error(err);
                   return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
@@ -95,10 +95,10 @@ module.exports.updateUser = function (req, res) {
 };
 
 // Se encarga de devolver los amigos de las redes sociales que tenga conectadas
-module.exports.getFriends = function (req, res) {
+module.exports.getFriends = function(req, res) {
 
-  process.nextTick(function () {
-    User.findOne({ _id: req.user }, selectFields(), function (err, user) {
+  process.nextTick(function() {
+    User.findOne({ _id: req.user }, selectFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -110,7 +110,7 @@ module.exports.getFriends = function (req, res) {
         async.parallel({
           facebook: function(callback) {
             if (user.hasLinkedAccount('facebook')) {
-              facebookFriends.getFriends(user.facebook.accessToken, user.facebook.id, function (err, results) {
+              facebookFriends.getFriends(user.facebook.accessToken, user.facebook.id, function(err, results) {
                 callback(err, results);
               });
             }

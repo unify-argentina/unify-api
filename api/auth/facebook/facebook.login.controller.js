@@ -19,9 +19,9 @@ var ACCESS_TOKEN_URL = 'https://graph.facebook.com/v2.3/oauth/access_token';
 var GRAPH_USER_URL = 'https://graph.facebook.com/v2.3/me';
 
 // Desconecta la cuenta de Facebook de la de Unify
-module.exports.unlinkAccount = function (req, res) {
+module.exports.unlinkAccount = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
@@ -37,13 +37,13 @@ module.exports.unlinkAccount = function (req, res) {
 };
 
 // Maneja la lógica principal del login con Facebook
-module.exports.linkAccount = function (req, res) {
+module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
     var qs = getAccessTokenParams(req);
     logger.debug('Access token params: ' + JSON.stringify(qs));
     // Primero intercambiamos el código de autorización para obtener el access token
-    request.get({ url: ACCESS_TOKEN_URL, qs: qs, json: true }, function (err, response, accessToken) {
+    request.get({ url: ACCESS_TOKEN_URL, qs: qs, json: true }, function(err, response, accessToken) {
       if (response.statusCode !== 200) {
         logger.error(accessToken.error.message);
         return res.status(response.statusCode).send({ errors: [{ msg: accessToken.error.message }] });
@@ -51,7 +51,7 @@ module.exports.linkAccount = function (req, res) {
 
       logger.debug('Access token: ' + JSON.stringify(accessToken));
       // Una vez que tenemos el accessToken, obtenemos información del usuario actual
-      request.get({ url: GRAPH_USER_URL, qs: accessToken, json: true }, function (err, response, profile) {
+      request.get({ url: GRAPH_USER_URL, qs: accessToken, json: true }, function(err, response, profile) {
         if (response.statusCode !== 200) {
           logger.error(accessToken.error.message);
           return res.status(response.statusCode).send({ errors: [{ msg: accessToken.error.message }] });
@@ -75,7 +75,7 @@ module.exports.linkAccount = function (req, res) {
 
 // Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessToken) {
-  User.findOne({ 'facebook.id': facebookProfile.id }, function (err, existingUser) {
+  User.findOne({ 'facebook.id': facebookProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
       logger.debug('Existing facebook user: ' + existingUser.toString());
@@ -90,7 +90,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
       catch(err) {
         return res.status(401).send({ errors: [{ msg: err.message }] });
       }
-      User.findById(payload.sub, function (err, user) {
+      User.findById(payload.sub, function(err, user) {
         if (err || !user) {
           logger.warn('User not found: ' + payload.sub);
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -113,7 +113,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
 
 // Maneja el caso de un usuario no autenticado
 var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
-  User.findOne({ 'facebook.id': facebookProfile.id }, function (err, existingFacebookUser) {
+  User.findOne({ 'facebook.id': facebookProfile.id }, function(err, existingFacebookUser) {
     // Si encuentra a uno con el id de Facebook, es un usuario registrado con Facebook
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingFacebookUser) {
@@ -145,7 +145,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
 
 // Salva el usuario en la base de datos y devuelve un Json Web Token si todo salió bien
 var saveUser = function(res, user) {
-  user.save(function (err) {
+  user.save(function(err) {
     if (err) {
       return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }

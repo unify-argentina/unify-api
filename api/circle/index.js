@@ -22,7 +22,7 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
   }
 
   // Buscamos el usuario del request y verificamos que el circle_id pertenezca a este usuario
-  User.findOne({ _id: req.user }, function (err, user) {
+  User.findOne({ _id: req.user }, function(err, user) {
     if (err || !user) {
       logger.warn('User not found: ' + req.user);
       return res.status(400).send({ errors: [{ msg: 'User not found' }] });

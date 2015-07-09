@@ -12,7 +12,7 @@ var config = require('../../../config');
 var logger = require('../../../config/logger');
 
 // Este método crea un JSON Web Token
-module.exports.createJWT = function (user) {
+module.exports.createJWT = function(user) {
   var payload = {
     sub: user._id,
     iat: moment().unix(),
