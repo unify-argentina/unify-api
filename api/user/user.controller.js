@@ -9,7 +9,7 @@ var facebookFriends = require('../auth/facebook/facebook.friends.controller');
 var instagramFriends = require('../auth/instagram/instagram.friends.controller');
 var twitterFriends = require('../auth/twitter/twitter.friends.controller');
 var async = require('async');
-var logger = require('../../config/logger')(__filename);
+var logger = require('../../config/logger');
 
 // modelos
 var User = require('./user.model.js');
@@ -27,7 +27,7 @@ module.exports.getUserById = function(req, res) {
           return res.status(401).send({ errors: [{ msg: 'Error finding user with id ' + req.params.id }] });
         }
         else {
-          logger.info('Get user by id: ' + req.params.user_id);
+          logger.debug('Get user by id: ' + req.params.user_id);
           return res.status(200).send({ user: user });
         }
       });
@@ -60,7 +60,7 @@ module.exports.updateUser = function (req, res) {
     // Si no encontramos un usuario con ese email, está disponible
     User.findOne({ email: req.body.email }, function (err, existingUser) {
       if (existingUser) {
-        logger.info('User already exists: ' + existingUser);
+        logger.debug('User already exists: ' + existingUser);
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
       else {
@@ -83,7 +83,7 @@ module.exports.updateUser = function (req, res) {
                 }
                 else {
                   user.password = undefined;
-                  logger.info('Updated user: ' + user.toString());
+                  logger.debug('Updated user: ' + user.toString());
                   return res.send({ user: user });
                 }
               });
@@ -106,7 +106,7 @@ module.exports.getFriends = function (req, res) {
       else {
         // Una vez que encontramos al usuario, mandamos a consultar los amigos por cada red social que tenga
         // asociada el usuario
-        logger.info('Searching for friends');
+        logger.debug('Searching for friends');
         async.parallel({
           facebook: function(callback) {
             if (user.hasLinkedAccount('facebook')) {

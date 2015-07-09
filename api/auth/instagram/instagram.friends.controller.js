@@ -8,7 +8,7 @@
 var util = require('util');
 var request = require('request');
 var async = require('async');
-var logger = require('../../../config/logger')(__filename);
+var logger = require('../../../config/logger');
 
 // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Instagram
 var users = [];
@@ -31,7 +31,7 @@ module.exports.getFriends = function(accessToken, instagramId, callback) {
           count: mappedUsers.length,
           list: mappedUsers
         };
-        logger.info('Friends: ' + JSON.stringify(result));
+        logger.debug('Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }
@@ -42,7 +42,7 @@ module.exports.getFriends = function(accessToken, instagramId, callback) {
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
 var getInstagramData = function(url, callback) {
 
-  logger.info('URL: ' + url);
+  logger.debug('URL: ' + url);
   request.get({ url: url, json: true }, function(err, response) {
     if (!response.body.meta) {
       logger.error('Could not get instagram friends');

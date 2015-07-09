@@ -12,6 +12,7 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
 var Circle = require('../circle/circle.model');
 var bcrypt = require('bcryptjs');
+var logger = require('../../config/logger');
 
 var userSchema = mongoose.Schema({
 
@@ -91,8 +92,14 @@ userSchema.post('save', function(user, next) {
 
 // Este 'hook' se encarga de eliminar el círculo principal del usuario cuando este se elimina
 userSchema.pre('remove', function(next) {
-  Circle.remove({ _id: this.mainCircle }).exec();
-  next();
+  Circle.findOne({ _id: this.mainCircle }, function(err, circle) {
+    if (err) {
+      next();
+    }
+    else {
+      circle.remove(next);
+    }
+  });
 });
 
 // Este método compara la password que se pasa por parámetro con la hasheada
@@ -110,6 +117,31 @@ userSchema.methods.hasLinkedAccount = function(account) {
     hasFields = hasFields && this.twitter.accessToken.token && this.twitter.accessToken.tokenSecret;
   }
   return hasFields;
+};
+
+// Este método verifica que el circleId pasado por parámetro sea el id de un
+// círculo o subcírculo del usuario
+userSchema.methods.hasCircleWithId = function(circleId, callback) {
+  // Primero buscamos el círculo principal del usuario
+  var self = this;
+  logger.debug('Trying to find a circle with id=' + circleId);
+  Circle.findOne({ _id: self.mainCircle }, function(err, circle) {
+    if (err || !circle) {
+      callback(false, null);
+    }
+    else {
+      // Para luego poder verificar que el círculo pasado por parámetro
+      // tiene como ancestro al círculo principal
+      Circle.findOne({ _id: circleId }, function(err, subCircle) {
+        var exists = !err && subCircle !== null;
+        var isMainCircle = exists && subCircle.ancestors.length === 0 && subCircle._id.equals(self.mainCircle);
+        var isValidSubcircle = exists && subCircle.ancestors.length > 0 && subCircle.hasAncestor(circle);
+        var result = isMainCircle || isValidSubcircle;
+        logger.debug('Circle=' + circleId + ' belongs to current user=' + self._id + ' ? result=' + result);
+        callback(result, subCircle);
+      });
+    }
+  });
 };
 
 userSchema.methods.toString = function() {

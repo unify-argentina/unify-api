@@ -8,7 +8,7 @@
 var request = require('request');
 var async = require('async');
 var config = require('../../../config');
-var logger = require('../../../config/logger')(__filename);
+var logger = require('../../../config/logger');
 
 // constantes
 var TWITTER_USER_FOLLOWS_URL = 'https://api.twitter.com/1.1/friends/list.json';
@@ -30,7 +30,7 @@ module.exports.getFriends = function(accessToken, twitterId, callback) {
           count: mappedUsers.length,
           list: mappedUsers
         };
-        logger.info('Friends: ' + JSON.stringify(result));
+        logger.debug('Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }
@@ -51,7 +51,7 @@ var getTwitterData = function(url, cursor, accessToken, twitterId, callback) {
     include_user_entities: false
   };
 
-  logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
+  logger.debug('URL: ' + url + 'qs=' + JSON.stringify(qs));
   request.get({ url: url, oauth: getOauthParam(accessToken), qs: qs, json: true }, function(err, response) {
     if (err || (response.body.errors && response.body.errors.length > 0)) {
       logger.error('Error: ' + err ? err : response.body.errors[0].message);

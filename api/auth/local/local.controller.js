@@ -8,7 +8,7 @@
 
 // requires
 var jwt = require('./../util/jwt');
-var logger = require('../../../config/logger')(__filename);
+var logger = require('../../../config/logger');
 
 // modelos
 var User = require('../../user/user.model');
@@ -36,7 +36,7 @@ module.exports.login = function (req, res) {
 
     // Si no encontramos un usuario, no existe, error
     User.findOne({ email: req.body.email }, '+password', function (err, user) {
-      if (!user) {
+      if (err || !user) {
         logger.warn('User not found: ' + req.body.email);
         return res.status(401).send({ errors: [{ msg: "User doesn't exist" }] });
       }
@@ -49,7 +49,7 @@ module.exports.login = function (req, res) {
             return res.status(401).send({errors: [{msg: 'Wrong password'}]});
           }
           else {
-            logger.info('User logged in successfully: ' + user.toString());
+            logger.debug('User logged in successfully: ' + user.toString());
             res.send({token: jwt.createJWT(user)});
           }
         });

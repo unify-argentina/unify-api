@@ -9,7 +9,7 @@
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
 var config = require('../../../config');
-var logger = require('../../../config/logger')(__filename);
+var logger = require('../../../config/logger');
 
 // Este método crea un JSON Web Token
 module.exports.createJWT = function (user) {
@@ -19,7 +19,7 @@ module.exports.createJWT = function (user) {
     exp: moment().add(30, 'days').unix()
   };
   var token = jwt.sign(payload, config.TOKEN_SECRET);
-  logger.info('User=' + user._id + ' token=' + token);
+  logger.debug('User=' + user._id + ' token=' + token);
   return token;
 };
 
@@ -52,7 +52,7 @@ module.exports.ensureAuthenticated = function(req, res, next) {
       return res.status(401).send({ errors: [{ msg: err.message }] });
     }
 
-    logger.info('Token payload: ' + JSON.stringify(payload));
+    logger.debug('Token payload: ' + JSON.stringify(payload));
     if (payload.exp <= moment().unix()) {
       logger.warn('Token has expired: ' + payload.exp + ' is older than ' + moment().unix());
       return res.status(401).send({ errors: [{ msg: 'Token has expired' }] });

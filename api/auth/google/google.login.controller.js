@@ -23,7 +23,7 @@ module.exports.unlinkAccount = function (req, res) {
   process.nextTick(function () {
     User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
-        return res.status(400).send({ errors: [{ msg: 'User not found' }]});
+        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
         user.google = undefined;
@@ -75,7 +75,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, accessTok
         return res.status(401).send({ errors: [{ msg: err.message }] });
       }
       User.findById(payload.sub, function (err, user) {
-        if (!user) {
+        if (err || !user) {
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
         else {

@@ -3,3 +3,11 @@
  * @author Joel Márquez
  * */
 'use strict';
+
+// TODO
+module.exports.createContact = function (req, res) {
+
+  process.nextTick(function () {
+    return res.sendStatus(200);
+  });
+};

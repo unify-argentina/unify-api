@@ -263,6 +263,81 @@
   },
   {
     "type": "get",
+    "url": "/api/user/:user_id/circle/:circle_id",
+    "title": "Obtener circulo",
+    "group": "Circulos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "circle_id",
+            "description": "<p>Id del circulo</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "circle",
+            "description": "<p>Circulo</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\":{\n    \"parent\":\"559ebc76dc9167e815a750b6\",\n    \"name\":\"Tios\",\n    \"_id\":\"559ebc91dc9167e815a750b7\",\n    \"__v\":0,\n    \"ancestors\":[\n      \"559eba8109b6aee614e3f733\",\n      \"559ebc0ddc9167e815a750b5\",\n      \"559ebc76dc9167e815a750b6\"\n    ]\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/circle/index.js",
+    "groupTitle": "Circulos",
+    "name": "GetApiUserUser_idCircleCircle_id",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id"
+      }
+    ]
+  },
+  {
+    "type": "get",
     "url": "/auth/twitter/callback",
     "title": "Twitter login callback",
     "group": "Social",
@@ -780,7 +855,7 @@
   {
     "type": "get",
     "url": "/api/user/:user_id",
-    "title": "Obtener Usuario",
+    "title": "Obtener usuario",
     "group": "Usuarios",
     "header": {
       "fields": {
@@ -848,7 +923,7 @@
   {
     "type": "get",
     "url": "/api/user/:user_id/friends",
-    "title": "Obtener los amigos del Usuario",
+    "title": "Obtener los amigos del usuario",
     "group": "Usuarios",
     "header": {
       "fields": {
@@ -916,7 +991,7 @@
   {
     "type": "post",
     "url": "/api/user/:user_id",
-    "title": "Actualizar Usuario",
+    "title": "Actualizar usuario",
     "group": "Usuarios",
     "header": {
       "fields": {

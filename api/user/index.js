@@ -30,7 +30,7 @@ userRoutes.param('user_id', function(req, res, next, userId) {
 });
 
 /**
- * @api {get} /api/user/:user_id Obtener Usuario
+ * @api {get} /api/user/:user_id Obtener usuario
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token
@@ -59,7 +59,7 @@ userRoutes.param('user_id', function(req, res, next, userId) {
 userRoutes.get('/:user_id', userController.getUserById);
 
 /**
- * @api {post} /api/user/:user_id Actualizar Usuario
+ * @api {post} /api/user/:user_id Actualizar usuario
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token
@@ -97,10 +97,10 @@ userRoutes.get('/:user_id', userController.getUserById);
  *        }
  *     }
  */
-userRoutes.post('/:user_id', userController.updateUser);
+userRoutes.put('/:user_id', userController.updateUser);
 
 /**
- * @api {get} /api/user/:user_id/friends Obtener los amigos del Usuario
+ * @api {get} /api/user/:user_id/friends Obtener los amigos del usuario
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token

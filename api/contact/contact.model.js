@@ -6,6 +6,7 @@
 
 // requires
 var mongoose = require('mongoose');
+var ObjectId = mongoose.Schema.ObjectId;
 
 var contactSchema = mongoose.Schema({
 
@@ -14,7 +15,8 @@ var contactSchema = mongoose.Schema({
   picture: String,
   facebookId: String,
   twitterId: String,
-  instagramId: String
+  instagramId: String,
+  circle: { type: ObjectId, ref: 'Circle' }
 });
 
 module.exports = mongoose.model('Contact', contactSchema);

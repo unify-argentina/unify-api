@@ -5,19 +5,28 @@
 'use strict';
 
 var winston = require('winston');
+winston.emitErrs = true;
 
-// Termina devolviendo la última carpeta y el nombre del archivo, ej: config/logger.js
-var getLabel = function(callingModule) {
-  var parts = callingModule.split('/');
-  return parts[parts.length - 2] + '/' + parts.pop();
-};
+var logger = new winston.Logger({
+  transports: [
+    new winston.transports.File({
+      timestamp: true,
+      level: 'info',
+      filename: './logs/all-logs.log',
+      handleExceptions: true,
+      json: true,
+      maxsize: 5242880, //5MB
+      maxFiles: 5,
+      colorize: false
+    }),
+    new winston.transports.Console({
+      level: 'debug',
+      handleExceptions: true,
+      json: false,
+      colorize: true
+    })
+  ],
+  exitOnError: false
+});
 
-// Cada vez que se quiera usar, se va a tener que llamar así: require('logger.js')(__filename);
-module.exports = function(callingModule) {
-  return new winston.Logger({
-    transports: [new winston.transports.Console({
-      label: getLabel(callingModule),
-      timestamp: true
-    })]
-  });
-};
+module.exports = logger;

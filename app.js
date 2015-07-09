@@ -10,7 +10,7 @@
 // requires
 var express = require('express');
 var mongoose = require('mongoose');
-var logger = require('./config/logger')(__filename);
+var logger = require('./config/logger');
 
 // import config
 var config = require('./config');
@@ -22,14 +22,14 @@ require('./routes')(app);
 
 // mongodb
 mongoose.connect(config.MONGODB, function(err) {
-  logger.info('Connected to MongoDB at ' + config.MONGODB);
+  logger.debug('Connected to MongoDB at ' + config.MONGODB);
   mongoose.set('debug', function (coll, method, query, doc) {
-    logger.info('Col: ' + coll + ' method: ' + method + ' query: ' + JSON.stringify(query) + ' doc: ' + JSON.stringify(doc));
+    logger.debug('Col: ' + coll + ' method: ' + method + ' query: ' + JSON.stringify(query) + ' doc: ' + JSON.stringify(doc));
   });
 });
 
 // start app
 var port = process.env.PORT || 8080;
 app.listen(port, function() {
-  logger.info('Unify API started at port ' + port);
+  logger.debug('Unify API started at port ' + port);
 });

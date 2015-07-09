@@ -9,7 +9,7 @@ var jwt = require('./../util/jwt');
 var request = require('request');
 var config = require('../../../config');
 var randomstring = require('randomstring');
-var logger = require('../../../config/logger')(__filename);
+var logger = require('../../../config/logger');
 
 // modelos
 var User = require('../../user/user.model');
@@ -25,11 +25,11 @@ module.exports.unlinkAccount = function (req, res) {
     User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }]});
+        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
         user.facebook = undefined;
-        logger.info('Successfully unlinked facebook account for user: ' + user.toString());
+        logger.debug('Successfully unlinked facebook account for user: ' + user.toString());
         return saveUser(res, user);
       }
     });
@@ -41,7 +41,7 @@ module.exports.linkAccount = function (req, res) {
 
   process.nextTick(function() {
     var qs = getAccessTokenParams(req);
-    logger.info('Access token params: ' + JSON.stringify(qs));
+    logger.debug('Access token params: ' + JSON.stringify(qs));
     // Primero intercambiamos el código de autorización para obtener el access token
     request.get({ url: ACCESS_TOKEN_URL, qs: qs, json: true }, function (err, response, accessToken) {
       if (response.statusCode !== 200) {
@@ -49,7 +49,7 @@ module.exports.linkAccount = function (req, res) {
         return res.status(response.statusCode).send({ errors: [{ msg: accessToken.error.message }] });
       }
 
-      logger.info('Access token: ' + JSON.stringify(accessToken));
+      logger.debug('Access token: ' + JSON.stringify(accessToken));
       // Una vez que tenemos el accessToken, obtenemos información del usuario actual
       request.get({ url: GRAPH_USER_URL, qs: accessToken, json: true }, function (err, response, profile) {
         if (response.statusCode !== 200) {
@@ -57,15 +57,15 @@ module.exports.linkAccount = function (req, res) {
           return res.status(response.statusCode).send({ errors: [{ msg: accessToken.error.message }] });
         }
 
-        logger.info('Facebook profile: ' + JSON.stringify(profile));
+        logger.debug('Facebook profile: ' + JSON.stringify(profile));
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
-          logger.info('Authenticated user');
+          logger.debug('Authenticated user');
           handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, accessToken.access_token);
         }
         // Si no tiene el header de authorization, es porque es un nuevo usuario
         else {
-          logger.info('Not authenticated user');
+          logger.debug('Not authenticated user');
           handleNotAuthenticatedUser(res, profile, accessToken.access_token);
         }
       });
@@ -78,7 +78,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
   User.findOne({ 'facebook.id': facebookProfile.id }, function (err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
-      logger.info('Existing facebook user: ' + existingUser.toString());
+      logger.debug('Existing facebook user: ' + existingUser.toString());
       return res.send({ token: jwt.createJWT(existingUser) });
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Facebook
@@ -91,7 +91,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
         return res.status(401).send({ errors: [{ msg: err.message }] });
       }
       User.findById(payload.sub, function (err, user) {
-        if (!user) {
+        if (err || !user) {
           logger.warn('User not found: ' + payload.sub);
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
@@ -102,7 +102,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
           if (user.email.indexOf('no-email') > -1) {
             user.email = facebookProfile.email;
           }
-          logger.info('Existing unify user: ' + user.toString());
+          logger.debug('Existing unify user: ' + user.toString());
           linkFacebookData(user, facebookProfile, accessToken);
           return saveUser(res, user);
         }
@@ -117,14 +117,14 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
     // Si encuentra a uno con el id de Facebook, es un usuario registrado con Facebook
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingFacebookUser) {
-      logger.info('Existing facebook user: ' + existingFacebookUser.toString());
+      logger.debug('Existing facebook user: ' + existingFacebookUser.toString());
       return res.send({ token: jwt.createJWT(existingFacebookUser) });
     }
     else {
       User.findOne({ 'email': facebookProfile.email }, function(err, existingUnifyUser) {
         // Si encuentra a uno con el email de Facebook, vincula la cuenta local con la de Facebook
         if (existingUnifyUser) {
-          logger.info('Existing unify user: ' + existingUnifyUser);
+          logger.debug('Existing unify user: ' + existingUnifyUser);
           linkFacebookData(existingUnifyUser, facebookProfile, accessToken);
           return saveUser(res, existingUnifyUser);
         }
@@ -134,7 +134,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
           user.name = facebookProfile.name;
           user.email = facebookProfile.email;
           user.password = randomstring.generate(20);
-          logger.info('New facebook user!: ' + user);
+          logger.debug('New facebook user!: ' + user);
           linkFacebookData(user, facebookProfile, accessToken);
           return saveUser(res, user);
         }

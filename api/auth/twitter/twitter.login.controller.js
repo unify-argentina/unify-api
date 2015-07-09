@@ -106,8 +106,8 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessTo
         return res.status(401).send({ errors: [{ msg: err.message }] });
       }
       User.findById(payload.sub, function (err, user) {
-        if (!user) {
-          return res.status(400).send({errors: [{msg: 'User not found'}]});
+        if (err || !user) {
+          return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
         // Si existe un usuario de Unify, vinculamos su cuenta con la de Twitter
         else {
