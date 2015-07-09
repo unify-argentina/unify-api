@@ -13,7 +13,7 @@ var methodOverride = require('method-override');
 var cookieParser = require('cookie-parser');
 var expressValidator = require('express-validator');
 
-var allowCrossDomain = function (req, res, next) {
+var allowCrossDomain = function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:9000");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.header('Access-Control-Allow-Credentials', true);
@@ -21,7 +21,7 @@ var allowCrossDomain = function (req, res, next) {
   next();
 };
 
-module.exports = function (app) {
+module.exports = function(app) {
   app.use(compression());
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());

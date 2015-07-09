@@ -1,5 +1,5 @@
 /*
- * Tests de creación de un usuario
+ * Tests de ABM de un usuario
  * @author Joel Márquez
  * */
 'use strict';
@@ -8,6 +8,7 @@
 var assert = require('assert');
 var mongoose = require('mongoose');
 var config = require('../config');
+var logger = require('../config/logger');
 
 // modelos
 var User = require('../api/user/user.model');
@@ -16,7 +17,7 @@ var Circle = require('../api/circle/circle.model');
 // constantes
 var PASSWORD = 'This is not my real password';
 
-var defaultUser = function () {
+var defaultUser = function() {
   return {
     name: 'Juan Losa',
     email: 'unify.argentina@gmail.com',
@@ -24,46 +25,48 @@ var defaultUser = function () {
   };
 };
 
-describe('User', function () {
+describe('User', function() {
 
   // Antes de comenzar los tests, nos conectamos a la base
-  before(function (done) {
+  before(function(done) {
     mongoose.connect(config.MONGODB_TEST);
     done();
   });
 
   // Al finalizar cada test, borramos todas las cuentas de la base
-  afterEach(function (done) {
+  afterEach(function(done) {
     User.remove().exec(done);
   });
 
   // Al finalizar todos los tests, nos desconectamos de la base
-  after(function (done) {
+  after(function(done) {
     mongoose.connection.close(done);
   });
 
-  it('should create ok', function (done) {
-    User.create(defaultUser(), function (err, user) {
+  it('should create ok', function(done) {
+    User.create(defaultUser(), function(err, user) {
       if (err) {
         done();
       }
       else {
-        User.find({}, function (err, users1) {
-          users1.length.should.equal(1);
+        User.find({}, function(err, users) {
+          users.length.should.equal(1);
+          users[0].name.should.equal('Juan Losa');
+          users[0].email.should.equal('unify.argentina@gmail.com');
           done();
         });
       }
     });
   });
 
-  it('should hash password before saving to database', function (done) {
-    User.create(defaultUser(), function (err, user) {
+  it('should hash password before saving to database', function(done) {
+    User.create(defaultUser(), function(err, user) {
       if (err) {
         done();
       }
       else {
         assert.notEqual(user.password, PASSWORD);
-        user.comparePassword(PASSWORD, function (err, isMatch) {
+        user.comparePassword(PASSWORD, function(err, isMatch) {
           assert.equal(isMatch, true);
           done();
         });
@@ -71,12 +74,12 @@ describe('User', function () {
     });
   });
 
-  it('should remove asociated main user circle when removing a user instance', function (done) {
-    User.create({ name: 'Juan Losa', email: 'unify.argentina@gmail.com', password: 'Holaja' }, function (err, user) {
-      Circle.count({}, function (err, count) {
+  it('should remove asociated main user circle when removing a user instance', function(done) {
+    User.create({ name: 'Juan Losa', email: 'unify.argentina@gmail.com', password: 'Holaja' }, function(err, user) {
+      Circle.count({}, function(err, count) {
         var oldCount = count;
-        user.remove(function (err) {
-          Circle.count({}, function (err, count) {
+        user.remove(function(err) {
+          Circle.count({}, function(err, count) {
             count.should.equal(oldCount - 1);
             done();
           });
@@ -85,12 +88,50 @@ describe('User', function () {
     });
   });
 
-  it('should not allow to create two accounts with the same email', function (done) {
-    User.create(defaultUser(), function (err, user) {
-      User.create(defaultUser(), function (err, user2) {
-        User.count({}, function (err, count) {
+  it('should not allow to create two accounts with the same email', function(done) {
+    User.create(defaultUser(), function(err, user) {
+      User.create(defaultUser(), function(err, user2) {
+        User.count({}, function(err, count) {
           count.should.equal(1);
           done();
+        });
+      });
+    });
+  });
+
+  it('should not find an invalid subcircle', function(done) {
+    User.create(defaultUser(), function(err, user) {
+      User.findOne({ _id: user._id }, function(err, foundUser) {
+        foundUser.hasCircleWithId('', function(success, foundCircle) {
+          assert.equal(success, false);
+          assert.equal(foundCircle, null);
+          done();
+        });
+      });
+    });
+  });
+
+  it('should find a valid user circle (mainCircle)', function(done) {
+    User.create(defaultUser(), function(err, user) {
+      User.findOne({ _id: user._id }, function(err, foundUser) {
+        foundUser.hasCircleWithId(foundUser.mainCircle, function(success, foundCircle) {
+          assert.equal(success, true);
+          foundUser.mainCircle.toString().should.equal(foundCircle._id.toString());
+          done();
+        });
+      });
+    });
+  });
+
+  it('should find a valid user circle (subCircle)', function(done) {
+    User.create(defaultUser(), function(err, user) {
+      User.findOne({ _id: user._id }, function(err, foundUser) {
+        Circle.create({ name: 'Amigos', parent: foundUser.mainCircle, ancestors: [foundUser.mainCircle] }, function(err, circle) {
+          foundUser.hasCircleWithId(circle._id, function(success, foundCircle) {
+            assert.equal(success, true);
+            circle._id.toString().should.equal(foundCircle._id.toString());
+            done();
+          });
         });
       });
     });

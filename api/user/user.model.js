@@ -145,7 +145,7 @@ userSchema.methods.hasCircleWithId = function(circleId, callback) {
 };
 
 userSchema.methods.toString = function() {
-  return 'Name: ' + this.name + ' email: ' + this.email + ' id: ' + this._id;
+  return 'ID: ' + this._id + ' Name: ' + this.name + ' email: ' + this.email + ' mainCircle: ' + this.mainCircle;
 };
 
 module.exports = mongoose.model('User', userSchema);

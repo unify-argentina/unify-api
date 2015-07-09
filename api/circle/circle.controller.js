@@ -108,9 +108,9 @@ var validateParams = function(req, res) {
   }
 
   // Validamos nosql injection
-  if (typeof req.body.name === 'object' || typeof req.body.parent_id === 'object') {
-    logger.warn('No SQL injection - name: ' + req.body.name+ ' parentId: ' + req.body.parent_id);
-    return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
+  if (typeof req.body.name !== 'string' || typeof req.body.parent_id !== 'string') {
+    logger.warn('No SQL injection - name: ' + req.body.name + ' parentId: ' + req.body.parent_id);
+    return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
 };
 

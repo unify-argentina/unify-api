@@ -20,66 +20,72 @@ var USERS_PATH = '/api/user/';
 var LOGIN_PATH = '/auth/login';
 
 // Esta función sirve para hacer un login y devolverle al callback el user_id y el token de Unify
-var login = function (callback) {
+var login = function(callback) {
   User.findOne({ email: 'unify.argentina@gmail.com' })
     .populate('mainCircle')
-    .exec(function (err, user) {
+    .exec(function(err, user) {
     request(API_URL)
       .post(LOGIN_PATH)
       .send({
         email: 'unify.argentina@gmail.com',
         password: 'This is not my real password'
       })
-      .end(function (err, data) {
+      .end(function(err, data) {
         callback(user, data.res.body.token);
       });
   });
 };
 
-describe('Users API', function () {
+describe('Users API', function() {
 
-  before(function (done) {
+  before(function(done) {
     mongoose.connect(config.MONGODB_TEST);
-    User.create({ name: 'Juan Losa', email: 'unify.argentina@gmail.com', password: 'This is not my real password' }, done);
+    User.remove().exec(function(err) {
+      User.create({
+        name: 'Juan Losa',
+        email: 'unify.argentina@gmail.com',
+        password: 'This is not my real password'
+      }, done);
+    });
   });
 
-  after(function (done) {
-    User.remove().exec(function (err) {
+  after(function(done) {
+    User.remove().exec(function(err) {
       mongoose.connection.close(done);
     });
   });
 
-  describe('GET /api/user/:user_id', function () {
-    it('should not allow to get user information without token', function (done) {
-      User.findOne({ email: 'unify.argentina@gmail.com' }, function (err, user) {
+  describe('GET /api/user/:user_id', function() {
+    it('should not allow to get user information without token', function(done) {
+      User.findOne({ email: 'unify.argentina@gmail.com' }, function(err, user) {
         request(API_URL)
           .get(USERS_PATH + user._id)
-          .end(function (err, data) {
+          .end(function(err, data) {
             data.res.body.errors[0].msg.should.equal('Please make sure your request has an Authorization header');
             done();
           });
       });
     });
 
-    it('should not allow to get user information with an invalid token', function (done) {
-      User.findOne({ email: 'unify.argentina@gmail.com' }, function (err, user) {
+    it('should not allow to get user information with an invalid token', function(done) {
+      User.findOne({ email: 'unify.argentina@gmail.com' }, function(err, user) {
         request(API_URL)
           .get(USERS_PATH + user._id)
           .set('Authorization', 'Bearer 1234567890')
-          .end(function (err, data) {
+          .end(function(err, data) {
             data.res.body.errors[0].msg.should.equal('jwt malformed');
             done();
           });
       });
     });
 
-    it('should not allow to get user information with other user id', function (done) {
+    it('should not allow to get user information with other user id', function(done) {
       // Primero creamos un nuevo usuario
       User.create({
         name: 'Juan Losa',
         email: 'unify.argentina2@gmail.com',
         password: 'This is not my real password'
-      }, function (err, user) {
+      }, function(err, user) {
         // Luego nos logueamos con el primer usuario, obteniendo el token de unify
         request(API_URL)
           .post(LOGIN_PATH)
@@ -88,12 +94,13 @@ describe('Users API', function () {
             password: 'This is not my real password'
           })
           // Por último, intentamos obtener la info del nuevo usuario con el token del primer usuario
-          .end(function (err, data) {
-            User.findOne({ email: 'unify.argentina@gmail.com' }, function (err, user2) {
+          .end(function(err, data) {
+            User.findOne({ email: 'unify.argentina@gmail.com' }, function(err, user2) {
               request(API_URL)
                 .get(USERS_PATH + user._id)
                 .set('Authorization', 'Bearer ' + data.res.body.token)
-                .end(function (err, data) {
+                .end(function(err, data) {
+                  data.res.statusCode.should.equal(401);
                   data.res.body.errors[0].msg.should.equal('You are trying to find a different user');
                   done();
                 });
@@ -102,12 +109,12 @@ describe('Users API', function () {
       });
     });
 
-    it('should allow to get user information with valid access token', function (done) {
-      login(function (user, token) {
+    it('should allow to get user information with valid access token', function(done) {
+      login(function(user, token) {
         request(API_URL)
           .get(USERS_PATH + user._id)
           .set('Authorization', 'Bearer ' + token)
-          .end(function (err, data) {
+          .end(function(err, data) {
             data.res.statusCode.should.equal(200);
             var jsonUser = data.res.body.user;
             jsonUser._id.should.equal(user._id.toString());
@@ -120,25 +127,26 @@ describe('Users API', function () {
     });
   });
 
-  describe('PUT /api/user/:user_id', function () {
-    it('should not allow to update user information without token', function (done) {
-      User.findOne({ email: 'unify.argentina@gmail.com' }, function (err, user) {
+  describe('PUT /api/user/:user_id', function() {
+    it('should not allow to update user information without token', function(done) {
+      User.findOne({ email: 'unify.argentina@gmail.com' }, function(err, user) {
         request(API_URL)
           .put(USERS_PATH + user._id)
-          .end(function (err, data) {
+          .end(function(err, data) {
+            data.res.statusCode.should.equal(401);
             data.res.body.errors[0].msg.should.equal('Please make sure your request has an Authorization header');
             done();
           });
       });
     });
 
-    it('should not allow to update user information with empty data', function (done) {
-      login(function (user, token) {
+    it('should not allow to update user information with empty data', function(done) {
+      login(function(user, token) {
         request(API_URL)
           .put(USERS_PATH + user._id)
           .set('Authorization', 'Bearer ' + token)
           .send({})
-          .end(function (err, data) {
+          .end(function(err, data) {
             data.res.statusCode.should.equal(401);
             var errors = data.res.body.errors;
             var error = errors[0];
@@ -158,8 +166,8 @@ describe('Users API', function () {
       });
     });
 
-    it('should not allow to update user information with wrong data', function (done) {
-      login(function (user, token) {
+    it('should not allow to update user information with wrong data', function(done) {
+      login(function(user, token) {
         request(API_URL)
           .put(USERS_PATH + user._id)
           .set('Authorization', 'Bearer ' + token)
@@ -169,7 +177,7 @@ describe('Users API', function () {
             password: 'a',
             confirm_password: 'b'
           })
-          .end(function (err, data) {
+          .end(function(err, data) {
             data.res.statusCode.should.equal(401);
             var errors = data.res.body.errors;
             var error = errors[0];
@@ -186,8 +194,8 @@ describe('Users API', function () {
       });
     });
 
-    it('should not allow to update user information with injection data', function (done) {
-      login(function (user, token) {
+    it('should not allow to update user information with injection data', function(done) {
+      login(function(user, token) {
         request(API_URL)
           .put(USERS_PATH + user._id)
           .set('Authorization', 'Bearer ' + token)
@@ -197,16 +205,16 @@ describe('Users API', function () {
             "password":{"$gt": "undefined"},
             "confirm_password":{"$gt": "undefined"}
           })
-          .end(function (err, data) {
+          .end(function(err, data) {
             data.res.statusCode.should.equal(401);
-            data.res.body.errors[0].msg.should.equal("You're trying to send object data types");
+            data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
             done();
           });
       });
     });
 
-    it('should not allow to update user information with existent email', function (done) {
-      login(function (user, token) {
+    it('should not allow to update user information with existent email', function(done) {
+      login(function(user, token) {
         request(API_URL)
           .put(USERS_PATH + user._id)
           .set('Authorization', 'Bearer ' + token)
@@ -216,7 +224,7 @@ describe('Users API', function () {
             password: 'aaaaaa',
             confirm_password: 'aaaaaa'
           })
-          .end(function (err, data) {
+          .end(function(err, data) {
             data.res.statusCode.should.equal(409);
             data.res.body.errors[0].param.should.equal('email');
             data.res.body.errors[0].msg.should.equal('Email is already taken');
@@ -225,8 +233,8 @@ describe('Users API', function () {
       });
     });
 
-    it('should allow to update user information with unexistent email', function (done) {
-      login(function (user, token) {
+    it('should allow to update user information with unexistent email', function(done) {
+      login(function(user, token) {
         request(API_URL)
           .put(USERS_PATH + user._id)
           .set('Authorization', 'Bearer ' + token)
@@ -236,7 +244,7 @@ describe('Users API', function () {
             password: 'aaaaaa',
             confirm_password: 'aaaaaa'
           })
-          .end(function (err, data) {
+          .end(function(err, data) {
             data.res.statusCode.should.equal(200);
             var jsonUser = data.res.body.user;
             jsonUser._id.should.equal(user._id.toString());

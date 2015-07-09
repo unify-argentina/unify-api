@@ -21,6 +21,7 @@ circleSchema.pre('remove', function(next) {
   next();
 });
 
+// Chequea que dentro de los ancestros se encuentre el ancestro pasado por parámetro
 circleSchema.methods.hasAncestor = function(ancestor) {
   for (var i = 0; i < this.ancestors.length; i++) {
     if (this.ancestors[i].equals(ancestor._id)) {
@@ -31,7 +32,7 @@ circleSchema.methods.hasAncestor = function(ancestor) {
 };
 
 circleSchema.methods.toString = function() {
-  return 'Name: ' + this.name + ' parent: ' + this.parent;
+  return 'ID: ' + this._id + ' Name: ' + this.name + ' parent: ' + this.parent;
 };
 
 module.exports = mongoose.model('Circle', circleSchema);

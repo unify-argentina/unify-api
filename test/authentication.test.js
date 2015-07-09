@@ -19,7 +19,7 @@ var API_URL = 'http://localhost:8000';
 var LOGIN_PATH = '/auth/login';
 var SIGNUP_PATH = '/auth/signup';
 
-var defaultUser = function () {
+var defaultUser = function() {
   return {
     name: 'Juan Losa',
     email: 'unify.argentina@gmail.com',
@@ -27,27 +27,29 @@ var defaultUser = function () {
   };
 };
 
-describe('Authentication', function () {
+describe('Authentication', function() {
 
   // Antes de comenzar, nos aseguramos de que exista la cuenta con la que vamos a probar el login
-  before(function (done) {
+  before(function(done) {
     mongoose.connect(config.MONGODB_TEST);
-    User.create(defaultUser(), done);
+    User.remove().exec(function(err) {
+      User.create(defaultUser(), done);
+    });
   });
 
   // Al finalizar los tests, debemos borrar todas las cuentas de la base y desconectarnos de la base
-  after(function (done) {
-    User.remove().exec(function (err) {
+  after(function(done) {
+    User.remove().exec(function(err) {
       mongoose.connection.close(done);
     });
   });
 
-  describe('POST /auth/signup', function () {
-    it('should not allow to signup with empty data', function (done) {
+  describe('POST /auth/signup', function() {
+    it('should not allow to signup with empty data', function(done) {
       request(API_URL)
         .post(SIGNUP_PATH)
         .send({})
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(401);
           var errors = data.res.body.errors;
           var error = errors[0];
@@ -72,7 +74,7 @@ describe('Authentication', function () {
         });
     });
 
-    it('should not allow to signup with wrong data', function (done) {
+    it('should not allow to signup with wrong data', function(done) {
       request(API_URL)
         .post(SIGNUP_PATH)
         .send({
@@ -81,7 +83,7 @@ describe('Authentication', function () {
           password: 'a',
           confirm_password: 'b'
         })
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(401);
           var errors = data.res.body.errors;
           var error = errors[0];
@@ -97,7 +99,7 @@ describe('Authentication', function () {
         });
     });
 
-    it('should not allow to signup with injection data', function (done) {
+    it('should not allow to signup with injection data', function(done) {
       request(API_URL)
         .post(SIGNUP_PATH)
         .send({
@@ -106,14 +108,14 @@ describe('Authentication', function () {
           "password":{"$gt": "undefined"},
           "confirm_password":{"$gt": "undefined"}
         })
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(401);
-          data.res.body.errors[0].msg.should.equal("You're trying to send object data types");
+          data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
           done();
         });
     });
 
-    it('should not allow to signup with existent account', function (done) {
+    it('should not allow to signup with existent account', function(done) {
       request(API_URL)
         .post(SIGNUP_PATH)
         .send({
@@ -122,7 +124,7 @@ describe('Authentication', function () {
           password: 'aaaaaa',
           confirm_password: 'aaaaaa'
         })
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(409);
           data.res.body.errors[0].param.should.equal('email');
           data.res.body.errors[0].msg.should.equal('Email is already taken');
@@ -130,7 +132,7 @@ describe('Authentication', function () {
         });
     });
 
-    it('should allow to signup with unexistent account', function (done) {
+    it('should allow to signup with unexistent account', function(done) {
       request(API_URL)
         .post(SIGNUP_PATH)
         .send({
@@ -139,7 +141,7 @@ describe('Authentication', function () {
           password: 'aaaaaa',
           confirm_password: 'aaaaaa'
         })
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(200);
           data.res.body.token.should.be.type('string');
           done();
@@ -147,12 +149,12 @@ describe('Authentication', function () {
     });
   });
 
-  describe('POST /auth/login', function () {
-    it('should not allow to login with empty data', function (done) {
+  describe('POST /auth/login', function() {
+    it('should not allow to login with empty data', function(done) {
       request(API_URL)
         .post(LOGIN_PATH)
         .send({})
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(401);
           var errors = data.res.body.errors;
           var error = errors[0];
@@ -171,14 +173,14 @@ describe('Authentication', function () {
         });
     });
 
-    it('should not allow to login with wrong data', function (done) {
+    it('should not allow to login with wrong data', function(done) {
       request(API_URL)
         .post(LOGIN_PATH)
         .send({
           email: 'a',
           password: 's'
         })
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(401);
           var error = data.res.body.errors[0];
           error.param.should.equal('email');
@@ -187,56 +189,56 @@ describe('Authentication', function () {
         });
     });
 
-    it('should not allow to login with injection data', function (done) {
+    it('should not allow to login with injection data', function(done) {
       request(API_URL)
         .post(LOGIN_PATH)
         .send({
           "email":"unify.argentina@gmail.com",
           "password": {"$gt": "undefined"}
         })
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(401);
-          data.res.body.errors[0].msg.should.equal("You're trying to send object data types");
+          data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
           done();
         });
     });
 
-    it('should not allow to login with unexistent account', function (done) {
+    it('should not allow to login with unexistent account', function(done) {
       request(API_URL)
         .post(LOGIN_PATH)
         .send({
           email: 'unexistent@gmail.com',
           password: 'validPassword'
         })
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(401);
           data.res.body.errors[0].msg.should.equal("User doesn't exist");
           done();
         });
     });
 
-    it('should not allow to login with incorrect password', function (done) {
+    it('should not allow to login with incorrect password', function(done) {
       request(API_URL)
         .post(LOGIN_PATH)
         .send({
           email: 'unify.argentina@gmail.com',
           password: 'incorrectPassword'
         })
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(401);
           data.res.body.errors[0].msg.should.equal('Wrong password');
           done();
         });
     });
 
-    it('should allow login with correct email and password', function (done) {
+    it('should allow login with correct email and password', function(done) {
       request(API_URL)
         .post(LOGIN_PATH)
         .send({
           email: 'unify.argentina@gmail.com',
           password: 'This is not my real password'
         })
-        .end(function (err, data) {
+        .end(function(err, data) {
           data.res.statusCode.should.equal(200);
           data.res.body.token.should.be.type('string');
           done();

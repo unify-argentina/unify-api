@@ -29,9 +29,9 @@ module.exports.login = function(req, res) {
     }
 
     // Validamos nosql injection
-    if (typeof req.body.email === 'object' || typeof req.body.password === 'object') {
+    if (typeof req.body.email !== 'string' || typeof req.body.password !== 'string') {
       logger.warn('No SQL injection - email: ' + req.body.email + ' password: ' + req.body.password);
-      return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
+      return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
     }
 
     // Si no encontramos un usuario, no existe, error
@@ -77,11 +77,11 @@ module.exports.signup = function(req, res) {
     }
 
     // Validamos nosql injection
-    if (typeof req.body.email === 'object' || typeof req.body.name === 'object' ||
-      typeof req.body.password === 'object' || typeof req.body.confirm_password === 'object') {
+    if (typeof req.body.email !== 'string' || typeof req.body.name !== 'string' ||
+      typeof req.body.password !== 'string' || typeof req.body.confirm_password !== 'string') {
       logger.warn('No SQL injection - email: ' + req.body.email + ' password: ' + req.body.password +
                   ' name: ' + req.body.name + ' confirmPassword: ' + req.body.confirm_password);
-      return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
+      return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
     }
 
     // Si no encontramos un usuario, creamos un usuario nuevo y le generamos un token con el id del usuario

@@ -15,8 +15,8 @@ var User = require('./user.model.js');
 // coincida con el user que está en el request, previamente validado con el Json Web Token
 userRoutes.param('user_id', function(req, res, next, userId) {
   // Validamos nosql injection
-  if (typeof userId === 'object') {
-    return res.status(401).send({ errors: [{ msg: "You're trying to send object data types" }] });
+  if (typeof userId !== 'string') {
+    return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
 
   // Si el req.user, ya habiendo pasado por la verificación del token es el mismo
@@ -59,7 +59,7 @@ userRoutes.param('user_id', function(req, res, next, userId) {
 userRoutes.get('/:user_id', userController.getUserById);
 
 /**
- * @api {post} /api/user/:user_id Actualizar usuario
+ * @api {put} /api/user/:user_id Actualizar usuario
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token

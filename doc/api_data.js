@@ -174,95 +174,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/api/user/:id/circle",
-    "title": "Crear un circulo",
-    "group": "Circulos",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Id del usuario</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "name",
-            "description": "<p>Nombre del circulo a crear</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "parent_id",
-            "description": "<p>Id del circulo padre</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo de request",
-          "content": "{\n  \"name\":\"Amigos\",\n  \"parent_id\":\"55936a0460bb409c379800b7\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>Object</p> ",
-            "optional": false,
-            "field": "circle",
-            "description": "<p>Circulo creado</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\": {\n    \"__v\":0,\n    \"parent\":\n    \"55936a0460bb409c379800b7\",\n    \"name\":\"Amigos\",\n    \"_id\":\"55936a8960bb409c379800b8\",\n    \"contacts\":[]\n  }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/circle/index.js",
-    "groupTitle": "Circulos",
-    "name": "GetApiUserIdCircle",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/api/user/:id/circle"
-      }
-    ]
-  },
-  {
-    "type": "get",
     "url": "/api/user/:user_id/circle/:circle_id",
     "title": "Obtener circulo",
     "group": "Circulos",
@@ -330,6 +241,191 @@ define({ "api": [
     "filename": "api/circle/index.js",
     "groupTitle": "Circulos",
     "name": "GetApiUserUser_idCircleCircle_id",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/api/user/:user_id/circle",
+    "title": "Crear un circulo",
+    "group": "Circulos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Nombre del circulo a crear</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "parent_id",
+            "description": "<p>Id del circulo padre</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"name\":\"Amigos\",\n  \"parent_id\":\"55936a0460bb409c379800b7\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "circle",
+            "description": "<p>Circulo creado</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\":{\n    \"parent\":\"55936a0460bb409c379800b7\",\n    \"name\":\"Amigos\",\n    \"_id\":\"559ebc91dc9167e815a750b7\",\n    \"__v\":0,\n    \"ancestors\":[\n      \"559eba8109b6aee614e3f733\",\n      \"559ebc0ddc9167e815a750b5\",\n      \"55936a0460bb409c379800b7\"\n    ]\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/circle/index.js",
+    "groupTitle": "Circulos",
+    "name": "PostApiUserUser_idCircle",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/circle"
+      }
+    ]
+  },
+  {
+    "type": "put",
+    "url": "/api/user/:user_id/circle/:circle_id",
+    "title": "Actualizar un circulo",
+    "group": "Circulos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "circle_id",
+            "description": "<p>Id del circulo a actualizar</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Nuevo nombre del circulo a actualizar</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "parent_id",
+            "description": "<p>Nuevo id padre del circulo a actualizar</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"name\":\"Amigos\",\n  \"parent_id\":\"55936a0460bb409c379800b7\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "circle",
+            "description": "<p>Circulo creado</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\":{\n    \"parent\":\"55936a0460bb409c379800b7\",\n    \"name\":\"Amigos\",\n    \"_id\":\"559ebc91dc9167e815a750b7\",\n    \"__v\":0,\n    \"ancestors\":[\n      \"559eba8109b6aee614e3f733\",\n      \"559ebc0ddc9167e815a750b5\",\n      \"55936a0460bb409c379800b7\"\n    ]\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/circle/index.js",
+    "groupTitle": "Circulos",
+    "name": "PutApiUserUser_idCircleCircle_id",
     "sampleRequest": [
       {
         "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id"
@@ -989,7 +1085,7 @@ define({ "api": [
     ]
   },
   {
-    "type": "post",
+    "type": "put",
     "url": "/api/user/:user_id",
     "title": "Actualizar usuario",
     "group": "Usuarios",
@@ -1084,7 +1180,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "api/user/index.js",
     "groupTitle": "Usuarios",
-    "name": "PostApiUserUser_id",
+    "name": "PutApiUserUser_id",
     "sampleRequest": [
       {
         "url": "http://localhost:8080/api/user/:user_id"
