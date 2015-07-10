@@ -22,9 +22,9 @@ module.exports.getUserById = function(req, res) {
       .findOne({ _id: req.params.user_id })
       .populate('mainCircle')
       .exec(function(err, user) {
-        if (err) {
-          logger.error('Unable to find user with id: ' + req.params.user_id);
-          return res.status(401).send({ errors: [{ msg: 'Error finding user with id ' + req.params.id }] });
+        if (err || !user) {
+          logger.warn('User not found: ' + req.user);
+          return res.status(400).send({errors: [{msg: 'User not found'}]});
         }
         else {
           logger.debug('Get user by id: ' + req.params.user_id);

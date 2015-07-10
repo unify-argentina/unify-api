@@ -83,6 +83,8 @@ module.exports.updateCircle = function (req, res) {
                 saveCircleData(req, res, circle, foundCircle);
               }
               else {
+                logger
+                  .warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
                 return res.status(401)
                   .send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
               }
@@ -130,5 +132,42 @@ var saveCircleData = function(req, res, circle, foundCircle) {
       logger.debug('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
       return res.status(200).send({ circle: circle });
     }
+  });
+};
+
+// Borra el círculo pasado por parámetro
+module.exports.deleteCircle = function(req, res) {
+
+  process.nextTick(function() {
+    // Primero buscamos el usuario loggeado, para luego ver si el círculo pasado por parámetro
+    // no es el círculo principal del usuario
+    User.findOne({ _id: req.user })
+      .populate('mainCircle')
+      .exec(function (err, user) {
+      if (err || !user) {
+        logger.warn('User not found: ' + req.user);
+        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+      }
+      else {
+        Circle.findOne({ _id: req.circle }, function(err, circle) {
+          if (user.mainCircle._id.equals(circle._id)) {
+            logger.warn('Cannot delete users main circle: ' + circle._id);
+            return res.status(400).send({ errors: [{ msg: 'Cannot delete users main circle' }] });
+          }
+          // Si no es el círculo principal, lo borramos y devolvemos el id del círculo recientemente borrado
+          else {
+            circle.remove(function(err) {
+              if (err) {
+                logger.err(err);
+                return res.status(401).send({ errors: [{ msg: 'Error removing circle ' + err }] });
+              }
+              else {
+                res.status(200).send({ circle: circle._id });
+              }
+            });
+          }
+        });
+      }
+    });
   });
 };

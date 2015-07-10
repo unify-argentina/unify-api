@@ -281,4 +281,48 @@ describe('Circles API', function() {
       });
     });
   });
+
+  describe('DELETE /api/user/:user_id/circle/:circle_id', function() {
+    it('should not allow to delete a circle without token', function(done) {
+      request(API_URL)
+        .delete(util.format(CIRCLES_PATH, 'a', 'a'))
+        .end(function(err, data) {
+          data.res.statusCode.should.equal(401);
+          data.res.body.errors[0].msg.should.equal('Please make sure your request has an Authorization header');
+          done();
+        });
+    });
+
+    it('should not allow to delete users main circle', function(done) {
+      login(function(user, token) {
+        request(API_URL)
+          .delete(util.format(CIRCLES_PATH, user._id, user.mainCircle._id))
+          .set('Authorization', 'Bearer ' + token)
+          .end(function(err, data) {
+            data.res.statusCode.should.equal(400);
+            data.res.body.errors[0].msg.should.equal('Cannot delete users main circle');
+            done();
+          });
+      });
+    });
+
+    it('should allow to delete users subcircle', function(done) {
+      login(function(user, token) {
+        Circle.create({
+          name: 'Familia',
+          parent: user.mainCircle._id,
+          ancestors: [user.mainCircle._id]
+        }, function(err, subcircle) {
+          request(API_URL)
+            .delete(util.format(CIRCLES_PATH, user._id, subcircle._id))
+            .set('Authorization', 'Bearer ' + token)
+            .end(function(err, data) {
+              data.res.statusCode.should.equal(200);
+              data.res.body.circle.should.equal(subcircle._id.toString());
+              done();
+            });
+        });
+      });
+    });
+  });
 });

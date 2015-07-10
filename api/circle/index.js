@@ -34,7 +34,8 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
           next();
         }
         else {
-          return res.status(401).send({ errors: [{ msg: "You are trying to find a circle that doesn't belong to you" }]});
+          logger.warn("You are trying to find a circle=" + circleId + " that doesn't belong to you");
+          return res.status(401).send({ errors: [{ msg: "You are trying to find a circle that doesn't belong to you" }] });
         }
       });
     }
@@ -157,5 +158,7 @@ circleRoutes.get('/:circle_id', circleController.getCircleById);
  *    }
  */
 circleRoutes.put('/:circle_id', circleController.updateCircle);
+
+circleRoutes.delete('/:circle_id', circleController.deleteCircle);
 
 module.exports = circleRoutes;
