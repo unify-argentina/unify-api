@@ -159,6 +159,28 @@ circleRoutes.get('/:circle_id', circleController.getCircleById);
  */
 circleRoutes.put('/:circle_id', circleController.updateCircle);
 
+/**
+ * @api {delete} /api/user/:user_id/circle/:circle_id Eliminar un circulo
+ * @apiGroup Circulos
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} circle_id Id del circulo a borrar (no puede ser el círculo principal)
+ *
+ * @apiSuccess {String} circle Id del circulo eliminado
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *
+ *    {
+ *      "circle":"55936a0460bb409c379800b7"
+ *    }
+ */
 circleRoutes.delete('/:circle_id', circleController.deleteCircle);
 
 module.exports = circleRoutes;

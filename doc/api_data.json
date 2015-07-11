@@ -173,6 +173,81 @@
     ]
   },
   {
+    "type": "delete",
+    "url": "/api/user/:user_id/circle/:circle_id",
+    "title": "Eliminar un circulo",
+    "group": "Circulos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "circle_id",
+            "description": "<p>Id del circulo a borrar (no puede ser el círculo principal)</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "circle",
+            "description": "<p>Id del circulo eliminado</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\":\"55936a0460bb409c379800b7\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/circle/index.js",
+    "groupTitle": "Circulos",
+    "name": "DeleteApiUserUser_idCircleCircle_id",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id"
+      }
+    ]
+  },
+  {
     "type": "get",
     "url": "/api/user/:user_id/circle/:circle_id",
     "title": "Obtener circulo",
