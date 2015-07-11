@@ -160,7 +160,7 @@ module.exports.getFriends = function(req, res) {
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 var selectFields = function() {
   return 'facebook.id facebook.accessToken twitter.id twitter.accessToken.token ' +
-    'twitter.accessToken.tokenSecret instagram.id instagram.accessToken google.id google.accessToken';
+    'twitter.accessToken.tokenSecret instagram.id instagram.accessToken';
 };
 
 // Envía al cliente los amigos del usuario

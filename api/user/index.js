@@ -175,4 +175,6 @@ userRoutes.get('/:user_id/friends', userController.getFriends);
 
 userRoutes.use('/:user_id/circle', require('../circle'));
 
+userRoutes.use('/:user_id/contact', require('../contact'));
+
 module.exports = userRoutes;

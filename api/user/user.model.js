@@ -111,10 +111,13 @@ userSchema.methods.comparePassword = function(password, done) {
 
 // Chequea que el usuario efectivamente tenga la cuenta asociada
 userSchema.methods.hasLinkedAccount = function(account) {
-  var hasFields = this[account] && this[account].accessToken && this[account].id;
+  var hasFields = false;
   // El access token de Twitter es un objeto con dos campos
   if (account === 'twitter') {
-    hasFields = hasFields && this.twitter.accessToken.token && this.twitter.accessToken.tokenSecret;
+    hasFields = typeof this.twitter.accessToken.token === 'string' && typeof this.twitter.accessToken.tokenSecret === 'string';
+  }
+  else {
+    hasFields = typeof this[account].accessToken === 'string' && typeof this[account].id === 'string';
   }
   return hasFields;
 };
