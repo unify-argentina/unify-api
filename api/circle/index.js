@@ -30,7 +30,7 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
     else {
       user.hasCircleWithId(circleId, function(success, foundCircle) {
         if (success) {
-          req.circle = foundCircle._id;
+          req.circle = foundCircle;
           next();
         }
         else {

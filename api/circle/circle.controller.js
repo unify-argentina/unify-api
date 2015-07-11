@@ -45,15 +45,7 @@ module.exports.createCircle = function(req, res) {
 module.exports.getCircleById = function(req, res) {
 
   process.nextTick(function() {
-    Circle.findOne({ _id: req.circle }, function(err, circle) {
-      if (err || !circle) {
-        logger.warn('Circle not found: ' + req.circle);
-        return res.status(400).send({ errors: [{ msg: 'Circle not found' }] });
-      }
-      else {
-        return res.status(200).send({ circle: circle });
-      }
-    });
+    return res.status(200).send({ circle: req.circle });
   });
 };
 
@@ -63,32 +55,23 @@ module.exports.updateCircle = function (req, res) {
   process.nextTick(function () {
     validateParams(req, res);
 
-    // Encontramos el círculo pasado por parámetro para cambiarle el parent y el nombre
-    Circle.findOne({ _id: req.circle }, function(err, circle) {
-      if (err || !circle) {
-        logger.warn('Circle not found: ' + req.circle);
-        return res.status(400).send({ errors: [{ msg: 'Circle not found' }] });
+    // Encontramos al usuario y chequeamos que el parent_id pertenezca a un círculo del usuario
+    User.findOne({ _id: req.user }, function(err, user) {
+      if (err || !user) {
+        logger.warn('User not found: ' + req.user);
+        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
-        // Luego encontramos al usuario y chequeamos que el parent_id pertenezca a un círculo del usuario
-        User.findOne({ _id: req.user }, function(err, user) {
-          if (err || !user) {
-            logger.warn('User not found: ' + req.user);
-            return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+        // Luego, si el parent_id existe y pertenece al usuario loggeado, actualizamos el subcírculo
+        user.hasCircleWithId(req.body.parent_id, function(success, foundCircle) {
+          if (success) {
+            saveCircleData(req, res, req.circle, foundCircle);
           }
           else {
-            // Luego, si el parent_id existe y pertenece al usuario loggeado, actualizamos el subcírculo
-            user.hasCircleWithId(req.body.parent_id, function(success, foundCircle) {
-              if (success) {
-                saveCircleData(req, res, circle, foundCircle);
-              }
-              else {
-                logger
-                  .warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
-                return res.status(401)
-                  .send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
-              }
-            });
+            logger
+              .warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
+            return res.status(401)
+              .send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
           }
         });
       }
@@ -149,24 +132,23 @@ module.exports.deleteCircle = function(req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
-        Circle.findOne({ _id: req.circle }, function(err, circle) {
-          if (user.mainCircle._id.equals(circle._id)) {
-            logger.warn('Cannot delete users main circle: ' + circle._id);
-            return res.status(400).send({ errors: [{ msg: 'Cannot delete users main circle' }] });
-          }
-          // Si no es el círculo principal, lo borramos y devolvemos el id del círculo recientemente borrado
-          else {
-            circle.remove(function(err) {
-              if (err) {
-                logger.err(err);
-                return res.status(401).send({ errors: [{ msg: 'Error removing circle ' + err }] });
-              }
-              else {
-                res.status(200).send({ circle: circle._id });
-              }
-            });
-          }
-        });
+        var circle = req.circle;
+        if (user.mainCircle._id.equals(circle._id)) {
+          logger.warn('Cannot delete users main circle: ' + circle._id);
+          return res.status(400).send({ errors: [{ msg: 'Cannot delete users main circle' }] });
+        }
+        // Si no es el círculo principal, lo borramos y devolvemos el id del círculo recientemente borrado
+        else {
+          circle.remove(function(err) {
+            if (err) {
+              logger.err(err);
+              return res.status(401).send({ errors: [{ msg: 'Error removing circle ' + err }] });
+            }
+            else {
+              res.status(200).send({ circle: circle._id });
+            }
+          });
+        }
       }
     });
   });
