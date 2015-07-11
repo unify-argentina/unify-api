@@ -81,7 +81,7 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
  *      }
  *    }
  */
-circleRoutes.post('/', circleController.createCircle);
+circleRoutes.post('/', circleController.create);
 
 /**
  * @api {get} /api/user/:user_id/circle/:circle_id Obtener circulo
@@ -115,7 +115,7 @@ circleRoutes.post('/', circleController.createCircle);
  *      }
  *    }
  */
-circleRoutes.get('/:circle_id', circleController.getCircleById);
+circleRoutes.get('/:circle_id', circleController.getById);
 
 /**
  * @api {put} /api/user/:user_id/circle/:circle_id Actualizar un circulo
@@ -157,7 +157,7 @@ circleRoutes.get('/:circle_id', circleController.getCircleById);
  *      }
  *    }
  */
-circleRoutes.put('/:circle_id', circleController.updateCircle);
+circleRoutes.put('/:circle_id', circleController.update);
 
 /**
  * @api {delete} /api/user/:user_id/circle/:circle_id Eliminar un circulo
@@ -181,6 +181,6 @@ circleRoutes.put('/:circle_id', circleController.updateCircle);
  *      "circle":"55936a0460bb409c379800b7"
  *    }
  */
-circleRoutes.delete('/:circle_id', circleController.deleteCircle);
+circleRoutes.delete('/:circle_id', circleController.delete);
 
 module.exports = circleRoutes;

@@ -11,6 +11,7 @@ var ObjectId = mongoose.Schema.ObjectId;
 var circleSchema = mongoose.Schema({
 
   name: String,
+  picture: String,
   parent: { type: ObjectId, ref: 'Circle', index: true },
   ancestors: [{ type: ObjectId, ref: 'Circle', index: true }]
 });

@@ -15,7 +15,7 @@ var logger = require('../../config/logger');
 var User = require('./user.model.js');
 
 // Se encarga de obtener el usuario en base al id que se le pase por parámetro
-module.exports.getUserById = function(req, res) {
+module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
     User
@@ -35,7 +35,7 @@ module.exports.getUserById = function(req, res) {
 };
 
 // Se encarga de actualizar el usuario en base al id que se le pase por parámetro
-module.exports.updateUser = function(req, res) {
+module.exports.update = function(req, res) {
 
   process.nextTick(function() {
     req.assert('email', 'Required').notEmpty();

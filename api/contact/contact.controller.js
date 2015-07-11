@@ -5,7 +5,31 @@
 'use strict';
 
 // TODO
-module.exports.createContact = function(req, res) {
+module.exports.create = function(req, res) {
+
+  process.nextTick(function() {
+    return res.sendStatus(200);
+  });
+};
+
+// TODO
+module.exports.getById = function(req, res) {
+
+  process.nextTick(function() {
+    return res.sendStatus(200);
+  });
+};
+
+// TODO
+module.exports.update = function(req, res) {
+
+  process.nextTick(function() {
+    return res.sendStatus(200);
+  });
+};
+
+// TODO
+module.exports.delete = function(req, res) {
 
   process.nextTick(function() {
     return res.sendStatus(200);

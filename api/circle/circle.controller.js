@@ -13,7 +13,7 @@ var Circle = require('./circle.model');
 var Contact = require('../contact/contact.model');
 
 // Crea un círculo
-module.exports.createCircle = function(req, res) {
+module.exports.create = function(req, res) {
 
   process.nextTick(function() {
     validateParams(req, res);
@@ -42,7 +42,7 @@ module.exports.createCircle = function(req, res) {
 };
 
 // Devuelve el círculo pedido
-module.exports.getCircleById = function(req, res) {
+module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
     return res.status(200).send({ circle: req.circle });
@@ -50,7 +50,7 @@ module.exports.getCircleById = function(req, res) {
 };
 
 // Se encarga de actualizar el circulo en base al id que se le pase por parámetro
-module.exports.updateCircle = function (req, res) {
+module.exports.update = function (req, res) {
 
   process.nextTick(function () {
     validateParams(req, res);
@@ -119,7 +119,7 @@ var saveCircleData = function(req, res, circle, foundCircle) {
 };
 
 // Borra el círculo pasado por parámetro
-module.exports.deleteCircle = function(req, res) {
+module.exports.delete = function(req, res) {
 
   process.nextTick(function() {
     // Primero buscamos el usuario loggeado, para luego ver si el círculo pasado por parámetro

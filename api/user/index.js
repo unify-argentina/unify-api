@@ -56,7 +56,7 @@ userRoutes.param('user_id', function(req, res, next, userId) {
  *        }
  *     }
  */
-userRoutes.get('/:user_id', userController.getUserById);
+userRoutes.get('/:user_id', userController.getById);
 
 /**
  * @api {put} /api/user/:user_id Actualizar usuario
@@ -97,7 +97,7 @@ userRoutes.get('/:user_id', userController.getUserById);
  *        }
  *     }
  */
-userRoutes.put('/:user_id', userController.updateUser);
+userRoutes.put('/:user_id', userController.update);
 
 /**
  * @api {get} /api/user/:user_id/friends Obtener los amigos del usuario

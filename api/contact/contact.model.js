@@ -16,7 +16,8 @@ var contactSchema = mongoose.Schema({
   facebookId: String,
   twitterId: String,
   instagramId: String,
-  circle: { type: ObjectId, ref: 'Circle' }
+  circle: { type: ObjectId, ref: 'Circle' },
+  user: { type: ObjectId, ref: 'User' }
 });
 
 module.exports = mongoose.model('Contact', contactSchema);
