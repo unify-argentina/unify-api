@@ -99,7 +99,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
         else {
           // Este email puede haber sido generado al hacer un login con Instagram o con Twitter,
           // por lo que debemos pisarlo y usar un email verdadero
-          if (user.email.indexOf('no-email') > -1) {
+          if (user.email.indexOf('no-email') > -1 && facebookProfile.email) {
             user.email = facebookProfile.email;
           }
           logger.debug('Existing unify user: ' + user.toString());
