@@ -43,11 +43,10 @@ module.exports.create = function(req, res) {
   });
 };
 
-// TODO
 module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
-    return res.sendStatus(200);
+    return res.status(200).send({ contact: req.contact });
   });
 };
 
