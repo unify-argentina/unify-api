@@ -70,6 +70,7 @@ module.exports.delete = function(req, res) {
 var validateParams = function(req, res) {
   req.assert('name', 'Required').notEmpty();
   req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
+  // TODO revisar URL, opcional o no?
   req.assert('picture', 'Required').notEmpty();
   req.assert('picture', 'It must be a valid URL').isURL();
   // TODO revisar si un contacto puede estar en más de un círculo

@@ -508,6 +508,399 @@ define({ "api": [
     ]
   },
   {
+    "type": "delete",
+    "url": "/api/user/:user_id/contact/:contact_id",
+    "title": "Eliminar un contacto",
+    "group": "Contactos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "contact_id",
+            "description": "<p>Id del contacto a borrar</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "circle",
+            "description": "<p>Id del contacto eliminado</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"contact\":\"55936a0460bb409c379800b7\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/contact/index.js",
+    "groupTitle": "Contactos",
+    "name": "DeleteApiUserUser_idContactContact_id",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/contact/:contact_id"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/api/user/:user_id/contact/:contact_id",
+    "title": "Obtener contacto",
+    "group": "Contactos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "contact_id",
+            "description": "<p>Id del contacto</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "contact",
+            "description": "<p>Contacto</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"contact\":{\n    \"user\":\"55a1f39737bc05b2257c6ae0\",\n    \"circle\":\"55a1f39937bc05b2257c6ae1\",\n    \"twitter_id\":\"261365528\",\n    \"facebook_id\":\"10205153877979641\",\n    \"picture\":\"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large\",\n    \"name\":\"Alejo\",\n    \"_id\":\"55a1f47e71912f3c26602dbe\",\n    \"__v\":0\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/contact/index.js",
+    "groupTitle": "Contactos",
+    "name": "GetApiUserUser_idContactContact_id",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/contact/:contact_id"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/api/user/:user_id/contact",
+    "title": "Crear un contacto",
+    "group": "Contactos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Nombre del contacto a crear</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "picture",
+            "description": "<p>URL de la imagen del contacto</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "circle_id",
+            "description": "<p>Id del círculo en el cual el contacto va a ser creado</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "facebook_id",
+            "description": "<p>Id del perfil de facebook del contacto</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "twitter_id",
+            "description": "<p>Id del perfil de twitter del contacto</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "instagram_id",
+            "description": "<p>Id del perfil de instagram del contacto</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"name\":\"Alejo\",\n  \"picture\":\"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large\",\n  \"facebook_id\":\"10205153877979641\",\n  \"twitter_id\":\"261365528\",\n  \"instagram_id\":\"1574863419\",\n  \"circle_id\":\"55a1f0d9d3dc50a522cd0aff\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Aclaración: si bien los ids de las redes sociales son opcionales, al menos uno es requerido para poder crear un contacto y obtener contenido de esa red social asignada.</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "contact",
+            "description": "<p>Contacto creado</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"contact\":{\n    \"user\":\"55a1f39737bc05b2257c6ae0\",\n    \"circle\":\"55a1f39937bc05b2257c6ae1\",\n    \"twitter_id\":\"261365528\",\n    \"facebook_id\":\"10205153877979641\",\n    \"picture\":\"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large\",\n    \"name\":\"Alejo\",\n    \"_id\":\"55a1f47e71912f3c26602dbe\",\n    \"__v\":0\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/contact/index.js",
+    "groupTitle": "Contactos",
+    "name": "PostApiUserUser_idContact",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/contact"
+      }
+    ]
+  },
+  {
+    "type": "put",
+    "url": "/api/user/:user_id/contact/:contact_id",
+    "title": "Actualizar un contacto",
+    "group": "Contactos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "contact_id",
+            "description": "<p>Id del contacto a actualizar</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Nuevo nombre del contacto a actualizar</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "picture",
+            "description": "<p>URL de la imagen del contacto</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "circle_id",
+            "description": "<p>Id del círculo en el cual el contacto va a ser actualizado</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "facebook_id",
+            "description": "<p>Id del perfil de facebook del contacto</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "twitter_id",
+            "description": "<p>Id del perfil de twitter del contacto</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "instagram_id",
+            "description": "<p>Id del perfil de instagram del contacto</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"name\":\"Alejo\",\n  \"picture\":\"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large\",\n  \"facebook_id\":\"10205153877979641\",\n  \"twitter_id\":\"261365528\",\n  \"instagram_id\":\"1574863419\",\n  \"circle_id\":\"55a1f0d9d3dc50a522cd0aff\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Aclaración: si bien los ids de las redes sociales son opcionales, al menos uno es requerido para poder actualizar un contacto y obtener contenido de esa red social asignada.</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "contact",
+            "description": "<p>Contacto actualizado</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"contact\":{\n    \"user\":\"55a1f39737bc05b2257c6ae0\",\n    \"circle\":\"55a1f39937bc05b2257c6ae1\",\n    \"twitter_id\":\"261365528\",\n    \"facebook_id\":\"10205153877979641\",\n    \"picture\":\"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large\",\n    \"name\":\"Alejo\",\n    \"_id\":\"55a1f47e71912f3c26602dbe\",\n    \"__v\":0\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/contact/index.js",
+    "groupTitle": "Contactos",
+    "name": "PutApiUserUser_idContactContact_id",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/contact/:contact_id"
+      }
+    ]
+  },
+  {
     "type": "get",
     "url": "/auth/twitter/callback",
     "title": "Twitter login callback",
