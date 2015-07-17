@@ -175,7 +175,7 @@ var sendFriendsResponseFromResults = function(res, results) {
   if (results.twitter) {
     friends.twitter = results.twitter;
   }
-  res.send({
+  return res.send({
     friends: friends
   });
 };

@@ -88,7 +88,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
         payload = jwt.verify(unifyToken, config.TOKEN_SECRET);
       }
       catch(err) {
-        return res.status(401).send({ errors: [{ msg: err.message }] });
+        return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
       }
       User.findById(payload.sub, function(err, user) {
         if (err || !user) {

@@ -25,7 +25,7 @@ var jwt = require('./auth/util/jwt');
 apiRoutes.get('/', function(req, res) {
 
   process.nextTick(function() {
-    res.send({version: pjson.version});
+    return res.send({ version: pjson.version });
   });
 });
 

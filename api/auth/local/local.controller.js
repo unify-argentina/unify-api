@@ -50,7 +50,7 @@ module.exports.login = function(req, res) {
           }
           else {
             logger.debug('User logged in successfully: ' + user.toString());
-            res.send({token: jwt.createJWT(user)});
+            return res.send({token: jwt.createJWT(user)});
           }
         });
       }
@@ -103,7 +103,7 @@ module.exports.signup = function(req, res) {
             return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
           }
           else {
-            res.send({token: jwt.createJWT(user)});
+            return res.send({token: jwt.createJWT(user)});
           }
         });
       }

@@ -73,7 +73,7 @@ describe('Users API', function() {
           .get(USERS_PATH + user._id)
           .set('Authorization', 'Bearer 1234567890')
           .end(function(err, data) {
-            data.res.body.errors[0].msg.should.equal('jwt malformed');
+            data.res.body.errors[0].msg.should.equal('Error verifying json web token');
             done();
           });
       });

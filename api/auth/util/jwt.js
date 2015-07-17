@@ -49,7 +49,7 @@ module.exports.ensureAuthenticated = function(req, res, next) {
     }
     catch (err) {
       logger.error('Error verifying token: ' + err.message);
-      return res.status(401).send({ errors: [{ msg: err.message }] });
+      return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
     }
 
     logger.debug('Token payload: ' + JSON.stringify(payload));
