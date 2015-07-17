@@ -26,7 +26,7 @@ module.exports.create = function(req, res) {
       }
       else {
 
-        validateSocialIds(user, req, res);
+        validateSocialIds(user, req, res, 'creating');
 
         user.hasCircleWithId(req.body.circle_id, function(success, foundCircle) {
           if (success) {
@@ -43,6 +43,7 @@ module.exports.create = function(req, res) {
   });
 };
 
+// Devuelve el contacto pedido por Id
 module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
@@ -50,19 +51,50 @@ module.exports.getById = function(req, res) {
   });
 };
 
-// TODO
+// Se encarga de actualizar el contacto en base al id que se le pase por parámetro
 module.exports.update = function(req, res) {
 
   process.nextTick(function() {
-    return res.sendStatus(200);
+    validateParams(req, res);
+
+    // Primero encontramos al usuario loggeado
+    User.findOne({ _id: req.user }, selectFields(),function (err, user) {
+      if (err || !user) {
+        logger.warn('User not found: ' + req.user);
+        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+      }
+      else {
+
+        validateSocialIds(user, req, res, 'updating');
+
+        user.hasCircleWithId(req.body.circle_id, function(success, foundCircle) {
+          if (success) {
+            saveContactData(req, res, req.contact, user);
+          }
+          else {
+            logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
+            return res.status(401).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
+          }
+        });
+      }
+    });
   });
 };
 
-// TODO
+// Borra el contacto pasado por parámetro
 module.exports.delete = function(req, res) {
 
   process.nextTick(function() {
-    return res.sendStatus(200);
+    var contact = req.contact;
+    contact.remove(function(err) {
+      if (err) {
+        logger.err(err);
+        return res.status(401).send({ errors: [{ msg: 'Error removing contact ' + err }] });
+      }
+      else {
+        return res.status(200).send({ contact: contact._id });
+      }
+    });
   });
 };
 
@@ -92,12 +124,12 @@ var validateParams = function(req, res) {
   }
 };
 
-var validateSocialIds = function(user, req, res) {
+var validateSocialIds = function(user, req, res, text) {
   // Validamos que tenga por lo menos un id de una red social
   if (!req.body.facebook_id && !req.body.twitter_id && !req.body.instagram_id) {
     logger.warn("Requester didn't suplied a facebook, twitter or instagram id for creating a contact");
     return res.status(401).send({ errors: [{ msg:
-      'You have to suply a facebook, twitter or instagram id for creating a contact' }] });
+      'You have to suply a facebook, twitter or instagram id for ' + text + ' a contact' }] });
   }
   // Validamos que si hay alguno, tenga un formato válido
   else if (req.body.facebook_id && typeof req.body.facebook_id !== 'string' ||
