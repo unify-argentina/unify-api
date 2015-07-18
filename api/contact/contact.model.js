@@ -10,14 +10,13 @@ var ObjectId = mongoose.Schema.ObjectId;
 
 var contactSchema = mongoose.Schema({
 
-  // TODO required, select
-  name: String,
+  name: { type: String, required: true },
   picture: String,
   facebook_id: String,
   twitter_id: String,
   instagram_id: String,
-  circle: { type: ObjectId, ref: 'Circle' },
-  user: { type: ObjectId, ref: 'User' }
+  circle: { type: ObjectId, required: true, ref: 'Circle' },
+  user: { type: ObjectId, required: true, ref: 'User' }
 });
 
 contactSchema.methods.toString = function() {

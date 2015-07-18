@@ -10,17 +10,10 @@ var ObjectId = mongoose.Schema.ObjectId;
 
 var circleSchema = mongoose.Schema({
 
-  // TODO required
-  name: String,
+  name: { type: String, required: true },
   picture: String,
   parent: { type: ObjectId, ref: 'Circle', index: true },
   ancestors: [{ type: ObjectId, ref: 'Circle', index: true }]
-});
-
-// TODO cascading
-circleSchema.pre('remove', function(next) {
-  var circle = this;
-  next();
 });
 
 // Chequea que dentro de los ancestros se encuentre el ancestro pasado por parámetro

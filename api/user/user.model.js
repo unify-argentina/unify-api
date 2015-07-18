@@ -91,6 +91,7 @@ userSchema.post('save', function(user, next) {
 });
 
 // Este 'hook' se encarga de eliminar el círculo principal del usuario cuando este se elimina
+// TODO eliminar los contactos del usuario
 userSchema.pre('remove', function(next) {
   Circle.findOne({ _id: this.mainCircle }, function(err, circle) {
     if (err) {
