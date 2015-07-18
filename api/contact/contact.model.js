@@ -20,13 +20,13 @@ var contactSchema = mongoose.Schema({
 });
 
 contactSchema.methods.toString = function() {
-  return 'name: ' + this.name +
-  'user: ' + this.user +
-  'picture: ' + this.picture +
-  'facebook_id: ' + this.facebook_id +
-  'twitter_id: ' + this.twitter_id +
-  'instagram_id: ' + this.instagram_id +
-  'circle: ' + this.circle;
+  return 'id: ' + this._id + ' name: ' + this.name +
+  ' user: ' + this.user +
+  ' picture: ' + this.picture +
+  ' facebook_id: ' + this.facebook_id +
+  ' twitter_id: ' + this.twitter_id +
+  ' instagram_id: ' + this.instagram_id +
+  ' circle: ' + this.circle;
 };
 
 module.exports = mongoose.model('Contact', contactSchema);

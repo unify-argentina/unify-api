@@ -5,7 +5,6 @@
 'use strict';
 
 // requires
-var should = require('should');
 var request = require('supertest');
 var mongoose = require('mongoose');
 var config = require('../config');
@@ -246,6 +245,27 @@ describe('Circles API', function() {
             data.res.body.errors[0].msg.should.equal("Paren't circle doesn't exists or doesn't belong to current user");
             done();
           });
+      });
+    });
+
+    it.only('should not allow to update users main circle', function(done) {
+      login(function(user, token) {
+        Circle.create({
+          name: 'Familia',
+          parent: user.mainCircle._id,
+          ancestors: [user.mainCircle._id]
+        }, function(err, firstSubcircle) {
+
+          request(API_URL)
+            .put(util.format(CIRCLES_PATH, user._id, user.mainCircle._id))
+            .set('Authorization', 'Bearer ' + token)
+            .send({ name: 'Amigos', parent_id: firstSubcircle._id })
+            .end(function(err, data) {
+              data.res.statusCode.should.equal(401);
+              data.res.body.errors[0].msg.should.equal("Main circle can't be modified");
+              done();
+            });
+        });
       });
     });
 

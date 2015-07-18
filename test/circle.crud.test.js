@@ -27,33 +27,23 @@ describe('Circle', function() {
 
   it('should create ok', function(done) {
     Circle.create({ name: 'Friends' }, function(err, circle) {
-      if (err) {
+      Circle.find({}, function(err, circles) {
+        circles.length.should.equal(1);
+        circles[0].name.should.equal('Friends');
         done();
-      }
-      else {
-        Circle.find({}, function(err, circles) {
-          circles.length.should.equal(1);
-          circles[0].name.should.equal('Friends');
-          done();
-        });
-      }
+      });
     });
   });
 
   it('should check for an ancestor ok', function(done) {
     Circle.create({ name: 'Family' }, function(err, familyCircle) {
-      if (err) {
-        done();
-      }
-      else {
-        Circle.create({ name: 'Grands', parent: familyCircle._id, ancestors: [familyCircle._id] }, function(err, grandsCircle) {
-          Circle.create({ name: 'Main Circle' }, function(err, mainCircle) {
-            grandsCircle.hasAncestor(familyCircle).should.equal(true);
-            grandsCircle.hasAncestor(mainCircle).should.equal(false);
-            done();
-          });
+      Circle.create({ name: 'Grands', parent: familyCircle._id, ancestors: [familyCircle._id] }, function(err, grandsCircle) {
+        Circle.create({ name: 'Main Circle' }, function(err, mainCircle) {
+          grandsCircle.hasAncestor(familyCircle).should.equal(true);
+          grandsCircle.hasAncestor(mainCircle).should.equal(false);
+          done();
         });
-      }
-    });
+      });
+      });
   });
 });

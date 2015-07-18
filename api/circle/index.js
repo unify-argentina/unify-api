@@ -30,8 +30,15 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
     else {
       user.hasCircleWithId(circleId, function(success, foundCircle) {
         if (success) {
-          req.circle = foundCircle;
-          next();
+          // No se puede modificar el círculo principal del usuario
+          if (foundCircle._id.equals(user.mainCircle)) {
+            logger.warn("Main circle can't be modified for user=" + user._id);
+            return res.status(401).send({ errors: [{ msg: "Main circle can't be modified" }] });
+          }
+          else {
+            req.circle = foundCircle;
+            next();
+          }
         }
         else {
           logger.warn("You are trying to find a circle=" + circleId + " that doesn't belong to you");
