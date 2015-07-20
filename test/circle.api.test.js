@@ -46,7 +46,9 @@ describe('Circles API', function() {
         name: 'Juan Losa',
         email: 'unify.argentina@gmail.com',
         password: 'This is not my real password'
-      }, done);
+      }, function(err, user) {
+        Circle.create({ name: 'Familia', parent: user.mainCircle, ancestors: [user.mainCircle] }, done);
+      });
     });
   });
 
@@ -206,49 +208,83 @@ describe('Circles API', function() {
         });
     });
 
+    it('should not allow to update a circle with empty data', function(done) {
+      login(function(user, token) {
+        Circle.findOne({ name: 'Familia', parent: user.mainCircle }, function(err, circle) {
+          request(API_URL)
+            .put(util.format(CIRCLES_PATH, user._id, circle._id))
+            .set('Authorization', 'Bearer ' + token)
+            .send({})
+            .end(function(err, data) {
+              data.res.statusCode.should.equal(401);
+              var errors = data.res.body.errors;
+              var error = errors[0];
+              error.param.should.equal('name');
+              error.msg.should.equal('Required');
+              error = errors[1];
+              error.param.should.equal('name');
+              error.msg.should.equal('Only alphanumeric characters are allowed');
+              error = errors[2];
+              error.param.should.equal('parent_id');
+              error.msg.should.equal('Required');
+              error = errors[3];
+              error.param.should.equal('parent_id');
+              error.msg.should.equal('Only alphanumeric characters are allowed');
+              done();
+            });
+        });
+      });
+    });
+
     it('should not allow to update a circle with wrong data', function(done) {
       login(function(user, token) {
-        request(API_URL)
-          .put(util.format(CIRCLES_PATH, user._id, user.mainCircle._id))
-          .set('Authorization', 'Bearer ' + token)
-          .send({ name: 234, parent_id: 234 })
-          .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
-            data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
-            done();
-          });
+        Circle.findOne({ name: 'Familia', parent: user.mainCircle }, function(err, circle) {
+          request(API_URL)
+            .put(util.format(CIRCLES_PATH, user._id, circle._id))
+            .set('Authorization', 'Bearer ' + token)
+            .send({ name: 234, parent_id: 234 })
+            .end(function(err, data) {
+              data.res.statusCode.should.equal(401);
+              data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
+              done();
+            });
+        });
       });
     });
 
     it('should not allow to update a circle with injection data', function(done) {
       login(function(user, token) {
-        request(API_URL)
-          .put(util.format(CIRCLES_PATH, user._id, user.mainCircle._id))
-          .set('Authorization', 'Bearer ' + token)
-          .send({ name: {"$gt": "undefined"}, parent_id: {"$gt": "undefined"} })
-          .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
-            data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
-            done();
-          });
+        Circle.findOne({ name: 'Familia', parent: user.mainCircle }, function(err, circle) {
+          request(API_URL)
+            .put(util.format(CIRCLES_PATH, user._id, circle._id))
+            .set('Authorization', 'Bearer ' + token)
+            .send({name: {"$gt": "undefined"}, parent_id: {"$gt": "undefined"}})
+            .end(function (err, data) {
+              data.res.statusCode.should.equal(401);
+              data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
+              done();
+            });
+        });
       });
     });
 
     it('should not allow to update a circle with an invalid parent circle', function(done) {
       login(function(user, token) {
-        request(API_URL)
-          .put(util.format(CIRCLES_PATH, user._id, user.mainCircle._id))
-          .set('Authorization', 'Bearer ' + token)
-          .send({ name: 'Second', parent_id: 'asdasdasdadasd' })
-          .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
-            data.res.body.errors[0].msg.should.equal("Paren't circle doesn't exists or doesn't belong to current user");
-            done();
-          });
+        Circle.findOne({ name: 'Familia', parent: user.mainCircle }, function(err, circle) {
+          request(API_URL)
+            .put(util.format(CIRCLES_PATH, user._id, circle._id))
+            .set('Authorization', 'Bearer ' + token)
+            .send({name: 'Second', parent_id: 'asdasdasdadasd'})
+            .end(function (err, data) {
+              data.res.statusCode.should.equal(401);
+              data.res.body.errors[0].msg.should.equal("Paren't circle doesn't exists or doesn't belong to current user");
+              done();
+            });
+        });
       });
     });
 
-    it.only('should not allow to update users main circle', function(done) {
+    it('should not allow to update users main circle', function(done) {
       login(function(user, token) {
         Circle.create({
           name: 'Familia',

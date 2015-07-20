@@ -62,18 +62,25 @@ module.exports.update = function (req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
-        // Luego, si el parent_id existe y pertenece al usuario loggeado, actualizamos el subcírculo
-        user.hasCircleWithId(req.body.parent_id, function(success, foundCircle) {
-          if (success) {
-            saveCircleData(req, res, req.circle, foundCircle);
-          }
-          else {
-            logger
-              .warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
-            return res.status(401)
-              .send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
-          }
-        });
+        // No se puede modificar el círculo principal del usuario
+        if (req.circle._id.equals(user.mainCircle)) {
+          logger.warn("Main circle can't be modified for user=" + user._id);
+          return res.status(401).send({errors: [{msg: "Main circle can't be modified"}]});
+        }
+        else {
+          // Luego, si el parent_id existe y pertenece al usuario loggeado, actualizamos el subcírculo
+          user.hasCircleWithId(req.body.parent_id, function (success, foundCircle) {
+            if (success) {
+              saveCircleData(req, res, req.circle, foundCircle);
+            }
+            else {
+              logger
+                .warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
+              return res.status(401)
+                .send({errors: [{msg: "Paren't circle doesn't exists or doesn't belong to current user"}]});
+            }
+          });
+        }
       }
     });
   });
