@@ -10,13 +10,14 @@ var request = require('request');
 var config = require('../../../config');
 var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
+var facebookUtils = require('./facebook.utils');
 
 // modelos
 var User = require('../../user/user.model');
 
 // constantes
-var ACCESS_TOKEN_URL = 'https://graph.facebook.com/v2.3/oauth/access_token';
-var GRAPH_USER_URL = 'https://graph.facebook.com/v2.3/me';
+var ACCESS_TOKEN_URL = facebookUtils.getBaseURL() + '/oauth/access_token';
+var GRAPH_USER_URL = facebookUtils.getBaseURL() + '/me';
 
 // Desconecta la cuenta de Facebook de la de Unify
 module.exports.unlinkAccount = function(req, res) {
@@ -160,7 +161,7 @@ var linkFacebookData = function(unifyUser, facebookProfile, accessToken) {
   unifyUser.facebook.id = facebookProfile.id;
   unifyUser.facebook.email = facebookProfile.email;
   unifyUser.facebook.accessToken = accessToken;
-  unifyUser.facebook.picture = getFacebookPicture(facebookProfile.id);
+  unifyUser.facebook.picture = facebookUtils.getFacebookPicture(facebookProfile.id);
   unifyUser.facebook.displayName = facebookProfile.name;
 };
 
@@ -172,9 +173,4 @@ var getAccessTokenParams = function(req) {
     client_secret: config.FACEBOOK_SECRET,
     redirect_uri: req.body.redirectUri
   };
-};
-
-// Devuelve la url de la imagen del perfil del usuario con id = profileId
-var getFacebookPicture = function(profileId) {
-  return 'https://graph.facebook.com/v2.3/' + profileId + '/picture?type=large';
 };

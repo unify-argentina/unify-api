@@ -9,6 +9,7 @@ var util = require('util');
 var request = require('request');
 var async = require('async');
 var logger = require('../../../config/logger');
+var facebookUtils = require('./facebook.utils');
 
 // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Facebook
 var users = [];
@@ -16,7 +17,7 @@ var users = [];
 // Devuelve los amigos de Facebook del usuario loggeado
 module.exports.getFriends = function(accessToken, facebookId, callback) {
 
-  var url = util.format('https://graph.facebook.com/v2.3/%s/friends?access_token=%s&limit=1000', facebookId, accessToken);
+  var url = util.format('%s/%s/friends?access_token=%s&limit=1000', facebookUtils.getBaseURL(), facebookId, accessToken);
 
   getFacebookData(url, function(err, facebookUsers) {
     if (err) {
@@ -64,12 +65,7 @@ var mapUser = function(facebookUser, callback) {
   var user = {
     id: facebookUser.id,
     name: facebookUser.name,
-    picture: getFacebookPicture(facebookUser.id)
+    picture: facebookUtils.getFacebookPicture(facebookUser.id)
   };
   callback(null, user);
-};
-
-// Devuelve la url de la imagen del perfil del usuario con id = profileId
-var getFacebookPicture = function(profileId) {
-  return 'https://graph.facebook.com/v2.3/' + profileId + '/picture?type=large';
 };

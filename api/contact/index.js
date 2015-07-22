@@ -7,6 +7,7 @@
 // requires
 var contactRoutes = require('express').Router();
 var contactController = require('./contact.controller');
+var mediaController = require('./contact.media.controller');
 var logger = require('../../config/logger');
 
 // modelos
@@ -195,5 +196,7 @@ contactRoutes.put('/:contact_id', contactController.update);
  *    }
  */
 contactRoutes.delete('/:contact_id', contactController.delete);
+
+contactRoutes.get('/:contact_id/media', mediaController.getMedia);
 
 module.exports = contactRoutes;

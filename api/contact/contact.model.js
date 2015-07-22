@@ -29,4 +29,9 @@ contactSchema.methods.toString = function() {
   ' circle: ' + this.circle;
 };
 
+// Chequea que el contacto efectivamente tenga la cuenta asociada
+contactSchema.methods.hasLinkedAccount = function(account) {
+  return typeof this[account + '_id'] === 'string';
+};
+
 module.exports = mongoose.model('Contact', contactSchema);

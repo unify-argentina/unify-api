@@ -9,6 +9,7 @@ var request = require('request');
 var async = require('async');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
+var twitterOAuthHelper = require('./twitter.auth.helper');
 
 // constantes
 var TWITTER_USER_FOLLOWS_URL = 'https://api.twitter.com/1.1/friends/list.json';
@@ -52,7 +53,7 @@ var getTwitterData = function(url, cursor, accessToken, twitterId, callback) {
   };
 
   logger.debug('URL: ' + url + 'qs=' + JSON.stringify(qs));
-  request.get({ url: url, oauth: getOauthParam(accessToken), qs: qs, json: true }, function(err, response) {
+  request.get({ url: url, oauth: twitterOAuthHelper.getOauthParam(accessToken), qs: qs, json: true }, function(err, response) {
     if (err || (response.body.errors && response.body.errors.length > 0)) {
       logger.error('Error: ' + err ? err : response.body.errors[0].message);
       callback(err ? err : response.body.errors[0].message, null);
@@ -68,16 +69,6 @@ var getTwitterData = function(url, cursor, accessToken, twitterId, callback) {
       callback(null, users);
     }
   });
-};
-
-// Devuelve los parámetros necesarios de OAuth para hacer el request autenticado
-var getOauthParam = function(accessToken) {
-  return {
-    consumer_key: config.TWITTER_KEY,
-    consumer_secret: config.TWITTER_SECRET,
-    token: accessToken.token,
-    token_secret: accessToken.tokenSecret
-  };
 };
 
 // Recibe un objeto de usuario de Twitter y devuelve uno homogéneo a las 3 redes sociales
