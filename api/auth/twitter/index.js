@@ -44,7 +44,7 @@ twitterRouter.post('/', twitterController.linkAccount);
 twitterRouter.get('/callback', twitterController.handleCallback);
 
 /**
- * @api {post} /auth/twitter/unlink Twitter unlink
+ * @api {delete} /auth/twitter Twitter unlink
  * @apiGroup Social
  *
  * @apiHeader {String} Authorization Bearer token
@@ -61,6 +61,6 @@ twitterRouter.get('/callback', twitterController.handleCallback);
  *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
  *     }
  */
-twitterRouter.post('/unlink', jwt.ensureAuthenticated, twitterController.unlinkAccount);
+twitterRouter.delete('/', jwt.ensureAuthenticated, twitterController.unlinkAccount);
 
 module.exports = twitterRouter;

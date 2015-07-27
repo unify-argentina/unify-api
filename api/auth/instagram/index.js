@@ -28,7 +28,7 @@ var jwt = require('../util/jwt');
 instagramRouter.post('/', instagramController.linkAccount);
 
 /**
- * @api {post} /auth/instagram/unlink Instagram unlink
+ * @api {delete} /auth/instagram Instagram unlink
  * @apiGroup Social
  *
  * @apiHeader {String} Authorization Bearer token
@@ -45,6 +45,6 @@ instagramRouter.post('/', instagramController.linkAccount);
  *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
  *     }
  */
-instagramRouter.post('/unlink', jwt.ensureAuthenticated, instagramController.unlinkAccount);
+instagramRouter.delete('/', jwt.ensureAuthenticated, instagramController.unlinkAccount);
 
 module.exports = instagramRouter;

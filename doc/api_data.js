@@ -901,6 +901,226 @@ define({ "api": [
     ]
   },
   {
+    "type": "delete",
+    "url": "/auth/facebook",
+    "title": "Facebook unlink",
+    "group": "Social",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/facebook/index.js",
+    "groupTitle": "Social",
+    "name": "DeleteAuthFacebook",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/facebook"
+      }
+    ]
+  },
+  {
+    "type": "delete",
+    "url": "/auth/google",
+    "title": "Google unlink",
+    "group": "Social",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/google/index.js",
+    "groupTitle": "Social",
+    "name": "DeleteAuthGoogle",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/google"
+      }
+    ]
+  },
+  {
+    "type": "delete",
+    "url": "/auth/instagram",
+    "title": "Instagram unlink",
+    "group": "Social",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/instagram/index.js",
+    "groupTitle": "Social",
+    "name": "DeleteAuthInstagram",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/instagram"
+      }
+    ]
+  },
+  {
+    "type": "delete",
+    "url": "/auth/twitter",
+    "title": "Twitter unlink",
+    "group": "Social",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/twitter/index.js",
+    "groupTitle": "Social",
+    "name": "DeleteAuthTwitter",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/twitter"
+      }
+    ]
+  },
+  {
     "type": "get",
     "url": "/auth/twitter/callback",
     "title": "Twitter login callback",
@@ -1019,61 +1239,6 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/auth/facebook/unlink",
-    "title": "Facebook unlink",
-    "group": "Social",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/facebook/index.js",
-    "groupTitle": "Social",
-    "name": "PostAuthFacebookUnlink",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/facebook/unlink"
-      }
-    ]
-  },
-  {
-    "type": "post",
     "url": "/auth/google",
     "title": "Google login",
     "group": "Social",
@@ -1131,61 +1296,6 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:8080/auth/google"
-      }
-    ]
-  },
-  {
-    "type": "post",
-    "url": "/auth/google/unlink",
-    "title": "Google unlink",
-    "group": "Social",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/google/index.js",
-    "groupTitle": "Social",
-    "name": "PostAuthGoogleUnlink",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/google/unlink"
       }
     ]
   },
@@ -1253,61 +1363,6 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/auth/instagram/unlink",
-    "title": "Instagram unlink",
-    "group": "Social",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/instagram/index.js",
-    "groupTitle": "Social",
-    "name": "PostAuthInstagramUnlink",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/instagram/unlink"
-      }
-    ]
-  },
-  {
-    "type": "post",
     "url": "/auth/twitter",
     "title": "Twitter login",
     "group": "Social",
@@ -1358,61 +1413,6 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:8080/auth/twitter"
-      }
-    ]
-  },
-  {
-    "type": "post",
-    "url": "/auth/twitter/unlink",
-    "title": "Twitter unlink",
-    "group": "Social",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/twitter/index.js",
-    "groupTitle": "Social",
-    "name": "PostAuthTwitterUnlink",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/twitter/unlink"
       }
     ]
   },

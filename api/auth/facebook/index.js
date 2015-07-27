@@ -28,7 +28,7 @@ var jwt = require('../util/jwt');
 facebookRouter.post('/', facebookController.linkAccount);
 
 /**
- * @api {post} /auth/facebook/unlink Facebook unlink
+ * @api {delete} /auth/facebook Facebook unlink
  * @apiGroup Social
  *
  * @apiHeader {String} Authorization Bearer token
@@ -45,6 +45,6 @@ facebookRouter.post('/', facebookController.linkAccount);
  *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs"
  *     }
  */
-facebookRouter.post('/unlink', jwt.ensureAuthenticated, facebookController.unlinkAccount);
+facebookRouter.delete('/', jwt.ensureAuthenticated, facebookController.unlinkAccount);
 
 module.exports = facebookRouter;
