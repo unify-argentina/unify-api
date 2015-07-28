@@ -6,6 +6,7 @@
 
 // requires
 var logger = require('../../config/logger');
+var _ = require('lodash');
 
 // modelos
 var User = require('../user/user.model');
@@ -39,7 +40,23 @@ module.exports.create = function(req, res) {
 module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
-    return res.status(200).send({ circle: req.circle });
+
+    Contact.find({ circle: req.circle._id }, function(err, contacts) {
+      if (err || !contacts) {
+        logger.warn('Could not find contacts for circle=' + req.circle._id);
+        return res.status(401).send({ errors: [{ msg: 'Could not find contacts for specified circle' }] });
+      }
+      else {
+        var contactsObject = {
+          contacts: contacts
+        };
+        var result = _.merge(contactsObject, req.circle.toJSON());
+        result.user = undefined;
+        return res.send({
+          circle: result
+        });
+      }
+    });
   });
 };
 
@@ -100,7 +117,7 @@ module.exports.delete = function(req, res) {
               return res.status(401).send({ errors: [{ msg: 'Error removing circle ' + err }] });
             }
             else {
-              return res.status(200).send({ circle: circle._id });
+              return res.send({ circle: circle._id });
             }
           });
         }
@@ -143,7 +160,7 @@ var saveCircleData = function(req, res, circle, foundCircle) {
     }
     else {
       logger.debug('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
-      return res.status(200).send({ circle: circle });
+      return res.send({ circle: circle });
     }
   });
 };

@@ -28,7 +28,7 @@ module.exports.getById = function(req, res) {
         }
         else {
           logger.debug('Get user by id: ' + req.params.user_id);
-          return res.status(200).send({ user: user });
+          return res.send({ user: user });
         }
       });
   });

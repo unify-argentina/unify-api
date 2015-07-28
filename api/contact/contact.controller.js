@@ -40,7 +40,7 @@ module.exports.create = function(req, res) {
 module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
-    return res.status(200).send({ contact: req.contact });
+    return res.send({ contact: req.contact });
   });
 };
 
@@ -78,7 +78,7 @@ module.exports.delete = function(req, res) {
         return res.status(401).send({ errors: [{ msg: 'Error removing contact ' + err }] });
       }
       else {
-        return res.status(200).send({ contact: contact._id });
+        return res.send({ contact: contact._id });
       }
     });
   });
@@ -148,7 +148,7 @@ var saveContactData = function(req, res, contact, user) {
     }
     else {
       logger.debug('Contact for user: ' + req.user + ' created successfully: ' + contact.toString());
-      return res.status(200).send({ contact: contact });
+      return res.send({ contact: contact });
     }
   });
 };

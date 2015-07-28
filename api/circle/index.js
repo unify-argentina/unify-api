@@ -23,7 +23,7 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
 
   // Buscamos el usuario del request y verificamos que el circle_id pertenezca a este usuario
   Circle.findOne({ _id: circleId, user: req.user })
-    .populate('user')
+    .populate('user ancestors')
     .exec(function(err, circle) {
       if (err || !circle) {
         logger.warn("You are trying to find a circle=" + circleId + " that doesn't belong to you");
@@ -95,19 +95,49 @@ circleRoutes.post('/', circleController.create);
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *
- *    {
- *      "circle":{
- *        "parent":"559ebc76dc9167e815a750b6",
- *        "name":"Tios",
- *        "_id":"559ebc91dc9167e815a750b7",
- *        "__v":0,
- *        "ancestors":[
- *          "559eba8109b6aee614e3f733",
- *          "559ebc0ddc9167e815a750b5",
- *          "559ebc76dc9167e815a750b6"
- *        ]
- *      }
- *    }
+ *     {
+ *         "circle": {
+ *             "contacts": [
+ *                 {
+ *                     "user": "55b6f24c8424341d1fe6ef61",
+ *                     "circle": "55b6f2ba8424341d1fe6ef63",
+ *                     "picture": "graph.facebook.com/v2.3/10153267328674738/picture?type=large",
+ *                     "name": "Joel",
+ *                     "instagram_id": "993803680",
+ *                     "twitter_id": "42704750",
+ *                     "facebook_id": "10153267328674738",
+ *                     "_id": "55b6f649fdd3e3be2400da40",
+ *                     "__v": 0
+ *                 },
+ *                 {
+ *                     "user": "55b6f24c8424341d1fe6ef61",
+ *                     "circle": "55b6f2ba8424341d1fe6ef63",
+ *                     "picture": "https://graph.facebook.com/v2.3/10205153877979641/picture?type=large",
+ *                     "name": "Alejo",
+ *                     "instagram_id": "993803680",
+ *                     "twitter_id": "42704750",
+ *                     "facebook_id": "10153267328674738",
+ *                     "_id": "55b6f668fdd3e3be2400da41",
+ *                     "__v": 0
+ *                 }
+ *             ],
+ *             "parent": "55b6f24e8424341d1fe6ef62",
+ *             "name": "Amigos",
+ *             "_id": "55b6f2ba8424341d1fe6ef63",
+ *             "__v": 0,
+ *             "ancestors": [
+ *                 {
+ *                     "user": "55b6f24c8424341d1fe6ef61",
+ *                     "name": "Main Circle",
+ *                     "_id": "55b6f24e8424341d1fe6ef62",
+ *                     "__v": 0,
+ *                     "ancestors": [
+ *                     ]
+ *                 }
+ *             ]
+ *         }
+ *     }
+ *
  */
 circleRoutes.get('/:circle_id', circleController.getById);
 
