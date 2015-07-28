@@ -117,7 +117,7 @@ contactRoutes.post('/', contactController.create);
  *             "_id": "55b3ac25a748942e223f739b",
  *             "__v": 0,
  *             "media": {
- *                 "count": 139,
+ *                 "count": 6,
  *                 "list": [
  *                     {
  *                         "provider": "facebook",

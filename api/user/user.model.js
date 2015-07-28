@@ -52,8 +52,8 @@ var userSchema = mongoose.Schema({
 
   google: {
     id: { type: String, index: true, select: false },
-    email: String,
     accessToken: { type: String, select: false },
+    email: String,
     picture: String,
     displayName: String
   }

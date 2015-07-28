@@ -1,5 +1,5 @@
 /*
- * Este es el módulo que se encarga de controlar los contenidos a mostrar de un contacto
+ * Este es el módulo que se encarga de controlar los contenidos a mostrar de un usuario
  * @author Joel Márquez
  * */
 'use strict';
@@ -15,7 +15,7 @@ var _ = require('lodash');
 // modelos
 var User = require('../user/user.model');
 
-// Obtiene el contenido de un contacto
+// Obtiene el contenido del usuario
 module.exports.getMedia = function (req, res) {
 
   process.nextTick(function () {
@@ -26,17 +26,17 @@ module.exports.getMedia = function (req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
-        doGetMedia(req, res, user, req.contact);
+        doGetMedia(req, res, user);
       }
     });
   });
 };
 
-var doGetMedia = function(req, res, user, contact) {
+var doGetMedia = function(req, res, user) {
   async.parallel({
       facebook: function(callback) {
-        if (user.hasLinkedAccount('facebook') && contact.hasLinkedAccount('facebook')) {
-          facebookMedia.getMedia(user.facebook.accessToken, contact.facebook_id, function(err, results) {
+        if (user.hasLinkedAccount('facebook')) {
+          facebookMedia.getMedia(user.facebook.accessToken, user.facebook.id, function(err, results) {
             callback(err, results);
           });
         }
@@ -46,8 +46,8 @@ var doGetMedia = function(req, res, user, contact) {
         }
       },
       instagram: function(callback) {
-        if (user.hasLinkedAccount('instagram') && contact.hasLinkedAccount('instagram')) {
-          instagramMedia.getMedia(user.instagram.accessToken, contact.instagram_id, function(err, results) {
+        if (user.hasLinkedAccount('instagram')) {
+          instagramMedia.getMedia(user.instagram.accessToken, user.instagram.id, function(err, results) {
             callback(err, results);
           });
         }
@@ -57,8 +57,8 @@ var doGetMedia = function(req, res, user, contact) {
         }
       },
       twitter: function(callback) {
-        if (user.hasLinkedAccount('twitter') && contact.hasLinkedAccount('twitter')) {
-          twitterMedia.getMedia(user.twitter.accessToken, contact.twitter_id, function(err, results) {
+        if (user.hasLinkedAccount('twitter')) {
+          twitterMedia.getMedia(user.twitter.accessToken, user.twitter.id, function(err, results) {
             callback(err, results);
           });
         }
@@ -75,13 +75,13 @@ var doGetMedia = function(req, res, user, contact) {
         return res.status(400).send({ errors: [{ msg: 'There was an error obtaining contact media' }] });
       }
       else {
-        sendMediaResponseFromResults(res, contact, results);
+        sendMediaResponseFromResults(res, user, results);
       }
-  });
+    });
 };
 
-// Envía al cliente el contenido del contacto
-var sendMediaResponseFromResults = function(res, contact, results) {
+// Envía al cliente el contenido del usuario
+var sendMediaResponseFromResults = function(res, user, results) {
   var mediaObjects = [];
   if (results.facebook) {
     mediaObjects.push.apply(mediaObjects, results.facebook);
@@ -96,7 +96,7 @@ var sendMediaResponseFromResults = function(res, contact, results) {
   async.sortBy(mediaObjects, function(media, callback) {
     // los ordenamos por fecha de creación (los más nuevos primero)
     callback(null, -media.created_time);
-  // Una vez que los ordenamos, los enviamos
+    // Una vez que los ordenamos, los enviamos
   }, function(err, sortedMedia) {
     var mediaObject = {
       media: {
@@ -104,15 +104,26 @@ var sendMediaResponseFromResults = function(res, contact, results) {
         list: sortedMedia
       }
     };
-    var result = _.merge(contact.toJSON(), mediaObject);
+    var result = _.merge(user.toJSON(), mediaObject);
+    clearProtectedData(result);
     return res.send({
-      contact: result
+      user: result
     });
   });
 };
 
+// Limpia los datos que no tienen que ser enviados al cliente
+var clearProtectedData = function(result) {
+  result.instagram.id = undefined;
+  result.instagram.accessToken = undefined;
+  result.facebook.id = undefined;
+  result.facebook.accessToken = undefined;
+  result.twitter.id = undefined;
+  result.twitter.accessToken = undefined;
+};
+
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 var selectFields = function() {
-  return 'facebook.id facebook.accessToken twitter.id twitter.accessToken.token ' +
-    'twitter.accessToken.tokenSecret instagram.id instagram.accessToken';
+  return '+facebook.id +facebook.accessToken +twitter.id +twitter.accessToken.token ' +
+    '+twitter.accessToken.tokenSecret +instagram.id +instagram.accessToken';
 };

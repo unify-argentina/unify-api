@@ -7,6 +7,7 @@
 // requires
 var userRoutes = require('express').Router();
 var userController = require('./user.controller');
+var mediaController = require('./user.media.controller');
 
 // modelos
 var User = require('./user.model.js');
@@ -46,17 +47,73 @@ userRoutes.param('user_id', function(req, res, next, userId) {
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *
- *     {
+ *    {
  *        "user": {
- *          "mainCircle":"558748787f0a76cc4ca02a35",
- *          "email":"unify.argentina@gmail.com",
- *          "name":"Juan Losa",
- *          "_id":"558748767f0a76cc4ca02a34",
- *          "__v":0
+ *            "__v": 0,
+ *            "_id": "55b6fba973191a7428d80c94",
+ *            "email": "90joelmarquez@gmail.com",
+ *            "mainCircle": "55b6fbaa73191a7428d80c95",
+ *            "name": "Joel Marquez",
+ *            "google": {
+ *                "displayName": "Joel Márquez",
+ *                "email": "90joelmarquez@gmail.com",
+ *                "picture": "https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200"
+ *            },
+ *            "instagram": {
+ *                "displayName": "Joel Márquez",
+ *                "picture": "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg",
+ *                "userName": "joe__marquez"
+ *            },
+ *            "twitter": {
+ *                "displayName": "Joel Márquez",
+ *                "picture": "http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg",
+ *                "userName": "joelmarquez90"
+ *            },
+ *            "facebook": {
+ *                "displayName": "Joel Márquez",
+ *                "email": "90joelmarquez@gmail.com",
+ *                "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
+ *            },
+ *            "validLocalUser": true,
+ *            "media": {
+ *                "count": 3,
+ *                "list": [
+ *                    {
+ *                        "provider": "facebook",
+ *                        "id": "10153477879074738",
+ *                        "type": "image",
+ *                        "created_time": 1437948477,
+ *                        "link": "https://www.facebook.com/photo.php?fbid=10153477879074738&set=a.10152154863139738.1073741830.826764737&type=1",
+ *                        "media_url": "https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-9/20225_10153477879074738_4360696422298472690_n.jpg?oh=7d332338c4db1136c359cbe0e7ed3264&oe=565513FA&__gda__=1448067937_d3d74b86dbe101b54961e0549652c028",
+ *                        "text": "Cumple de franchu 3 años, y si, se vuelve a la infancia"
+ *                    },
+ *                    {
+ *                        "provider": "instagram",
+ *                        "id": "1037909504130909999_993803680",
+ *                        "type": "image",
+ *                        "created_time": 1437948476,
+ *                        "link": "https://instagram.com/p/5nZTHmuYcv/",
+ *                        "likes": 13,
+ *                        "media_url": "https://scontent.cdninstagram.com/hphotos-xfp1/t51.2885-15/e15/10809951_484188628422854_977065670_n.jpg",
+ *                        "text": "Cumple de franchu 3 años, y si, se vuelve a la infancia",
+ *                        "user_has_liked": ""
+ *                    },
+ *                    {
+ *                        "provider": "twitter",
+ *                        "id": "625427358284148736",
+ *                        "type": "text",
+ *                        "created_time": 1437948476,
+ *                        "link": "https://twitter.com/statuses/625427358284148736",
+ *                        "likes": 0,
+ *                        "text": "Cumple de franchu 3 años, y si, se vuelve a la infancia https://t.co/ZT86vvlho0",
+ *                        "user_has_liked": false
+ *                    }
+ *                ]
+ *            }
  *        }
- *     }
+ *    }
  */
-userRoutes.get('/:user_id', userController.getById);
+userRoutes.get('/:user_id', mediaController.getMedia);
 
 /**
  * @api {put} /api/user/:user_id Actualizar usuario
