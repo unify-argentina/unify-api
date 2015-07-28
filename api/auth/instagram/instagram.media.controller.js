@@ -59,7 +59,7 @@ var mapMedia = function(instagramMedia, callback) {
 var mapVideo = function(instagramVideo, callback) {
   // Si la url del video vino en el data, mapeamos de una
   if (instagramVideo.videos.standard_resolution) {
-    callback(null, doMapVideo(instagramVideo, instagramVideo.videos.standard_resolution));
+    callback(null, doMapVideo(instagramVideo, instagramVideo.videos.standard_resolution.url));
   }
   else {
     // Sino tenemos que ir a pedirla al endpoint de media
@@ -102,7 +102,7 @@ var getVideoURL = function(videoId, callback) {
       callback(new Error('Instagram video URL not found'), null);
     }
     else {
-      callback(null, response.body.data.videos.standard_resolution);
+      callback(null, response.body.data.videos.standard_resolution.url);
     }
   });
 };

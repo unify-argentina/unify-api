@@ -10,6 +10,7 @@ var twitterMedia = require('../auth/twitter/twitter.media.controller');
 var facebookMedia = require('../auth/facebook/facebook.media.controller');
 var logger = require('../../config/logger');
 var async = require('async');
+var _ = require('lodash');
 
 // modelos
 var User = require('../user/user.model');
@@ -73,13 +74,13 @@ var doGetMedia = function(req, res, user, contact) {
         return res.status(400).send({ errors: [{ msg: 'There was an error obtaining contact media' }] });
       }
       else {
-        sendMediaResponseFromResults(res, results);
+        sendMediaResponseFromResults(res, contact, results);
       }
   });
 };
 
 // Envía al cliente el contenido del contacto
-var sendMediaResponseFromResults = function(res, results) {
+var sendMediaResponseFromResults = function(res, contact, results) {
   var mediaObjects = [];
   if (results.facebook) {
     mediaObjects.push.apply(mediaObjects, results.facebook);
@@ -92,13 +93,19 @@ var sendMediaResponseFromResults = function(res, results) {
   }
   // Una vez que tenemos los contenidos de las 3 redes sociales
   async.sortBy(mediaObjects, function(media, callback) {
-    // los ordenamos por fecha de creación
-    callback(null, media.created_time);
+    // los ordenamos por fecha de creación (los más nuevos primero)
+    callback(null, -media.created_time);
   // Una vez que los ordenamos, los enviamos
-  }, function(err, result) {
+  }, function(err, sortedMedia) {
+    var mediaObject = {
+      media: {
+        count: sortedMedia.length,
+        list: sortedMedia
+      }
+    };
+    var result = _.merge(contact.toJSON(), mediaObject);
     return res.send({
-      count: result.length,
-      list: result
+      contact: result
     });
   });
 };
