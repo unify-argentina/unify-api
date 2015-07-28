@@ -22,24 +22,18 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
   }
 
   // Buscamos el usuario del request y verificamos que el circle_id pertenezca a este usuario
-  User.findOne({ _id: req.user }, function(err, user) {
-    if (err || !user) {
-      logger.warn('User not found: ' + req.user);
-      return res.status(400).send({ errors: [{ msg: 'User not found' }] });
-    }
-    else {
-      user.hasCircleWithId(circleId, function(success, foundCircle) {
-        if (success) {
-          req.circle = foundCircle;
-          next();
-        }
-        else {
-          logger.warn("You are trying to find a circle=" + circleId + " that doesn't belong to you");
-          return res.status(401).send({ errors: [{ msg: "You are trying to find a circle that doesn't belong to you" }] });
-        }
-      });
-    }
-  });
+  Circle.findOne({ _id: circleId, user: req.user })
+    .populate('user')
+    .exec(function(err, circle) {
+      if (err || !circle) {
+        logger.warn("You are trying to find a circle=" + circleId + " that doesn't belong to you");
+        return res.status(401).send({ errors: [{ msg: "You are trying to find a circle that doesn't belong to you" }] });
+      }
+      else {
+        req.circle = circle;
+        next();
+      }
+    });
 });
 
 /**

@@ -98,42 +98,4 @@ describe('User', function() {
       });
     });
   });
-
-  it('should not find an invalid subcircle', function(done) {
-    User.create(defaultUser(), function(err, user) {
-      User.findOne({ _id: user._id }, function(err, foundUser) {
-        foundUser.hasCircleWithId('', function(success, foundCircle) {
-          assert.equal(success, false);
-          assert.equal(foundCircle, null);
-          done();
-        });
-      });
-    });
-  });
-
-  it('should find a valid user circle (mainCircle)', function(done) {
-    User.create(defaultUser(), function(err, user) {
-      User.findOne({ _id: user._id }, function(err, foundUser) {
-        foundUser.hasCircleWithId(foundUser.mainCircle, function(success, foundCircle) {
-          assert.equal(success, true);
-          foundUser.mainCircle.toString().should.equal(foundCircle._id.toString());
-          done();
-        });
-      });
-    });
-  });
-
-  it('should find a valid user circle (subCircle)', function(done) {
-    User.create(defaultUser(), function(err, user) {
-      User.findOne({ _id: user._id }, function(err, foundUser) {
-        Circle.create({ name: 'Amigos', parent: foundUser.mainCircle, ancestors: [foundUser.mainCircle] }, function(err, circle) {
-          foundUser.hasCircleWithId(circle._id, function(success, foundCircle) {
-            assert.equal(success, true);
-            circle._id.toString().should.equal(foundCircle._id.toString());
-            done();
-          });
-        });
-      });
-    });
-  });
 });

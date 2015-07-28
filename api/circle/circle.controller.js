@@ -18,26 +18,20 @@ module.exports.create = function(req, res) {
   process.nextTick(function() {
     validateParams(req, res);
 
-    // Primero encontramos al usuario loggeado
-    User.findOne({ _id: req.user }, function(err, user) {
-      if (err || !user) {
-        logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
-      }
-      else {
-        // Luego, si el parent_id existe y pertenece al usuario loggeado, creamos un subcírculo
-        user.hasCircleWithId(req.body.parent_id, function(success, foundCircle) {
-          if (success) {
-            var circle = new Circle();
-            saveCircleData(req, res, circle, foundCircle);
-          }
-          else {
-            logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
-            return res.status(401).send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
-          }
-        });
-      }
-    });
+    // Encontramos al parent circle y verificamos que pertenezca al usuario loggeado
+    Circle.findOne({ _id: req.body.parent_id, user: req.user })
+      .populate('user')
+      .exec(function(err, parentCircle) {
+        if (err || !parentCircle) {
+          logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
+          return res.status(401).send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
+        }
+        else {
+          var circle = new Circle();
+          circle.user = parentCircle.user._id;
+          saveCircleData(req, res, circle, parentCircle);
+        }
+      });
   });
 };
 
@@ -55,34 +49,27 @@ module.exports.update = function (req, res) {
   process.nextTick(function () {
     validateParams(req, res);
 
-    // Encontramos al usuario y chequeamos que el parent_id pertenezca a un círculo del usuario
-    User.findOne({ _id: req.user }, function(err, user) {
-      if (err || !user) {
-        logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
-      }
-      else {
-        // No se puede modificar el círculo principal del usuario
-        if (req.circle._id.equals(user.mainCircle)) {
-          logger.warn("Main circle can't be modified for user=" + user._id);
-          return res.status(401).send({errors: [{msg: "Main circle can't be modified"}]});
-        }
-        else {
-          // Luego, si el parent_id existe y pertenece al usuario loggeado, actualizamos el subcírculo
-          user.hasCircleWithId(req.body.parent_id, function (success, foundCircle) {
-            if (success) {
-              saveCircleData(req, res, req.circle, foundCircle);
-            }
-            else {
-              logger
-                .warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
-              return res.status(401)
-                .send({errors: [{msg: "Paren't circle doesn't exists or doesn't belong to current user"}]});
-            }
-          });
-        }
-      }
-    });
+    // Si el círculo a modificar es el principal, devolvemos error
+    if (req.circle._id.equals(req.circle.user.mainCircle)) {
+      logger.warn("Main circle can't be modified for user=" + req.circle.user._id);
+      return res.status(401).send({ errors: [{ msg: "Main circle can't be modified" }] });
+    }
+    // Sino, encontramos el circulo padre, verificamos que pertenezca al usuario y lo actualizamos
+    else {
+      Circle.findOne({ _id: req.body.parent_id, user: req.user })
+        .populate('user')
+        .exec(function(err, parentCircle) {
+          if (err || !parentCircle) {
+            logger
+              .warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
+            return res.status(401)
+              .send({errors: [{msg: "Paren't circle doesn't exists or doesn't belong to current user"}]});
+          }
+          else {
+            saveCircleData(req, res, req.circle, parentCircle);
+          }
+        });
+    }
   });
 };
 

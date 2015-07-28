@@ -12,6 +12,7 @@ var circleSchema = mongoose.Schema({
 
   name: { type: String, required: true },
   picture: String,
+  user: { type: ObjectId, ref: 'User', index: true, required: true },
   parent: { type: ObjectId, ref: 'Circle', index: true },
   ancestors: [{ type: ObjectId, ref: 'Circle', index: true }]
 });

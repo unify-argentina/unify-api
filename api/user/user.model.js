@@ -78,6 +78,7 @@ userSchema.post('save', function(user, next) {
   if (user.mainCircle === undefined) {
     var mainCircle = new Circle();
     mainCircle.name = 'Main Circle';
+    mainCircle.user = user._id;
     mainCircle.save(function(err) {
       user.mainCircle = mainCircle;
       user.save(function(err) {
@@ -121,31 +122,6 @@ userSchema.methods.hasLinkedAccount = function(account) {
     hasFields = typeof this[account].accessToken === 'string' && typeof this[account].id === 'string';
   }
   return hasFields;
-};
-
-// Este método verifica que el circleId pasado por parámetro sea el id de un
-// círculo o subcírculo del usuario
-userSchema.methods.hasCircleWithId = function(circleId, callback) {
-  // Primero buscamos el círculo principal del usuario
-  var self = this;
-  logger.debug('Trying to find a circle with id=' + circleId);
-  Circle.findOne({ _id: self.mainCircle }, function(err, circle) {
-    if (err || !circle) {
-      callback(false, null);
-    }
-    else {
-      // Para luego poder verificar que el círculo pasado por parámetro
-      // tiene como ancestro al círculo principal
-      Circle.findOne({ _id: circleId }, function(err, subCircle) {
-        var exists = !err && subCircle !== null;
-        var isMainCircle = exists && subCircle.ancestors.length === 0 && subCircle._id.equals(self.mainCircle);
-        var isValidSubcircle = exists && subCircle.ancestors.length > 0 && subCircle.hasAncestor(circle);
-        var result = isMainCircle || isValidSubcircle;
-        logger.debug('Circle=' + circleId + ' belongs to current user=' + self._id + ' ? result=' + result);
-        callback(result, subCircle);
-      });
-    }
-  });
 };
 
 userSchema.methods.toString = function() {

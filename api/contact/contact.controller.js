@@ -18,26 +18,19 @@ module.exports.create = function(req, res) {
   process.nextTick(function() {
     validateParams(req, res);
 
-    // Primero encontramos al usuario loggeado
-    User.findOne({ _id: req.user }, selectFields(),function (err, user) {
-      if (err || !user) {
-        logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+    validateSocialIds(req, res, 'creating');
+
+    // Encontramos el círculo cuyo usuario es el que está en el request
+    Circle.findOne({ _id: req.body.circle_id, user: req.user })
+      .populate('user', selectFields())
+      .exec(function(err, circle) {
+      if (err || !circle) {
+        logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
+        return res.status(401).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
       }
       else {
-        validateSocialIds(user, req, res, 'creating');
-
-        // Revisamos que el usuario tenga efectivamente el círculo pasado por parámetro
-        user.hasCircleWithId(req.body.circle_id, function(success, foundCircle) {
-          if (success) {
-            var contact = new Contact();
-            saveContactData(req, res, contact, user);
-          }
-          else {
-            logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
-            return res.status(401).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
-          }
-        });
+        var contact = new Contact();
+        saveContactData(req, res, contact, circle.user);
       }
     });
   });
@@ -57,27 +50,19 @@ module.exports.update = function(req, res) {
   process.nextTick(function() {
     validateParams(req, res);
 
-    // Primero encontramos al usuario loggeado
-    User.findOne({ _id: req.user }, selectFields(),function (err, user) {
-      if (err || !user) {
-        logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
-      }
-      else {
+    validateSocialIds(req, res, 'updating');
 
-        validateSocialIds(user, req, res, 'updating');
-
-        // Revisamos que el usuario tenga efectivamente el círculo pasado por parámetro
-        user.hasCircleWithId(req.body.circle_id, function(success, foundCircle) {
-          if (success) {
-            saveContactData(req, res, req.contact, user);
-          }
-          else {
-            logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
-            return res.status(401).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
-          }
-        });
-      }
+    // Revisamos que el usuario tenga efectivamente el círculo pasado por parámetro
+    Circle.findOne({ _id: req.body.circle_id, user: req.user })
+      .populate('user', selectFields())
+      .exec(function(err, circle) {
+        if (err || !circle) {
+          logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
+          return res.status(401).send({errors: [{msg: "Circle doesn't exists or doesn't belong to current user"}]});
+        }
+        else {
+          saveContactData(req, res, req.contact, circle.user);
+        }
     });
   });
 };
@@ -127,7 +112,7 @@ var validateParams = function(req, res) {
   }
 };
 
-var validateSocialIds = function(user, req, res, text) {
+var validateSocialIds = function(req, res, text) {
   // Validamos que tenga por lo menos un id de una red social
   if (!req.body.facebook_id && !req.body.twitter_id && !req.body.instagram_id) {
     logger.warn("Requester didn't suplied a facebook, twitter or instagram id for creating a contact");

@@ -47,7 +47,7 @@ describe('Circles API', function() {
         email: 'unify.argentina@gmail.com',
         password: 'This is not my real password'
       }, function(err, user) {
-        Circle.create({ name: 'Familia', parent: user.mainCircle, ancestors: [user.mainCircle] }, done);
+        Circle.create({ name: 'Familia', parent: user.mainCircle, ancestors: [user.mainCircle], user: user._id }, done);
       });
     });
   });
@@ -289,7 +289,8 @@ describe('Circles API', function() {
         Circle.create({
           name: 'Familia',
           parent: user.mainCircle._id,
-          ancestors: [user.mainCircle._id]
+          ancestors: [user.mainCircle._id],
+          user: user._id
         }, function(err, firstSubcircle) {
 
           request(API_URL)
@@ -310,13 +311,15 @@ describe('Circles API', function() {
         Circle.create({
           name: 'Familia',
           parent: user.mainCircle._id,
-          ancestors: [user.mainCircle._id]
+          ancestors: [user.mainCircle._id],
+          user: user._id
         }, function(err, firstSubcircle) {
 
           Circle.create({
             name: 'Materna',
             parent: firstSubcircle._id,
-            ancestors: [user.mainCircle._id, firstSubcircle._id]
+            ancestors: [user.mainCircle._id, firstSubcircle._id],
+            user: user._id
           }, function(err, secondSubcircle) {
 
             request(API_URL)
@@ -367,7 +370,8 @@ describe('Circles API', function() {
         Circle.create({
           name: 'Familia',
           parent: user.mainCircle._id,
-          ancestors: [user.mainCircle._id]
+          ancestors: [user.mainCircle._id],
+          user: user._id
         }, function(err, subcircle) {
           request(API_URL)
             .delete(util.format(CIRCLES_PATH, user._id, subcircle._id))
