@@ -12,7 +12,7 @@ var config = require('../../../config');
 var logger = require('../../../config/logger');
 
 // Este método crea un JSON Web Token
-module.exports.createJWT = function(user) {
+module.exports.createJWT = function(res, user) {
   var payload = {
     sub: user._id,
     iat: moment().unix(),
@@ -20,7 +20,10 @@ module.exports.createJWT = function(user) {
   };
   var token = jwt.sign(payload, config.TOKEN_SECRET);
   logger.debug('User=' + user._id + ' token=' + token);
-  return token;
+  return res.send({
+    token: token,
+    user: user.toJSON()
+  });
 };
 
 // Este método verifica y desencripta el JSON Web Token

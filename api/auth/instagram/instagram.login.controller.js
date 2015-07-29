@@ -58,7 +58,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
   User.findOne({ 'instagram.id': instagramProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
-      return res.send({ token: jwt.createJWT(existingUser) });
+      return jwt.createJWT(res, existingUser);
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Instagram
     else {
@@ -89,7 +89,7 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, accessToken) {
   // pero no loggeado, generamos el token y se lo enviamos
   User.findOne({ 'instagram.id': instagramProfile.id }, function(err, existingInstagramUser) {
     if (existingInstagramUser) {
-      return res.send({ token: jwt.createJWT(existingInstagramUser )});
+      return jwt.createJWT(res, existingInstagramUser);
     }
     // Si no encuentra a uno, no tenemos forma de saber el email de Instagram, ya que es algo que la API
     // no lo provee, entonces damos de alta un nuevo usuario de Unify sin email
@@ -114,7 +114,8 @@ var saveUser = function(res, user) {
       return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }
     else {
-      return res.send({ token: jwt.createJWT(user) });
+      user.password = undefined;
+      return jwt.createJWT(res, user);
     }
   });
 };

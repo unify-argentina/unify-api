@@ -81,7 +81,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiLCJpYXQiOjE\",\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55b6fba973191a7428d80c94\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"mainCircle\": \"55b6fbaa73191a7428d80c95\",\n        \"name\": \"Joel Marquez\",\n        \"google\": {\n            \"displayName\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"displayName\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n            \"userName\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"displayName\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"userName\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"displayName\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"validLocalUser\": true\n    }\n}",
           "type": "json"
         }
       ]
@@ -157,7 +157,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI4M2VkM2Y0NjAxZmMxMTFhYjcyMWY\",\n    \"user\": {\n        \"mainCircle\": {\n            \"__v\": 0,\n            \"user\": \"55b83ed3f4601fc111ab721f\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55b83ed4f4601fc111ab7220\",\n            \"ancestors\": [\n            ]\n        },\n        \"__v\": 0,\n        \"email\": \"90joelmarquez2@gmail.com\",\n        \"name\": \"Joel\",\n        \"_id\": \"55b83ed3f4601fc111ab721f\",\n        \"validLocalUser\": true\n    }\n}",
           "type": "json"
         }
       ]
@@ -1222,7 +1222,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"mainCircle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"displayName\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"displayName\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"userName\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"displayName\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"userName\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"displayName\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"validLocalUser\": true\n  }\n}",
           "type": "json"
         }
       ]
@@ -1284,7 +1284,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"mainCircle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"displayName\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"displayName\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"userName\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"displayName\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"userName\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"displayName\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"validLocalUser\": true\n  }\n}",
           "type": "json"
         }
       ]
@@ -1346,7 +1346,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"mainCircle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"displayName\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"displayName\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"userName\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"displayName\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"userName\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"displayName\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"validLocalUser\": true\n  }\n}",
           "type": "json"
         }
       ]
@@ -1401,7 +1401,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "content": "{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"mainCircle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"displayName\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"displayName\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"userName\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"displayName\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"userName\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"displayName\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"validLocalUser\": true\n  }\n}",
           "type": "json"
         }
       ]

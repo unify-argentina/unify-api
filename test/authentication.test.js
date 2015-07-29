@@ -8,6 +8,8 @@
 var request = require('supertest');
 var mongoose = require('mongoose');
 var config = require('../config');
+var assert = require('assert');
+var logger = require('../config/logger');
 
 // modelos
 var User = require('../api/user/user.model');
@@ -143,6 +145,11 @@ describe('Authentication', function() {
         .end(function(err, data) {
           data.res.statusCode.should.equal(200);
           data.res.body.token.should.be.type('string');
+          var jsonUser = data.res.body.user;
+          jsonUser.email.should.equal('unexistentemail@gmail.com');
+          jsonUser.name.should.equal('name');
+          jsonUser._id.should.be.type('string');
+          jsonUser.mainCircle.should.be.type('object');
           done();
         });
     });
@@ -240,6 +247,11 @@ describe('Authentication', function() {
         .end(function(err, data) {
           data.res.statusCode.should.equal(200);
           data.res.body.token.should.be.type('string');
+          var jsonUser = data.res.body.user;
+          jsonUser.email.should.equal('unify.argentina@gmail.com');
+          jsonUser.name.should.equal('Juan Losa');
+          jsonUser._id.should.be.type('string');
+          jsonUser.mainCircle.should.be.type('object');
           done();
         });
     });

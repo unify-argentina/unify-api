@@ -63,7 +63,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, accessTok
   User.findOne({ 'google.id': googleProfile.sub }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
-      return res.send({ token: jwt.createJWT(existingUser) });
+      return jwt.createJWT(res, existingUser);
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Google
     else {
@@ -98,7 +98,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, accessToken) {
     // Si encuentra a uno con el id de Google, es un usuario registrado con Google
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingGoogleUser) {
-      return res.send({ token: jwt.createJWT(existingGoogleUser) });
+      return jwt.createJWT(res, existingGoogleUser);
     }
     else {
       User.findOne({ 'email': googleProfile.email }, function(err, existingUnifyUser) {
@@ -128,7 +128,8 @@ var saveUser = function(res, user) {
       return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }
     else {
-      return res.send({ token: jwt.createJWT(user) });
+      user.password = undefined;
+      return jwt.createJWT(res, user);
     }
   });
 };

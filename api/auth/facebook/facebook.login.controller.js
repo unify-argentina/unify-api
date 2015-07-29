@@ -80,7 +80,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
       logger.debug('Existing facebook user: ' + existingUser.toString());
-      return res.send({ token: jwt.createJWT(existingUser) });
+      return jwt.createJWT(res, existingUser);
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Facebook
     else {
@@ -119,7 +119,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingFacebookUser) {
       logger.debug('Existing facebook user: ' + existingFacebookUser.toString());
-      return res.send({ token: jwt.createJWT(existingFacebookUser) });
+      return jwt.createJWT(res, existingFacebookUser);
     }
     else {
       User.findOne({ 'email': facebookProfile.email }, function(err, existingUnifyUser) {
@@ -151,7 +151,8 @@ var saveUser = function(res, user) {
       return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }
     else {
-      return res.send({ token: jwt.createJWT(user) });
+      user.password = undefined;
+      return jwt.createJWT(res, user);
     }
   });
 };

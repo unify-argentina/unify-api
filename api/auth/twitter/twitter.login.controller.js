@@ -94,7 +94,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessTo
   User.findOne({ 'twitter.id': twitterProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
-      return res.send({ token: jwt.createJWT(existingUser) });
+      return jwt.createJWT(res, existingUser);
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Twitter
     else {
@@ -125,7 +125,7 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, accessToken) {
     // Si encuentra a uno con el id de Twitter, es un usuario registrado con Twitter
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingTwitterUser) {
-      return res.send({token: jwt.createJWT(existingTwitterUser)});
+      return jwt.createJWT(res, existingTwitterUser);
     }
     // Si no encuentra a uno, no tenemos forma de saber el email de Twitter, ya que es algo que la API
     // no lo provee, entonces damos de alta un nuevo usuario de Unify sin email
@@ -150,7 +150,8 @@ var saveUser = function(res, user) {
       return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }
     else {
-      return res.send({ token: jwt.createJWT(user) });
+      user.password = undefined;
+      return jwt.createJWT(res, user);
     }
   });
 };

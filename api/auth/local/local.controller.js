@@ -35,7 +35,9 @@ module.exports.login = function(req, res) {
     }
 
     // Si no encontramos un usuario, no existe, error
-    User.findOne({ email: req.body.email }, '+password', function(err, user) {
+    User.findOne({ email: req.body.email }, '+password')
+      .populate('mainCircle')
+      .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.body.email);
         return res.status(401).send({ errors: [{ msg: "User doesn't exist" }] });
@@ -46,11 +48,12 @@ module.exports.login = function(req, res) {
           // Si coincide, enviamos el token con el id del usuario loggeado
           if (!isMatch) {
             logger.warn('Wrong password for user: ' + user.toString());
-            return res.status(401).send({errors: [{msg: 'Wrong password'}]});
+            return res.status(401).send({ errors: [{ msg: 'Wrong password' }] });
           }
           else {
             logger.debug('User logged in successfully: ' + user.toString());
-            return res.send({token: jwt.createJWT(user)});
+            user.password = undefined;
+            return jwt.createJWT(res, user);
           }
         });
       }
@@ -103,7 +106,8 @@ module.exports.signup = function(req, res) {
             return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
           }
           else {
-            return res.send({token: jwt.createJWT(user)});
+            user.password = undefined;
+            return jwt.createJWT(res, user);
           }
         });
       }
