@@ -10,9 +10,12 @@
 // requires
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
-var Circle = require('../circle/circle.model');
 var bcrypt = require('bcryptjs');
 var logger = require('../../config/logger');
+
+// modelos
+var Circle = require('../circle/circle.model');
+var Contact = require('../contact/contact.model');
 
 var userSchema = mongoose.Schema({
 
@@ -91,16 +94,13 @@ userSchema.post('save', function(user, next) {
   }
 });
 
-// Este 'hook' se encarga de eliminar el círculo principal del usuario cuando este se elimina
-// TODO eliminar los contactos del usuario
+// Este 'hook' se encarga de eliminar los círculos/contactos del usuario
 userSchema.pre('remove', function(next) {
-  Circle.findOne({ _id: this.mainCircle }, function(err, circle) {
-    if (err) {
+  var userId = this._id;
+  Circle.remove({ user: userId }, function(err) {
+    Contact.remove({ user: userId }, function(err) {
       next();
-    }
-    else {
-      circle.remove(next);
-    }
+    });
   });
 });
 
