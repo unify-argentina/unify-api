@@ -14,8 +14,25 @@ var circleSchema = mongoose.Schema({
   picture: String,
   user: { type: ObjectId, ref: 'User', index: true, required: true },
   parent: { type: ObjectId, ref: 'Circle', index: true },
-  ancestors: [{ type: ObjectId, ref: 'Circle', index: true }]
+  ancestors: [{ type: ObjectId, ref: 'Circle', index: true }],
+
+  createdAt: { type: Date, select: false },
+  updatedAt: { type: Date, select: false }
 });
+
+// Actualiza la fecha de update y la de creación en caso de ser la primera vez
+circleSchema.pre('save', function(next) {
+  var now = new Date();
+  this.updatedAt = now;
+  if (!this.createdAt) {
+    this.createdAt = now;
+  }
+  next();
+});
+
+circleSchema.methods.toString = function() {
+  return 'ID: ' + this._id + ' Name: ' + this.name + ' parent: ' + this.parent;
+};
 
 // Chequea que dentro de los ancestros se encuentre el ancestro pasado por parámetro
 circleSchema.methods.hasAncestor = function(ancestor) {
@@ -25,10 +42,6 @@ circleSchema.methods.hasAncestor = function(ancestor) {
     }
   }
   return false;
-};
-
-circleSchema.methods.toString = function() {
-  return 'ID: ' + this._id + ' Name: ' + this.name + ' parent: ' + this.parent;
 };
 
 module.exports = mongoose.model('Circle', circleSchema);

@@ -16,7 +16,20 @@ var contactSchema = mongoose.Schema({
   twitter_id: String,
   instagram_id: String,
   circle: { type: ObjectId, required: true, ref: 'Circle' },
-  user: { type: ObjectId, required: true, ref: 'User' }
+  user: { type: ObjectId, required: true, ref: 'User' },
+
+  createdAt: { type: Date, select: false },
+  updatedAt: { type: Date, select: false }
+});
+
+// Actualiza la fecha de update y la de creación en caso de ser la primera vez
+contactSchema.pre('save', function(next) {
+  var now = new Date();
+  this.updatedAt = now;
+  if (!this.createdAt) {
+    this.createdAt = now;
+  }
+  next();
 });
 
 contactSchema.methods.toString = function() {

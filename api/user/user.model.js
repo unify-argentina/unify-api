@@ -59,11 +59,22 @@ var userSchema = mongoose.Schema({
     email: String,
     picture: String,
     displayName: String
-  }
+  },
+
+  createdAt: { type: Date, select: false },
+  updatedAt: { type: Date, select: false }
 });
 
-// Este 'hook' se encarga de hacer un hash de la password para guardarla
+// Este 'hook' se encarga de hacer un hash de la password para guardarla y
+// actualiza la fecha de update y la de creación en caso de ser la primera vez
 userSchema.pre('save', function(next) {
+
+  var now = new Date();
+  this.updatedAt = now;
+  if (!this.createdAt) {
+    this.createdAt = now;
+  }
+
   var user = this;
   if (!user.isModified('password')) {
     return next();
@@ -104,6 +115,10 @@ userSchema.pre('remove', function(next) {
   });
 });
 
+userSchema.methods.toString = function() {
+  return 'ID: ' + this._id + ' Name: ' + this.name + ' email: ' + this.email + ' mainCircle: ' + this.mainCircle;
+};
+
 // Este método compara la password que se pasa por parámetro con la hasheada
 userSchema.methods.comparePassword = function(password, done) {
   bcrypt.compare(password, this.password, function(err, isMatch) {
@@ -122,10 +137,6 @@ userSchema.methods.hasLinkedAccount = function(account) {
     hasFields = typeof this[account].accessToken === 'string' && typeof this[account].id === 'string';
   }
   return hasFields;
-};
-
-userSchema.methods.toString = function() {
-  return 'ID: ' + this._id + ' Name: ' + this.name + ' email: ' + this.email + ' mainCircle: ' + this.mainCircle;
 };
 
 module.exports = mongoose.model('User', userSchema);
