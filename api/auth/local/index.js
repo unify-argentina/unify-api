@@ -27,13 +27,20 @@ var jwt = require('../util/jwt');
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *     {
- *         "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiLCJpYXQiOjE",
+ *         "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWJjM2MyN2JmYTU0MGVhMmM0MzJjZGMiLCJpYXQiOjE0MzgzOTk2NDUsImV4cCI6MTQ0MDk5MTY0NX0.lrrs4_S3qZ7roqmJeCr3nNAXxmPURlYhZlUA7IOcn2w",
  *         "user": {
  *             "__v": 0,
- *             "_id": "55b6fba973191a7428d80c94",
+ *             "_id": "55bc3c27bfa540ea2c432cdc",
  *             "email": "90joelmarquez@gmail.com",
- *             "main_circle": "55b6fbaa73191a7428d80c95",
- *             "name": "Joel Marquez",
+ *             "main_circle": {
+ *                 "user": "55bc3c27bfa540ea2c432cdc",
+ *                 "name": "Main Circle",
+ *                 "_id": "55bc3c29bfa540ea2c432cdd",
+ *                 "__v": 0,
+ *                 "ancestors": [
+ *                 ]
+ *             },
+ *             "name": "Joel",
  *             "google": {
  *                 "display_name": "Joel Márquez",
  *                 "email": "90joelmarquez@gmail.com",
