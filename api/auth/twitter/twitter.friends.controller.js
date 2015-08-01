@@ -18,9 +18,9 @@ var TWITTER_USER_FOLLOWS_URL = 'https://api.twitter.com/1.1/friends/list.json';
 var users = [];
 
 // Devuelve las personas a las que sigue en Instagram el usuario loggeado
-module.exports.getFriends = function(accessToken, twitterId, callback) {
+module.exports.getFriends = function(access_token, twitterId, callback) {
 
-  getTwitterData(TWITTER_USER_FOLLOWS_URL, -1, accessToken, twitterId, function(err, twitterUsers) {
+  getTwitterData(TWITTER_USER_FOLLOWS_URL, -1, access_token, twitterId, function(err, twitterUsers) {
     if (err) {
       callback(err, null);
     }
@@ -40,7 +40,7 @@ module.exports.getFriends = function(accessToken, twitterId, callback) {
 
 // Le pega a la API de Twitter y en el response, si fue exitoso, van a estar las personas a las que sigue de
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
-var getTwitterData = function(url, cursor, accessToken, twitterId, callback) {
+var getTwitterData = function(url, cursor, access_token, twitterId, callback) {
 
   var qs = {
     cursor: cursor,
@@ -53,7 +53,7 @@ var getTwitterData = function(url, cursor, accessToken, twitterId, callback) {
   };
 
   logger.debug('URL: ' + url + 'qs=' + JSON.stringify(qs));
-  request.get({ url: url, oauth: twitterOAuthHelper.getOauthParam(accessToken), qs: qs, json: true }, function(err, response) {
+  request.get({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
     if (err || (response.body.errors && response.body.errors.length > 0)) {
       logger.error('Error: ' + err ? err : response.body.errors[0].message);
       callback(err ? err : response.body.errors[0].message, null);
@@ -61,7 +61,7 @@ var getTwitterData = function(url, cursor, accessToken, twitterId, callback) {
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.next_cursor !== 0) {
       users.push.apply(users, response.body.users);
-      getTwitterData(TWITTER_USER_FOLLOWS_URL, response.body.next_cursor, accessToken, twitterId, callback);
+      getTwitterData(TWITTER_USER_FOLLOWS_URL, response.body.next_cursor, access_token, twitterId, callback);
     }
     // Sino, ya tengo los usuarios y los devuelvo en el callback
     else {

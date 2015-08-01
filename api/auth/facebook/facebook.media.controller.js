@@ -14,19 +14,19 @@ var facebookPhotos = require('./facebook.photos.controller');
 var facebookVideos = require('./facebook.videos.controller');
 var facebookStatuses = require('./facebook.statuses.controller');
 
-module.exports.getMedia = function(accessToken, facebookId, callback) {
+module.exports.getMedia = function(access_token, facebookId, callback) {
 
   async.parallel({
     photos: function(callback) {
-      facebookPhotos.getPhotos(accessToken, facebookId, callback);
+      facebookPhotos.getPhotos(access_token, facebookId, callback);
     },
 
     videos: function(callback) {
-      facebookVideos.getVideos(accessToken, facebookId, callback);
+      facebookVideos.getVideos(access_token, facebookId, callback);
     },
 
     statuses: function(callback) {
-      facebookStatuses.getStatuses(accessToken, facebookId, callback);
+      facebookStatuses.getStatuses(access_token, facebookId, callback);
     }
   },
 

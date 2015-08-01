@@ -14,11 +14,11 @@ var logger = require('../../../config/logger');
 var users = [];
 
 // Devuelve las personas a las que sigue en Instagram el usuario loggeado
-module.exports.getFriends = function(accessToken, instagramId, callback) {
+module.exports.getFriends = function(access_token, instagramId, callback) {
 
   // El límite de la API de Instagram es de 100 usuarios por request. No lo dice, pero probando
   // descubrimos que es 100. https://instagram.com/developer/endpoints/
-  var url = util.format('https://api.instagram.com/v1/users/%s/follows?access_token=%s&count=100', instagramId, accessToken);
+  var url = util.format('https://api.instagram.com/v1/users/%s/follows?access_token=%s&count=100', instagramId, access_token);
 
   getInstagramData(url, function(err, instagramUsers) {
     if (err) {

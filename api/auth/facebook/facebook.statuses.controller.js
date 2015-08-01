@@ -15,9 +15,9 @@ var facebookUtils = require('./facebook.utils');
 // constantes
 var USER_STATUSES_URL = facebookUtils.getBaseURL() + '/%s/statuses?access_token=%s';
 
-module.exports.getStatuses = function(accessToken, facebookId, callback) {
+module.exports.getStatuses = function(access_token, facebookId, callback) {
 
-  var url = util.format(USER_STATUSES_URL, facebookId, accessToken);
+  var url = util.format(USER_STATUSES_URL, facebookId, access_token);
   logger.debug('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {

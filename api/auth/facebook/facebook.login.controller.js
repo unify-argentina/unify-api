@@ -44,30 +44,30 @@ module.exports.linkAccount = function(req, res) {
     var qs = getAccessTokenParams(req);
     logger.debug('Access token params: ' + JSON.stringify(qs));
     // Primero intercambiamos el código de autorización para obtener el access token
-    request.get({ url: ACCESS_TOKEN_URL, qs: qs, json: true }, function(err, response, accessToken) {
+    request.get({ url: ACCESS_TOKEN_URL, qs: qs, json: true }, function(err, response, access_token) {
       if (response.statusCode !== 200) {
-        logger.error(accessToken.error.message);
-        return res.status(response.statusCode).send({ errors: [{ msg: accessToken.error.message }] });
+        logger.error(access_token.error.message);
+        return res.status(response.statusCode).send({ errors: [{ msg: access_token.error.message }] });
       }
 
-      logger.debug('Access token: ' + JSON.stringify(accessToken));
-      // Una vez que tenemos el accessToken, obtenemos información del usuario actual
-      request.get({ url: GRAPH_USER_URL, qs: accessToken, json: true }, function(err, response, profile) {
+      logger.debug('Access token: ' + JSON.stringify(access_token));
+      // Una vez que tenemos el access_token, obtenemos información del usuario actual
+      request.get({ url: GRAPH_USER_URL, qs: access_token, json: true }, function(err, response, profile) {
         if (response.statusCode !== 200) {
-          logger.error(accessToken.error.message);
-          return res.status(response.statusCode).send({ errors: [{ msg: accessToken.error.message }] });
+          logger.error(access_token.error.message);
+          return res.status(response.statusCode).send({ errors: [{ msg: access_token.error.message }] });
         }
 
         logger.debug('Facebook profile: ' + JSON.stringify(profile));
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
           logger.debug('Authenticated user');
-          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, accessToken.access_token);
+          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, access_token.access_token);
         }
         // Si no tiene el header de authorization, es porque es un nuevo usuario
         else {
           logger.debug('Not authenticated user');
-          handleNotAuthenticatedUser(res, profile, accessToken.access_token);
+          handleNotAuthenticatedUser(res, profile, access_token.access_token);
         }
       });
     });
@@ -75,7 +75,7 @@ module.exports.linkAccount = function(req, res) {
 };
 
 // Maneja el caso de un autenticado con un token de Unify
-var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessToken) {
+var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, access_token) {
   User.findOne({ 'facebook.id': facebookProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
@@ -86,7 +86,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
     else {
       var payload = null;
       try {
-        payload = jwt.verify(unifyToken, config.TOKEN_SECRET);
+        payload = jwt.verify(unifyToken);
       }
       catch(err) {
         return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
@@ -104,7 +104,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
             user.email = facebookProfile.email;
           }
           logger.debug('Existing unify user: ' + user.toString());
-          linkFacebookData(user, facebookProfile, accessToken);
+          linkFacebookData(user, facebookProfile, access_token);
           return saveUser(res, user);
         }
       });
@@ -113,7 +113,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, accessT
 };
 
 // Maneja el caso de un usuario no autenticado
-var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
+var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
   User.findOne({ 'facebook.id': facebookProfile.id }, function(err, existingFacebookUser) {
     // Si encuentra a uno con el id de Facebook, es un usuario registrado con Facebook
     // pero no loggeado, generamos el token y se lo enviamos
@@ -126,7 +126,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
         // Si encuentra a uno con el email de Facebook, vincula la cuenta local con la de Facebook
         if (existingUnifyUser) {
           logger.debug('Existing unify user: ' + existingUnifyUser);
-          linkFacebookData(existingUnifyUser, facebookProfile, accessToken);
+          linkFacebookData(existingUnifyUser, facebookProfile, access_token);
           return saveUser(res, existingUnifyUser);
         }
         // Si no encuentra a uno, es un usuario nuevo haciendo un login con Facebook
@@ -136,7 +136,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, accessToken) {
           user.email = facebookProfile.email;
           user.password = randomstring.generate(20);
           logger.debug('New facebook user!: ' + user);
-          linkFacebookData(user, facebookProfile, accessToken);
+          linkFacebookData(user, facebookProfile, access_token);
           return saveUser(res, user);
         }
       });
@@ -158,15 +158,15 @@ var saveUser = function(res, user) {
 };
 
 // Copia los datos de Facebook en la cuenta de Unify
-var linkFacebookData = function(unifyUser, facebookProfile, accessToken) {
+var linkFacebookData = function(unifyUser, facebookProfile, access_token) {
   unifyUser.facebook.id = facebookProfile.id;
   unifyUser.facebook.email = facebookProfile.email;
-  unifyUser.facebook.accessToken = accessToken;
+  unifyUser.facebook.access_token = access_token;
   unifyUser.facebook.picture = facebookUtils.getFacebookPicture(facebookProfile.id);
-  unifyUser.facebook.displayName = facebookProfile.name;
+  unifyUser.facebook.display_name = facebookProfile.name;
 };
 
-// Devuelve los parámetros necesarios para el intercambio del accessToken
+// Devuelve los parámetros necesarios para el intercambio del access_token
 var getAccessTokenParams = function(req) {
   return {
     code: req.body.code,

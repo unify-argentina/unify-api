@@ -25,7 +25,7 @@ var CONTACTS_PATH = '/api/user/%s/contact/%s';
 // Esta función sirve para hacer un login y devolverle al callback el user_id y el token de Unify
 var login = function(email, password, callback) {
   User.findOne({ email: email })
-    .populate('mainCircle')
+    .populate('main_circle')
     .exec(function(err, user) {
       request(API_URL)
         .post(LOGIN_PATH)
@@ -53,7 +53,7 @@ describe('Contacts API', function() {
           email: 'unify.argentina2@gmail.com',
           password: 'This is not my real password',
           facebook: {
-            accessToken: 'asdasdasd',
+            access_token: 'asdasdasd',
             id: 'asdasd'
           }
         }], function(err, users) {
@@ -61,7 +61,7 @@ describe('Contacts API', function() {
         Contact.remove().exec(function(err) {
           Contact.create({
             name: 'Jose', facebook_id: 'asdasdasd',
-            circle: user.mainCircle._id, user: user._id }, done);
+            circle: user.main_circle._id, user: user._id }, done);
         });
       });
     });
@@ -173,12 +173,12 @@ describe('Contacts API', function() {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: 'Juan', facebook_id: 'asd33223423asd', circle_id: user.mainCircle._id })
+          .send({ name: 'Juan', facebook_id: 'asd33223423asd', circle_id: user.main_circle._id })
           .end(function(err, data) {
             data.res.statusCode.should.equal(200);
             var jsonContact = data.res.body.contact;
             jsonContact.user.should.equal(user._id.toString());
-            jsonContact.circle.should.equal(user.mainCircle._id.toString());
+            jsonContact.circle.should.equal(user.main_circle._id.toString());
             jsonContact.name.should.equal('Juan');
             jsonContact.facebook_id.should.equal('asd33223423asd');
             done();
@@ -221,7 +221,7 @@ describe('Contacts API', function() {
               data.res.statusCode.should.equal(200);
               var jsonContact = data.res.body.contact;
               jsonContact.user.should.equal(user._id.toString());
-              jsonContact.circle.should.equal(user.mainCircle._id.toString());
+              jsonContact.circle.should.equal(user.main_circle._id.toString());
               jsonContact.name.should.equal('Jose');
               jsonContact.facebook_id.should.equal('asdasdasd');
               done();
@@ -341,12 +341,12 @@ describe('Contacts API', function() {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'Joaquin', facebook_id: 'ansdjnj23234', circle_id: user.mainCircle._id })
+            .send({ name: 'Joaquin', facebook_id: 'ansdjnj23234', circle_id: user.main_circle._id })
             .end(function(err, data) {
               data.res.statusCode.should.equal(200);
               var jsonContact = data.res.body.contact;
               jsonContact.user.should.equal(user._id.toString());
-              jsonContact.circle.should.equal(user.mainCircle._id.toString());
+              jsonContact.circle.should.equal(user.main_circle._id.toString());
               jsonContact.name.should.equal('Joaquin');
               jsonContact.facebook_id.should.equal('ansdjnj23234');
               done();

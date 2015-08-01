@@ -15,9 +15,9 @@ var facebookUtils = require('./facebook.utils');
 var users = [];
 
 // Devuelve los amigos de Facebook del usuario loggeado
-module.exports.getFriends = function(accessToken, facebookId, callback) {
+module.exports.getFriends = function(access_token, facebookId, callback) {
 
-  var url = util.format('%s/%s/friends?access_token=%s&limit=1000', facebookUtils.getBaseURL(), facebookId, accessToken);
+  var url = util.format('%s/%s/friends?access_token=%s&limit=1000', facebookUtils.getBaseURL(), facebookId, access_token);
 
   getFacebookData(url, function(err, facebookUsers) {
     if (err) {

@@ -30,7 +30,7 @@ describe('Contact', function() {
 
   it('should create ok', function(done) {
     User.create({ name: 'Juan Losa', email: 'unify.argentina@gmail.com', password: 'password' }, function(err, user) {
-      Contact.create({ name: 'contacto1', circle: user.mainCircle, user: user }, function(err, contact) {
+      Contact.create({ name: 'contacto1', circle: user.main_circle, user: user }, function(err, contact) {
         Contact.find({}, function(err, contacts) {
           contacts.length.should.equal(1);
           contacts[0].name.should.equal('contacto1');

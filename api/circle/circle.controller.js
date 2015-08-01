@@ -67,7 +67,7 @@ module.exports.update = function (req, res) {
     validateParams(req, res);
 
     // Si el círculo a modificar es el principal, devolvemos error
-    if (req.circle._id.equals(req.circle.user.mainCircle)) {
+    if (req.circle._id.equals(req.circle.user.main_circle)) {
       logger.warn("Main circle can't be modified for user=" + req.circle.user._id);
       return res.status(401).send({ errors: [{ msg: "Main circle can't be modified" }] });
     }
@@ -97,7 +97,7 @@ module.exports.delete = function(req, res) {
     // Primero buscamos el usuario loggeado, para luego ver si el círculo pasado por parámetro
     // no es el círculo principal del usuario
     User.findOne({ _id: req.user })
-      .populate('mainCircle')
+      .populate('main_circle')
       .exec(function (err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
@@ -105,7 +105,7 @@ module.exports.delete = function(req, res) {
       }
       else {
         var circle = req.circle;
-        if (user.mainCircle._id.equals(circle._id)) {
+        if (user.main_circle._id.equals(circle._id)) {
           logger.warn('Cannot delete users main circle: ' + circle._id);
           return res.status(400).send({ errors: [{ msg: 'Cannot delete users main circle' }] });
         }

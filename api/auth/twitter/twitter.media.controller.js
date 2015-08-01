@@ -21,7 +21,7 @@ var USER_MEDIA_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
 var TWITTER_DATE_FORMAT = 'dd MMM DD HH:mm:ss ZZ YYYY';
 var TWITTER_STATUS_URL = 'https://twitter.com/statuses/';
 
-module.exports.getMedia = function(accessToken, twitterId, callback) {
+module.exports.getMedia = function(access_token, twitterId, callback) {
 
   var qs = {
     //cursor: cursor,
@@ -32,7 +32,7 @@ module.exports.getMedia = function(accessToken, twitterId, callback) {
   };
 
   logger.debug('URL: ' + USER_MEDIA_URL + 'qs=' + JSON.stringify(qs));
-  request.get({ url: USER_MEDIA_URL, oauth: twitterOAuthHelper.getOauthParam(accessToken), qs: qs, json: true }, function(err, response) {
+  request.get({ url: USER_MEDIA_URL, oauth: twitterOAuthHelper.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
     if (err) {
       callback(err, null);
     }

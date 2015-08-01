@@ -39,19 +39,19 @@ module.exports.linkAccount = function(req, res) {
   process.nextTick(function() {
     // Primero intercambiamos el código de autorización para obtener el access token
     request.post(ACCESS_TOKEN_URL, { json: true, form: getAccessTokenParams(req) }, function(err, response, token) {
-      var accessToken = token.access_token;
-      var headers = { Authorization: 'Bearer ' + accessToken };
+      var access_token = token.access_token;
+      var headers = { Authorization: 'Bearer ' + access_token };
 
-      // Una vez que tenemos el accessToken, obtenemos información del usuario actual
+      // Una vez que tenemos el access_token, obtenemos información del usuario actual
       request.get({ url: PEOPLE_API_URL, headers: headers, json: true }, function(err, response, profile) {
 
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
-          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, accessToken);
+          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, access_token);
         }
         // Si no tiene el header de authorization, es porque es un nuevo usuario
         else {
-          handleNotAuthenticatedUser(res, profile, accessToken);
+          handleNotAuthenticatedUser(res, profile, access_token);
         }
       });
     });
@@ -59,7 +59,7 @@ module.exports.linkAccount = function(req, res) {
 };
 
 // Maneja el caso de un autenticado con un token de Unify
-var handleAuthenticatedUser = function(res, unifyToken, googleProfile, accessToken) {
+var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_token) {
   User.findOne({ 'google.id': googleProfile.sub }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
@@ -69,7 +69,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, accessTok
     else {
       var payload = null;
       try {
-        payload = jwt.verify(unifyToken, config.TOKEN_SECRET);
+        payload = jwt.verify(unifyToken);
       }
       catch(err) {
         return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
@@ -84,7 +84,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, accessTok
           if (user.email.indexOf('no-email') > -1) {
             user.email = googleProfile.email;
           }
-          linkGoogleData(user, googleProfile, accessToken);
+          linkGoogleData(user, googleProfile, access_token);
           return saveUser(res, user);
         }
       });
@@ -93,7 +93,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, accessTok
 };
 
 // Maneja el caso de un usuario no autenticado
-var handleNotAuthenticatedUser = function(res, googleProfile, accessToken) {
+var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
   User.findOne({ 'google.id': googleProfile.sub }, function(err, existingGoogleUser) {
     // Si encuentra a uno con el id de Google, es un usuario registrado con Google
     // pero no loggeado, generamos el token y se lo enviamos
@@ -104,7 +104,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, accessToken) {
       User.findOne({ 'email': googleProfile.email }, function(err, existingUnifyUser) {
         // Si encuentra a uno con el email de Google, vincula la cuenta local con la de Google
         if (existingUnifyUser) {
-          linkGoogleData(existingUnifyUser, googleProfile, accessToken);
+          linkGoogleData(existingUnifyUser, googleProfile, access_token);
           return saveUser(res, existingUnifyUser);
         }
         // Si no encuentra a uno, es un usuario nuevo haciendo un login con Google
@@ -113,7 +113,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, accessToken) {
           user.name = googleProfile.name;
           user.email = googleProfile.email;
           user.password = randomstring.generate(20);
-          linkGoogleData(user, googleProfile, accessToken);
+          linkGoogleData(user, googleProfile, access_token);
           return saveUser(res, user);
         }
       });
@@ -135,15 +135,15 @@ var saveUser = function(res, user) {
 };
 
 // Copia los datos de Google en la cuenta de Unify
-var linkGoogleData = function(unifyUser, googleProfile, accessToken) {
+var linkGoogleData = function(unifyUser, googleProfile, access_token) {
   unifyUser.google.id = googleProfile.sub;
   unifyUser.google.email = googleProfile.email;
-  unifyUser.google.accessToken = accessToken;
+  unifyUser.google.access_token = access_token;
   unifyUser.google.picture = googleProfile.picture.replace('sz=50', 'sz=200');
-  unifyUser.google.displayName = googleProfile.name;
+  unifyUser.google.display_name = googleProfile.name;
 };
 
-// Devuelve los parámetros necesarios para el intercambio del accessToken
+// Devuelve los parámetros necesarios para el intercambio del access_token
 var getAccessTokenParams = function(req) {
   return {
     code: req.body.code,

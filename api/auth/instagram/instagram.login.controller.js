@@ -54,7 +54,7 @@ module.exports.linkAccount = function(req, res) {
 };
 
 // Maneja el caso de un autenticado con un token de Unify
-var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, accessToken) {
+var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access_token) {
   User.findOne({ 'instagram.id': instagramProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
@@ -64,7 +64,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
     else {
       var payload = null;
       try {
-        payload = jwt.verify(unifyToken, config.TOKEN_SECRET);
+        payload = jwt.verify(unifyToken);
       }
       catch(err) {
         return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
@@ -75,7 +75,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
         }
         // Si existe un usuario de Unify, vinculamos su cuenta con la de Instagram
         else {
-          linkInstagramData(user, instagramProfile, accessToken);
+          linkInstagramData(user, instagramProfile, access_token);
           return saveUser(res, user);
         }
       });
@@ -84,7 +84,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
 };
 
 // Maneja el caso de un usuario no autenticado
-var handleNotAuthenticatedUser = function(res, instagramProfile, accessToken) {
+var handleNotAuthenticatedUser = function(res, instagramProfile, access_token) {
   // Si encuentra a uno con el id de Instagram, es un usuario registrado con Twitter
   // pero no loggeado, generamos el token y se lo enviamos
   User.findOne({ 'instagram.id': instagramProfile.id }, function(err, existingInstagramUser) {
@@ -101,7 +101,7 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, accessToken) {
       // restricción de que el email tiene que ser único
       user.email = 'no-email' + randomstring.generate(10) + '@gmail.com';
       user.password = randomstring.generate(20);
-      linkInstagramData(user, instagramProfile, accessToken);
+      linkInstagramData(user, instagramProfile, access_token);
       return saveUser(res, user);
     }
   });
@@ -121,15 +121,15 @@ var saveUser = function(res, user) {
 };
 
 // Copia los datos de Instagram en la cuenta de Unify
-var linkInstagramData = function(unifyUser, instagramProfile, accessToken) {
+var linkInstagramData = function(unifyUser, instagramProfile, access_token) {
   unifyUser.instagram.id = instagramProfile.id;
   unifyUser.instagram.userName = instagramProfile.username;
-  unifyUser.instagram.displayName = instagramProfile.full_name;
+  unifyUser.instagram.display_name = instagramProfile.full_name;
   unifyUser.instagram.picture = instagramProfile.profile_picture;
-  unifyUser.instagram.accessToken = accessToken;
+  unifyUser.instagram.access_token = access_token;
 };
 
-// Devuelve los parámetros necesarios para el intercambio del accessToken
+// Devuelve los parámetros necesarios para el intercambio del access_token
 var getAccessTokenParams = function(req) {
   return {
     code: req.body.code,

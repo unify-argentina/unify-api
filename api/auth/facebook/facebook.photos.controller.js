@@ -15,9 +15,9 @@ var facebookUtils = require('./facebook.utils');
 // constantes
 var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?type=uploaded&fields=id,name,created_time,album,images,link&access_token=%s';
 
-module.exports.getPhotos = function(accessToken, facebookId, callback) {
+module.exports.getPhotos = function(access_token, facebookId, callback) {
 
-  var url = util.format(USER_PHOTOS_URL, facebookId, accessToken);
+  var url = util.format(USER_PHOTOS_URL, facebookId, access_token);
   logger.debug('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {

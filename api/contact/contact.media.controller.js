@@ -36,7 +36,7 @@ var doGetMedia = function(req, res, user, contact) {
   async.parallel({
       facebook: function(callback) {
         if (user.hasLinkedAccount('facebook') && contact.hasLinkedAccount('facebook')) {
-          facebookMedia.getMedia(user.facebook.accessToken, contact.facebook_id, function(err, results) {
+          facebookMedia.getMedia(user.facebook.access_token, contact.facebook_id, function(err, results) {
             callback(err, results);
           });
         }
@@ -47,7 +47,7 @@ var doGetMedia = function(req, res, user, contact) {
       },
       instagram: function(callback) {
         if (user.hasLinkedAccount('instagram') && contact.hasLinkedAccount('instagram')) {
-          instagramMedia.getMedia(user.instagram.accessToken, contact.instagram_id, function(err, results) {
+          instagramMedia.getMedia(user.instagram.access_token, contact.instagram_id, function(err, results) {
             callback(err, results);
           });
         }
@@ -58,7 +58,7 @@ var doGetMedia = function(req, res, user, contact) {
       },
       twitter: function(callback) {
         if (user.hasLinkedAccount('twitter') && contact.hasLinkedAccount('twitter')) {
-          twitterMedia.getMedia(user.twitter.accessToken, contact.twitter_id, function(err, results) {
+          twitterMedia.getMedia(user.twitter.access_token, contact.twitter_id, function(err, results) {
             callback(err, results);
           });
         }
@@ -113,6 +113,6 @@ var sendMediaResponseFromResults = function(res, contact, results) {
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 var selectFields = function() {
-  return 'facebook.id facebook.accessToken twitter.id twitter.accessToken.token ' +
-    'twitter.accessToken.tokenSecret instagram.id instagram.accessToken';
+  return 'facebook.id facebook.access_token twitter.id twitter.access_token.token ' +
+    'twitter.access_token.token_secret instagram.id instagram.access_token';
 };

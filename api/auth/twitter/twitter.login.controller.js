@@ -68,29 +68,29 @@ module.exports.linkAccount = function(req, res) {
 var handleTokenRequest = function(req, res) {
   // Intercambiamos el oauth token y el oauth verifier para obtener el access token
   var oauth = getAccessTokenParams(req);
-  request.post({ url: ACCESS_TOKEN_URL, oauth: oauth }, function(err, response, accessToken) {
+  request.post({ url: ACCESS_TOKEN_URL, oauth: oauth }, function(err, response, access_token) {
 
-    accessToken = qs.parse(accessToken);
+    access_token = qs.parse(access_token);
 
     // Una vez tenemos el access token, obtenemos la información del usuario a vincular
-    var profileOauth = getProfileParams(accessToken.oauth_token);
-    request.get({ url: PROFILE_URL + accessToken.screen_name, oauth: profileOauth, json: true },
+    var profileOauth = getProfileParams(access_token.oauth_token);
+    request.get({ url: PROFILE_URL + access_token.screen_name, oauth: profileOauth, json: true },
       function(err, response, profile) {
 
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
-          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, accessToken);
+          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, access_token);
         }
         // Si no tiene el header de authorization, es porque es un nuevo usuario
         else {
-          handleNotAuthenticatedUser(res, profile, accessToken);
+          handleNotAuthenticatedUser(res, profile, access_token);
         }
       });
   });
 };
 
 // Maneja el caso de un autenticado con un token de Unify
-var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessToken) {
+var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_token) {
   User.findOne({ 'twitter.id': twitterProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
@@ -100,7 +100,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessTo
     else {
       var payload = null;
       try {
-        payload = jwt.verify(unifyToken, config.TOKEN_SECRET);
+        payload = jwt.verify(unifyToken);
       }
       catch(err) {
         return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
@@ -111,7 +111,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessTo
         }
         // Si existe un usuario de Unify, vinculamos su cuenta con la de Twitter
         else {
-          linkTwitterData(user, twitterProfile, accessToken);
+          linkTwitterData(user, twitterProfile, access_token);
           return saveUser(res, user);
         }
       });
@@ -120,7 +120,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, accessTo
 };
 
 // Maneja el caso de un usuario no autenticado
-var handleNotAuthenticatedUser = function(res, twitterProfile, accessToken) {
+var handleNotAuthenticatedUser = function(res, twitterProfile, access_token) {
   User.findOne({ 'twitter.id': twitterProfile.id }, function(err, existingTwitterUser) {
     // Si encuentra a uno con el id de Twitter, es un usuario registrado con Twitter
     // pero no loggeado, generamos el token y se lo enviamos
@@ -137,7 +137,7 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, accessToken) {
       // restricción de que el email tiene que ser único
       user.email = 'no-email' + randomstring.generate(10) + '@gmail.com';
       user.password = randomstring.generate(20);
-      linkTwitterData(user, twitterProfile, accessToken);
+      linkTwitterData(user, twitterProfile, access_token);
       return saveUser(res, user);
     }
   });
@@ -157,12 +157,12 @@ var saveUser = function(res, user) {
 };
 
 // Copia los datos de Twitter en la cuenta de Unify
-var linkTwitterData = function(unifyUser, twitterProfile, accessToken) {
+var linkTwitterData = function(unifyUser, twitterProfile, access_token) {
   unifyUser.twitter.id = twitterProfile.id;
-  unifyUser.twitter.accessToken.token = accessToken.oauth_token;
-  unifyUser.twitter.accessToken.tokenSecret = accessToken.oauth_token_secret;
+  unifyUser.twitter.access_token.token = access_token.oauth_token;
+  unifyUser.twitter.access_token.token_secret = access_token.oauth_token_secret;
   unifyUser.twitter.picture = twitterProfile.profile_image_url.replace('_normal', '_bigger');
-  unifyUser.twitter.displayName = twitterProfile.name;
+  unifyUser.twitter.display_name = twitterProfile.name;
   unifyUser.twitter.userName = twitterProfile.screen_name;
 };
 

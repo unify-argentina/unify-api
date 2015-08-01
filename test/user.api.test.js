@@ -21,7 +21,7 @@ var LOGIN_PATH = '/auth/login';
 // Esta función sirve para hacer un login y devolverle al callback el user_id y el token de Unify
 var login = function(callback) {
   User.findOne({ email: 'unify.argentina@gmail.com' })
-    .populate('mainCircle')
+    .populate('main_circle')
     .exec(function(err, user) {
     request(API_URL)
       .post(LOGIN_PATH)
@@ -119,7 +119,7 @@ describe('Users API', function() {
             jsonUser._id.should.equal(user._id.toString());
             jsonUser.email.should.equal(user.email);
             jsonUser.name.should.equal(user.name);
-            jsonUser.mainCircle.name.should.equal(user.mainCircle.name);
+            jsonUser.main_circle.name.should.equal(user.main_circle.name);
             done();
           });
       });
@@ -249,7 +249,7 @@ describe('Users API', function() {
             jsonUser._id.should.equal(user._id.toString());
             jsonUser.email.should.equal('unexistentemail@gmail.com');
             jsonUser.name.should.equal('name');
-            jsonUser.mainCircle.name.should.equal(user.mainCircle.name);
+            jsonUser.main_circle.name.should.equal(user.main_circle.name);
             done();
           });
       });

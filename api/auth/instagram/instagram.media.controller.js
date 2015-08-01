@@ -19,12 +19,12 @@ var MEDIA_URL = 'https://api.instagram.com/v1/media/%s?access_token=%s';
 
 var ACCESS_TOKEN = '';
 
-module.exports.getMedia = function(accessToken, instagramId, callback) {
+module.exports.getMedia = function(access_token, instagramId, callback) {
 
   // FIXME Chanchada, ver como se puede mejorar
-  ACCESS_TOKEN = accessToken;
+  ACCESS_TOKEN = access_token;
 
-  var url = util.format(USER_MEDIA_URL, instagramId, accessToken);
+  var url = util.format(USER_MEDIA_URL, instagramId, access_token);
   logger.debug('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {

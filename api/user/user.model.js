@@ -22,47 +22,47 @@ var userSchema = mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true, select: false },
-  validLocalUser: { type: Boolean, default: false },
-  birthDate: Date,
-  mainCircle: { type: ObjectId, ref: 'Circle' },
+  valid_local_user: { type: Boolean, default: false },
+  birth_date: Date,
+  main_circle: { type: ObjectId, ref: 'Circle' },
 
   facebook: {
     id: { type: String, index: true, select: false },
     email: String,
-    accessToken: { type: String, select: false },
+    access_token: { type: String, select: false },
     picture: String,
-    displayName: String
+    display_name: String
   },
 
   twitter: {
     id: { type: String, index: true, select: false },
-    accessToken: {
+    access_token: {
       token: { type: String, select: false },
-      tokenSecret: { type: String, select: false }
+      token_secret: { type: String, select: false }
     },
     picture: String,
-    displayName: String,
+    display_name: String,
     userName: String
   },
 
   instagram: {
     id: { type: String, index: true, select: false },
-    accessToken: { type: String, select: false },
+    access_token: { type: String, select: false },
     picture: String,
-    displayName: String,
+    display_name: String,
     userName: String
   },
 
   google: {
     id: { type: String, index: true, select: false },
-    accessToken: { type: String, select: false },
+    access_token: { type: String, select: false },
     email: String,
     picture: String,
-    displayName: String
+    display_name: String
   },
 
-  createdAt: { type: Date, select: false },
-  updatedAt: { type: Date, select: false }
+  created_at: { type: Date, select: false },
+  updated_at: { type: Date, select: false }
 });
 
 // Este 'hook' se encarga de hacer un hash de la password para guardarla y
@@ -70,9 +70,9 @@ var userSchema = mongoose.Schema({
 userSchema.pre('save', function(next) {
 
   var now = new Date();
-  this.updatedAt = now;
-  if (!this.createdAt) {
-    this.createdAt = now;
+  this.updated_at = now;
+  if (!this.created_at) {
+    this.created_at = now;
   }
 
   var user = this;
@@ -89,12 +89,12 @@ userSchema.pre('save', function(next) {
 
 // Recién cuando el usuario haya sido creado exitosamente creamos el círculo principal
 userSchema.post('save', function(user, next) {
-  if (user.mainCircle === undefined) {
-    var mainCircle = new Circle();
-    mainCircle.name = 'Main Circle';
-    mainCircle.user = user._id;
-    mainCircle.save(function(err) {
-      user.mainCircle = mainCircle;
+  if (user.main_circle === undefined) {
+    var main_circle = new Circle();
+    main_circle.name = 'Main Circle';
+    main_circle.user = user._id;
+    main_circle.save(function(err) {
+      user.main_circle = main_circle;
       user.save(function(err) {
         next();
       });
@@ -116,7 +116,7 @@ userSchema.pre('remove', function(next) {
 });
 
 userSchema.methods.toString = function() {
-  return 'ID: ' + this._id + ' Name: ' + this.name + ' email: ' + this.email + ' mainCircle: ' + this.mainCircle;
+  return 'ID: ' + this._id + ' Name: ' + this.name + ' email: ' + this.email + ' main_circle: ' + this.main_circle;
 };
 
 // Este método compara la password que se pasa por parámetro con la hasheada
@@ -131,10 +131,10 @@ userSchema.methods.hasLinkedAccount = function(account) {
   var hasFields = false;
   // El access token de Twitter es un objeto con dos campos
   if (account === 'twitter') {
-    hasFields = typeof this.twitter.accessToken.token === 'string' && typeof this.twitter.accessToken.tokenSecret === 'string';
+    hasFields = typeof this.twitter.access_token.token === 'string' && typeof this.twitter.access_token.token_secret === 'string';
   }
   else {
-    hasFields = typeof this[account].accessToken === 'string' && typeof this[account].id === 'string';
+    hasFields = typeof this[account].access_token === 'string' && typeof this[account].id === 'string';
   }
   return hasFields;
 };

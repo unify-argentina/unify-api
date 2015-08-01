@@ -36,7 +36,7 @@ var doGetMedia = function(req, res, user) {
   async.parallel({
       facebook: function(callback) {
         if (user.hasLinkedAccount('facebook')) {
-          facebookMedia.getMedia(user.facebook.accessToken, user.facebook.id, function(err, results) {
+          facebookMedia.getMedia(user.facebook.access_token, user.facebook.id, function(err, results) {
             callback(err, results);
           });
         }
@@ -47,7 +47,7 @@ var doGetMedia = function(req, res, user) {
       },
       instagram: function(callback) {
         if (user.hasLinkedAccount('instagram')) {
-          instagramMedia.getMedia(user.instagram.accessToken, user.instagram.id, function(err, results) {
+          instagramMedia.getMedia(user.instagram.access_token, user.instagram.id, function(err, results) {
             callback(err, results);
           });
         }
@@ -58,7 +58,7 @@ var doGetMedia = function(req, res, user) {
       },
       twitter: function(callback) {
         if (user.hasLinkedAccount('twitter')) {
-          twitterMedia.getMedia(user.twitter.accessToken, user.twitter.id, function(err, results) {
+          twitterMedia.getMedia(user.twitter.access_token, user.twitter.id, function(err, results) {
             callback(err, results);
           });
         }
@@ -115,15 +115,15 @@ var sendMediaResponseFromResults = function(res, user, results) {
 // Limpia los datos que no tienen que ser enviados al cliente
 var clearProtectedData = function(result) {
   result.instagram.id = undefined;
-  result.instagram.accessToken = undefined;
+  result.instagram.access_token = undefined;
   result.facebook.id = undefined;
-  result.facebook.accessToken = undefined;
+  result.facebook.access_token = undefined;
   result.twitter.id = undefined;
-  result.twitter.accessToken = undefined;
+  result.twitter.access_token = undefined;
 };
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 var selectFields = function() {
-  return '+facebook.id +facebook.accessToken +twitter.id +twitter.accessToken.token ' +
-    '+twitter.accessToken.tokenSecret +instagram.id +instagram.accessToken';
+  return '+facebook.id +facebook.access_token +twitter.id +twitter.access_token.token ' +
+    '+twitter.access_token.token_secret +instagram.id +instagram.access_token';
 };

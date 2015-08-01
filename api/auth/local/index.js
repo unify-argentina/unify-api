@@ -32,29 +32,29 @@ var jwt = require('../util/jwt');
  *             "__v": 0,
  *             "_id": "55b6fba973191a7428d80c94",
  *             "email": "90joelmarquez@gmail.com",
- *             "mainCircle": "55b6fbaa73191a7428d80c95",
+ *             "main_circle": "55b6fbaa73191a7428d80c95",
  *             "name": "Joel Marquez",
  *             "google": {
- *                 "displayName": "Joel Márquez",
+ *                 "display_name": "Joel Márquez",
  *                 "email": "90joelmarquez@gmail.com",
  *                 "picture": "https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200"
  *             },
  *             "instagram": {
- *                 "displayName": "Joel Márquez",
+ *                 "display_name": "Joel Márquez",
  *                 "picture": "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg",
  *                 "userName": "joe__marquez"
  *             },
  *             "twitter": {
- *                 "displayName": "Joel Márquez",
+ *                 "display_name": "Joel Márquez",
  *                 "picture": "http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg",
  *                 "userName": "joelmarquez90"
  *             },
  *             "facebook": {
- *                 "displayName": "Joel Márquez",
+ *                 "display_name": "Joel Márquez",
  *                 "email": "90joelmarquez@gmail.com",
  *                 "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
  *             },
- *             "validLocalUser": true
+ *             "valid_local_user": true
  *         }
  *     }
  */
@@ -84,7 +84,7 @@ localRoutes.post('/login', localController.login);
  *     {
  *         "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI4M2VkM2Y0NjAxZmMxMTFhYjcyMWY",
  *         "user": {
- *             "mainCircle": {
+ *             "main_circle": {
  *                 "__v": 0,
  *                 "user": "55b83ed3f4601fc111ab721f",
  *                 "name": "Main Circle",
@@ -96,7 +96,7 @@ localRoutes.post('/login', localController.login);
  *             "email": "90joelmarquez2@gmail.com",
  *             "name": "Joel",
  *             "_id": "55b83ed3f4601fc111ab721f",
- *             "validLocalUser": true
+ *             "valid_local_user": true
  *         }
  *     }
  */

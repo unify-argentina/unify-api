@@ -23,7 +23,7 @@ var CIRCLES_PATH = '/api/user/%s/circle/%s';
 // Esta función sirve para hacer un login y devolverle al callback el user_id y el token de Unify
 var login = function(callback) {
   User.findOne({ email: 'unify.argentina@gmail.com' })
-    .populate('mainCircle')
+    .populate('main_circle')
     .exec(function(err, user) {
       request(API_URL)
         .post(LOGIN_PATH)
@@ -47,7 +47,7 @@ describe('Circles API', function() {
         email: 'unify.argentina@gmail.com',
         password: 'This is not my real password'
       }, function(err, user) {
-        Circle.create({ name: 'Familia', parent: user.mainCircle, ancestors: [user.mainCircle], user: user._id }, done);
+        Circle.create({ name: 'Familia', parent: user.main_circle, ancestors: [user.main_circle], user: user._id }, done);
       });
     });
   });
@@ -143,13 +143,13 @@ describe('Circles API', function() {
         request(API_URL)
           .post(util.format(CIRCLES_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: 'Amigos', parent_id: user.mainCircle._id })
+          .send({ name: 'Amigos', parent_id: user.main_circle._id })
           .end(function(err, data) {
             data.res.statusCode.should.equal(200);
             var jsonCircle = data.res.body.circle;
-            jsonCircle.parent.should.equal(user.mainCircle._id.toString());
+            jsonCircle.parent.should.equal(user.main_circle._id.toString());
             jsonCircle.name.should.equal('Amigos');
-            jsonCircle.ancestors[0].should.equal(user.mainCircle._id.toString());
+            jsonCircle.ancestors[0].should.equal(user.main_circle._id.toString());
             done();
           });
       });
@@ -183,13 +183,13 @@ describe('Circles API', function() {
     it('should allow to get a circle that belong to user', function(done) {
       login(function(user, token) {
         request(API_URL)
-          .get(util.format(CIRCLES_PATH, user._id, user.mainCircle._id))
+          .get(util.format(CIRCLES_PATH, user._id, user.main_circle._id))
           .set('Authorization', 'Bearer ' + token)
           .end(function(err, data) {
             data.res.statusCode.should.equal(200);
             var jsonCircle = data.res.body.circle;
             jsonCircle.name.should.equal('Main Circle');
-            jsonCircle._id.should.equal(user.mainCircle._id.toString());
+            jsonCircle._id.should.equal(user.main_circle._id.toString());
             done();
           });
       });
@@ -210,7 +210,7 @@ describe('Circles API', function() {
 
     it('should not allow to update a circle with empty data', function(done) {
       login(function(user, token) {
-        Circle.findOne({ name: 'Familia', parent: user.mainCircle }, function(err, circle) {
+        Circle.findOne({ name: 'Familia', parent: user.main_circle }, function(err, circle) {
           request(API_URL)
             .put(util.format(CIRCLES_PATH, user._id, circle._id))
             .set('Authorization', 'Bearer ' + token)
@@ -238,7 +238,7 @@ describe('Circles API', function() {
 
     it('should not allow to update a circle with wrong data', function(done) {
       login(function(user, token) {
-        Circle.findOne({ name: 'Familia', parent: user.mainCircle }, function(err, circle) {
+        Circle.findOne({ name: 'Familia', parent: user.main_circle }, function(err, circle) {
           request(API_URL)
             .put(util.format(CIRCLES_PATH, user._id, circle._id))
             .set('Authorization', 'Bearer ' + token)
@@ -254,7 +254,7 @@ describe('Circles API', function() {
 
     it('should not allow to update a circle with injection data', function(done) {
       login(function(user, token) {
-        Circle.findOne({ name: 'Familia', parent: user.mainCircle }, function(err, circle) {
+        Circle.findOne({ name: 'Familia', parent: user.main_circle }, function(err, circle) {
           request(API_URL)
             .put(util.format(CIRCLES_PATH, user._id, circle._id))
             .set('Authorization', 'Bearer ' + token)
@@ -270,7 +270,7 @@ describe('Circles API', function() {
 
     it('should not allow to update a circle with an invalid parent circle', function(done) {
       login(function(user, token) {
-        Circle.findOne({ name: 'Familia', parent: user.mainCircle }, function(err, circle) {
+        Circle.findOne({ name: 'Familia', parent: user.main_circle }, function(err, circle) {
           request(API_URL)
             .put(util.format(CIRCLES_PATH, user._id, circle._id))
             .set('Authorization', 'Bearer ' + token)
@@ -288,15 +288,15 @@ describe('Circles API', function() {
       login(function(user, token) {
         Circle.create({
           name: 'Familia',
-          parent: user.mainCircle._id,
-          ancestors: [user.mainCircle._id],
+          parent: user.main_circle._id,
+          ancestors: [user.main_circle._id],
           user: user._id
-        }, function(err, firstSubcircle) {
+        }, function(err, first_subcircle) {
 
           request(API_URL)
-            .put(util.format(CIRCLES_PATH, user._id, user.mainCircle._id))
+            .put(util.format(CIRCLES_PATH, user._id, user.main_circle._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'Amigos', parent_id: firstSubcircle._id })
+            .send({ name: 'Amigos', parent_id: first_subcircle._id })
             .end(function(err, data) {
               data.res.statusCode.should.equal(401);
               data.res.body.errors[0].msg.should.equal("Main circle can't be modified");
@@ -310,29 +310,29 @@ describe('Circles API', function() {
       login(function(user, token) {
         Circle.create({
           name: 'Familia',
-          parent: user.mainCircle._id,
-          ancestors: [user.mainCircle._id],
+          parent: user.main_circle._id,
+          ancestors: [user.main_circle._id],
           user: user._id
-        }, function(err, firstSubcircle) {
+        }, function(err, first_subcircle) {
 
           Circle.create({
             name: 'Materna',
-            parent: firstSubcircle._id,
-            ancestors: [user.mainCircle._id, firstSubcircle._id],
+            parent: first_subcircle._id,
+            ancestors: [user.main_circle._id, first_subcircle._id],
             user: user._id
           }, function(err, secondSubcircle) {
 
             request(API_URL)
               .put(util.format(CIRCLES_PATH, user._id, secondSubcircle._id))
               .set('Authorization', 'Bearer ' + token)
-              .send({ name: 'Amigos', parent_id: user.mainCircle._id })
+              .send({ name: 'Amigos', parent_id: user.main_circle._id })
               .end(function(err, data) {
                 data.res.statusCode.should.equal(200);
                 var jsonCircle = data.res.body.circle;
                 jsonCircle.name.should.equal('Amigos');
                 jsonCircle._id.should.equal(secondSubcircle._id.toString());
-                jsonCircle.parent.should.equal(user.mainCircle._id.toString());
-                jsonCircle.ancestors[0].should.equal(user.mainCircle._id.toString());
+                jsonCircle.parent.should.equal(user.main_circle._id.toString());
+                jsonCircle.ancestors[0].should.equal(user.main_circle._id.toString());
                 done();
               });
           });
@@ -355,7 +355,7 @@ describe('Circles API', function() {
     it('should not allow to delete users main circle', function(done) {
       login(function(user, token) {
         request(API_URL)
-          .delete(util.format(CIRCLES_PATH, user._id, user.mainCircle._id))
+          .delete(util.format(CIRCLES_PATH, user._id, user.main_circle._id))
           .set('Authorization', 'Bearer ' + token)
           .end(function(err, data) {
             data.res.statusCode.should.equal(400);
@@ -369,8 +369,8 @@ describe('Circles API', function() {
       login(function(user, token) {
         Circle.create({
           name: 'Familia',
-          parent: user.mainCircle._id,
-          ancestors: [user.mainCircle._id],
+          parent: user.main_circle._id,
+          ancestors: [user.main_circle._id],
           user: user._id
         }, function(err, subcircle) {
           request(API_URL)

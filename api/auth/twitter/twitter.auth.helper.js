@@ -8,11 +8,11 @@
 // requires
 var config = require('../../../config');
 
-module.exports.getOauthParam = function(accessToken) {
+module.exports.getOauthParam = function(access_token) {
   return {
     consumer_key: config.TWITTER_KEY,
     consumer_secret: config.TWITTER_SECRET,
-    token: accessToken.token,
-    token_secret: accessToken.tokenSecret
+    token: access_token.token,
+    token_secret: access_token.token_secret
   };
 };

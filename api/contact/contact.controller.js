@@ -192,6 +192,6 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 var selectFields = function() {
-  return '+facebook.id +facebook.accessToken +twitter.id +twitter.accessToken.token ' +
-    '+twitter.accessToken.tokenSecret +instagram.id +instagram.accessToken';
+  return '+facebook.id +facebook.access_token +twitter.id +twitter.access_token.token ' +
+    '+twitter.access_token.token_secret +instagram.id +instagram.access_token';
 };

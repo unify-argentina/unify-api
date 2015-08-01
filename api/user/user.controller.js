@@ -20,7 +20,7 @@ module.exports.getById = function(req, res) {
   process.nextTick(function() {
     User
       .findOne({ _id: req.params.user_id })
-      .populate('mainCircle')
+      .populate('main_circle')
       .exec(function(err, user) {
         if (err || !user) {
           logger.warn('User not found: ' + req.user);
@@ -66,7 +66,7 @@ module.exports.update = function(req, res) {
       else {
         // Encontramos un usuario con el id del token y le actualizamos los datos
         User.findOne({ _id: req.user })
-          .populate('mainCircle')
+          .populate('main_circle')
           .exec(function(err, user) {
             if (err || !user) {
               logger.warn('User not found: ' + req.user);
@@ -110,7 +110,7 @@ module.exports.getFriends = function(req, res) {
         async.parallel({
           facebook: function(callback) {
             if (user.hasLinkedAccount('facebook')) {
-              facebookFriends.getFriends(user.facebook.accessToken, user.facebook.id, function(err, results) {
+              facebookFriends.getFriends(user.facebook.access_token, user.facebook.id, function(err, results) {
                 callback(err, results);
               });
             }
@@ -121,7 +121,7 @@ module.exports.getFriends = function(req, res) {
           },
           instagram: function(callback) {
             if (user.hasLinkedAccount('instagram')) {
-              instagramFriends.getFriends(user.instagram.accessToken, user.instagram.id, function(err, results) {
+              instagramFriends.getFriends(user.instagram.access_token, user.instagram.id, function(err, results) {
                 callback(err, results);
               });
             }
@@ -132,7 +132,7 @@ module.exports.getFriends = function(req, res) {
           },
           twitter: function(callback) {
             if (user.hasLinkedAccount('twitter')) {
-              twitterFriends.getFriends(user.twitter.accessToken, user.twitter.id, function(err, results) {
+              twitterFriends.getFriends(user.twitter.access_token, user.twitter.id, function(err, results) {
                 callback(err, results);
               });
             }
@@ -159,8 +159,8 @@ module.exports.getFriends = function(req, res) {
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 var selectFields = function() {
-  return 'facebook.id facebook.accessToken twitter.id twitter.accessToken.token ' +
-    'twitter.accessToken.tokenSecret instagram.id instagram.accessToken';
+  return 'facebook.id facebook.access_token twitter.id twitter.access_token.token ' +
+    'twitter.access_token.token_secret instagram.id instagram.access_token';
 };
 
 // Envía al cliente los amigos del usuario

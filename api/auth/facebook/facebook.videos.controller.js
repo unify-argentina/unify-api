@@ -15,9 +15,9 @@ var facebookUtils = require('./facebook.utils');
 // constantes
 var USER_VIDEOS_URL = facebookUtils.getBaseURL() + '/%s/videos?type=uploaded&fields=id,description,length,source,picture,created_time&access_token=%s';
 
-module.exports.getVideos = function(accessToken, facebookId, callback) {
+module.exports.getVideos = function(access_token, facebookId, callback) {
 
-  var url = util.format(USER_VIDEOS_URL, facebookId, accessToken);
+  var url = util.format(USER_VIDEOS_URL, facebookId, access_token);
   logger.debug('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {

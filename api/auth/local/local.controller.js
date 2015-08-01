@@ -36,7 +36,7 @@ module.exports.login = function(req, res) {
 
     // Si no encontramos un usuario, no existe, error
     User.findOne({ email: req.body.email }, '+password')
-      .populate('mainCircle')
+      .populate('main_circle')
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.body.email);
@@ -98,7 +98,7 @@ module.exports.signup = function(req, res) {
           email: req.body.email,
           name: req.body.name,
           password: req.body.password,
-          validLocalUser: true
+          valid_local_user: true
         });
         user.save(function(err) {
           if (err) {

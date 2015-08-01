@@ -16,16 +16,16 @@ var circleSchema = mongoose.Schema({
   parent: { type: ObjectId, ref: 'Circle', index: true },
   ancestors: [{ type: ObjectId, ref: 'Circle', index: true }],
 
-  createdAt: { type: Date, select: false },
-  updatedAt: { type: Date, select: false }
+  created_at: { type: Date, select: false },
+  updated_at: { type: Date, select: false }
 });
 
 // Actualiza la fecha de update y la de creación en caso de ser la primera vez
 circleSchema.pre('save', function(next) {
   var now = new Date();
-  this.updatedAt = now;
-  if (!this.createdAt) {
-    this.createdAt = now;
+  this.updated_at = now;
+  if (!this.created_at) {
+    this.created_at = now;
   }
   next();
 });

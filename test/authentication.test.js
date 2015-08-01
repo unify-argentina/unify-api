@@ -149,7 +149,7 @@ describe('Authentication', function() {
           jsonUser.email.should.equal('unexistentemail@gmail.com');
           jsonUser.name.should.equal('name');
           jsonUser._id.should.be.type('string');
-          jsonUser.mainCircle.should.be.type('object');
+          jsonUser.main_circle.should.be.type('object');
           done();
         });
     });
@@ -251,7 +251,7 @@ describe('Authentication', function() {
           jsonUser.email.should.equal('unify.argentina@gmail.com');
           jsonUser.name.should.equal('Juan Losa');
           jsonUser._id.should.be.type('string');
-          jsonUser.mainCircle.should.be.type('object');
+          jsonUser.main_circle.should.be.type('object');
           done();
         });
     });

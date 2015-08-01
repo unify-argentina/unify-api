@@ -27,8 +27,8 @@ module.exports.createJWT = function(res, user) {
 };
 
 // Este método verifica y desencripta el JSON Web Token
-module.exports.verify = function(token, tokenSecret) {
-  return jwt.verify(token, tokenSecret);
+module.exports.verify = function(token) {
+  return jwt.verify(token, config.TOKEN_SECRET);
 };
 
 // Obtiene el token del header de autenticación
