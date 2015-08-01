@@ -24,7 +24,7 @@ module.exports.getById = function(req, res) {
       .exec(function(err, user) {
         if (err || !user) {
           logger.warn('User not found: ' + req.user);
-          return res.status(400).send({errors: [{msg: 'User not found'}]});
+          return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
         else {
           logger.debug('Get user by id: ' + req.params.user_id);

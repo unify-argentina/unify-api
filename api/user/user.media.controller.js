@@ -20,7 +20,9 @@ module.exports.getMedia = function (req, res) {
 
   process.nextTick(function () {
 
-    User.findOne({ _id: req.user }, selectFields(), function (err, user) {
+    User.findOne({ _id: req.user }, selectFields())
+      .populate('main_circle')
+      .exec(function (err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -114,12 +116,18 @@ var sendMediaResponseFromResults = function(res, user, results) {
 
 // Limpia los datos que no tienen que ser enviados al cliente
 var clearProtectedData = function(result) {
-  result.instagram.id = undefined;
-  result.instagram.access_token = undefined;
-  result.facebook.id = undefined;
-  result.facebook.access_token = undefined;
-  result.twitter.id = undefined;
-  result.twitter.access_token = undefined;
+  if (result.instagram) {
+    result.instagram.id = undefined;
+    result.instagram.access_token = undefined;
+  }
+  if (result.facebook) {
+    result.facebook.id = undefined;
+    result.facebook.access_token = undefined;
+  }
+  if (result.twitter) {
+    result.twitter.id = undefined;
+    result.twitter.access_token = undefined;
+  }
 };
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
