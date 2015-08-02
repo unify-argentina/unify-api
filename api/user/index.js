@@ -8,6 +8,7 @@
 var userRoutes = require('express').Router();
 var userController = require('./user.controller');
 var mediaController = require('./user.media.controller');
+var friendsController = require('./user.friends.controller');
 
 // modelos
 var User = require('./user.model.js');
@@ -228,7 +229,7 @@ userRoutes.put('/:user_id', userController.update);
  *      }
  *    }
  */
-userRoutes.get('/:user_id/friends', userController.getFriends);
+userRoutes.get('/:user_id/friends', friendsController.getFriends);
 
 userRoutes.use('/:user_id/circle', require('../circle'));
 

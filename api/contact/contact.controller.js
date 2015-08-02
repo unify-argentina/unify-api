@@ -148,6 +148,8 @@ var saveContactData = function(req, res, contact, user) {
     }
     else {
       logger.debug('Contact for user: ' + req.user + ' created successfully: ' + contact.toString());
+      contact.created_at = undefined;
+      contact.updated_at = undefined;
       return res.send({ contact: contact });
     }
   });

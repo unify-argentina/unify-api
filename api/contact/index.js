@@ -182,7 +182,7 @@ contactRoutes.post('/', contactController.create);
  *         }
  *     }
  */
-contactRoutes.get('/:contact_id', mediaController.getMedia);//contactController.getById);
+contactRoutes.get('/:contact_id', mediaController.getMedia);
 
 /**
  * @api {put} /api/user/:user_id/contact/:contact_id Actualizar un contacto

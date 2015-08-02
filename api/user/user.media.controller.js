@@ -28,47 +28,18 @@ module.exports.getMedia = function (req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
-        doGetMedia(req, res, user);
+        doGetMedia(res, user);
       }
     });
   });
 };
 
-var doGetMedia = function(req, res, user) {
+// Una vez que encontramos al usuario, mandamos a consultar su contenido por cada red social que tenga asociada
+var doGetMedia = function(res, user) {
   async.parallel({
-      facebook: function(callback) {
-        if (user.hasLinkedAccount('facebook')) {
-          facebookMedia.getMedia(user.facebook.access_token, user.facebook.id, function(err, results) {
-            callback(err, results);
-          });
-        }
-        // Si no tiene linkeada la cuenta de Facebook, no devolvemos nada
-        else {
-          callback(null, null);
-        }
-      },
-      instagram: function(callback) {
-        if (user.hasLinkedAccount('instagram')) {
-          instagramMedia.getMedia(user.instagram.access_token, user.instagram.id, function(err, results) {
-            callback(err, results);
-          });
-        }
-        // Si no tiene linkeada la cuenta de Instagram, no devolvemos nada
-        else {
-          callback(null, null);
-        }
-      },
-      twitter: function(callback) {
-        if (user.hasLinkedAccount('twitter')) {
-          twitterMedia.getMedia(user.twitter.access_token, user.twitter.id, function(err, results) {
-            callback(err, results);
-          });
-        }
-        // Si no tiene linkeada la cuenta de Twitter, no devolvemos nada
-        else {
-          callback(null, null);
-        }
-      }
+      facebook: getFacebookMedia.bind(null, user),
+      instagram: getInstagramMedia.bind(null, user),
+      twitter: getTwitterMedia.bind(null, user)
     },
     // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
     function(err, results) {
@@ -80,6 +51,42 @@ var doGetMedia = function(req, res, user) {
         sendMediaResponseFromResults(res, user, results);
       }
     });
+};
+
+var getFacebookMedia = function(user, callback) {
+  if (user.hasLinkedAccount('facebook')) {
+    facebookMedia.getMedia(user.facebook.access_token, user.facebook.id, function(err, results) {
+      callback(err, results);
+    });
+  }
+  // Si no tiene linkeada la cuenta de Facebook, no devolvemos nada
+  else {
+    callback(null, null);
+  }
+};
+
+var getInstagramMedia = function(user, callback) {
+  if (user.hasLinkedAccount('instagram')) {
+    instagramMedia.getMedia(user.instagram.access_token, user.instagram.id, function(err, results) {
+      callback(err, results);
+    });
+  }
+  // Si no tiene linkeada la cuenta de Instagram, no devolvemos nada
+  else {
+    callback(null, null);
+  }
+};
+
+var getTwitterMedia = function(user, callback) {
+  if (user.hasLinkedAccount('twitter')) {
+    twitterMedia.getMedia(user.twitter.access_token, user.twitter.id, function(err, results) {
+      callback(err, results);
+    });
+  }
+  // Si no tiene linkeada la cuenta de Twitter, no devolvemos nada
+  else {
+    callback(null, null);
+  }
 };
 
 // Envía al cliente el contenido del usuario

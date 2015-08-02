@@ -26,47 +26,18 @@ module.exports.getMedia = function (req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
-        doGetMedia(req, res, user, req.contact);
+        doGetMedia(res, user, req.contact);
       }
     });
   });
 };
 
-var doGetMedia = function(req, res, user, contact) {
+// Una vez que encontramos al usuario, mandamos a consultar el contenido del contacto por cada red social que tenga asociada
+var doGetMedia = function(res, user, contact) {
   async.parallel({
-      facebook: function(callback) {
-        if (user.hasLinkedAccount('facebook') && contact.hasLinkedAccount('facebook')) {
-          facebookMedia.getMedia(user.facebook.access_token, contact.facebook_id, function(err, results) {
-            callback(err, results);
-          });
-        }
-        // Si no tiene linkeada la cuenta de Facebook, no devolvemos nada
-        else {
-          callback(null, null);
-        }
-      },
-      instagram: function(callback) {
-        if (user.hasLinkedAccount('instagram') && contact.hasLinkedAccount('instagram')) {
-          instagramMedia.getMedia(user.instagram.access_token, contact.instagram_id, function(err, results) {
-            callback(err, results);
-          });
-        }
-        // Si no tiene linkeada la cuenta de Instagram, no devolvemos nada
-        else {
-          callback(null, null);
-        }
-      },
-      twitter: function(callback) {
-        if (user.hasLinkedAccount('twitter') && contact.hasLinkedAccount('twitter')) {
-          twitterMedia.getMedia(user.twitter.access_token, contact.twitter_id, function(err, results) {
-            callback(err, results);
-          });
-        }
-        // Si no tiene linkeada la cuenta de Twitter, no devolvemos nada
-        else {
-          callback(null, null);
-        }
-      }
+      facebook: getFacebookMedia.bind(null, user, contact),
+      instagram: getInstagramMedia.bind(null, user, contact),
+      twitter: getTwitterMedia.bind(null, user, contact)
     },
     // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
     function(err, results) {
@@ -77,7 +48,43 @@ var doGetMedia = function(req, res, user, contact) {
       else {
         sendMediaResponseFromResults(res, contact, results);
       }
-  });
+    });
+};
+
+var getFacebookMedia = function(user, contact, callback) {
+  if (user.hasLinkedAccount('facebook') && contact.hasLinkedAccount('facebook')) {
+    facebookMedia.getMedia(user.facebook.access_token, contact.facebook_id, function(err, results) {
+      callback(err, results);
+    });
+  }
+  // Si no tiene linkeada la cuenta de Facebook, no devolvemos nada
+  else {
+    callback(null, null);
+  }
+};
+
+var getInstagramMedia = function(user, contact, callback) {
+  if (user.hasLinkedAccount('instagram') && contact.hasLinkedAccount('instagram')) {
+    instagramMedia.getMedia(user.instagram.access_token, contact.instagram_id, function(err, results) {
+      callback(err, results);
+    });
+  }
+  // Si no tiene linkeada la cuenta de Instagram, no devolvemos nada
+  else {
+    callback(null, null);
+  }
+};
+
+var getTwitterMedia = function(user, contact, callback) {
+  if (user.hasLinkedAccount('twitter') && contact.hasLinkedAccount('twitter')) {
+    twitterMedia.getMedia(user.twitter.access_token, contact.twitter_id, function(err, results) {
+      callback(err, results);
+    });
+  }
+  // Si no tiene linkeada la cuenta de Twitter, no devolvemos nada
+  else {
+    callback(null, null);
+  }
 };
 
 // Envía al cliente el contenido del contacto
