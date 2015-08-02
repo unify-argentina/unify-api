@@ -111,7 +111,7 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, access_token) {
 var saveUser = function(res, user) {
   user.save(function(err) {
     if (err) {
-      return res.send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
+      return res.status(400).send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }
     else {
       user.password = undefined;

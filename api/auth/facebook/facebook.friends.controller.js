@@ -8,6 +8,7 @@
 var util = require('util');
 var request = require('request');
 var async = require('async');
+var _ = require('lodash');
 var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
 
@@ -26,9 +27,13 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
     else {
       // Mapeamos los usuarios para que sean homogéneos a las 3 redes sociales
       async.map(facebookUsers, mapUser, function(err, mappedUsers) {
+        // Filtramos los usuarios duplicados
+        var filteredMappedUsers = _.uniq(mappedUsers, function(mappedUser) {
+          return mappedUser.id;
+        });
         var result = {
-          count: mappedUsers.length,
-          list: mappedUsers
+          count: filteredMappedUsers.length,
+          list: filteredMappedUsers
         };
         logger.debug('Friends: ' + JSON.stringify(result));
         callback(err, result);

@@ -15,8 +15,12 @@ var contactSchema = mongoose.Schema({
   facebook_id: String,
   twitter_id: String,
   instagram_id: String,
-  circle: { type: ObjectId, required: true, ref: 'Circle' },
-  ancestors: [{ type: ObjectId, ref: 'Circle', index: true }],
+  // Un contacto puede estar en más de un círculo, entonces creamos tiene que tener una referencia a cada
+  // uno de sus padres y a sus ancestros
+  parents: [{
+    circle: { type: ObjectId, required: true, ref: 'Circle' },
+    ancestors: [{ type: ObjectId, ref: 'Circle', index: true }]
+  }],
   user: { type: ObjectId, required: true, ref: 'User' },
 
   created_at: { type: Date, select: false },

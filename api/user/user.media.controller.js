@@ -115,9 +115,7 @@ var sendMediaResponseFromResults = function(res, user, results) {
     };
     var result = _.merge(user.toJSON(), mediaObject);
     clearProtectedData(result);
-    return res.send({
-      user: result
-    });
+    return res.send({ user: result });
   });
 };
 

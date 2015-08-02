@@ -52,9 +52,7 @@ module.exports.getById = function(req, res) {
         };
         var result = _.merge(contactsObject, req.circle.toJSON());
         result.user = undefined;
-        return res.send({
-          circle: result
-        });
+        return res.send({ circle: result });
       }
     });
   });

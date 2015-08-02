@@ -7,6 +7,7 @@
 // requires
 var request = require('request');
 var async = require('async');
+var _ = require('lodash');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
 var twitterOAuthHelper = require('./twitter.auth.helper');
@@ -27,9 +28,13 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
     else {
       // Mapeamos los usuarios para que sean homogéneos a las 3 redes sociales
       async.map(twitterUsers, mapUser, function(err, mappedUsers) {
+        // Filtramos los usuarios duplicados
+        var filteredMappedUsers = _.uniq(mappedUsers, function(mappedUser) {
+          return mappedUser.id;
+        });
         var result = {
-          count: mappedUsers.length,
-          list: mappedUsers
+          count: filteredMappedUsers.length,
+          list: filteredMappedUsers
         };
         logger.debug('Friends: ' + JSON.stringify(result));
         callback(err, result);

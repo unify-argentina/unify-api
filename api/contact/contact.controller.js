@@ -30,7 +30,7 @@ module.exports.create = function(req, res) {
       }
       else {
         var contact = new Contact();
-        saveContactData(req, res, contact, circle.user);
+        saveContactData(req, res, contact, circle);
       }
     });
   });
@@ -58,10 +58,10 @@ module.exports.update = function(req, res) {
       .exec(function(err, circle) {
         if (err || !circle) {
           logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
-          return res.status(401).send({errors: [{msg: "Circle doesn't exists or doesn't belong to current user"}]});
+          return res.status(401).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
         }
         else {
-          saveContactData(req, res, req.contact, circle.user);
+          saveContactData(req, res, req.contact, circle);
         }
     });
   });
@@ -130,8 +130,9 @@ var validateSocialIds = function(req, res, text) {
 };
 
 // Salva el contacto y lo envía al cliente
-var saveContactData = function(req, res, contact, user) {
+var saveContactData = function(req, res, contact, circle) {
 
+  var user = circle.user;
   // Validamos que el usuario tenga las cuentas asociadas para poder
   // crear un contacto con los ids pasados por parámetro
   validateUserSocialAccounts(req, res, contact, user);
@@ -141,6 +142,7 @@ var saveContactData = function(req, res, contact, user) {
   contact.picture = req.body.picture;
   contact.circle = req.body.circle_id;
   contact.user = req.user;
+  contact.parents = getContactParents(circle);
   contact.save(function(err) {
     if (err) {
       logger.err(err);
@@ -153,6 +155,18 @@ var saveContactData = function(req, res, contact, user) {
       return res.send({ contact: contact });
     }
   });
+};
+
+// Este método genera los ancestros de un contacto (el círculo en el cual fue creado más los ancestros del círculo)
+var getContactParents = function(circle) {
+  var parents = [];
+  var contactAncestors = [circle._id];
+  contactAncestors.push.apply(contactAncestors, circle.ancestors);
+  parents.push({
+    circle: circle._id,
+    ancestors: contactAncestors
+  });
+  return parents;
 };
 
 // Este método chequea que si se le pasó un social_id, efectivamente el usuario tenga esa cuenta linkeada

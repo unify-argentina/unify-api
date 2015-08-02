@@ -26,14 +26,22 @@ module.exports.getMedia = function (req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
-        doGetMedia(res, user, req.contact);
+        module.exports.doGetMedia(user, req.contact, function(err, results) {
+          if (err) {
+            logger.warn('Error searching media ' + err);
+            return res.status(400).send({ errors: [{ msg: 'There was an error obtaining contact media' }] });
+          }
+          else {
+            sendMediaResponseFromResults(res, req.contact, results);
+          }
+        });
       }
     });
   });
 };
 
-// Una vez que encontramos al usuario, mandamos a consultar el contenido del contacto por cada red social que tenga asociada
-var doGetMedia = function(res, user, contact) {
+// Obtiene el contenido del contacto por cada red social que tenga asociada el usuario
+module.exports.doGetMedia = function(user, contact, callback) {
   async.parallel({
       facebook: getFacebookMedia.bind(null, user, contact),
       instagram: getInstagramMedia.bind(null, user, contact),
@@ -42,11 +50,10 @@ var doGetMedia = function(res, user, contact) {
     // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
     function(err, results) {
       if (err) {
-        logger.warn('Error searching media ' + err);
-        return res.status(400).send({ errors: [{ msg: 'There was an error obtaining contact media' }] });
+        callback(err, null);
       }
       else {
-        sendMediaResponseFromResults(res, contact, results);
+        callback(null, results);
       }
     });
 };
@@ -112,9 +119,7 @@ var sendMediaResponseFromResults = function(res, contact, results) {
       }
     };
     var result = _.merge(contact.toJSON(), mediaObject);
-    return res.send({
-      contact: result
-    });
+    return res.send({ contact: result });
   });
 };
 
