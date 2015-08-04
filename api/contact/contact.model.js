@@ -11,10 +11,28 @@ var ObjectId = mongoose.Schema.ObjectId;
 var contactSchema = mongoose.Schema({
 
   name: { type: String, required: true },
-  picture: String,
-  facebook_id: String,
-  twitter_id: String,
-  instagram_id: String,
+  picture: { type: String, required: true },
+
+  facebook: {
+    id: String,
+    display_name: String
+  },
+
+  twitter: {
+    id: String,
+    username: String
+  },
+
+  instagram: {
+    id: String,
+    username: String
+  },
+
+  google: {
+    id: String,
+    email: String
+  },
+
   // Un contacto puede estar en más de un círculo, entonces creamos tiene que tener una referencia a cada
   // uno de sus padres y a sus ancestros
   parents: [{
@@ -40,16 +58,12 @@ contactSchema.pre('save', function(next) {
 contactSchema.methods.toString = function() {
   return 'id: ' + this._id + ' name: ' + this.name +
   ' user: ' + this.user +
-  ' picture: ' + this.picture +
-  ' facebook_id: ' + this.facebook_id +
-  ' twitter_id: ' + this.twitter_id +
-  ' instagram_id: ' + this.instagram_id +
-  ' circle: ' + this.circle;
+  ' picture: ' + this.picture;
 };
 
 // Chequea que el contacto efectivamente tenga la cuenta asociada
 contactSchema.methods.hasLinkedAccount = function(account) {
-  return typeof this[account + '_id'] === 'string';
+  return typeof this[account].id === 'string';
 };
 
 module.exports = mongoose.model('Contact', contactSchema);

@@ -123,7 +123,7 @@ var saveUser = function(res, user) {
 // Copia los datos de Instagram en la cuenta de Unify
 var linkInstagramData = function(unifyUser, instagramProfile, access_token) {
   unifyUser.instagram.id = instagramProfile.id;
-  unifyUser.instagram.userName = instagramProfile.username;
+  unifyUser.instagram.username = instagramProfile.username;
   unifyUser.instagram.display_name = instagramProfile.full_name;
   unifyUser.instagram.picture = instagramProfile.profile_picture;
   unifyUser.instagram.access_token = access_token;

@@ -60,7 +60,7 @@ module.exports.doGetMedia = function(user, contact, callback) {
 
 var getFacebookMedia = function(user, contact, callback) {
   if (user.hasLinkedAccount('facebook') && contact.hasLinkedAccount('facebook')) {
-    facebookMedia.getMedia(user.facebook.access_token, contact.facebook_id, function(err, results) {
+    facebookMedia.getMedia(user.facebook.access_token, contact.facebook.id, function(err, results) {
       callback(err, results);
     });
   }
@@ -72,7 +72,7 @@ var getFacebookMedia = function(user, contact, callback) {
 
 var getInstagramMedia = function(user, contact, callback) {
   if (user.hasLinkedAccount('instagram') && contact.hasLinkedAccount('instagram')) {
-    instagramMedia.getMedia(user.instagram.access_token, contact.instagram_id, function(err, results) {
+    instagramMedia.getMedia(user.instagram.access_token, contact.instagram.id, function(err, results) {
       callback(err, results);
     });
   }
@@ -84,7 +84,7 @@ var getInstagramMedia = function(user, contact, callback) {
 
 var getTwitterMedia = function(user, contact, callback) {
   if (user.hasLinkedAccount('twitter') && contact.hasLinkedAccount('twitter')) {
-    twitterMedia.getMedia(user.twitter.access_token, contact.twitter_id, function(err, results) {
+    twitterMedia.getMedia(user.twitter.access_token, contact.twitter.id, function(err, results) {
       callback(err, results);
     });
   }

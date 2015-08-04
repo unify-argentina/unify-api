@@ -63,12 +63,12 @@ userRoutes.param('user_id', function(req, res, next, userId) {
  *            "instagram": {
  *                "display_name": "Joel Márquez",
  *                "picture": "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg",
- *                "userName": "joe__marquez"
+ *                "username": "joe__marquez"
  *            },
  *            "twitter": {
  *                "display_name": "Joel Márquez",
  *                "picture": "http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg",
- *                "userName": "joelmarquez90"
+ *                "username": "joelmarquez90"
  *            },
  *            "facebook": {
  *                "display_name": "Joel Márquez",

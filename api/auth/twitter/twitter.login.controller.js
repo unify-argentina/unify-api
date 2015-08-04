@@ -163,7 +163,7 @@ var linkTwitterData = function(unifyUser, twitterProfile, access_token) {
   unifyUser.twitter.access_token.token_secret = access_token.oauth_token_secret;
   unifyUser.twitter.picture = twitterProfile.profile_image_url.replace('_normal', '_bigger');
   unifyUser.twitter.display_name = twitterProfile.name;
-  unifyUser.twitter.userName = twitterProfile.screen_name;
+  unifyUser.twitter.username = twitterProfile.screen_name;
 };
 
 // Devuelve un objeto para obtener el oauth token

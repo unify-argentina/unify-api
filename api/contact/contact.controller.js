@@ -88,9 +88,8 @@ module.exports.delete = function(req, res) {
 var validateParams = function(req, res) {
   req.assert('name', 'Required').notEmpty();
   req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
-  // TODO revisar URL, opcional o no?
-  /*req.assert('picture', 'Required').notEmpty();
-  req.assert('picture', 'It must be a valid URL').isURL();*/
+  req.assert('picture', 'Required').notEmpty();
+  req.assert('picture', 'It must be a valid URL').isURL();
   // TODO revisar si un contacto puede estar en más de un círculo
   req.assert('circle_id', 'Required').notEmpty();
   req.assert('circle_id', 'Only alphanumeric characters are allowed').isAscii();
@@ -102,27 +101,37 @@ var validateParams = function(req, res) {
   }
 
   // Validamos nosql injection
-  if (typeof req.body.name !== 'string' || typeof req.body.circle_id !== 'string'
-  // TODO revisar URL, opcional o no?
-  /*|| typeof req.body.picture !== 'string'*/) {
-    logger.warn('No SQL injection - name: ' + req.body.name + ' circle_id: ' + req.body.circle_id)
-    // TODO revisar URL, opcional o no?
-    /*+ ' picture: ' + req.body.picture*/;
+  if (typeof req.body.name !== 'string' || typeof req.body.circle_id !== 'string' || typeof req.body.picture !== 'string') {
+    logger.warn('No SQL injection - name: ' + req.body.name + ' circle_id: ' + req.body.circle_id +
+      ' picture: ' + req.body.picture);
     return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
 };
 
 var validateSocialIds = function(req, res, text) {
-  // Validamos que tenga por lo menos un id de una red social
+
+  validateSocialIdsExistance(req, res, text);
+
+  validateSocialIdsFormat(req, res);
+};
+
+// Validamos que tenga por lo menos un id de una red social
+var validateSocialIdsExistance = function(req, res, text) {
   if (!req.body.facebook_id && !req.body.twitter_id && !req.body.instagram_id) {
     logger.warn("Requester didn't suplied a facebook, twitter or instagram id for creating a contact");
     return res.status(401).send({ errors: [{ msg:
-      'You have to suply a facebook, twitter or instagram id for ' + text + ' a contact' }] });
+    'You have to suply a facebook, twitter or instagram id for ' + text + ' a contact' }] });
   }
-  // Validamos que si hay alguno, tenga un formato válido
-  else if (req.body.facebook_id && typeof req.body.facebook_id !== 'string' ||
+};
+
+// Validamos que si hay alguno, tenga un formato válido
+var validateSocialIdsFormat = function(req, res) {
+  if (req.body.facebook_id && typeof req.body.facebook_id !== 'string' ||
+    req.body.facebook_display_name && typeof req.body.facebook_display_name !== 'string' ||
     req.body.twitter_id && typeof req.body.twitter_id !== 'string' ||
-    req.body.instagram_id && typeof req.body.instagram_id !== 'string') {
+    req.body.twitter_username && typeof req.body.twitter_username !== 'string' ||
+    req.body.instagram_id && typeof req.body.instagram_id !== 'string' ||
+    req.body.instagram_username && typeof req.body.instagram_username !== 'string') {
     logger.warn('No SQL injection - facebook_id: ' + req.body.facebook_id +
       ' twitter_id: ' + req.body.twitter_id + ' instagram_id: ' + req.body.instagram_id);
     return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
@@ -175,7 +184,8 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
   // Si vino como parámetro el id de facebook del contacto y el usuario tiene asociado facebook, lo agregamos
   if (typeof req.body.facebook_id === 'string') {
     if (user.hasLinkedAccount('facebook')) {
-      contact.facebook_id = req.body.facebook_id;
+      contact.facebook.id = req.body.facebook_id;
+      contact.facebook.display_name = req.body.facebook_display_name;
     }
     // Sino, devolvemos error ya que no tiene linkeada esa cuenta
     else {
@@ -186,7 +196,8 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
   // Si vino como parámetro el id de twitter del contacto y el usuario tiene asociado twitter, lo agregamos
   if (typeof req.body.twitter_id === 'string') {
     if (user.hasLinkedAccount('twitter')) {
-      contact.twitter_id = req.body.twitter_id;
+      contact.twitter.id = req.body.twitter_id;
+      contact.twitter.username = req.body.twitter_username;
     }
     // Sino, devolvemos error ya que no tiene linkeada esa cuenta
     else {
@@ -197,7 +208,8 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
   // Si vino como parámetro el id de instagram del contacto y el usuario tiene asociado instagram, lo agregamos
   if (typeof req.body.instagram_id === 'string') {
     if (user.hasLinkedAccount('instagram')) {
-      contact.instagram_id = req.body.instagram_id;
+      contact.instagram.id = req.body.instagram_id;
+      contact.instagram.username = req.body.instagram_username;
     }
     // Sino, devolvemos error ya que no tiene linkeada esa cuenta
     else {

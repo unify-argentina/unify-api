@@ -42,7 +42,7 @@ var userSchema = mongoose.Schema({
     },
     picture: String,
     display_name: String,
-    userName: String
+    username: String
   },
 
   instagram: {
@@ -50,7 +50,7 @@ var userSchema = mongoose.Schema({
     access_token: { type: String, select: false },
     picture: String,
     display_name: String,
-    userName: String
+    username: String
   },
 
   google: {

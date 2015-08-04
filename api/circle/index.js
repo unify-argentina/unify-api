@@ -95,53 +95,84 @@ circleRoutes.post('/', circleController.create);
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
  *     {
  *         "circle": {
  *             "contacts": [
  *                 {
- *                     "user": "55be9bb91f8bd56a4fab63f0",
+ *                     "user": "55c02cc70cce13ec28bd7ec1",
  *                     "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large",
  *                     "name": "Joel",
- *                     "instagram_id": "993803680",
- *                     "twitter_id": "42704750",
- *                     "facebook_id": "10153267328674738",
- *                     "_id": "55bea6eaad16a7e3588b1ca7",
+ *                     "_id": "55c0315cccab88ba31786d71",
  *                     "__v": 0,
  *                     "parents": [
  *                         {
- *                             "circle": "55be9bbb1f8bd56a4fab63f1",
- *                             "_id": "55bea6eaad16a7e3588b1ca8",
+ *                             "circle": "55c02cc80cce13ec28bd7ec2",
+ *                             "_id": "55c0315cccab88ba31786d72",
  *                             "ancestors": [
- *                                 "55be9bbb1f8bd56a4fab63f1"
+ *                                 "55c02cc80cce13ec28bd7ec2"
  *                             ]
  *                         }
- *                     ]
+ *                     ],
+ *                     "instagram": {
+ *                         "username": "joe__marquez",
+ *                         "id": "993803680"
+ *                     },
+ *                     "twitter": {
+ *                         "username": "joelmarquez90",
+ *                         "id": "42704750"
+ *                     },
+ *                     "facebook": {
+ *                         "display_name": "Joel Márquez",
+ *                         "id": "10153267328674738"
+ *                     }
  *                 },
  *                 {
- *                     "user": "55be9bb91f8bd56a4fab63f0",
- *                     "picture": "https://graph.facebook.com/v2.3/10205153877979641/picture?type=large",
+ *                     "user": "55c02cc70cce13ec28bd7ec1",
+ *                     "picture": "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg",
  *                     "name": "Alejo",
- *                     "instagram_id": "1574863419",
- *                     "twitter_id": "261365528",
- *                     "facebook_id": "10205153877979641",
- *                     "_id": "55beabbba6d239e95b50075b",
+ *                     "_id": "55c0316dccab88ba31786d73",
  *                     "__v": 0,
  *                     "parents": [
  *                         {
- *                             "circle": "55beaba5a6d239e95b50075a",
- *                             "_id": "55beabbba6d239e95b50075c",
+ *                             "circle": "55c02cc80cce13ec28bd7ec2",
+ *                             "_id": "55c0316dccab88ba31786d74",
  *                             "ancestors": [
- *                                 "55beaba5a6d239e95b50075a",
- *                                 "55be9bbb1f8bd56a4fab63f1"
+ *                                 "55c02cc80cce13ec28bd7ec2"
  *                             ]
  *                         }
- *                     ]
+ *                     ],
+ *                     "instagram": {
+ *                         "username": "aleagb23",
+ *                         "id": "1574863419"
+ *                     },
+ *                     "twitter": {
+ *                         "username": "aleagb23",
+ *                         "id": "261365528"
+ *                     },
+ *                     "facebook": {
+ *                         "display_name": "Alejo García",
+ *                         "id": "10205153877979641"
+ *                     }
  *                 }
  *             ],
  *             "media": {
- *                 "count": 6,
+ *                 "count": 4,
  *                 "list": [
+ *                     {
+ *                         "provider": "twitter",
+ *                         "id": "628281888210321408",
+ *                         "type": "video",
+ *                         "created_time": 1438629049,
+ *                         "link": "https://twitter.com/statuses/628281888210321408",
+ *                         "likes": 0,
+ *                         "text": "http://t.co/IkL1oTkgq1",
+ *                         "user_has_liked": false,
+ *                         "contact": {
+ *                             "id": "55c0316dccab88ba31786d73",
+ *                             "name": "Alejo",
+ *                             "picture": "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg"
+ *                         }
+ *                     },
  *                     {
  *                         "provider": "facebook",
  *                         "id": "10153491173094738",
@@ -151,7 +182,7 @@ circleRoutes.post('/', circleController.create);
  *                         "media_url": "https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xft1/v/t1.0-9/11817260_10153491173094738_5949918706607306589_n.jpg?oh=4f851773c7660e1ddbe34cb477627ae8&oe=5656DEED&__gda__=1448770591_84ba495cc3a3554a2bc842d1653f1ca8",
  *                         "text": "Pami, pati, pael, paella",
  *                         "contact": {
- *                             "id": "55bea6eaad16a7e3588b1ca7",
+ *                             "id": "55c0315cccab88ba31786d71",
  *                             "name": "Joel",
  *                             "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
  *                         }
@@ -166,7 +197,7 @@ circleRoutes.post('/', circleController.create);
  *                         "text": "Pami, pati, pael, paella @ Charly's House https://t.co/181HbfsaEv",
  *                         "user_has_liked": false,
  *                         "contact": {
- *                             "id": "55bea6eaad16a7e3588b1ca7",
+ *                             "id": "55c0315cccab88ba31786d71",
  *                             "name": "Joel",
  *                             "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
  *                         }
@@ -182,60 +213,15 @@ circleRoutes.post('/', circleController.create);
  *                         "text": "Pami, pati, pael, paella",
  *                         "user_has_liked": "",
  *                         "contact": {
- *                             "id": "55bea6eaad16a7e3588b1ca7",
+ *                             "id": "55c0315cccab88ba31786d71",
  *                             "name": "Joel",
  *                             "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
- *                         }
- *                     },
- *                     {
- *                         "provider": "twitter",
- *                         "id": "625702932302970882",
- *                         "type": "text",
- *                         "created_time": 1438014178,
- *                         "link": "https://twitter.com/statuses/625702932302970882",
- *                         "likes": 0,
- *                         "text": "El spot de Altamira en el que Scioli, Macri y Massa emulan los 3 Chiflados es lo más grande que hay..",
- *                         "user_has_liked": false,
- *                         "contact": {
- *                             "id": "55beabbba6d239e95b50075b",
- *                             "name": "Alejo",
- *                             "picture": "https://graph.facebook.com/v2.3/10205153877979641/picture?type=large"
- *                         }
- *                     },
- *                     {
- *                         "provider": "instagram",
- *                         "id": "1032419311030202502_1574863419",
- *                         "type": "image",
- *                         "created_time": 1437293994,
- *                         "link": "https://instagram.com/p/5T4-S1NXCG/",
- *                         "likes": 8,
- *                         "media_url": "https://scontent.cdninstagram.com/hphotos-xtp1/t51.2885-15/s640x640/sh0.08/e35/10499264_1058431774190878_494207365_n.jpg",
- *                         "text": "Gracias Carlitos por volver.. #Boca #BocaJuniors #Tevez",
- *                         "user_has_liked": "",
- *                         "contact": {
- *                             "id": "55beabbba6d239e95b50075b",
- *                             "name": "Alejo",
- *                             "picture": "https://graph.facebook.com/v2.3/10205153877979641/picture?type=large"
- *                         }
- *                     },
- *                     {
- *                         "provider": "facebook",
- *                         "id": "10205141615393084",
- *                         "type": "image",
- *                         "created_time": 1431099507,
- *                         "link": "https://www.facebook.com/photo.php?fbid=10205141615393084&set=a.10203978678240382.1073741825.1025603691&type=1",
- *                         "media_url": "https://scontent.xx.fbcdn.net/hphotos-xtf1/v/t1.0-9/11111209_10205141615393084_5968826018430732303_n.jpg?oh=97d88517956b5472d2552129273e2b86&oe=564920FF",
- *                         "text": "Cómo se pone la clínica los jueves a la noche!! #ChauChauApéndice #ÓrganoInútil",
- *                         "contact": {
- *                             "id": "55beabbba6d239e95b50075b",
- *                             "name": "Alejo",
- *                             "picture": "https://graph.facebook.com/v2.3/10205153877979641/picture?type=large"
  *                         }
  *                     }
  *                 ]
  *             },
  *             "name": "Main Circle",
- *             "_id": "55be9bbb1f8bd56a4fab63f1",
+ *             "_id": "55c02cc80cce13ec28bd7ec2",
  *             "__v": 0,
  *             "ancestors": [
  *             ]
