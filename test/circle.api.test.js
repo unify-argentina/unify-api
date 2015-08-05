@@ -138,6 +138,23 @@ describe('Circles API', function() {
       });
     });
 
+    it('should not allow to create a circle with an invalid picture', function(done) {
+      login(function(user, token) {
+        request(API_URL)
+          .post(util.format(CIRCLES_PATH, user._id, ''))
+          .set('Authorization', 'Bearer ' + token)
+          .send({ name: 'Amigos', parent_id: user.main_circle._id, picture: 123 })
+          .end(function(err, data) {
+            data.res.statusCode.should.equal(401);
+            var errors = data.res.body.errors;
+            var error = errors[0];
+            error.param.should.equal('picture');
+            error.msg.should.equal('It must be a valid URL');
+            done();
+          });
+      });
+    });
+
     it('should allow to create a circle with valid parent circle', function(done) {
       login(function(user, token) {
         request(API_URL)
@@ -302,6 +319,39 @@ describe('Circles API', function() {
               data.res.body.errors[0].msg.should.equal("Main circle can't be modified");
               done();
             });
+        });
+      });
+    });
+
+    it('should allow to update a circle with valid parent circle', function(done) {
+      login(function(user, token) {
+        Circle.create({
+          name: 'Familia',
+          parent: user.main_circle._id,
+          ancestors: [user.main_circle._id],
+          user: user._id
+        }, function(err, first_subcircle) {
+
+          Circle.create({
+            name: 'Materna',
+            parent: first_subcircle._id,
+            ancestors: [user.main_circle._id, first_subcircle._id],
+            user: user._id
+          }, function(err, secondSubcircle) {
+
+            request(API_URL)
+              .put(util.format(CIRCLES_PATH, user._id, secondSubcircle._id))
+              .set('Authorization', 'Bearer ' + token)
+              .send({ name: 'Amigos', parent_id: user.main_circle._id, picture: 123 })
+              .end(function(err, data) {
+                data.res.statusCode.should.equal(401);
+                var errors = data.res.body.errors;
+                var error = errors[0];
+                error.param.should.equal('picture');
+                error.msg.should.equal('It must be a valid URL');
+                done();
+              });
+          });
         });
       });
     });

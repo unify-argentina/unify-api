@@ -128,6 +128,7 @@ module.exports.delete = function(req, res) {
 var validateParams = function(req, res) {
   req.assert('name', 'Required').notEmpty();
   req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
+  req.assert('picture', 'It must be a valid URL').optional().isURL();
   req.assert('parent_id', 'Required').notEmpty();
   req.assert('parent_id', 'Only alphanumeric characters are allowed').isAscii();
 
@@ -148,6 +149,7 @@ var validateParams = function(req, res) {
 var saveCircleData = function(req, res, circle, foundCircle) {
   circle.name = req.body.name;
   circle.parent = req.body.parent_id;
+  circle.picture = req.body.picture;
   var ancestors = foundCircle.ancestors;
   ancestors.push(req.body.parent_id);
   circle.ancestors = ancestors;

@@ -50,11 +50,13 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
  * @apiParam {String} user_id Id del usuario
  * @apiParam {String} name Nombre del circulo a crear
  * @apiParam {String} parent_id Id del circulo padre
+ * @apiParam {String} [picture] URL de la imagen del circulo
  *
  * @apiParamExample {json} Ejemplo de request
  *    {
  *      "name":"Amigos",
- *      "parent_id":"55936a0460bb409c379800b7"
+ *      "parent_id":"55936a0460bb409c379800b7",
+ *      "picture":"http://www.sabiask.com/images/Image/perro.jpg"
  *    }
  *
  * @apiSuccess {Object} circle Circulo creado
@@ -66,6 +68,7 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
  *      "circle":{
  *        "parent":"55936a0460bb409c379800b7",
  *        "name":"Amigos",
+ *        "picture":"http://www.sabiask.com/images/Image/perro.jpg",
  *        "_id":"559ebc91dc9167e815a750b7",
  *        "__v":0,
  *        "ancestors":[
@@ -244,11 +247,13 @@ circleRoutes.get('/:circle_id', mediaController.getMedia);
  * @apiParam {String} circle_id Id del circulo a actualizar
  * @apiParam {String} name Nuevo nombre del circulo a actualizar
  * @apiParam {String} parent_id Nuevo id padre del circulo a actualizar
+ * @apiParam {String} [picture] URL de la imagen del circulo
  *
  * @apiParamExample {json} Ejemplo de request
  *    {
  *      "name":"Amigos",
- *      "parent_id":"55936a0460bb409c379800b7"
+ *      "parent_id":"55936a0460bb409c379800b7",
+ *      "picture":"http://www.sabiask.com/images/Image/perro.jpg"
  *    }
  *
  * @apiSuccess {Object} circle Circulo creado
@@ -260,6 +265,7 @@ circleRoutes.get('/:circle_id', mediaController.getMedia);
  *      "circle":{
  *        "parent":"55936a0460bb409c379800b7",
  *        "name":"Amigos",
+ *        "picture":"http://www.sabiask.com/images/Image/perro.jpg",
  *        "_id":"559ebc91dc9167e815a750b7",
  *        "__v":0,
  *        "ancestors":[

@@ -370,13 +370,20 @@ define({ "api": [
             "optional": false,
             "field": "parent_id",
             "description": "<p>Id del circulo padre</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "picture",
+            "description": "<p>URL de la imagen del circulo</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo de request",
-          "content": "{\n  \"name\":\"Amigos\",\n  \"parent_id\":\"55936a0460bb409c379800b7\"\n}",
+          "content": "{\n  \"name\":\"Amigos\",\n  \"parent_id\":\"55936a0460bb409c379800b7\",\n  \"picture\":\"http://www.sabiask.com/images/Image/perro.jpg\"\n}",
           "type": "json"
         }
       ]
@@ -396,7 +403,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\":{\n    \"parent\":\"55936a0460bb409c379800b7\",\n    \"name\":\"Amigos\",\n    \"_id\":\"559ebc91dc9167e815a750b7\",\n    \"__v\":0,\n    \"ancestors\":[\n      \"559eba8109b6aee614e3f733\",\n      \"559ebc0ddc9167e815a750b5\",\n      \"55936a0460bb409c379800b7\"\n    ]\n  }\n}",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\":{\n    \"parent\":\"55936a0460bb409c379800b7\",\n    \"name\":\"Amigos\",\n    \"picture\":\"http://www.sabiask.com/images/Image/perro.jpg\",\n    \"_id\":\"559ebc91dc9167e815a750b7\",\n    \"__v\":0,\n    \"ancestors\":[\n      \"559eba8109b6aee614e3f733\",\n      \"559ebc0ddc9167e815a750b5\",\n      \"55936a0460bb409c379800b7\"\n    ]\n  }\n}",
           "type": "json"
         }
       ]
@@ -466,13 +473,20 @@ define({ "api": [
             "optional": false,
             "field": "parent_id",
             "description": "<p>Nuevo id padre del circulo a actualizar</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "picture",
+            "description": "<p>URL de la imagen del circulo</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo de request",
-          "content": "{\n  \"name\":\"Amigos\",\n  \"parent_id\":\"55936a0460bb409c379800b7\"\n}",
+          "content": "{\n  \"name\":\"Amigos\",\n  \"parent_id\":\"55936a0460bb409c379800b7\",\n  \"picture\":\"http://www.sabiask.com/images/Image/perro.jpg\"\n}",
           "type": "json"
         }
       ]
@@ -492,7 +506,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\":{\n    \"parent\":\"55936a0460bb409c379800b7\",\n    \"name\":\"Amigos\",\n    \"_id\":\"559ebc91dc9167e815a750b7\",\n    \"__v\":0,\n    \"ancestors\":[\n      \"559eba8109b6aee614e3f733\",\n      \"559ebc0ddc9167e815a750b5\",\n      \"55936a0460bb409c379800b7\"\n    ]\n  }\n}",
+          "content": " HTTP/1.1 200 OK\n\n{\n  \"circle\":{\n    \"parent\":\"55936a0460bb409c379800b7\",\n    \"name\":\"Amigos\",\n    \"picture\":\"http://www.sabiask.com/images/Image/perro.jpg\",\n    \"_id\":\"559ebc91dc9167e815a750b7\",\n    \"__v\":0,\n    \"ancestors\":[\n      \"559eba8109b6aee614e3f733\",\n      \"559ebc0ddc9167e815a750b5\",\n      \"55936a0460bb409c379800b7\"\n    ]\n  }\n}",
           "type": "json"
         }
       ]
