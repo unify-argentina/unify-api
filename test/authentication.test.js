@@ -63,12 +63,9 @@ describe('Authentication', function() {
           error.param.should.equal('name');
           error.msg.should.equal('Required');
           error = errors[3];
-          error.param.should.equal('name');
-          error.msg.should.equal('Only alphanumeric characters are allowed');
-          error = errors[4];
           error.param.should.equal('password');
           error.msg.should.equal('Password should have at least 6 characters of length');
-          error = errors[5];
+          error = errors[4];
           error.param.should.equal('confirm_password');
           error.msg.should.equal('Required');
           done();
