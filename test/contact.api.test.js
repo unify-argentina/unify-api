@@ -21,6 +21,7 @@ var Contact = require('../api/contact/contact.model');
 var API_URL = 'http://localhost:8000';
 var LOGIN_PATH = '/auth/login';
 var CONTACTS_PATH = '/api/user/%s/contact/%s';
+var GOOGLE_URL = 'https://www.google.com.ar';
 
 // Esta función sirve para hacer un login y devolverle al callback el user_id y el token de Unify
 var login = function(email, password, callback) {
@@ -59,9 +60,15 @@ describe('Contacts API', function() {
         }], function(err, users) {
           var user = users[1];
         Contact.remove().exec(function(err) {
-          Contact.create({
-            name: 'Jose', 'facebook.id': 'asdasdasd', 'facebook.display_name': 'Jose',
-            circle: user.main_circle._id, user: user._id }, done);
+
+          var parents = [];
+          var contactAncestors = [user.main_circle._id];
+          parents.push({
+            circle: user.main_circle._id,
+            ancestors: contactAncestors
+          });
+          Contact.create({ name: 'Jose', circle: user.main_circle, user: user,
+            picture: GOOGLE_URL, parents: parents, facebook: { id: 'abc123', display_name: 'Jose' } }, done);
         });
       });
     });
@@ -101,11 +108,34 @@ describe('Contacts API', function() {
             error.param.should.equal('name');
             error.msg.should.equal('Only alphanumeric characters are allowed');
             error = errors[2];
-            error.param.should.equal('circle_id');
+            error.param.should.equal('picture');
             error.msg.should.equal('Required');
             error = errors[3];
+            error.param.should.equal('picture');
+            error.msg.should.equal('It must be a valid URL');
+            error = errors[4];
+            error.param.should.equal('circle_id');
+            error.msg.should.equal('Required');
+            error = errors[5];
             error.param.should.equal('circle_id');
             error.msg.should.equal('Only alphanumeric characters are allowed');
+            done();
+          });
+      });
+    });
+
+    it('should not allow to create a contact with invalid picture url', function(done) {
+      login('unify.argentina@gmail.com', 'This is not my real password', function(user, token) {
+        request(API_URL)
+          .post(util.format(CONTACTS_PATH, user._id, ''))
+          .set('Authorization', 'Bearer ' + token)
+          .send({ name: 234, picture: 'asdasdasd', circle_id: 234 })
+          .end(function(err, data) {
+            data.res.statusCode.should.equal(401);
+            var errors = data.res.body.errors;
+            var error = errors[0];
+            error.param.should.equal('picture');
+            error.msg.should.equal('It must be a valid URL');
             done();
           });
       });
@@ -116,7 +146,7 @@ describe('Contacts API', function() {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: 234, picture: 323, circle_id: 234 })
+          .send({ name: 234, picture: GOOGLE_URL, circle_id: 234 })
           .end(function(err, data) {
             data.res.statusCode.should.equal(401);
             data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
@@ -130,7 +160,7 @@ describe('Contacts API', function() {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: {"$gt": "undefined"}, picture: {"$gt": "undefined"}, circle_id: {"$gt": "undefined"} })
+          .send({ name: {"$gt": "undefined"}, picture: GOOGLE_URL, circle_id: {"$gt": "undefined"} })
           .end(function(err, data) {
             data.res.statusCode.should.equal(401);
             data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
@@ -144,7 +174,7 @@ describe('Contacts API', function() {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: 'Juan', picture: 'http://www.google.com', circle_id: 'aksdm8zxkcmaksd9343' })
+          .send({ name: 'Juan', picture: GOOGLE_URL, circle_id: 'aksdm8zxkcmaksd9343' })
           .end(function(err, data) {
             data.res.statusCode.should.equal(401);
             data.res.body.errors[0].msg.should
@@ -159,7 +189,7 @@ describe('Contacts API', function() {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: 'Juan', picture: 'http://www.google.com',
+          .send({ name: 'Juan', picture: GOOGLE_URL,
             facebook_id: 'asd33223423asd', facebook_display_name: 'Juan', circle_id: 'aksdm8zxkcmaksd9343' })
           .end(function(err, data) {
             data.res.statusCode.should.equal(401);
@@ -174,15 +204,20 @@ describe('Contacts API', function() {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: 'Juan', picture: 'http://www.google.com',
+          .send({ name: 'Juan', picture: GOOGLE_URL,
             facebook_id: 'asd33223423asd', facebook_display_name: 'Juan', circle_id: user.main_circle._id })
           .end(function(err, data) {
             data.res.statusCode.should.equal(200);
             var jsonContact = data.res.body.contact;
             jsonContact.user.should.equal(user._id.toString());
-            jsonContact.circle.should.equal(user.main_circle._id.toString());
             jsonContact.name.should.equal('Juan');
-            //TODO jsonContact.facebook_id.should.equal('asd33223423asd');
+            jsonContact.picture.should.equal(GOOGLE_URL);
+            jsonContact.facebook.id.should.equal('asd33223423asd');
+            jsonContact.facebook.display_name.should.equal('Juan');
+            jsonContact.parents.length.should.equal(1);
+            jsonContact.parents[0].circle.should.equal(user.main_circle._id.toString());
+            jsonContact.parents[0].ancestors.length.should.equal(1);
+            jsonContact.parents[0].ancestors[0].should.equal(user.main_circle._id.toString());
             done();
           });
       });
@@ -223,9 +258,14 @@ describe('Contacts API', function() {
               data.res.statusCode.should.equal(200);
               var jsonContact = data.res.body.contact;
               jsonContact.user.should.equal(user._id.toString());
-              jsonContact.circle.should.equal(user.main_circle._id.toString());
               jsonContact.name.should.equal('Jose');
-              //TODO jsonContact.facebook_id.should.equal('asdasdasd');
+              jsonContact.picture.should.equal(GOOGLE_URL);
+              jsonContact.facebook.id.should.equal('abc123');
+              jsonContact.facebook.display_name.should.equal('Jose');
+              jsonContact.parents.length.should.equal(1);
+              jsonContact.parents[0].circle.should.equal(user.main_circle._id.toString());
+              jsonContact.parents[0].ancestors.length.should.equal(1);
+              jsonContact.parents[0].ancestors[0].should.equal(user.main_circle._id.toString());
               done();
             });
         });
@@ -261,11 +301,36 @@ describe('Contacts API', function() {
               error.param.should.equal('name');
               error.msg.should.equal('Only alphanumeric characters are allowed');
               error = errors[2];
-              error.param.should.equal('circle_id');
+              error.param.should.equal('picture');
               error.msg.should.equal('Required');
               error = errors[3];
+              error.param.should.equal('picture');
+              error.msg.should.equal('It must be a valid URL');
+              error = errors[4];
+              error.param.should.equal('circle_id');
+              error.msg.should.equal('Required');
+              error = errors[5];
               error.param.should.equal('circle_id');
               error.msg.should.equal('Only alphanumeric characters are allowed');
+              done();
+            });
+        });
+      });
+    });
+
+    it('should not allow to create a contact with invalid picture url', function(done) {
+      login('unify.argentina2@gmail.com', 'This is not my real password', function(user, token) {
+        Contact.findOne({ name: 'Jose' }, function(err, contact) {
+          request(API_URL)
+            .put(util.format(CONTACTS_PATH, user._id, contact._id))
+            .set('Authorization', 'Bearer ' + token)
+            .send({ name: 234, picture: 233, circle_id: 234 })
+            .end(function(err, data) {
+              data.res.statusCode.should.equal(401);
+              var errors = data.res.body.errors;
+              var error = errors[0];
+              error.param.should.equal('picture');
+              error.msg.should.equal('It must be a valid URL');
               done();
             });
         });
@@ -278,7 +343,7 @@ describe('Contacts API', function() {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 234, picture: 233, circle_id: 234 })
+            .send({ name: 234, picture: GOOGLE_URL, circle_id: 234 })
             .end(function(err, data) {
               data.res.statusCode.should.equal(401);
               data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
@@ -294,7 +359,7 @@ describe('Contacts API', function() {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: {"$gt": "undefined"}, picture: {"$gt": "undefined"}, circle_id: {"$gt": "undefined"} })
+            .send({ name: {"$gt": "undefined"}, picture: GOOGLE_URL, circle_id: {"$gt": "undefined"} })
             .end(function(err, data) {
               data.res.statusCode.should.equal(401);
               data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
@@ -310,7 +375,7 @@ describe('Contacts API', function() {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'Joaquin', picture: 'http://www.google.com', circle_id: 'asdasdasdasd' })
+            .send({ name: 'Joaquin', picture: GOOGLE_URL, circle_id: 'asdasdasdasd' })
             .end(function(err, data) {
               data.res.statusCode.should.equal(401);
                data.res.body.errors[0].msg.should
@@ -327,7 +392,7 @@ describe('Contacts API', function() {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'Joaquin', picture: 'http://www.google.com',
+            .send({ name: 'Joaquin', picture: GOOGLE_URL,
               facebook_id: 'asdasdasd', facebook_display_name: 'Juan', circle_id: 'asdasdasdasd' })
             .end(function(err, data) {
               data.res.statusCode.should.equal(401);
@@ -344,15 +409,20 @@ describe('Contacts API', function() {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'Joaquin', picture: 'http://www.google.com',
+            .send({ name: 'Joaquin', picture: 'http://www.facebook.com',
               facebook_id: 'ansdjnj23234', facebook_display_name: 'Juan', circle_id: user.main_circle._id })
             .end(function(err, data) {
               data.res.statusCode.should.equal(200);
               var jsonContact = data.res.body.contact;
               jsonContact.user.should.equal(user._id.toString());
-              jsonContact.circle.should.equal(user.main_circle._id.toString());
               jsonContact.name.should.equal('Joaquin');
-              //TODO jsonContact.facebook_id.should.equal('ansdjnj23234');
+              jsonContact.picture.should.equal('http://www.facebook.com');
+              jsonContact.facebook.id.should.equal('ansdjnj23234');
+              jsonContact.facebook.display_name.should.equal('Juan');
+              jsonContact.parents.length.should.equal(1);
+              jsonContact.parents[0].circle.should.equal(user.main_circle._id.toString());
+              jsonContact.parents[0].ancestors.length.should.equal(1);
+              jsonContact.parents[0].ancestors[0].should.equal(user.main_circle._id.toString());
               done();
             });
         });

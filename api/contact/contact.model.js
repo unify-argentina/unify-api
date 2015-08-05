@@ -37,7 +37,7 @@ var contactSchema = mongoose.Schema({
   // uno de sus padres y a sus ancestros
   parents: [{
     circle: { type: ObjectId, required: true, ref: 'Circle' },
-    ancestors: [{ type: ObjectId, ref: 'Circle', index: true }]
+    ancestors: [{ type: ObjectId, required: true, ref: 'Circle', index: true }]
   }],
   user: { type: ObjectId, required: true, ref: 'User' },
 
@@ -57,8 +57,8 @@ contactSchema.pre('save', function(next) {
 
 contactSchema.methods.toString = function() {
   return 'id: ' + this._id + ' name: ' + this.name +
-  ' user: ' + this.user +
-  ' picture: ' + this.picture;
+  ' user: ' + this.user + ' picture: ' + this.picture +
+    ' parents: ' + this.parents;
 };
 
 // Chequea que el contacto efectivamente tenga la cuenta asociada
