@@ -169,9 +169,6 @@ describe('Authentication', function() {
           error = errors[2];
           error.param.should.equal('password');
           error.msg.should.equal('Required');
-          error = errors[3];
-          error.param.should.equal('password');
-          error.msg.should.equal('Only alphanumeric characters are allowed');
           done();
         });
     });

@@ -88,11 +88,9 @@ module.exports.delete = function(req, res) {
 // Valida que los parámetros sean correctos
 var validateParams = function(req, res) {
   req.assert('name', 'Required').notEmpty();
-  req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
   req.assert('picture', 'Required').notEmpty();
   req.assert('picture', 'It must be a valid URL').isURL();
   req.assert('circle_id', 'Required').notEmpty();
-  req.assert('circle_id', 'Only alphanumeric characters are allowed').isAscii();
 
   // Validamos errores
   if (req.validationErrors()) {

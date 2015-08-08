@@ -20,7 +20,6 @@ module.exports.login = function(req, res) {
     req.assert('email', 'Required').notEmpty();
     req.assert('email', 'Valid email required').isEmail();
     req.assert('password', 'Required').notEmpty();
-    req.assert('password', 'Only alphanumeric characters are allowed').isAscii();
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -68,7 +67,6 @@ module.exports.signup = function(req, res) {
     req.assert('email', 'Required').notEmpty();
     req.assert('email', 'Valid email required').isEmail();
     req.assert('name', 'Required').notEmpty();
-    //req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
     req.assert('password', 'Password should have at least 6 characters of length').len(6, 100);
     req.assert('confirm_password', 'Required').notEmpty();
     req.assert('confirm_password', 'Confirm password must be equal to password').equals(req.body.password);
@@ -107,6 +105,8 @@ module.exports.signup = function(req, res) {
           }
           else {
             user.password = undefined;
+            user.created_at = undefined;
+            user.updated_at = undefined;
             return jwt.createJWT(res, user);
           }
         });
