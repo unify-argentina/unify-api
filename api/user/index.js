@@ -48,71 +48,97 @@ userRoutes.param('user_id', function(req, res, next, userId) {
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *
- *    {
- *        "user": {
- *            "__v": 0,
- *            "_id": "55b6fba973191a7428d80c94",
- *            "email": "90joelmarquez@gmail.com",
- *            "main_circle": "55b6fbaa73191a7428d80c95",
- *            "name": "Joel Marquez",
- *            "google": {
- *                "display_name": "Joel Márquez",
- *                "email": "90joelmarquez@gmail.com",
- *                "picture": "https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200"
- *            },
- *            "instagram": {
- *                "display_name": "Joel Márquez",
- *                "picture": "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg",
- *                "username": "joe__marquez"
- *            },
- *            "twitter": {
- *                "display_name": "Joel Márquez",
- *                "picture": "http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg",
- *                "username": "joelmarquez90"
- *            },
- *            "facebook": {
- *                "display_name": "Joel Márquez",
- *                "email": "90joelmarquez@gmail.com",
- *                "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
- *            },
- *            "valid_local_user": true,
- *            "media": {
- *                "count": 3,
- *                "list": [
- *                    {
- *                        "provider": "facebook",
- *                        "id": "10153477879074738",
- *                        "type": "image",
- *                        "created_time": 1437948477,
- *                        "link": "https://www.facebook.com/photo.php?fbid=10153477879074738&set=a.10152154863139738.1073741830.826764737&type=1",
- *                        "media_url": "https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-9/20225_10153477879074738_4360696422298472690_n.jpg?oh=7d332338c4db1136c359cbe0e7ed3264&oe=565513FA&__gda__=1448067937_d3d74b86dbe101b54961e0549652c028",
- *                        "text": "Cumple de franchu 3 años, y si, se vuelve a la infancia"
- *                    },
- *                    {
- *                        "provider": "instagram",
- *                        "id": "1037909504130909999_993803680",
- *                        "type": "image",
- *                        "created_time": 1437948476,
- *                        "link": "https://instagram.com/p/5nZTHmuYcv/",
- *                        "likes": 13,
- *                        "media_url": "https://scontent.cdninstagram.com/hphotos-xfp1/t51.2885-15/e15/10809951_484188628422854_977065670_n.jpg",
- *                        "text": "Cumple de franchu 3 años, y si, se vuelve a la infancia",
- *                        "user_has_liked": ""
- *                    },
- *                    {
- *                        "provider": "twitter",
- *                        "id": "625427358284148736",
- *                        "type": "text",
- *                        "created_time": 1437948476,
- *                        "link": "https://twitter.com/statuses/625427358284148736",
- *                        "likes": 0,
- *                        "text": "Cumple de franchu 3 años, y si, se vuelve a la infancia https://t.co/ZT86vvlho0",
- *                        "user_has_liked": false
- *                    }
- *                ]
- *            }
- *        }
- *    }
+ *     {
+ *         "user": {
+ *             "__v": 0,
+ *             "_id": "55c421354037f03842898378",
+ *             "email": "90joelmarquez@gmail.com",
+ *             "main_circle": {
+ *                 "user": "55c421354037f03842898378",
+ *                 "name": "Main Circle",
+ *                 "_id": "55c421364037f03842898379",
+ *                 "__v": 0,
+ *                 "ancestors": [
+ *                 ]
+ *             },
+ *             "name": "Joel Márquez",
+ *             "google": {
+ *                 "display_name": "Joel Márquez",
+ *                 "email": "90joelmarquez@gmail.com",
+ *                 "picture": "https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200"
+ *             },
+ *             "instagram": {
+ *                 "display_name": "Joel Márquez",
+ *                 "picture": "https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg",
+ *                 "username": "joe__marquez"
+ *             },
+ *             "twitter": {
+ *                 "display_name": "Joel Márquez",
+ *                 "picture": "http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg",
+ *                 "username": "joelmarquez90"
+ *             },
+ *             "facebook": {
+ *                 "display_name": "Joel Márquez",
+ *                 "email": "90joelmarquez@gmail.com",
+ *                 "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
+ *             },
+ *             "valid_local_user": true,
+ *             "media": {
+ *                 "count": 5,
+ *                 "list": [
+ *                     {
+ *                         "provider": "twitter",
+ *                         "id": "614167759744815105",
+ *                         "type": "video",
+ *                         "created_time": 1435263979,
+ *                         "link": "https://twitter.com/statuses/614167759744815105",
+ *                         "likes": 0,
+ *                         "text": "RT @enunabaldosa: El mejor polvo de Fiorito. #FuerzaDiego http://t.co/n8aG5cQ17v",
+ *                         "user_has_liked": true
+ *                     },
+ *                     {
+ *                         "provider": "facebook",
+ *                         "id": "10153375756974738",
+ *                         "type": "video",
+ *                         "created_time": 1434330475,
+ *                         "link": "",
+ *                         "media_url": "https://video.xx.fbcdn.net/hvideo-xtf1/v/t43.1792-2/11390970_10153376400444738_1956408425_n.mp4?efg=eyJybHIiOjMxODEsInJsYSI6NDA5Nn0%3D&rl=3181&vabr=2121&oh=48e4f3c6aa439959b3714f69c80ce3c4&oe=55C7316F",
+ *                         "text": "Esto es La Vela Puerca señores, gracias por tanto!!!"
+ *                     },
+ *                     {
+ *                         "provider": "instagram",
+ *                         "id": "1004621806268155504_993803680",
+ *                         "type": "video",
+ *                         "created_time": 1433980273,
+ *                         "link": "https://instagram.com/p/3xIjXIOYZwVrXCEvFD9of7f_Jbc-qyedzM1Ak0/",
+ *                         "likes": 8,
+ *                         "media_url": "https://scontent.cdninstagram.com/hphotos-xfa1/t50.2886-16/11424155_495429683938569_221343300_n.mp4",
+ *                         "text": "Franchu rockstar dedicando canciones",
+ *                         "user_has_liked": ""
+ *                     },
+ *                     {
+ *                         "provider": "twitter",
+ *                         "id": "603017315962216448",
+ *                         "type": "text",
+ *                         "created_time": 1432605506,
+ *                         "link": "https://twitter.com/statuses/603017315962216448",
+ *                         "likes": 0,
+ *                         "text": "Potra! https://t.co/OBj9F9eSqO",
+ *                         "user_has_liked": false
+ *                     },
+ *                     {
+ *                         "provider": "facebook",
+ *                         "id": "10153299865284738",
+ *                         "type": "image",
+ *                         "created_time": 1432215901,
+ *                         "link": "https://www.facebook.com/photo.php?fbid=10153299865284738&set=a.10150737575769738.433956.826764737&type=1",
+ *                         "media_url": "https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/11222191_10153299865284738_4077884363797576640_n.jpg?oh=0652558e97b45b1fac8d31f6f9a8cb9c&oe=56446D81",
+ *                         "text": "Me parece una iniciativa muy buena del ministerio de seguridad. A atrapar a este hijo de puta! -> http://info.minseg.gob.ar/sebusca/index.html"
+ *                     }
+ *                 ]
+ *             }
+ *         }
+ *     }
  */
 userRoutes.get('/:user_id', mediaController.getMedia);
 

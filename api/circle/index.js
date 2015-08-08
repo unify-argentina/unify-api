@@ -234,6 +234,98 @@ circleRoutes.post('/', circleController.create);
 circleRoutes.get('/:circle_id', mediaController.getMedia);
 
 /**
+ * @api {get} /api/user/:user_id/circle/:circle_id/tree Obtener subcirculos
+ * @apiGroup Circulos
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} circle_id Id del circulo
+ *
+ * @apiSuccess {Object} tree Subcirculos
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "tree": [
+ *             {
+ *                 "_id": "55c421364037f03842898379",
+ *                 "name": "Main Circle",
+ *                 "subcircles": [
+ *                     {
+ *                         "_id": "55c427f69ad9fb6848a1fa72",
+ *                         "name": "Familia",
+ *                         "picture": "http://www.granada.escolapiosemaus.org/blogs/primariaingles/wp-content/uploads/sites/9/2014/10/family-home.png",
+ *                         "parent": "55c421364037f03842898379",
+ *                         "subcircles": [
+ *                             {
+ *                                 "_id": "55c4284c9ad9fb6848a1fa73",
+ *                                 "name": "Materna",
+ *                                 "picture": "http://www.healthyplace.com/blogs/relationshipsandmentalillness/files/2015/05/3d-happy-family-1.jpg",
+ *                                 "parent": "55c427f69ad9fb6848a1fa72",
+ *                                 "subcircles": [
+ *                                 ]
+ *                             },
+ *                             {
+ *                                 "_id": "55c4285b9ad9fb6848a1fa74",
+ *                                 "name": "Paterna",
+ *                                 "picture": "http://www.mindfuljourneycenter.com/wp-content/uploads/2014/07/couples-family-therapy.jpg",
+ *                                 "parent": "55c427f69ad9fb6848a1fa72",
+ *                                 "subcircles": [
+ *                                 ]
+ *                             }
+ *                         ]
+ *                     },
+ *                     {
+ *                         "_id": "55c428849ad9fb6848a1fa75",
+ *                         "name": "Amigos",
+ *                         "picture": "http://blackfriendconnect.com/wp-content/uploads/2013/07/rent-a-black-friend-picture-new1.jpg",
+ *                         "parent": "55c421364037f03842898379",
+ *                         "subcircles": [
+ *                             {
+ *                                 "_id": "55c428989ad9fb6848a1fa76",
+ *                                 "name": "Facu",
+ *                                 "picture": "http://www.unialliance.ac.uk/wp-content/uploads/2012/12/Caerleon-Lawn-21.jpg",
+ *                                 "parent": "55c428849ad9fb6848a1fa75",
+ *                                 "subcircles": [
+ *                                     {
+ *                                         "_id": "55c580811b6268f35b007af8",
+ *                                         "name": "Primer Año",
+ *                                         "parent": "55c428989ad9fb6848a1fa76",
+ *                                         "subcircles": [
+ *                                             {
+ *                                                 "_id": "55c5819455fdcea25c9f5607",
+ *                                                 "name": "Primer cuatrimestre",
+ *                                                 "parent": "55c580811b6268f35b007af8",
+ *                                                 "subcircles": [
+ *                                                 ]
+ *                                             }
+ *                                         ]
+ *                                     }
+ *                                 ]
+ *                             },
+ *                             {
+ *                                 "_id": "55c428a69ad9fb6848a1fa77",
+ *                                 "name": "Cole",
+ *                                 "picture": "http://images.idiva.com/media/content/2011/Dec/hot_to_make_friends_at_college.jpg",
+ *                                 "parent": "55c428849ad9fb6848a1fa75",
+ *                                 "subcircles": [
+ *                                 ]
+ *                             }
+ *                         ]
+ *                     }
+ *                 ]
+ *             }
+ *         ]
+ *     }
+ */
+circleRoutes.get('/:circle_id/tree', circleController.getTree);
+
+/**
  * @api {put} /api/user/:user_id/circle/:circle_id Actualizar un circulo
  * @apiGroup Circulos
  *

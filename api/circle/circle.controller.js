@@ -127,10 +127,8 @@ module.exports.delete = function(req, res) {
 // Valida que los parámetros sean correctos
 var validateParams = function(req, res) {
   req.assert('name', 'Required').notEmpty();
-  req.assert('name', 'Only alphanumeric characters are allowed').isAscii();
   req.assert('picture', 'It must be a valid URL').optional().isURL();
   req.assert('parent_id', 'Required').notEmpty();
-  req.assert('parent_id', 'Only alphanumeric characters are allowed').isAscii();
 
   // Validamos errores
   if (req.validationErrors()) {
@@ -160,7 +158,65 @@ var saveCircleData = function(req, res, circle, foundCircle) {
     }
     else {
       logger.debug('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
+      circle.created_at = undefined;
+      circle.updated_at = undefined;
       return res.send({ circle: circle });
     }
   });
+};
+
+// Este metodo devuelve los subcirculos en una estructura de arbol del circulo pedido
+module.exports.getTree = function (req, res) {
+
+  process.nextTick(function () {
+    Circle.find({ ancestors: req.circle._id }, 'picture parent name _id')
+      .lean()
+      .exec(function(err, circles) {
+      if (err || !circles) {
+        logger.warn('Could not find subcircles for circle=' + req.circle._id);
+        return res.status(401).send({ errors: [{ msg: 'Could not find subcircles for specified circle' }] });
+      }
+      else {
+        logger.debug('Subcircles for circle=' + req.circle._id + ' for user=' + req.user);
+        circles.push(req.circle);
+        var mappedIdCircles = circles.map(function(circle) {
+          return {
+            _id: circle._id.toString(),
+            name: circle.name,
+            picture: circle.picture,
+            parent: circle.parent ? circle.parent.toString() : undefined
+          };
+        });
+
+        var tree = makeTree({ q: mappedIdCircles });
+        res.send({ tree: tree });
+      }
+    });
+  });
+};
+
+var makeTree = function(options) {
+  var children, e, i, id, j, len, len1, o, pid, ref, ref1, temp;
+  id = options.id || "_id";
+  pid = options.parentid || "parent";
+  children = options.children || "subcircles";
+  temp = {};
+  ref = options.q;
+  for (i = 0, len = ref.length; i < len; i++) {
+    e = ref[i];
+    e[children] = [];
+    temp[e[id]] = e;
+  }
+  o = [];
+  ref1 = options.q;
+  for (j = 0, len1 = ref1.length; j < len1; j++) {
+    e = ref1[j];
+    if (temp[e[pid]] !== undefined) {
+      temp[e[pid]][children].push(e);
+    }
+    else {
+      o.push(e);
+    }
+  }
+  return o;
 };

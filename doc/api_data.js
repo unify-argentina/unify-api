@@ -323,6 +323,81 @@ define({ "api": [
     ]
   },
   {
+    "type": "get",
+    "url": "/api/user/:user_id/circle/:circle_id/tree",
+    "title": "Obtener subcirculos",
+    "group": "Circulos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "circle_id",
+            "description": "<p>Id del circulo</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "tree",
+            "description": "<p>Subcirculos</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"tree\": [\n        {\n            \"_id\": \"55c421364037f03842898379\",\n            \"name\": \"Main Circle\",\n            \"subcircles\": [\n                {\n                    \"_id\": \"55c427f69ad9fb6848a1fa72\",\n                    \"name\": \"Familia\",\n                    \"picture\": \"http://www.granada.escolapiosemaus.org/blogs/primariaingles/wp-content/uploads/sites/9/2014/10/family-home.png\",\n                    \"parent\": \"55c421364037f03842898379\",\n                    \"subcircles\": [\n                        {\n                            \"_id\": \"55c4284c9ad9fb6848a1fa73\",\n                            \"name\": \"Materna\",\n                            \"picture\": \"http://www.healthyplace.com/blogs/relationshipsandmentalillness/files/2015/05/3d-happy-family-1.jpg\",\n                            \"parent\": \"55c427f69ad9fb6848a1fa72\",\n                            \"subcircles\": [\n                            ]\n                        },\n                        {\n                            \"_id\": \"55c4285b9ad9fb6848a1fa74\",\n                            \"name\": \"Paterna\",\n                            \"picture\": \"http://www.mindfuljourneycenter.com/wp-content/uploads/2014/07/couples-family-therapy.jpg\",\n                            \"parent\": \"55c427f69ad9fb6848a1fa72\",\n                            \"subcircles\": [\n                            ]\n                        }\n                    ]\n                },\n                {\n                    \"_id\": \"55c428849ad9fb6848a1fa75\",\n                    \"name\": \"Amigos\",\n                    \"picture\": \"http://blackfriendconnect.com/wp-content/uploads/2013/07/rent-a-black-friend-picture-new1.jpg\",\n                    \"parent\": \"55c421364037f03842898379\",\n                    \"subcircles\": [\n                        {\n                            \"_id\": \"55c428989ad9fb6848a1fa76\",\n                            \"name\": \"Facu\",\n                            \"picture\": \"http://www.unialliance.ac.uk/wp-content/uploads/2012/12/Caerleon-Lawn-21.jpg\",\n                            \"parent\": \"55c428849ad9fb6848a1fa75\",\n                            \"subcircles\": [\n                                {\n                                    \"_id\": \"55c580811b6268f35b007af8\",\n                                    \"name\": \"Primer Año\",\n                                    \"parent\": \"55c428989ad9fb6848a1fa76\",\n                                    \"subcircles\": [\n                                        {\n                                            \"_id\": \"55c5819455fdcea25c9f5607\",\n                                            \"name\": \"Primer cuatrimestre\",\n                                            \"parent\": \"55c580811b6268f35b007af8\",\n                                            \"subcircles\": [\n                                            ]\n                                        }\n                                    ]\n                                }\n                            ]\n                        },\n                        {\n                            \"_id\": \"55c428a69ad9fb6848a1fa77\",\n                            \"name\": \"Cole\",\n                            \"picture\": \"http://images.idiva.com/media/content/2011/Dec/hot_to_make_friends_at_college.jpg\",\n                            \"parent\": \"55c428849ad9fb6848a1fa75\",\n                            \"subcircles\": [\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/circle/index.js",
+    "groupTitle": "Circulos",
+    "name": "GetApiUserUser_idCircleCircle_idTree",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id/tree"
+      }
+    ]
+  },
+  {
     "type": "post",
     "url": "/api/user/:user_id/circle",
     "title": "Crear un circulo",
@@ -1504,7 +1579,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": " HTTP/1.1 200 OK\n\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55b6fba973191a7428d80c94\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": \"55b6fbaa73191a7428d80c95\",\n        \"name\": \"Joel Marquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true,\n        \"media\": {\n            \"count\": 3,\n            \"list\": [\n                {\n                    \"provider\": \"facebook\",\n                    \"id\": \"10153477879074738\",\n                    \"type\": \"image\",\n                    \"created_time\": 1437948477,\n                    \"link\": \"https://www.facebook.com/photo.php?fbid=10153477879074738&set=a.10152154863139738.1073741830.826764737&type=1\",\n                    \"media_url\": \"https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-9/20225_10153477879074738_4360696422298472690_n.jpg?oh=7d332338c4db1136c359cbe0e7ed3264&oe=565513FA&__gda__=1448067937_d3d74b86dbe101b54961e0549652c028\",\n                    \"text\": \"Cumple de franchu 3 años, y si, se vuelve a la infancia\"\n                },\n                {\n                    \"provider\": \"instagram\",\n                    \"id\": \"1037909504130909999_993803680\",\n                    \"type\": \"image\",\n                    \"created_time\": 1437948476,\n                    \"link\": \"https://instagram.com/p/5nZTHmuYcv/\",\n                    \"likes\": 13,\n                    \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xfp1/t51.2885-15/e15/10809951_484188628422854_977065670_n.jpg\",\n                    \"text\": \"Cumple de franchu 3 años, y si, se vuelve a la infancia\",\n                    \"user_has_liked\": \"\"\n                },\n                {\n                    \"provider\": \"twitter\",\n                    \"id\": \"625427358284148736\",\n                    \"type\": \"text\",\n                    \"created_time\": 1437948476,\n                    \"link\": \"https://twitter.com/statuses/625427358284148736\",\n                    \"likes\": 0,\n                    \"text\": \"Cumple de franchu 3 años, y si, se vuelve a la infancia https://t.co/ZT86vvlho0\",\n                    \"user_has_liked\": false\n                }\n            ]\n        }\n    }\n}",
+          "content": "HTTP/1.1 200 OK\n\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true,\n        \"media\": {\n            \"count\": 5,\n            \"list\": [\n                {\n                    \"provider\": \"twitter\",\n                    \"id\": \"614167759744815105\",\n                    \"type\": \"video\",\n                    \"created_time\": 1435263979,\n                    \"link\": \"https://twitter.com/statuses/614167759744815105\",\n                    \"likes\": 0,\n                    \"text\": \"RT @enunabaldosa: El mejor polvo de Fiorito. #FuerzaDiego http://t.co/n8aG5cQ17v\",\n                    \"user_has_liked\": true\n                },\n                {\n                    \"provider\": \"facebook\",\n                    \"id\": \"10153375756974738\",\n                    \"type\": \"video\",\n                    \"created_time\": 1434330475,\n                    \"link\": \"\",\n                    \"media_url\": \"https://video.xx.fbcdn.net/hvideo-xtf1/v/t43.1792-2/11390970_10153376400444738_1956408425_n.mp4?efg=eyJybHIiOjMxODEsInJsYSI6NDA5Nn0%3D&rl=3181&vabr=2121&oh=48e4f3c6aa439959b3714f69c80ce3c4&oe=55C7316F\",\n                    \"text\": \"Esto es La Vela Puerca señores, gracias por tanto!!!\"\n                },\n                {\n                    \"provider\": \"instagram\",\n                    \"id\": \"1004621806268155504_993803680\",\n                    \"type\": \"video\",\n                    \"created_time\": 1433980273,\n                    \"link\": \"https://instagram.com/p/3xIjXIOYZwVrXCEvFD9of7f_Jbc-qyedzM1Ak0/\",\n                    \"likes\": 8,\n                    \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xfa1/t50.2886-16/11424155_495429683938569_221343300_n.mp4\",\n                    \"text\": \"Franchu rockstar dedicando canciones\",\n                    \"user_has_liked\": \"\"\n                },\n                {\n                    \"provider\": \"twitter\",\n                    \"id\": \"603017315962216448\",\n                    \"type\": \"text\",\n                    \"created_time\": 1432605506,\n                    \"link\": \"https://twitter.com/statuses/603017315962216448\",\n                    \"likes\": 0,\n                    \"text\": \"Potra! https://t.co/OBj9F9eSqO\",\n                    \"user_has_liked\": false\n                },\n                {\n                    \"provider\": \"facebook\",\n                    \"id\": \"10153299865284738\",\n                    \"type\": \"image\",\n                    \"created_time\": 1432215901,\n                    \"link\": \"https://www.facebook.com/photo.php?fbid=10153299865284738&set=a.10150737575769738.433956.826764737&type=1\",\n                    \"media_url\": \"https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/11222191_10153299865284738_4077884363797576640_n.jpg?oh=0652558e97b45b1fac8d31f6f9a8cb9c&oe=56446D81\",\n                    \"text\": \"Me parece una iniciativa muy buena del ministerio de seguridad. A atrapar a este hijo de puta! -> http://info.minseg.gob.ar/sebusca/index.html\"\n                }\n            ]\n        }\n    }\n}",
           "type": "json"
         }
       ]
