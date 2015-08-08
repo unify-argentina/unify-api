@@ -5,6 +5,9 @@
 'use strict';
 
 module.exports = {
+
+  CROSS_DOMAIN_URL: process.env.CROSS_DOMAIN_URL || 'http://localhost:9000',
+
   // Mongo DB
   MONGODB: process.env.MONGODB || 'mongodb://localhost:27017/unify-dev',
   MONGODB_TEST: process.env.MONGODB || 'mongodb://localhost:27017/unify-test',
