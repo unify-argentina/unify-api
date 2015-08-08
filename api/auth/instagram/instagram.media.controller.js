@@ -117,7 +117,7 @@ var mapImage = function(instagramImage, callback) {
     link: instagramImage.link || '',
     likes: instagramImage.likes.count || '',
     media_url: instagramImage.images.standard_resolution.url,
-    text: instagramImage.caption.text || '',
+    text: instagramImage.caption ? instagramImage.caption.text : '',
     user_has_liked: instagramImage.user_has_liked || ''
   };
   callback(image);
