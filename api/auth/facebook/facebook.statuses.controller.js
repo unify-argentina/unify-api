@@ -13,7 +13,7 @@ var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
 
 // constantes
-var USER_STATUSES_URL = facebookUtils.getBaseURL() + '/%s/statuses?access_token=%s';
+var USER_STATUSES_URL = facebookUtils.getBaseURL() + '/%s/statuses?fields=id,message,updated_time,likes.limit(0).summary(true),comments.limit(0).summary(true)&access_token=%s';
 
 module.exports.getStatuses = function(access_token, facebookId, callback) {
 
@@ -40,9 +40,9 @@ var mapStatus = function(facebookMedia, callback) {
   var mappedMedia = {
     provider: 'facebook',
     id: facebookMedia.id || '',
-    type: 'image',
+    type: 'text',
     created_time: moment(facebookMedia.updated_time, facebookUtils.getFacebookDateFormat(), 'en').unix() || '',
-    //likes: facebookMedia.favorite_count || 0,
+    likes: facebookMedia.likes.summary.total_count || 0,
     text: facebookMedia.message || ''
     //user_has_liked: facebookMedia.favorited || false
   };

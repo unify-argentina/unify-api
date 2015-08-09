@@ -13,7 +13,7 @@ var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
 
 // constantes
-var USER_VIDEOS_URL = facebookUtils.getBaseURL() + '/%s/videos?type=uploaded&fields=id,description,length,source,picture,created_time&access_token=%s';
+var USER_VIDEOS_URL = facebookUtils.getBaseURL() + '/%s/videos?type=uploaded&fields=id,description,length,source,picture,created_time,likes.limit(0).summary(true),comments.limit(0).summary(true)&access_token=%s';
 
 module.exports.getVideos = function(access_token, facebookId, callback) {
 
@@ -43,7 +43,7 @@ var mapVideo = function(facebookMedia, callback) {
     type: 'video',
     created_time: moment(facebookMedia.created_time, facebookUtils.getFacebookDateFormat(), 'en').unix() || '',
     link: facebookMedia.permalink_url ? facebookUtils.getFacebookURL() + facebookMedia.permalink_url : '',
-    //likes: facebookMedia.favorite_count || 0,
+    likes: facebookMedia.likes.summary.total_count || 0,
     media_url: facebookMedia.source,
     text: facebookMedia.description || ''
     //user_has_liked: facebookMedia.favorited || false

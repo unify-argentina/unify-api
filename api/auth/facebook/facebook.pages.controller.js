@@ -31,10 +31,6 @@ module.exports.getPages = function(access_token, facebookId, callback) {
         var filteredMappedPages = _.uniq(mappedPages, function(mappedUser) {
           return mappedUser.id;
         });
-        /*var result = {
-          count: filteredMappedPages.length,
-          list: filteredMappedPages
-        };*/
         logger.debug('Pages: ' + JSON.stringify(filteredMappedPages));
         callback(err, filteredMappedPages);
       });

@@ -13,7 +13,7 @@ var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
 
 // constantes
-var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?type=uploaded&fields=id,name,created_time,album,images,link&access_token=%s';
+var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?type=uploaded&fields=id,name,created_time,album,images,link,likes.limit(0).summary(true),comments.limit(0).summary(true)&access_token=%s';
 
 module.exports.getPhotos = function(access_token, facebookId, callback) {
 
@@ -43,7 +43,7 @@ var mapPhoto = function(facebookMedia, callback) {
     type: 'image',
     created_time: moment(facebookMedia.created_time, facebookUtils.getFacebookDateFormat(), 'en').unix() || '',
     link: facebookMedia.link || '',
-    //likes: facebookMedia.favorite_count || 0,
+    likes: facebookMedia.likes.summary.total_count || 0,
     media_url: facebookMedia.images[0].source,
     text: facebookMedia.name || ''
     //user_has_liked: facebookMedia.favorited || false
