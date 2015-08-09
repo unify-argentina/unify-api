@@ -84,7 +84,7 @@ var doMapVideo = function(instagramVideo, videoURL) {
     link: instagramVideo.link || '',
     likes: instagramVideo.likes.count || '',
     media_url: videoURL,
-    text: instagramVideo.caption.text || '',
+    text: instagramVideo.caption ? instagramVideo.caption.text : '',
     user_has_liked: instagramVideo.user_has_liked || ''
   };
 };
