@@ -31,18 +31,14 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
         var filteredMappedUsers = _.uniq(mappedUsers, function(mappedUser) {
           return mappedUser.id;
         });
-        var result = {
-          count: filteredMappedUsers.length,
-          list: filteredMappedUsers
-        };
-        logger.debug('Friends: ' + JSON.stringify(result));
-        callback(err, result);
+        logger.debug('Friends: ' + JSON.stringify(filteredMappedUsers));
+        callback(err, filteredMappedUsers);
       });
     }
   });
 };
 
-// Le pega a la API de Facebook y en el response, si fue exitoso, van a estar las personas a las que sigue de
+// Le pega a la API de Facebook y en el response, si fue exitoso, van a estar los amigos del usuario
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
 var getFacebookData = function(url, callback) {
 
@@ -70,7 +66,8 @@ var mapUser = function(facebookUser, callback) {
   var user = {
     id: facebookUser.id,
     name: facebookUser.name,
-    picture: facebookUtils.getFacebookPicture(facebookUser.id)
+    picture: facebookUtils.getFacebookPicture(facebookUser.id),
+    is_friend: true
   };
   callback(null, user);
 };

@@ -6,6 +6,7 @@
 
 // requires
 var facebookFriends = require('../auth/facebook/facebook.friends.controller');
+var facebookPages = require('../auth/facebook/facebook.pages.controller');
 var instagramFriends = require('../auth/instagram/instagram.friends.controller');
 var twitterFriends = require('../auth/twitter/twitter.friends.controller');
 var async = require('async');
@@ -34,7 +35,8 @@ module.exports.getFriends = function(req, res) {
 // asociada el usuario
 var doGetFriends = function(res, user) {
   async.parallel({
-      facebook: getFacebookFriends.bind(null, user),
+      facebook_friends: getFacebookFriends.bind(null, user),
+      facebook_pages: getFacebookPages.bind(null, user),
       instagram: getInstagramFriends.bind(null, user),
       twitter: getTwitterFriends.bind(null, user)
     },
@@ -53,6 +55,18 @@ var doGetFriends = function(res, user) {
 var getFacebookFriends = function(user, callback) {
   if (user.hasLinkedAccount('facebook')) {
     facebookFriends.getFriends(user.facebook.access_token, user.facebook.id, function(err, results) {
+      callback(err, results);
+    });
+  }
+  // Si no tiene linkeada la cuenta de Facebook, no devolvemos nada
+  else {
+    callback(null, null);
+  }
+};
+
+var getFacebookPages = function(user, callback) {
+  if (user.hasLinkedAccount('facebook')) {
+    facebookPages.getPages(user.facebook.access_token, user.facebook.id, function(err, results) {
       callback(err, results);
     });
   }
@@ -95,9 +109,23 @@ var selectFields = function() {
 // Envía al cliente los amigos del usuario
 var sendFriendsResponseFromResults = function(res, results) {
   var friends = {};
-  if (results.facebook) {
-    friends.facebook = results.facebook;
+
+  if (results.facebook_friends || results.facebook_pages) {
+
+    var facebook = {};
+    facebook.list = [];
+
+    if (results.facebook_friends) {
+      facebook.list.push.apply(facebook.list, results.facebook_friends);
+    }
+    if (results.facebook_pages) {
+      facebook.list.push.apply(facebook.list, results.facebook_pages);
+    }
+
+    facebook.count = facebook.list.length;
+    friends.facebook = facebook;
   }
+
   if (results.instagram) {
     friends.instagram = results.instagram;
   }

@@ -33,8 +33,8 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
           return mappedUser.id;
         });
         var result = {
-          count: filteredMappedUsers.length,
-          list: filteredMappedUsers
+          list: filteredMappedUsers,
+          count: filteredMappedUsers.length
         };
         logger.debug('Friends: ' + JSON.stringify(result));
         callback(err, result);
