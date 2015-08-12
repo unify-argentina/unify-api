@@ -59,7 +59,7 @@ module.exports.update = function(req, res) {
 
     // Si no encontramos un usuario con ese email, está disponible
     User.findOne({ email: req.body.email }, function(err, existingUser) {
-      if (existingUser) {
+      if (existingUser && !existingUser._id.equals(req.user)) {
         logger.debug('User already exists: ' + existingUser);
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
@@ -84,6 +84,8 @@ module.exports.update = function(req, res) {
                 else {
                   user.password = undefined;
                   logger.debug('Updated user: ' + user.toString());
+                  user.created_at = undefined;
+                  user.updated_at = undefined;
                   return res.send({ user: user });
                 }
               });

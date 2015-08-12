@@ -1579,7 +1579,7 @@
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true,\n        \"media\": {\n            \"count\": 5,\n            \"list\": [\n                {\n                    \"provider\": \"twitter\",\n                    \"id\": \"614167759744815105\",\n                    \"type\": \"video\",\n                    \"created_time\": 1435263979,\n                    \"link\": \"https://twitter.com/statuses/614167759744815105\",\n                    \"likes\": 0,\n                    \"text\": \"RT @enunabaldosa: El mejor polvo de Fiorito. #FuerzaDiego http://t.co/n8aG5cQ17v\",\n                    \"user_has_liked\": true\n                },\n                {\n                    \"provider\": \"facebook\",\n                    \"id\": \"10153375756974738\",\n                    \"type\": \"video\",\n                    \"created_time\": 1434330475,\n                    \"link\": \"\",\n                    \"media_url\": \"https://video.xx.fbcdn.net/hvideo-xtf1/v/t43.1792-2/11390970_10153376400444738_1956408425_n.mp4?efg=eyJybHIiOjMxODEsInJsYSI6NDA5Nn0%3D&rl=3181&vabr=2121&oh=48e4f3c6aa439959b3714f69c80ce3c4&oe=55C7316F\",\n                    \"text\": \"Esto es La Vela Puerca señores, gracias por tanto!!!\"\n                },\n                {\n                    \"provider\": \"instagram\",\n                    \"id\": \"1004621806268155504_993803680\",\n                    \"type\": \"video\",\n                    \"created_time\": 1433980273,\n                    \"link\": \"https://instagram.com/p/3xIjXIOYZwVrXCEvFD9of7f_Jbc-qyedzM1Ak0/\",\n                    \"likes\": 8,\n                    \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xfa1/t50.2886-16/11424155_495429683938569_221343300_n.mp4\",\n                    \"text\": \"Franchu rockstar dedicando canciones\",\n                    \"user_has_liked\": \"\"\n                },\n                {\n                    \"provider\": \"twitter\",\n                    \"id\": \"603017315962216448\",\n                    \"type\": \"text\",\n                    \"created_time\": 1432605506,\n                    \"link\": \"https://twitter.com/statuses/603017315962216448\",\n                    \"likes\": 0,\n                    \"text\": \"Potra! https://t.co/OBj9F9eSqO\",\n                    \"user_has_liked\": false\n                },\n                {\n                    \"provider\": \"facebook\",\n                    \"id\": \"10153299865284738\",\n                    \"type\": \"image\",\n                    \"created_time\": 1432215901,\n                    \"link\": \"https://www.facebook.com/photo.php?fbid=10153299865284738&set=a.10150737575769738.433956.826764737&type=1\",\n                    \"media_url\": \"https://scontent.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/11222191_10153299865284738_4077884363797576640_n.jpg?oh=0652558e97b45b1fac8d31f6f9a8cb9c&oe=56446D81\",\n                    \"text\": \"Me parece una iniciativa muy buena del ministerio de seguridad. A atrapar a este hijo de puta! -> http://info.minseg.gob.ar/sebusca/index.html\"\n                }\n            ]\n        }\n    }\n}",
+          "content": "HTTP/1.1 200 OK\n\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true\n    }\n}",
           "type": "json"
         }
       ]
@@ -1591,6 +1591,74 @@
     "sampleRequest": [
       {
         "url": "http://localhost:8080/api/user/:user_id"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/api/user/:user_id/feed",
+    "title": "Obtener feed del usuario",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "user",
+            "description": "<p>Usuario</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true,\n        \"media\": {\n            \"count\": 4,\n            \"list\": [\n                {\n                    \"provider\": \"twitter\",\n                    \"id\": \"630875071029112832\",\n                    \"type\": \"text\",\n                    \"created_time\": 1439247312,\n                    \"link\": \"https://twitter.com/statuses/630875071029112832\",\n                    \"likes\": 0,\n                    \"text\": \"@FloreJoffre volvió mi escritora favorita, la extrañaba mucho!\",\n                    \"user_has_liked\": false\n                },\n                {\n                    \"provider\": \"facebook\",\n                    \"id\": \"10153505103784738\",\n                    \"type\": \"image\",\n                    \"created_time\": 1438992173,\n                    \"link\": \"https://www.facebook.com/photo.php?fbid=10153505103784738&set=a.10152154863139738.1073741830.826764737&type=1\",\n                    \"likes\": 22,\n                    \"media_url\": \"https://scontent.xx.fbcdn.net/hphotos-xtp1/v/t1.0-9/11222579_10153505103784738_8048795787845306035_n.jpg?oh=1666a8fd6d3e5aed978488fc1b03ad17&oe=56809729\",\n                    \"text\": \"Visita a los abuelos!\"\n                },\n                {\n                    \"provider\": \"instagram\",\n                    \"id\": \"1046664664395121919_993803680\",\n                    \"type\": \"image\",\n                    \"created_time\": 1438992172,\n                    \"link\": \"https://instagram.com/p/6Gf_eAOYT_TLaOE0wV4q3GebfMnHq2eYRd3500/\",\n                    \"likes\": 10,\n                    \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11326029_815625338545580_1345778981_n.jpg\",\n                    \"text\": \"Visita a los abuelos!\",\n                    \"user_has_liked\": \"\"\n                },\n                {\n                    \"provider\": \"instagram\",\n                    \"id\": \"1041658847019238902_993803680\",\n                    \"type\": \"video\",\n                    \"created_time\": 1438395432,\n                    \"link\": \"https://instagram.com/p/50tzPRuYX2b063EzLuYQ190FkgywcDGwMbFoM0/\",\n                    \"likes\": 6,\n                    \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xfa1/t50.2886-16/11766536_1631591547111503_50874758_n.mp4\",\n                    \"text\": \"Alguien nos invadió el cuarto!\",\n                    \"user_has_liked\": \"\"\n                }\n            ]\n        }\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "GetApiUserUser_idFeed",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/feed"
       }
     ]
   },
@@ -1647,7 +1715,7 @@
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": " HTTP/1.1 200 OK\n\n{\n  \"friends\":{\n    \"facebook\":{\n      \"count\":1,\n      \"list\":[\n        {\n          \"id\":\"104412116557897\",\n          \"name\":\"Juan Losa\",\n          \"picture\":\"https://graph.facebook.com/v2.3/104412116557897/picture?type=large\"\n        }\n      ]\n    },\n    \"instagram\":{\n      \"count\":2,\n      \"list\":[\n        {\n          \"id\":\"1442169810\",\n          \"name\":\"marcelo tinelli\",\n          \"picture\":\"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11312440_693266217444492_2069397433_a.jpg\",\n          \"username\":\"cuervotinelli1\"\n        },\n        {\n          \"id\":\"1786223786\",\n          \"name\":\"Cucina Paradiso\",\n          \"picture\":\"https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xfp1/t51.2885-19/11055552_724116127706536_885942678_a.jpg\",\n          \"username\":\"cucinaparadisoba\"\n        }\n      ]\n    },\n    \"twitter\":{\n      \"count\":3,\n      \"list\":[\n        {\n          \"id\":\"2399412002\",\n          \"name\":\"StackCareersUK\",\n          \"picture\":\"http://pbs.twimg.com/profile_images/565838781853351937/P4RG_KjM_normal.png\",\n          \"username\":\"StackCareersUK\"\n        },\n        {\n          \"id\":\"1887042901\",\n          \"name\":\"Preguntados\",\n          \"picture\":\"http://pbs.twimg.com/profile_images/459753435336695808/y8G4IVrX_normal.png\",\n          \"username\":\"Preguntados_app\"\n        },\n        {\n          \"id\":\"211089576\",\n          \"name\":\"Wunderlist\",\n          \"picture\":\"http://pbs.twimg.com/profile_images/494884573428207616/BjPVVsRm_normal.png\",\n          \"username\":\"Wunderlist\"\n        }\n      ]\n    }\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n\n{\n    \"friends\": {\n        \"facebook\": {\n            \"list\": [\n                {\n                    \"id\": \"10205153877979641\",\n                    \"name\": \"Alejo García\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large\",\n                    \"is_friend\": true\n                },\n                {\n                    \"id\": \"237673679704701\",\n                    \"name\": \"Kinder\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/237673679704701/picture?type=large\",\n                    \"is_friend\": false\n                }\n            ],\n            \"count\": 2\n        },\n        \"instagram\": {\n            \"list\": [\n                {\n                    \"id\": \"1748235982\",\n                    \"name\": \"Basta De Todo\",\n                    \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11374053_781604678648356_1836083238_a.jpg\",\n                    \"username\": \"bastatodo\"\n                }\n            ],\n            \"count\": 1\n        },\n        \"twitter\": {\n            \"list\": [\n                {\n                    \"id\": \"66780587\",\n                    \"name\": \"Amazon Web Services\",\n                    \"picture\": \"http://pbs.twimg.com/profile_images/2900345382/16ffae8c667bdbc6a4969f6f02090652_bigger.png\",\n                    \"username\": \"awscloud\"\n                }\n            ],\n            \"count\": 1\n        }\n    }\n}",
           "type": "json"
         }
       ]
@@ -1750,7 +1818,7 @@
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n\n{\n   \"user\": {\n     \"main_circle\":\"558748787f0a76cc4ca02a35\",\n     \"email\":\"unify.argentina@gmail.com\",\n     \"name\":\"Juan Losa\",\n     \"_id\":\"558748767f0a76cc4ca02a34\",\n     \"__v\":0\n   }\n}",
+          "content": "HTTP/1.1 200 OK\n\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true\n    }\n}",
           "type": "json"
         }
       ]

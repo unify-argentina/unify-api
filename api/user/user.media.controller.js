@@ -108,7 +108,7 @@ var sendMediaResponseFromResults = function(res, user, results) {
     // Una vez que los ordenamos, los enviamos
   }, function(err, sortedMedia) {
     var mediaObject = {
-      media: {
+      feed: {
         count: sortedMedia.length,
         list: sortedMedia
       }
