@@ -40,7 +40,7 @@ module.exports.getMedia = function (req, res) {
                 return res.status(400).send({ errors: [{ msg: 'There was an error obtaining circle media' }] });
               }
               else {
-                sendMediaResponseFromResults(res, req.circle, contacts, results);
+                sendMediaResponseFromResults(res, results);
               }
             });
           }
@@ -98,7 +98,7 @@ var buildMediaArray = function(media) {
 };
 
 // Ordena el contenido cronológicamente y le devuelve al cliente los contactos, su contenido e info del círculo
-var sendMediaResponseFromResults = function(res, circle, contacts, mediaResults) {
+var sendMediaResponseFromResults = function(res, mediaResults) {
 
   // Media results es un array de arrays, lo convertimos a un sólo array
   var flattenedMedia = _.flatten(mediaResults);
@@ -108,14 +108,12 @@ var sendMediaResponseFromResults = function(res, circle, contacts, mediaResults)
     callback(null, -media.created_time);
   }, function(err, sortedMedia) {
 
-    var mediaObject = {
+    return res.send({ 
       media: {
         count: sortedMedia.length,
         list: sortedMedia
       }
-    };
-    result.user = undefined;
-    return res.send({ media: media });
+    });
   });
 };
 
