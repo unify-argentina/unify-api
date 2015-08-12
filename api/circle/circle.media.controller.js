@@ -114,14 +114,8 @@ var sendMediaResponseFromResults = function(res, circle, contacts, mediaResults)
         list: sortedMedia
       }
     };
-    var jsonCircle = circle.toJSON();
-    var mediaResult = _.merge(mediaObject, jsonCircle);
-    var contactsObject = {
-      contacts: contacts
-    };
-    var result = _.merge(contactsObject, mediaResult);
     result.user = undefined;
-    return res.send({ circle: result });
+    return res.send({ media: media });
   });
 };
 
