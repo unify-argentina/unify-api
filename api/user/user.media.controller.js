@@ -48,7 +48,7 @@ var doGetMedia = function(res, user) {
         return res.status(400).send({ errors: [{ msg: 'There was an error obtaining contact media' }] });
       }
       else {
-        sendMediaResponseFromResults(res, user, results);
+        sendMediaResponseFromResults(res, results);
       }
     });
 };
@@ -90,7 +90,7 @@ var getTwitterMedia = function(user, callback) {
 };
 
 // Envía al cliente el contenido del usuario
-var sendMediaResponseFromResults = function(res, user, results) {
+var sendMediaResponseFromResults = function(res, results) {
   var mediaObjects = [];
   if (results.facebook) {
     mediaObjects.push.apply(mediaObjects, results.facebook);
@@ -107,15 +107,12 @@ var sendMediaResponseFromResults = function(res, user, results) {
     callback(null, -media.created_time);
     // Una vez que los ordenamos, los enviamos
   }, function(err, sortedMedia) {
-    var mediaObject = {
-      feed: {
+    return res.send({
+      media: {
         count: sortedMedia.length,
         list: sortedMedia
       }
-    };
-    var result = _.merge(user.toJSON(), mediaObject);
-    clearProtectedData(result);
-    return res.send({ user: result });
+    });
   });
 };
 

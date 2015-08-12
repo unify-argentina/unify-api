@@ -32,7 +32,7 @@ module.exports.getMedia = function (req, res) {
             return res.status(400).send({ errors: [{ msg: 'There was an error obtaining contact media' }] });
           }
           else {
-            sendMediaResponseFromResults(res, req.contact, results);
+            sendMediaResponseFromResults(res, results);
           }
         });
       }
@@ -95,7 +95,7 @@ var getTwitterMedia = function(user, contact, callback) {
 };
 
 // Envía al cliente el contenido del contacto
-var sendMediaResponseFromResults = function(res, contact, results) {
+var sendMediaResponseFromResults = function(res, results) {
   var mediaObjects = [];
   if (results.facebook) {
     mediaObjects.push.apply(mediaObjects, results.facebook);
@@ -112,14 +112,12 @@ var sendMediaResponseFromResults = function(res, contact, results) {
     callback(null, -media.created_time);
   // Una vez que los ordenamos, los enviamos
   }, function(err, sortedMedia) {
-    var mediaObject = {
+    return res.send({ 
       media: {
         count: sortedMedia.length,
         list: sortedMedia
       }
-    };
-    var result = _.merge(contact.toJSON(), mediaObject);
-    return res.send({ contact: result });
+    });
   });
 };
 
