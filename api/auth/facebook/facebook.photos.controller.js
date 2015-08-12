@@ -18,7 +18,7 @@ var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?type=uploaded&fie
 module.exports.getPhotos = function(access_token, facebookId, callback) {
 
   var url = util.format(USER_PHOTOS_URL, facebookId, access_token);
-  logger.debug('URL: ' + url);
+  logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {
     if (err) {
@@ -27,7 +27,7 @@ module.exports.getPhotos = function(access_token, facebookId, callback) {
     else {
       // Si no hubo error, tenemos que mapear el response
       async.map(response.body.data, mapPhoto, function(err, mappedMedia) {
-        logger.debug('Media: ' + JSON.stringify(mappedMedia));
+        logger.info('Media: ' + JSON.stringify(mappedMedia));
         callback(err, mappedMedia);
       });
     }

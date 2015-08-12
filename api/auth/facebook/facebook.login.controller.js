@@ -30,7 +30,7 @@ module.exports.unlinkAccount = function(req, res) {
       }
       else {
         user.facebook = undefined;
-        logger.debug('Successfully unlinked facebook account for user: ' + user.toString());
+        logger.info('Successfully unlinked facebook account for user: ' + user.toString());
         return saveUser(res, user);
       }
     });
@@ -42,7 +42,7 @@ module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
     var qs = getAccessTokenParams(req);
-    logger.debug('Access token params: ' + JSON.stringify(qs));
+    logger.info('Access token params: ' + JSON.stringify(qs));
     // Primero intercambiamos el código de autorización para obtener el access token
     request.get({ url: ACCESS_TOKEN_URL, qs: qs, json: true }, function(err, response, access_token) {
       if (response.statusCode !== 200) {
@@ -50,7 +50,7 @@ module.exports.linkAccount = function(req, res) {
         return res.status(response.statusCode).send({ errors: [{ msg: access_token.error.message }] });
       }
 
-      logger.debug('Access token: ' + JSON.stringify(access_token));
+      logger.info('Access token: ' + JSON.stringify(access_token));
       // Una vez que tenemos el access_token, obtenemos información del usuario actual
       request.get({ url: GRAPH_USER_URL, qs: access_token, json: true }, function(err, response, profile) {
         if (response.statusCode !== 200) {
@@ -58,15 +58,15 @@ module.exports.linkAccount = function(req, res) {
           return res.status(response.statusCode).send({ errors: [{ msg: access_token.error.message }] });
         }
 
-        logger.debug('Facebook profile: ' + JSON.stringify(profile));
+        logger.info('Facebook profile: ' + JSON.stringify(profile));
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
-          logger.debug('Authenticated user');
+          logger.info('Authenticated user');
           handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, access_token.access_token);
         }
         // Si no tiene el header de authorization, es porque es un nuevo usuario
         else {
-          logger.debug('Not authenticated user');
+          logger.info('Not authenticated user');
           handleNotAuthenticatedUser(res, profile, access_token.access_token);
         }
       });
@@ -79,7 +79,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, access_
   User.findOne({ 'facebook.id': facebookProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
-      logger.debug('Existing facebook user: ' + existingUser.toString());
+      logger.info('Existing facebook user: ' + existingUser.toString());
       return jwt.createJWT(res, existingUser);
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Facebook
@@ -103,7 +103,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, access_
           if (user.email.indexOf('no-email') > -1 && facebookProfile.email) {
             user.email = facebookProfile.email;
           }
-          logger.debug('Existing unify user: ' + user.toString());
+          logger.info('Existing unify user: ' + user.toString());
           linkFacebookData(user, facebookProfile, access_token);
           return saveUser(res, user);
         }
@@ -118,14 +118,14 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
     // Si encuentra a uno con el id de Facebook, es un usuario registrado con Facebook
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingFacebookUser) {
-      logger.debug('Existing facebook user: ' + existingFacebookUser.toString());
+      logger.info('Existing facebook user: ' + existingFacebookUser.toString());
       return jwt.createJWT(res, existingFacebookUser);
     }
     else {
       User.findOne({ 'email': facebookProfile.email }, function(err, existingUnifyUser) {
         // Si encuentra a uno con el email de Facebook, vincula la cuenta local con la de Facebook
         if (existingUnifyUser) {
-          logger.debug('Existing unify user: ' + existingUnifyUser);
+          logger.info('Existing unify user: ' + existingUnifyUser);
           linkFacebookData(existingUnifyUser, facebookProfile, access_token);
           return saveUser(res, existingUnifyUser);
         }
@@ -135,7 +135,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
           user.name = facebookProfile.name;
           user.email = facebookProfile.email;
           user.password = randomstring.generate(20);
-          logger.debug('New facebook user!: ' + user);
+          logger.info('New facebook user!: ' + user);
           linkFacebookData(user, facebookProfile, access_token);
           return saveUser(res, user);
         }

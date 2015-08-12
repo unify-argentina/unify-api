@@ -157,7 +157,7 @@ var saveCircleData = function(req, res, circle, foundCircle) {
       return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
     }
     else {
-      logger.debug('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
+      logger.info('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
       circle.created_at = undefined;
       circle.updated_at = undefined;
       return res.send({ circle: circle });
@@ -177,7 +177,7 @@ module.exports.getTree = function (req, res) {
         return res.status(401).send({ errors: [{ msg: 'Could not find subcircles for specified circle' }] });
       }
       else {
-        logger.debug('Subcircles for circle=' + req.circle._id + ' for user=' + req.user);
+        logger.info('Subcircles for circle=' + req.circle._id + ' for user=' + req.user);
         circles.push(req.circle);
         var mappedIdCircles = circles.map(function(circle) {
           return {

@@ -44,7 +44,6 @@ module.exports.getById = function(req, res) {
   });
 };
 
-// TODO
 // Se encarga de actualizar el contacto en base al id que se le pase por parámetro
 module.exports.update = function(req, res) {
 
@@ -156,7 +155,7 @@ var saveContactData = function(req, res, contact, circle) {
       return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
     }
     else {
-      logger.debug('Contact for user: ' + req.user + ' created successfully: ' + contact.toString());
+      logger.info('Contact for user: ' + req.user + ' created successfully: ' + contact.toString());
       contact.created_at = undefined;
       contact.updated_at = undefined;
       return res.send({ contact: contact });

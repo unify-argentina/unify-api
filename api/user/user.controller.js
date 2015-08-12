@@ -27,7 +27,7 @@ module.exports.getById = function(req, res) {
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
         else {
-          logger.debug('Get user by id: ' + req.params.user_id);
+          logger.info('Get user by id: ' + req.params.user_id);
           return res.send({ user: user });
         }
       });
@@ -60,7 +60,7 @@ module.exports.update = function(req, res) {
     // Si no encontramos un usuario con ese email, está disponible
     User.findOne({ email: req.body.email }, function(err, existingUser) {
       if (existingUser && !existingUser._id.equals(req.user)) {
-        logger.debug('User already exists: ' + existingUser);
+        logger.info('User already exists: ' + existingUser);
         return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
       else {
@@ -83,7 +83,7 @@ module.exports.update = function(req, res) {
                 }
                 else {
                   user.password = undefined;
-                  logger.debug('Updated user: ' + user.toString());
+                  logger.info('Updated user: ' + user.toString());
                   user.created_at = undefined;
                   user.updated_at = undefined;
                   return res.send({ user: user });

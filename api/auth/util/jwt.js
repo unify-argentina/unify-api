@@ -19,7 +19,7 @@ module.exports.createJWT = function(res, user) {
     exp: moment().add(30, 'days').unix()
   };
   var token = jwt.sign(payload, config.TOKEN_SECRET);
-  logger.debug('User=' + user._id + ' token=' + token);
+  logger.info('User=' + user._id + ' token=' + token);
   return res.send({
     token: token,
     user: user.toJSON()
@@ -55,7 +55,7 @@ module.exports.ensureAuthenticated = function(req, res, next) {
       return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
     }
 
-    logger.debug('Token payload: ' + JSON.stringify(payload));
+    logger.info('Token payload: ' + JSON.stringify(payload));
     if (payload.exp <= moment().unix()) {
       logger.warn('Token has expired: ' + payload.exp + ' is older than ' + moment().unix());
       return res.status(401).send({ errors: [{ msg: 'Token has expired' }] });

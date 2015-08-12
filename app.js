@@ -22,14 +22,14 @@ require('./routes')(app);
 
 // mongodb
 mongoose.connect(config.MONGODB, function(err) {
-  logger.debug('Connected to MongoDB at ' + config.MONGODB);
+  logger.info('Connected to MongoDB at ' + config.MONGODB);
   mongoose.set('debug', function (coll, method, query, doc) {
-    logger.debug('Col: ' + coll + ' method: ' + method + ' query: ' + JSON.stringify(query) + ' doc: ' + JSON.stringify(doc));
+    logger.info('Col: ' + coll + ' method: ' + method + ' query: ' + JSON.stringify(query) + ' doc: ' + JSON.stringify(doc));
   });
 });
 
 // start app
 var port = process.env.PORT || 8080;
 app.listen(port, function() {
-  logger.debug('Unify API started at port ' + port);
+  logger.info('Unify API started at port ' + port);
 });

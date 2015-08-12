@@ -18,7 +18,7 @@ var USER_STATUSES_URL = facebookUtils.getBaseURL() + '/%s/statuses?fields=id,mes
 module.exports.getStatuses = function(access_token, facebookId, callback) {
 
   var url = util.format(USER_STATUSES_URL, facebookId, access_token);
-  logger.debug('URL: ' + url);
+  logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {
     if (err) {
@@ -27,7 +27,7 @@ module.exports.getStatuses = function(access_token, facebookId, callback) {
     else {
       // Si no hubo error, tenemos que mapear el response
       async.map(response.body.data, mapStatus, function(err, mappedMedia) {
-        logger.debug('Media: ' + JSON.stringify(mappedMedia));
+        logger.info('Media: ' + JSON.stringify(mappedMedia));
         callback(err, mappedMedia);
       });
     }

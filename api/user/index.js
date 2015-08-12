@@ -221,7 +221,7 @@ userRoutes.put('/:user_id', userController.update);
 userRoutes.get('/:user_id/friends', friendsController.getFriends);
 
 /**
- * @api {get} /api/user/:user_id/feed Obtener feed del usuario
+ * @api {get} /api/user/:user_id/media Obtener contenido del usuario
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token

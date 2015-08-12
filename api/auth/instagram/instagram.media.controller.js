@@ -25,7 +25,7 @@ module.exports.getMedia = function(access_token, instagramId, callback) {
   ACCESS_TOKEN = access_token;
 
   var url = util.format(USER_MEDIA_URL, instagramId, access_token);
-  logger.debug('URL: ' + url);
+  logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {
     if (err) {
@@ -34,7 +34,7 @@ module.exports.getMedia = function(access_token, instagramId, callback) {
     else {
       // Si no hubo error, tenemos que mapear el response
       async.map(response.body.data, mapMedia, function(err, mappedMedia) {
-        logger.debug('Media: ' + JSON.stringify(mappedMedia));
+        logger.info('Media: ' + JSON.stringify(mappedMedia));
         callback(err, mappedMedia);
       });
     }

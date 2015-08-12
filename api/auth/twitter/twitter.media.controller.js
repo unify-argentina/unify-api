@@ -26,12 +26,12 @@ module.exports.getMedia = function(access_token, twitterId, callback) {
   var qs = {
     //cursor: cursor,
     user_id: twitterId,
-    // La cantidad máxima de usuarios por request permitida por la API de Twitter
+    // La cantidad máxima de tweets por request permitida por la API de Twitter
     // https://dev.twitter.com/rest/reference/get/statuses/user_timeline
     count: 50
   };
 
-  logger.debug('URL: ' + USER_MEDIA_URL + 'qs=' + JSON.stringify(qs));
+  logger.info('URL: ' + USER_MEDIA_URL + 'qs=' + JSON.stringify(qs));
   request.get({ url: USER_MEDIA_URL, oauth: twitterOAuthHelper.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
     if (err) {
       callback(err, null);
@@ -39,7 +39,7 @@ module.exports.getMedia = function(access_token, twitterId, callback) {
     // Si no hubo error, tenemos que mapear el response
     else {
       async.map(response.body, mapMedia, function(err, mappedMedia) {
-        logger.debug('Media: ' + JSON.stringify(mappedMedia));
+        logger.info('Media: ' + JSON.stringify(mappedMedia));
         callback(err, mappedMedia);
       });
     }

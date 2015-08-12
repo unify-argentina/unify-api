@@ -36,7 +36,7 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
           list: filteredMappedUsers,
           count: filteredMappedUsers.length
         };
-        logger.debug('Friends: ' + JSON.stringify(result));
+        logger.info('Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }
@@ -57,7 +57,7 @@ var getTwitterData = function(url, cursor, access_token, twitterId, callback) {
     include_user_entities: false
   };
 
-  logger.debug('URL: ' + url + 'qs=' + JSON.stringify(qs));
+  logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
   request.get({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
     if (err || (response.body.errors && response.body.errors.length > 0)) {
       logger.error('Error: ' + err ? err : response.body.errors[0].message);

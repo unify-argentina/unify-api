@@ -31,7 +31,7 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
         var filteredMappedUsers = _.uniq(mappedUsers, function(mappedUser) {
           return mappedUser.id;
         });
-        logger.debug('Friends: ' + JSON.stringify(filteredMappedUsers));
+        logger.info('Friends: ' + JSON.stringify(filteredMappedUsers));
         callback(err, filteredMappedUsers);
       });
     }
@@ -42,7 +42,7 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
 var getFacebookData = function(url, callback) {
 
-  logger.debug('URL: ' + url);
+  logger.info('URL: ' + url);
   request.get({ url: url, json: true }, function(err, response) {
     if (err || response.body.error) {
       logger.error('Error: ' + err ? err : response.body.error.message);

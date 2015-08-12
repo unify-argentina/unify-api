@@ -36,7 +36,7 @@ module.exports.getFriends = function(access_token, instagramId, callback) {
           list: filteredMappedUsers,
           count: filteredMappedUsers.length
         };
-        logger.debug('Friends: ' + JSON.stringify(result));
+        logger.info('Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }
@@ -47,7 +47,7 @@ module.exports.getFriends = function(access_token, instagramId, callback) {
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
 var getInstagramData = function(url, callback) {
 
-  logger.debug('URL: ' + url);
+  logger.info('URL: ' + url);
   request.get({ url: url, json: true }, function(err, response) {
     if (!response.body.meta) {
       logger.error('Could not get instagram friends');

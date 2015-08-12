@@ -130,71 +130,36 @@ contactRoutes.post('/', contactController.create);
  *     HTTP/1.1 200 OK
  *     {
  *         "contact": {
- *             "user": "55c02cc70cce13ec28bd7ec1",
- *             "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large",
- *             "name": "Joel",
- *             "_id": "55c0315cccab88ba31786d71",
+ *             "user": "55c421354037f03842898378",
+ *             "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large",
+ *             "name": "Flore Joffré",
+ *             "_id": "55cab7542337df552818e540",
  *             "__v": 0,
  *             "parents": [
  *                 {
- *                     "circle": "55c02cc80cce13ec28bd7ec2",
- *                     "_id": "55c0315cccab88ba31786d72",
+ *                     "circle": "55c421364037f03842898379",
+ *                     "_id": "55cab7542337df552818e541",
  *                     "ancestors": [
- *                         "55c02cc80cce13ec28bd7ec2"
+ *                         "55c421364037f03842898379"
  *                     ]
  *                 }
  *             ],
  *             "instagram": {
- *                 "username": "joe__marquez",
- *                 "id": "993803680"
+ *                 "username": "florejoffre",
+ *                 "id": "1244524526"
  *             },
  *             "twitter": {
- *                 "username": "joelmarquez90",
- *                 "id": "42704750"
+ *                 "username": "FloreJoffre",
+ *                 "id": "197249917"
  *             },
  *             "facebook": {
- *                 "display_name": "Joel Márquez",
- *                 "id": "10153267328674738"
- *             },
- *             "media": {
- *                 "count": 138,
- *                 "list": [
- *                     {
- *                         "provider": "facebook",
- *                         "id": "10153491173094738",
- *                         "type": "image",
- *                         "created_time": 1438482468,
- *                         "link": "https://www.facebook.com/photo.php?fbid=10153491173094738&set=a.10152154863139738.1073741830.826764737&type=1",
- *                         "media_url": "https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xft1/v/t1.0-9/11817260_10153491173094738_5949918706607306589_n.jpg?oh=4f851773c7660e1ddbe34cb477627ae8&oe=5656DEED&__gda__=1448770591_84ba495cc3a3554a2bc842d1653f1ca8",
- *                         "text": "Pami, pati, pael, paella"
- *                     },
- *                     {
- *                         "provider": "twitter",
- *                         "id": "627667076744904704",
- *                         "type": "text",
- *                         "created_time": 1438482467,
- *                         "link": "https://twitter.com/statuses/627667076744904704",
- *                         "likes": 0,
- *                         "text": "Pami, pati, pael, paella @ Charly's House https://t.co/181HbfsaEv",
- *                         "user_has_liked": false
- *                     },
- *                     {
- *                         "provider": "instagram",
- *                         "id": "1042388941278905607_993803680",
- *                         "type": "image",
- *                         "created_time": 1438482466,
- *                         "link": "https://instagram.com/p/53TzgiuYUHAinWlkLpGfEoP160Kccs90O22Es0/",
- *                         "likes": 5,
- *                         "media_url": "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11376143_1476803242620418_1662626864_n.jpg",
- *                         "text": "Pami, pati, pael, paella",
- *                         "user_has_liked": ""
- *                     }
- *                 ]
+ *                 "display_name": "Flore Joffré",
+ *                 "id": "10206413202905994"
  *             }
  *         }
  *     }
  */
-contactRoutes.get('/:contact_id', mediaController.getMedia);
+contactRoutes.get('/:contact_id', contactController.getById);
 
 /**
  * @api {put} /api/user/:user_id/contact/:contact_id Actualizar un contacto
@@ -272,5 +237,91 @@ contactRoutes.put('/:contact_id', contactController.update);
  *    }
  */
 contactRoutes.delete('/:contact_id', contactController.delete);
+
+/**
+ * @api {get} /api/user/:user_id/contact/:contact_id/media Obtener contenido del contacto
+ * @apiGroup Contactos
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} contact_id Id del contacto
+ *
+ * @apiSuccess {Object} contact Contacto
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "contact": {
+ *             "user": "55c421354037f03842898378",
+ *             "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large",
+ *             "name": "Flore Joffré",
+ *             "_id": "55cab7542337df552818e540",
+ *             "__v": 0,
+ *             "parents": [
+ *                 {
+ *                     "circle": "55c421364037f03842898379",
+ *                     "_id": "55cab7542337df552818e541",
+ *                     "ancestors": [
+ *                         "55c421364037f03842898379"
+ *                     ]
+ *                 }
+ *             ],
+ *             "instagram": {
+ *                 "username": "florejoffre",
+ *                 "id": "1244524526"
+ *             },
+ *             "twitter": {
+ *                 "username": "FloreJoffre",
+ *                 "id": "197249917"
+ *             },
+ *             "facebook": {
+ *                 "display_name": "Flore Joffré",
+ *                 "id": "10206413202905994"
+ *             },
+ *             "media": {
+ *                 "count": 70,
+ *                 "list": [
+ *                     {
+ *                         "provider": "twitter",
+ *                         "id": "630875516275425280",
+ *                         "type": "text",
+ *                         "created_time": 1439247418,
+ *                         "link": "https://twitter.com/statuses/630875516275425280",
+ *                         "likes": 0,
+ *                         "text": "RT @joelmarquez90: @FloreJoffre volvió mi escritora favorita, la extrañaba mucho!",
+ *                         "user_has_liked": false
+ *                     },
+ *                     {
+ *                         "provider": "instagram",
+ *                         "id": "1045056700312632485_1244524526",
+ *                         "type": "image",
+ *                         "created_time": 1438800488,
+ *                         "link": "https://instagram.com/p/6AyYgwRryl/",
+ *                         "likes": 21,
+ *                         "media_url": "https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e15/11821140_1458199127814596_2044349920_n.jpg",
+ *                         "text": "40 meses y más a tu lado. \nGracias por estar a mi lado y amarme como lo haces. \nNo existe nadie como vos! Te amo para siempre 💕\n\"Ahora cambiemos el mundo, amigo, que tu ya has cambiado el mio\"",
+ *                         "user_has_liked": true
+ *                     },
+ *                     {
+ *                         "provider": "twitter",
+ *                         "id": "628927833134530560",
+ *                         "type": "video",
+ *                         "created_time": 1438783054,
+ *                         "link": "https://twitter.com/statuses/628927833134530560",
+ *                         "likes": 0,
+ *                         "text": "@eugeniiazarco euchi don't goooo http://t.co/vabQtQzV1Y",
+ *                         "user_has_liked": false
+ *                     }
+ *                 ]
+ *             }
+ *         }
+ *     }
+ */
+contactRoutes.get('/:contact_id/media', mediaController.getMedia);
 
 module.exports = contactRoutes;
