@@ -25,7 +25,7 @@ module.exports.create = function(req, res) {
       .exec(function(err, parentCircle) {
         if (err || !parentCircle) {
           logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
-          return res.status(401).send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
+          return res.status(400).send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
         }
         else {
           var circle = new Circle();
@@ -44,7 +44,7 @@ module.exports.getById = function(req, res) {
     Contact.find({ 'parents.circle': req.circle._id, user: req.user }, function(err, contacts) {
       if (err || !contacts) {
         logger.warn('Could not find contacts for circle=' + req.circle._id);
-        return res.status(401).send({ errors: [{ msg: 'Could not find contacts for specified circle' }] });
+        return res.status(400).send({ errors: [{ msg: 'Could not find contacts for specified circle' }] });
       }
       else {
         var contactsObject = {
@@ -67,7 +67,7 @@ module.exports.update = function (req, res) {
     // Si el círculo a modificar es el principal, devolvemos error
     if (req.circle._id.equals(req.circle.user.main_circle)) {
       logger.warn("Main circle can't be modified for user=" + req.circle.user._id);
-      return res.status(401).send({ errors: [{ msg: "Main circle can't be modified" }] });
+      return res.status(400).send({ errors: [{ msg: "Main circle can't be modified" }] });
     }
     // Sino, encontramos el circulo padre, verificamos que pertenezca al usuario y lo actualizamos
     else {
@@ -77,7 +77,7 @@ module.exports.update = function (req, res) {
           if (err || !parentCircle) {
             logger
               .warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
-            return res.status(401)
+            return res.status(400)
               .send({errors: [{msg: "Paren't circle doesn't exists or doesn't belong to current user"}]});
           }
           else {
@@ -112,7 +112,7 @@ module.exports.delete = function(req, res) {
           circle.remove(function(err) {
             if (err) {
               logger.err(err);
-              return res.status(401).send({ errors: [{ msg: 'Error removing circle ' + err }] });
+              return res.status(400).send({ errors: [{ msg: 'Error removing circle ' + err }] });
             }
             else {
               return res.send({ circle: circle._id });
@@ -133,13 +133,13 @@ var validateParams = function(req, res) {
   // Validamos errores
   if (req.validationErrors()) {
     logger.warn('Validation errors: ' + req.validationErrors());
-    return res.status(401).send({ errors: req.validationErrors()});
+    return res.status(400).send({ errors: req.validationErrors()});
   }
 
   // Validamos nosql injection
   if (typeof req.body.name !== 'string' || typeof req.body.parent_id !== 'string') {
     logger.warn('No SQL injection - name: ' + req.body.name + ' parentId: ' + req.body.parent_id);
-    return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
 };
 
@@ -154,7 +154,7 @@ var saveCircleData = function(req, res, circle, foundCircle) {
   circle.save(function(err) {
     if (err) {
       logger.err(err);
-      return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
+      return res.status(400).send({ errors: [{ msg: 'Error saving data ' + err }] });
     }
     else {
       logger.info('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
@@ -174,7 +174,7 @@ module.exports.getTree = function (req, res) {
       .exec(function(err, circles) {
       if (err || !circles) {
         logger.warn('Could not find subcircles for circle=' + req.circle._id);
-        return res.status(401).send({ errors: [{ msg: 'Could not find subcircles for specified circle' }] });
+        return res.status(400).send({ errors: [{ msg: 'Could not find subcircles for specified circle' }] });
       }
       else {
         logger.info('Subcircles for circle=' + req.circle._id + ' for user=' + req.user);

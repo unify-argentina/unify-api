@@ -18,13 +18,13 @@ var User = require('./user.model.js');
 userRoutes.param('user_id', function(req, res, next, userId) {
   // Validamos nosql injection
   if (typeof userId !== 'string') {
-    return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
 
   // Si el req.user, ya habiendo pasado por la verificación del token es el mismo
   // que el del req.params.id, enviamos el user
   if (req.user !== userId) {
-    return res.status(401).send({ errors: [{ msg: 'You are trying to find a different user' }]});
+    return res.status(400).send({ errors: [{ msg: 'You are trying to find a different user' }]});
   }
   else {
     next();

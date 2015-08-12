@@ -51,7 +51,7 @@ describe('Authentication', function() {
         .post(SIGNUP_PATH)
         .send({})
         .end(function(err, data) {
-          data.res.statusCode.should.equal(401);
+          data.res.statusCode.should.equal(400);
           var errors = data.res.body.errors;
           var error = errors[0];
           error.param.should.equal('email');
@@ -82,7 +82,7 @@ describe('Authentication', function() {
           confirm_password: 'b'
         })
         .end(function(err, data) {
-          data.res.statusCode.should.equal(401);
+          data.res.statusCode.should.equal(400);
           var errors = data.res.body.errors;
           var error = errors[0];
           error.param.should.equal('email');
@@ -107,7 +107,7 @@ describe('Authentication', function() {
           "confirm_password":{"$gt": "undefined"}
         })
         .end(function(err, data) {
-          data.res.statusCode.should.equal(401);
+          data.res.statusCode.should.equal(400);
           data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
           done();
         });
@@ -123,7 +123,7 @@ describe('Authentication', function() {
           confirm_password: 'aaaaaa'
         })
         .end(function(err, data) {
-          data.res.statusCode.should.equal(409);
+          data.res.statusCode.should.equal(400);
           data.res.body.errors[0].param.should.equal('email');
           data.res.body.errors[0].msg.should.equal('Email is already taken');
           done();
@@ -158,7 +158,7 @@ describe('Authentication', function() {
         .post(LOGIN_PATH)
         .send({})
         .end(function(err, data) {
-          data.res.statusCode.should.equal(401);
+          data.res.statusCode.should.equal(400);
           var errors = data.res.body.errors;
           var error = errors[0];
           error.param.should.equal('email');
@@ -181,7 +181,7 @@ describe('Authentication', function() {
           password: 's'
         })
         .end(function(err, data) {
-          data.res.statusCode.should.equal(401);
+          data.res.statusCode.should.equal(400);
           var error = data.res.body.errors[0];
           error.param.should.equal('email');
           error.msg.should.equal('Valid email required');
@@ -197,7 +197,7 @@ describe('Authentication', function() {
           "password": {"$gt": "undefined"}
         })
         .end(function(err, data) {
-          data.res.statusCode.should.equal(401);
+          data.res.statusCode.should.equal(400);
           data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
           done();
         });
@@ -211,7 +211,7 @@ describe('Authentication', function() {
           password: 'validPassword'
         })
         .end(function(err, data) {
-          data.res.statusCode.should.equal(401);
+          data.res.statusCode.should.equal(400);
           data.res.body.errors[0].msg.should.equal("User doesn't exist");
           done();
         });
@@ -225,7 +225,7 @@ describe('Authentication', function() {
           password: 'incorrectPassword'
         })
         .end(function(err, data) {
-          data.res.statusCode.should.equal(401);
+          data.res.statusCode.should.equal(400);
           data.res.body.errors[0].msg.should.equal('Wrong password');
           done();
         });

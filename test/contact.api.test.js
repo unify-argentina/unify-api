@@ -99,7 +99,7 @@ describe('Contacts API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({})
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             var errors = data.res.body.errors;
             var error = errors[0];
             error.param.should.equal('name');
@@ -125,7 +125,7 @@ describe('Contacts API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({ name: 234, picture: 'asdasdasd', circle_id: 234 })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             var errors = data.res.body.errors;
             var error = errors[0];
             error.param.should.equal('picture');
@@ -142,7 +142,7 @@ describe('Contacts API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({ name: 234, picture: GOOGLE_URL, circle_id: 234 })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
             done();
           });
@@ -156,7 +156,7 @@ describe('Contacts API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({ name: {"$gt": "undefined"}, picture: GOOGLE_URL, circle_id: {"$gt": "undefined"} })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
             done();
           });
@@ -170,7 +170,7 @@ describe('Contacts API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({ name: 'Juan', picture: GOOGLE_URL, circle_id: 'aksdm8zxkcmaksd9343' })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should
               .equal('You have to suply a facebook, twitter or instagram id for creating a contact');
             done();
@@ -186,7 +186,7 @@ describe('Contacts API', function() {
           .send({ name: 'Juan', picture: GOOGLE_URL,
             facebook_id: 'asd33223423asd', facebook_display_name: 'Juan', circle_id: 'aksdm8zxkcmaksd9343' })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("Circle doesn't exists or doesn't belong to current user");
             done();
           });
@@ -235,7 +235,7 @@ describe('Contacts API', function() {
           .get(util.format(CONTACTS_PATH, user._id, 'basdasdasd'))
           .set('Authorization', 'Bearer ' + token)
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("You are trying to find a contact that doesn't belong to you");
             done();
           });
@@ -286,7 +286,7 @@ describe('Contacts API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({})
             .end(function(err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               var errors = data.res.body.errors;
               var error = errors[0];
               error.param.should.equal('name');
@@ -314,7 +314,7 @@ describe('Contacts API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({ name: 234, picture: 233, circle_id: 234 })
             .end(function(err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               var errors = data.res.body.errors;
               var error = errors[0];
               error.param.should.equal('picture');
@@ -333,7 +333,7 @@ describe('Contacts API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({ name: 234, picture: GOOGLE_URL, circle_id: 234 })
             .end(function(err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
               done();
             });
@@ -349,7 +349,7 @@ describe('Contacts API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({ name: {"$gt": "undefined"}, picture: GOOGLE_URL, circle_id: {"$gt": "undefined"} })
             .end(function(err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
               done();
             });
@@ -365,7 +365,7 @@ describe('Contacts API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({ name: 'Joaquin', picture: GOOGLE_URL, circle_id: 'asdasdasdasd' })
             .end(function(err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
                data.res.body.errors[0].msg.should
                  .equal('You have to suply a facebook, twitter or instagram id for updating a contact');
               done();
@@ -383,7 +383,7 @@ describe('Contacts API', function() {
             .send({ name: 'Joaquin', picture: GOOGLE_URL,
               facebook_id: 'asdasdasd', facebook_display_name: 'Juan', circle_id: 'asdasdasdasd' })
             .end(function(err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("Circle doesn't exists or doesn't belong to current user");
               done();
             });

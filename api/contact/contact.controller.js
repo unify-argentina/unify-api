@@ -26,7 +26,7 @@ module.exports.create = function(req, res) {
       .exec(function(err, circle) {
       if (err || !circle) {
         logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
-        return res.status(401).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
+        return res.status(400).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
       }
       else {
         var contact = new Contact();
@@ -58,7 +58,7 @@ module.exports.update = function(req, res) {
       .exec(function(err, circle) {
         if (err || !circle) {
           logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
-          return res.status(401).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
+          return res.status(400).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
         }
         else {
           saveContactData(req, res, req.contact, circle);
@@ -75,7 +75,7 @@ module.exports.delete = function(req, res) {
     contact.remove(function(err) {
       if (err) {
         logger.err(err);
-        return res.status(401).send({ errors: [{ msg: 'Error removing contact ' + err }] });
+        return res.status(400).send({ errors: [{ msg: 'Error removing contact ' + err }] });
       }
       else {
         return res.send({ contact: contact._id });
@@ -94,14 +94,14 @@ var validateParams = function(req, res) {
   // Validamos errores
   if (req.validationErrors()) {
     logger.warn('Validation errors: ' + req.validationErrors());
-    return res.status(401).send({ errors: req.validationErrors()});
+    return res.status(400).send({ errors: req.validationErrors()});
   }
 
   // Validamos nosql injection
   if (typeof req.body.name !== 'string' || typeof req.body.circle_id !== 'string' || typeof req.body.picture !== 'string') {
     logger.warn('No SQL injection - name: ' + req.body.name + ' circle_id: ' + req.body.circle_id +
       ' picture: ' + req.body.picture);
-    return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
 };
 
@@ -116,7 +116,7 @@ var validateSocialIds = function(req, res, text) {
 var validateSocialIdsExistance = function(req, res, text) {
   if (!req.body.facebook_id && !req.body.twitter_id && !req.body.instagram_id) {
     logger.warn("Requester didn't suplied a facebook, twitter or instagram id for creating a contact");
-    return res.status(401).send({ errors: [{ msg:
+    return res.status(400).send({ errors: [{ msg:
     'You have to suply a facebook, twitter or instagram id for ' + text + ' a contact' }] });
   }
 };
@@ -131,7 +131,7 @@ var validateSocialIdsFormat = function(req, res) {
     req.body.instagram_username && typeof req.body.instagram_username !== 'string') {
     logger.warn('No SQL injection - facebook_id: ' + req.body.facebook_id +
       ' twitter_id: ' + req.body.twitter_id + ' instagram_id: ' + req.body.instagram_id);
-    return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
 };
 
@@ -152,7 +152,7 @@ var saveContactData = function(req, res, contact, circle) {
   contact.save(function(err) {
     if (err) {
       logger.err(err);
-      return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
+      return res.status(400).send({ errors: [{ msg: 'Error saving data ' + err }] });
     }
     else {
       logger.info('Contact for user: ' + req.user + ' created successfully: ' + contact.toString());
@@ -186,7 +186,7 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
     }
     // Sino, devolvemos error ya que no tiene linkeada esa cuenta
     else {
-      return res.status(401).send({ errors: [{ msg: 'You have to link your facebook account in order to create a contact with a facebook_id' }] });
+      return res.status(400).send({ errors: [{ msg: 'You have to link your facebook account in order to create a contact with a facebook_id' }] });
     }
   }
 
@@ -198,7 +198,7 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
     }
     // Sino, devolvemos error ya que no tiene linkeada esa cuenta
     else {
-      return res.status(401).send({ errors: [{ msg: 'You have to link your twitter account in order to create a contact with a twitter_id' }] });
+      return res.status(400).send({ errors: [{ msg: 'You have to link your twitter account in order to create a contact with a twitter_id' }] });
     }
   }
 
@@ -210,7 +210,7 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
     }
     // Sino, devolvemos error ya que no tiene linkeada esa cuenta
     else {
-      return res.status(401).send({ errors: [{ msg: 'You have to link your instagram account in order to create a contact with a instagram_id' }] });
+      return res.status(400).send({ errors: [{ msg: 'You have to link your instagram account in order to create a contact with a instagram_id' }] });
     }
   }
 };

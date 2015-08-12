@@ -24,13 +24,13 @@ module.exports.login = function(req, res) {
     // Validamos errores
     if (req.validationErrors()) {
       logger.warn('Validation errors: ' + req.validationErrors());
-      return res.status(401).send({ errors: req.validationErrors() });
+      return res.status(400).send({ errors: req.validationErrors() });
     }
 
     // Validamos nosql injection
     if (typeof req.body.email !== 'string' || typeof req.body.password !== 'string') {
       logger.warn('No SQL injection - email: ' + req.body.email + ' password: ' + req.body.password);
-      return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+      return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
     }
 
     // Si no encontramos un usuario, no existe, error
@@ -39,7 +39,7 @@ module.exports.login = function(req, res) {
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.body.email);
-        return res.status(401).send({ errors: [{ msg: "User doesn't exist" }] });
+        return res.status(400).send({ errors: [{ msg: "User doesn't exist" }] });
       }
       else {
         // Si lo encontramos comparamos passwords
@@ -47,7 +47,7 @@ module.exports.login = function(req, res) {
           // Si coincide, enviamos el token con el id del usuario loggeado
           if (!isMatch) {
             logger.warn('Wrong password for user: ' + user.toString());
-            return res.status(401).send({ errors: [{ msg: 'Wrong password' }] });
+            return res.status(400).send({ errors: [{ msg: 'Wrong password' }] });
           }
           else {
             logger.info('User logged in successfully: ' + user.toString());
@@ -74,7 +74,7 @@ module.exports.signup = function(req, res) {
     // Validamos errores
     if (req.validationErrors()) {
       logger.warn('Validation errors: ' + req.validationErrors());
-      return res.status(401).send({ errors: req.validationErrors() });
+      return res.status(400).send({ errors: req.validationErrors() });
     }
 
     // Validamos nosql injection
@@ -82,14 +82,14 @@ module.exports.signup = function(req, res) {
       typeof req.body.password !== 'string' || typeof req.body.confirm_password !== 'string') {
       logger.warn('No SQL injection - email: ' + req.body.email + ' password: ' + req.body.password +
                   ' name: ' + req.body.name + ' confirmPassword: ' + req.body.confirm_password);
-      return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+      return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
     }
 
     // Si no encontramos un usuario, creamos un usuario nuevo y le generamos un token con el id del usuario
     User.findOne({ email: req.body.email }, function(err, existingUser) {
       if (existingUser) {
         logger.warn('User already exists: ' + existingUser);
-        return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
+        return res.status(400).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
       else {
         var user = new User({
@@ -101,7 +101,7 @@ module.exports.signup = function(req, res) {
         user.save(function(err) {
           if (err) {
             logger.error(err);
-            return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
+            return res.status(400).send({ errors: [{ msg: 'Error saving data ' + err }] });
           }
           else {
             user.password = undefined;

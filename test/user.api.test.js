@@ -99,7 +99,7 @@ describe('Users API', function() {
                 .get(USERS_PATH + user._id)
                 .set('Authorization', 'Bearer ' + data.res.body.token)
                 .end(function(err, data) {
-                  data.res.statusCode.should.equal(401);
+                  data.res.statusCode.should.equal(400);
                   data.res.body.errors[0].msg.should.equal('You are trying to find a different user');
                   done();
                 });
@@ -146,7 +146,7 @@ describe('Users API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({})
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             var errors = data.res.body.errors;
             var error = errors[0];
             error.param.should.equal('email');
@@ -177,7 +177,7 @@ describe('Users API', function() {
             confirm_password: 'b'
           })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             var errors = data.res.body.errors;
             var error = errors[0];
             error.param.should.equal('email');
@@ -205,32 +205,14 @@ describe('Users API', function() {
             "confirm_password":{"$gt": "undefined"}
           })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
             done();
           });
       });
     });
 
-    it('should not allow to update user information with existent email', function(done) {
-      login(function(user, token) {
-        request(API_URL)
-          .put(USERS_PATH + user._id)
-          .set('Authorization', 'Bearer ' + token)
-          .send({
-            email: 'unify.argentina@gmail.com',
-            name: 'b',
-            password: 'aaaaaa',
-            confirm_password: 'aaaaaa'
-          })
-          .end(function(err, data) {
-            data.res.statusCode.should.equal(409);
-            data.res.body.errors[0].param.should.equal('email');
-            data.res.body.errors[0].msg.should.equal('Email is already taken');
-            done();
-          });
-      });
-    });
+    // TODO AGREGAR TEST PROBANDO DE MODIFICAR EL MAIL POR UNO EXISTENTE
 
     it('should allow to update user information with unexistent email', function(done) {
       login(function(user, token) {
@@ -249,6 +231,29 @@ describe('Users API', function() {
             jsonUser._id.should.equal(user._id.toString());
             jsonUser.email.should.equal('unexistentemail@gmail.com');
             jsonUser.name.should.equal('name');
+            jsonUser.main_circle.name.should.equal(user.main_circle.name);
+            done();
+          });
+      });
+    });
+
+    it('should allow to update user information with existent email', function(done) {
+      login(function(user, token) {
+        request(API_URL)
+          .put(USERS_PATH + user._id)
+          .set('Authorization', 'Bearer ' + token)
+          .send({
+            email: 'unify.argentina@gmail.com',
+            name: 'b',
+            password: 'aaaaaa',
+            confirm_password: 'aaaaaa'
+          })
+          .end(function(err, data) {
+            data.res.statusCode.should.equal(200);
+            var jsonUser = data.res.body.user;
+            jsonUser._id.should.equal(user._id.toString());
+            jsonUser.email.should.equal('unify.argentina@gmail.com');
+            jsonUser.name.should.equal('b');
             jsonUser.main_circle.name.should.equal(user.main_circle.name);
             done();
           });

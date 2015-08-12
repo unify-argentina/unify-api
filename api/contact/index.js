@@ -18,14 +18,14 @@ var Contact = require('./contact.model');
 contactRoutes.param('contact_id', function(req, res, next, contactId) {
   // Validamos nosql injection
   if (typeof contactId !== 'string') {
-    return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
 
   // Buscamos que el contacto pedido pertenezca al usuario loggeado
   Contact.findOne({ _id: contactId, user: req.user }, function(err, contact) {
     if (err || !contact) {
       logger.warn("You are trying to find a contact=" + contactId + " that doesn't belong to you");
-      return res.status(401).send({ errors: [{ msg: "You are trying to find a contact that doesn't belong to you" }] });
+      return res.status(400).send({ errors: [{ msg: "You are trying to find a contact that doesn't belong to you" }] });
     }
     // Si pertenece, incorporamos el id al request y continuamos
     else {

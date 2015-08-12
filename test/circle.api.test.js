@@ -77,7 +77,7 @@ describe('Circles API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({})
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             var errors = data.res.body.errors;
             var error = errors[0];
             error.param.should.equal('name');
@@ -97,7 +97,7 @@ describe('Circles API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({ name: 234, parent_id: 234 })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
             done();
           });
@@ -111,7 +111,7 @@ describe('Circles API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({ name: {"$gt": "undefined"}, parent_id: {"$gt": "undefined"} })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
             done();
           });
@@ -125,7 +125,7 @@ describe('Circles API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({ name: 'Amigos', parent_id: 'aksdm8zxkcmaksd9343' })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("Paren't circle doesn't exists or doesn't belong to current user");
             done();
           });
@@ -139,7 +139,7 @@ describe('Circles API', function() {
           .set('Authorization', 'Bearer ' + token)
           .send({ name: 'Amigos', parent_id: user.main_circle._id, picture: 123 })
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             var errors = data.res.body.errors;
             var error = errors[0];
             error.param.should.equal('picture');
@@ -184,7 +184,7 @@ describe('Circles API', function() {
           .get(util.format(CIRCLES_PATH, user._id, 'asdasdads'))
           .set('Authorization', 'Bearer ' + token)
           .end(function(err, data) {
-            data.res.statusCode.should.equal(401);
+            data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("You are trying to find a circle that doesn't belong to you");
             done();
           });
@@ -227,7 +227,7 @@ describe('Circles API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({})
             .end(function(err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               var errors = data.res.body.errors;
               var error = errors[0];
               error.param.should.equal('name');
@@ -249,7 +249,7 @@ describe('Circles API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({ name: 234, parent_id: 234 })
             .end(function(err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
               done();
             });
@@ -265,7 +265,7 @@ describe('Circles API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({name: {"$gt": "undefined"}, parent_id: {"$gt": "undefined"}})
             .end(function (err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
               done();
             });
@@ -281,7 +281,7 @@ describe('Circles API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({name: 'Second', parent_id: 'asdasdasdadasd'})
             .end(function (err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("Paren't circle doesn't exists or doesn't belong to current user");
               done();
             });
@@ -303,7 +303,7 @@ describe('Circles API', function() {
             .set('Authorization', 'Bearer ' + token)
             .send({ name: 'Amigos', parent_id: first_subcircle._id })
             .end(function(err, data) {
-              data.res.statusCode.should.equal(401);
+              data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("Main circle can't be modified");
               done();
             });
@@ -332,7 +332,7 @@ describe('Circles API', function() {
               .set('Authorization', 'Bearer ' + token)
               .send({ name: 'Amigos', parent_id: user.main_circle._id, picture: 123 })
               .end(function(err, data) {
-                data.res.statusCode.should.equal(401);
+                data.res.statusCode.should.equal(400);
                 var errors = data.res.body.errors;
                 var error = errors[0];
                 error.param.should.equal('picture');

@@ -47,21 +47,21 @@ module.exports.update = function(req, res) {
     // Validamos errores
     if (req.validationErrors()) {
       logger.warn('Validation errors: ' + req.validationErrors());
-      return res.status(401).send({ errors: req.validationErrors() });
+      return res.status(400).send({ errors: req.validationErrors() });
     }
 
     // Validamos nosql injection
     if (typeof req.body.email !== 'string' || (typeof req.body.name && typeof req.body.name !== 'string') ||
       typeof req.body.password !== 'string' || typeof req.body.confirm_password !== 'string') {
       logger.warn('No SQL injection - email: ' + req.body.email + ' password: ' + req.body.password);
-      return res.status(401).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+      return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
     }
 
     // Si no encontramos un usuario con ese email, está disponible
     User.findOne({ email: req.body.email }, function(err, existingUser) {
       if (existingUser && !existingUser._id.equals(req.user)) {
         logger.info('User already exists: ' + existingUser);
-        return res.status(409).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
+        return res.status(400).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
       }
       else {
         // Encontramos un usuario con el id del token y le actualizamos los datos
@@ -79,7 +79,7 @@ module.exports.update = function(req, res) {
               user.save(function(err) {
                 if (err) {
                   logger.error(err);
-                  return res.status(401).send({ errors: [{ msg: 'Error saving data ' + err }] });
+                  return res.status(400).send({ errors: [{ msg: 'Error saving data ' + err }] });
                 }
                 else {
                   user.password = undefined;
