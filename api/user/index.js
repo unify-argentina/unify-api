@@ -47,7 +47,6 @@ userRoutes.param('user_id', function(req, res, next, userId) {
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
  *     {
  *         "user": {
  *             "__v": 0,
@@ -116,7 +115,6 @@ userRoutes.get('/:user_id', userController.getById);
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
  *     {
  *         "user": {
  *             "__v": 0,
@@ -173,7 +171,6 @@ userRoutes.put('/:user_id', userController.update);
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
  *     {
  *         "friends": {
  *             "facebook": {
@@ -236,7 +233,6 @@ userRoutes.get('/:user_id/friends', friendsController.getFriends);
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
  *     {
  *         "user": {
  *             "__v": 0,

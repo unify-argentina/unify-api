@@ -63,21 +63,20 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
- *    {
- *      "circle":{
- *        "parent":"55936a0460bb409c379800b7",
- *        "name":"Amigos",
- *        "picture":"http://www.sabiask.com/images/Image/perro.jpg",
- *        "_id":"559ebc91dc9167e815a750b7",
- *        "__v":0,
- *        "ancestors":[
- *          "559eba8109b6aee614e3f733",
- *          "559ebc0ddc9167e815a750b5",
- *          "55936a0460bb409c379800b7"
- *        ]
- *      }
- *    }
+ *     {
+ *       "circle":{
+ *         "parent":"55936a0460bb409c379800b7",
+ *         "name":"Amigos",
+ *         "picture":"http://www.sabiask.com/images/Image/perro.jpg",
+ *         "_id":"559ebc91dc9167e815a750b7",
+ *         "__v":0,
+ *         "ancestors":[
+ *           "559eba8109b6aee614e3f733",
+ *           "559ebc0ddc9167e815a750b5",
+ *           "55936a0460bb409c379800b7"
+ *         ]
+ *       }
+ *     }
  */
 circleRoutes.post('/', circleController.create);
 
@@ -102,136 +101,67 @@ circleRoutes.post('/', circleController.create);
  *         "circle": {
  *             "contacts": [
  *                 {
- *                     "user": "55c02cc70cce13ec28bd7ec1",
- *                     "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large",
- *                     "name": "Joel",
- *                     "_id": "55c0315cccab88ba31786d71",
+ *                     "user": "55c421354037f03842898378",
+ *                     "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large",
+ *                     "name": "Leo Messi",
+ *                     "_id": "55c778f417d75075277f3b48",
  *                     "__v": 0,
  *                     "parents": [
  *                         {
- *                             "circle": "55c02cc80cce13ec28bd7ec2",
- *                             "_id": "55c0315cccab88ba31786d72",
+ *                             "circle": "55c421364037f03842898379",
+ *                             "_id": "55c778f417d75075277f3b49",
  *                             "ancestors": [
- *                                 "55c02cc80cce13ec28bd7ec2"
+ *                                 "55c421364037f03842898379"
  *                             ]
  *                         }
  *                     ],
  *                     "instagram": {
- *                         "username": "joe__marquez",
- *                         "id": "993803680"
- *                     },
- *                     "twitter": {
- *                         "username": "joelmarquez90",
- *                         "id": "42704750"
+ *                         "username": "leomessi",
+ *                         "id": "427553890"
  *                     },
  *                     "facebook": {
- *                         "display_name": "Joel Márquez",
- *                         "id": "10153267328674738"
+ *                         "display_name": "Leo Messi",
+ *                         "id": "176063032413299"
  *                     }
  *                 },
  *                 {
- *                     "user": "55c02cc70cce13ec28bd7ec1",
- *                     "picture": "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg",
- *                     "name": "Alejo",
- *                     "_id": "55c0316dccab88ba31786d73",
+ *                     "user": "55c421354037f03842898378",
+ *                     "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large",
+ *                     "name": "Flore Joffré",
+ *                     "_id": "55cab7542337df552818e540",
  *                     "__v": 0,
  *                     "parents": [
  *                         {
- *                             "circle": "55c02cc80cce13ec28bd7ec2",
- *                             "_id": "55c0316dccab88ba31786d74",
+ *                             "circle": "55c421364037f03842898379",
+ *                             "_id": "55cab7542337df552818e541",
  *                             "ancestors": [
- *                                 "55c02cc80cce13ec28bd7ec2"
+ *                                 "55c421364037f03842898379"
  *                             ]
  *                         }
  *                     ],
  *                     "instagram": {
- *                         "username": "aleagb23",
- *                         "id": "1574863419"
+ *                         "username": "florejoffre",
+ *                         "id": "1244524526"
  *                     },
  *                     "twitter": {
- *                         "username": "aleagb23",
- *                         "id": "261365528"
+ *                         "username": "FloreJoffre",
+ *                         "id": "197249917"
  *                     },
  *                     "facebook": {
- *                         "display_name": "Alejo García",
- *                         "id": "10205153877979641"
+ *                         "display_name": "Flore Joffré",
+ *                         "id": "10206413202905994"
  *                     }
  *                 }
  *             ],
- *             "media": {
- *                 "count": 4,
- *                 "list": [
- *                     {
- *                         "provider": "twitter",
- *                         "id": "628281888210321408",
- *                         "type": "video",
- *                         "created_time": 1438629049,
- *                         "link": "https://twitter.com/statuses/628281888210321408",
- *                         "likes": 0,
- *                         "text": "http://t.co/IkL1oTkgq1",
- *                         "user_has_liked": false,
- *                         "contact": {
- *                             "id": "55c0316dccab88ba31786d73",
- *                             "name": "Alejo",
- *                             "picture": "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg"
- *                         }
- *                     },
- *                     {
- *                         "provider": "facebook",
- *                         "id": "10153491173094738",
- *                         "type": "image",
- *                         "created_time": 1438482468,
- *                         "link": "https://www.facebook.com/photo.php?fbid=10153491173094738&set=a.10152154863139738.1073741830.826764737&type=1",
- *                         "media_url": "https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xft1/v/t1.0-9/11817260_10153491173094738_5949918706607306589_n.jpg?oh=4f851773c7660e1ddbe34cb477627ae8&oe=5656DEED&__gda__=1448770591_84ba495cc3a3554a2bc842d1653f1ca8",
- *                         "text": "Pami, pati, pael, paella",
- *                         "contact": {
- *                             "id": "55c0315cccab88ba31786d71",
- *                             "name": "Joel",
- *                             "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
- *                         }
- *                     },
- *                     {
- *                         "provider": "twitter",
- *                         "id": "627667076744904704",
- *                         "type": "text",
- *                         "created_time": 1438482467,
- *                         "link": "https://twitter.com/statuses/627667076744904704",
- *                         "likes": 0,
- *                         "text": "Pami, pati, pael, paella @ Charly's House https://t.co/181HbfsaEv",
- *                         "user_has_liked": false,
- *                         "contact": {
- *                             "id": "55c0315cccab88ba31786d71",
- *                             "name": "Joel",
- *                             "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
- *                         }
- *                     },
- *                     {
- *                         "provider": "instagram",
- *                         "id": "1042388941278905607_993803680",
- *                         "type": "image",
- *                         "created_time": 1438482466,
- *                         "link": "https://instagram.com/p/53TzgiuYUHAinWlkLpGfEoP160Kccs90O22Es0/",
- *                         "likes": 5,
- *                         "media_url": "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11376143_1476803242620418_1662626864_n.jpg",
- *                         "text": "Pami, pati, pael, paella",
- *                         "user_has_liked": "",
- *                         "contact": {
- *                             "id": "55c0315cccab88ba31786d71",
- *                             "name": "Joel",
- *                             "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
- *                         }
- *                     }
- *                 ]
- *             },
  *             "name": "Main Circle",
- *             "_id": "55c02cc80cce13ec28bd7ec2",
+ *             "_id": "55c421364037f03842898379",
  *             "__v": 0,
  *             "ancestors": [
  *             ]
  *         }
  *     }
  */
-circleRoutes.get('/:circle_id', mediaController.getMedia);
+circleRoutes.get('/:circle_id', circleController.getById);
 
 /**
  * @api {get} /api/user/:user_id/circle/:circle_id/tree Obtener subcirculos
@@ -352,21 +282,20 @@ circleRoutes.get('/:circle_id/tree', circleController.getTree);
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
- *    {
- *      "circle":{
- *        "parent":"55936a0460bb409c379800b7",
- *        "name":"Amigos",
- *        "picture":"http://www.sabiask.com/images/Image/perro.jpg",
- *        "_id":"559ebc91dc9167e815a750b7",
- *        "__v":0,
- *        "ancestors":[
- *          "559eba8109b6aee614e3f733",
- *          "559ebc0ddc9167e815a750b5",
- *          "55936a0460bb409c379800b7"
- *        ]
- *      }
- *    }
+ *     {
+ *       "circle":{
+ *         "parent":"55936a0460bb409c379800b7",
+ *         "name":"Amigos",
+ *         "picture":"http://www.sabiask.com/images/Image/perro.jpg",
+ *         "_id":"559ebc91dc9167e815a750b7",
+ *         "__v":0,
+ *         "ancestors":[
+ *           "559eba8109b6aee614e3f733",
+ *           "559ebc0ddc9167e815a750b5",
+ *           "55936a0460bb409c379800b7"
+ *         ]
+ *       }
+ *     }
  */
 circleRoutes.put('/:circle_id', circleController.update);
 
@@ -387,11 +316,143 @@ circleRoutes.put('/:circle_id', circleController.update);
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
- *    {
- *      "circle":"55936a0460bb409c379800b7"
- *    }
+ *     {
+ *       "circle":"55936a0460bb409c379800b7"
+ *     }
  */
 circleRoutes.delete('/:circle_id', circleController.delete);
+
+/**
+ * @api {get} /api/user/:user_id/circle/:circle_id/media Obtener contenido de un circulo
+ * @apiGroup Circulos
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} circle_id Id del circulo
+ *
+ * @apiSuccess {Object} circle Circulo
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "circle": {
+ *             "contacts": [
+ *                 {
+ *                     "user": "55c421354037f03842898378",
+ *                     "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large",
+ *                     "name": "Leo Messi",
+ *                     "_id": "55c778f417d75075277f3b48",
+ *                     "__v": 0,
+ *                     "parents": [
+ *                         {
+ *                             "circle": "55c421364037f03842898379",
+ *                             "_id": "55c778f417d75075277f3b49",
+ *                             "ancestors": [
+ *                                 "55c421364037f03842898379"
+ *                             ]
+ *                         }
+ *                     ],
+ *                     "instagram": {
+ *                         "username": "leomessi",
+ *                         "id": "427553890"
+ *                     },
+ *                     "facebook": {
+ *                         "display_name": "Leo Messi",
+ *                         "id": "176063032413299"
+ *                     }
+ *                 },
+ *                 {
+ *                     "user": "55c421354037f03842898378",
+ *                     "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large",
+ *                     "name": "Flore Joffré",
+ *                     "_id": "55cab7542337df552818e540",
+ *                     "__v": 0,
+ *                     "parents": [
+ *                         {
+ *                             "circle": "55c421364037f03842898379",
+ *                             "_id": "55cab7542337df552818e541",
+ *                             "ancestors": [
+ *                                 "55c421364037f03842898379"
+ *                             ]
+ *                         }
+ *                     ],
+ *                     "instagram": {
+ *                         "username": "florejoffre",
+ *                         "id": "1244524526"
+ *                     },
+ *                     "twitter": {
+ *                         "username": "FloreJoffre",
+ *                         "id": "197249917"
+ *                     },
+ *                     "facebook": {
+ *                         "display_name": "Flore Joffré",
+ *                         "id": "10206413202905994"
+ *                     }
+ *                 }
+ *             ],
+ *             "media": {
+ *                 "count": 3,
+ *                 "list": [
+ *                     {
+ *                         "provider": "facebook",
+ *                         "id": "1077882462231347",
+ *                         "type": "image",
+ *                         "created_time": 1439333915,
+ *                         "link": "https://www.facebook.com/LeoMessi/photos/a.699374540082143.1073741829.176063032413299/1077882462231347/?type=1",
+ *                         "likes": 1066753,
+ *                         "media_url": "https://fbcdn-sphotos-b-a.akamaihd.net/hphotos-ak-xpt1/v/t1.0-9/11244712_1077882462231347_165551174036149714_n.jpg?oh=e39fa09444de81ffe548e51810acc24e&oe=564CE091&__gda__=1447028885_95fc54b247602b0bfacc5ff482c9f02b",
+ *                         "text": "¡Supercampeones de Europa!\n\nSuper-Champions of Europe!\n\n- LIO",
+ *                         "contact": {
+ *                             "id": "55c778f417d75075277f3b48",
+ *                             "name": "Leo Messi",
+ *                             "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
+ *                         }
+ *                     },
+ *                     {
+ *                         "provider": "twitter",
+ *                         "id": "630874958827253762",
+ *                         "type": "text",
+ *                         "created_time": 1439247285,
+ *                         "link": "https://twitter.com/statuses/630874958827253762",
+ *                         "likes": 1,
+ *                         "text": "Nuevo escrito, porque todo te deja una marca...\nMi mirada sobre el mundo: Pasos en la arena del olvido http://t.co/V6htgXEB2M",
+ *                         "user_has_liked": true,
+ *                         "contact": {
+ *                             "id": "55cab7542337df552818e540",
+ *                             "name": "Flore Joffré",
+ *                             "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large"
+ *                         }
+ *                     },
+ *                     {
+ *                         "provider": "facebook",
+ *                         "id": "1063131313706462",
+ *                         "type": "video",
+ *                         "created_time": 1436971125,
+ *                         "link": "",
+ *                         "likes": 402504,
+ *                         "media_url": "https://video.xx.fbcdn.net/hvideo-xpf1/v/t42.1790-2/11665241_1063131397039787_1904888191_n.mp4?efg=eyJybHIiOjY3OCwicmxhIjo1MTJ9&rl=678&vabr=377&oh=fd343e09979c05f08234ed3568a14c07&oe=55CCA784",
+ *                         "text": "Ya somos 20 millones en Insta, ¡muchas gracias a tod@s!\n\n20 million Instagram followers, thank you everyone!\n\ninstagram.com/leomessi\n\n- LIO",
+ *                         "contact": {
+ *                             "id": "55c778f417d75075277f3b48",
+ *                             "name": "Leo Messi",
+ *                             "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
+ *                         }
+ *                     }
+ *                 ]
+ *             },
+ *             "name": "Main Circle",
+ *             "_id": "55c421364037f03842898379",
+ *             "__v": 0,
+ *             "ancestors": [
+ *             ]
+ *         }
+ *     }
+ */
+circleRoutes.get('/:circle_id/media', mediaController.getMedia);
 
 module.exports = circleRoutes;

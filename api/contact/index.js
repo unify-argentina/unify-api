@@ -77,7 +77,6 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
  *     {
  *         "contact": {
  *             "__v": 0,
@@ -198,19 +197,18 @@ contactRoutes.get('/:contact_id', contactController.getById);
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
- *    {
- *      "contact":{
- *        "user":"55a1f39737bc05b2257c6ae0",
- *        "circle":"55a1f39937bc05b2257c6ae1",
- *        "twitter_id":"261365528",
- *        "facebook_id":"10205153877979641",
- *        "picture":"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large",
- *        "name":"Alejo",
- *        "_id":"55a1f47e71912f3c26602dbe",
- *        "__v":0
- *      }
- *    }
+ *     {
+ *       "contact":{
+ *         "user":"55a1f39737bc05b2257c6ae0",
+ *         "circle":"55a1f39937bc05b2257c6ae1",
+ *         "twitter_id":"261365528",
+ *         "facebook_id":"10205153877979641",
+ *         "picture":"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large",
+ *         "name":"Alejo",
+ *         "_id":"55a1f47e71912f3c26602dbe",
+ *         "__v":0
+ *       }
+ *     }
  */
 contactRoutes.put('/:contact_id', contactController.update);
 
@@ -231,10 +229,9 @@ contactRoutes.put('/:contact_id', contactController.update);
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
- *
- *    {
- *      "contact":"55936a0460bb409c379800b7"
- *    }
+ *     {
+ *       "contact":"55936a0460bb409c379800b7"
+ *     }
  */
 contactRoutes.delete('/:contact_id', contactController.delete);
 
