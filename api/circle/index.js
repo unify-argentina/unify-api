@@ -340,115 +340,71 @@ circleRoutes.delete('/:circle_id', circleController.delete);
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *     {
- *         "circle": {
- *             "contacts": [
+ *         "media": {
+ *             "count": 4,
+ *             "list": [
  *                 {
- *                     "user": "55c421354037f03842898378",
- *                     "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large",
- *                     "name": "Leo Messi",
- *                     "_id": "55c778f417d75075277f3b48",
- *                     "__v": 0,
- *                     "parents": [
- *                         {
- *                             "circle": "55c421364037f03842898379",
- *                             "_id": "55c778f417d75075277f3b49",
- *                             "ancestors": [
- *                                 "55c421364037f03842898379"
- *                             ]
- *                         }
- *                     ],
- *                     "instagram": {
- *                         "username": "leomessi",
- *                         "id": "427553890"
- *                     },
- *                     "facebook": {
- *                         "display_name": "Leo Messi",
- *                         "id": "176063032413299"
+ *                     "provider": "facebook",
+ *                     "id": "1078735248812735",
+ *                     "type": "image",
+ *                     "created_time": 1439410963,
+ *                     "link": "https://www.facebook.com/LeoMessi/photos/a.1078734215479505.1073741903.176063032413299/1078735248812735/?type=1",
+ *                     "likes": 7896,
+ *                     "media_url": "https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xft1/t31.0-8/11872298_1078735248812735_5228412966569443985_o.jpg",
+ *                     "text": "FC BARCELONA vs SEVILLA CF / UEFA SUPER CUP",
+ *                     "contact": {
+ *                         "id": "55c778f417d75075277f3b48",
+ *                         "name": "Leo Messi",
+ *                         "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
  *                     }
  *                 },
  *                 {
- *                     "user": "55c421354037f03842898378",
- *                     "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large",
- *                     "name": "Flore Joffré",
- *                     "_id": "55cab7542337df552818e540",
- *                     "__v": 0,
- *                     "parents": [
- *                         {
- *                             "circle": "55c421364037f03842898379",
- *                             "_id": "55cab7542337df552818e541",
- *                             "ancestors": [
- *                                 "55c421364037f03842898379"
- *                             ]
- *                         }
- *                     ],
- *                     "instagram": {
- *                         "username": "florejoffre",
- *                         "id": "1244524526"
- *                     },
- *                     "twitter": {
- *                         "username": "FloreJoffre",
- *                         "id": "197249917"
- *                     },
- *                     "facebook": {
- *                         "display_name": "Flore Joffré",
- *                         "id": "10206413202905994"
+ *                     "provider": "twitter",
+ *                     "id": "631552235424600064",
+ *                     "type": "video",
+ *                     "created_time": 1439408761,
+ *                     "link": "https://twitter.com/statuses/631552235424600064",
+ *                     "likes": 0,
+ *                     "text": "RT @sergiolapegue: RT Esta imagen duele.Se llama Gabriel Márquez de Areco, muchos están así. Los ayudamos? Escriban a @VergaraFernando. htt…",
+ *                     "user_has_liked": false,
+ *                     "contact": {
+ *                         "id": "55cab7542337df552818e540",
+ *                         "name": "Flore Joffré",
+ *                         "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large"
+ *                     }
+ *                 },
+ *                 {
+ *                     "provider": "instagram",
+ *                     "id": "1029692922439453727_427553890",
+ *                     "type": "video",
+ *                     "created_time": 1436968983,
+ *                     "link": "https://instagram.com/p/5KNEHlvMwf/",
+ *                     "likes": 761575,
+ *                     "media_url": "https://scontent.cdninstagram.com/hphotos-xfa1/t50.2886-16/11758526_1461106840851005_793099058_n.mp4",
+ *                     "text": "",
+ *                     "user_has_liked": "",
+ *                     "contact": {
+ *                         "id": "55c778f417d75075277f3b48",
+ *                         "name": "Leo Messi",
+ *                         "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
+ *                     }
+ *                 },
+ *                 {
+ *                     "provider": "instagram",
+ *                     "id": "1028328237861489912_427553890",
+ *                     "type": "image",
+ *                     "created_time": 1436806300,
+ *                     "link": "https://instagram.com/p/5FWxWCPMz4/",
+ *                     "likes": 1318361,
+ *                     "media_url": "https://scontent.cdninstagram.com/hphotos-xpf1/t51.2885-15/s640x640/sh0.08/e35/10005235_1454738444829608_2103646408_n.jpg",
+ *                     "text": "",
+ *                     "user_has_liked": "",
+ *                     "contact": {
+ *                         "id": "55c778f417d75075277f3b48",
+ *                         "name": "Leo Messi",
+ *                         "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
  *                     }
  *                 }
- *             ],
- *             "media": {
- *                 "count": 3,
- *                 "list": [
- *                     {
- *                         "provider": "facebook",
- *                         "id": "1077882462231347",
- *                         "type": "image",
- *                         "created_time": 1439333915,
- *                         "link": "https://www.facebook.com/LeoMessi/photos/a.699374540082143.1073741829.176063032413299/1077882462231347/?type=1",
- *                         "likes": 1066753,
- *                         "media_url": "https://fbcdn-sphotos-b-a.akamaihd.net/hphotos-ak-xpt1/v/t1.0-9/11244712_1077882462231347_165551174036149714_n.jpg?oh=e39fa09444de81ffe548e51810acc24e&oe=564CE091&__gda__=1447028885_95fc54b247602b0bfacc5ff482c9f02b",
- *                         "text": "¡Supercampeones de Europa!\n\nSuper-Champions of Europe!\n\n- LIO",
- *                         "contact": {
- *                             "id": "55c778f417d75075277f3b48",
- *                             "name": "Leo Messi",
- *                             "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
- *                         }
- *                     },
- *                     {
- *                         "provider": "twitter",
- *                         "id": "630874958827253762",
- *                         "type": "text",
- *                         "created_time": 1439247285,
- *                         "link": "https://twitter.com/statuses/630874958827253762",
- *                         "likes": 1,
- *                         "text": "Nuevo escrito, porque todo te deja una marca...\nMi mirada sobre el mundo: Pasos en la arena del olvido http://t.co/V6htgXEB2M",
- *                         "user_has_liked": true,
- *                         "contact": {
- *                             "id": "55cab7542337df552818e540",
- *                             "name": "Flore Joffré",
- *                             "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large"
- *                         }
- *                     },
- *                     {
- *                         "provider": "facebook",
- *                         "id": "1063131313706462",
- *                         "type": "video",
- *                         "created_time": 1436971125,
- *                         "link": "",
- *                         "likes": 402504,
- *                         "media_url": "https://video.xx.fbcdn.net/hvideo-xpf1/v/t42.1790-2/11665241_1063131397039787_1904888191_n.mp4?efg=eyJybHIiOjY3OCwicmxhIjo1MTJ9&rl=678&vabr=377&oh=fd343e09979c05f08234ed3568a14c07&oe=55CCA784",
- *                         "text": "Ya somos 20 millones en Insta, ¡muchas gracias a tod@s!\n\n20 million Instagram followers, thank you everyone!\n\ninstagram.com/leomessi\n\n- LIO",
- *                         "contact": {
- *                             "id": "55c778f417d75075277f3b48",
- *                             "name": "Leo Messi",
- *                             "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
- *                         }
- *                     }
- *                 ]
- *             },
- *             "name": "Main Circle",
- *             "_id": "55c421364037f03842898379",
- *             "__v": 0,
- *             "ancestors": [
  *             ]
  *         }
  *     }

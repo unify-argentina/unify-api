@@ -236,7 +236,7 @@ contactRoutes.put('/:contact_id', contactController.update);
 contactRoutes.delete('/:contact_id', contactController.delete);
 
 /**
- * @api {get} /api/user/:user_id/contact/:contact_id/media Obtener contenido del contacto
+ * @api {get} /api/user/:user_id/contact/:contact_id/media Obtener contenido de un contacto
  * @apiGroup Contactos
  *
  * @apiHeader {String} Authorization Bearer token
@@ -253,69 +253,41 @@ contactRoutes.delete('/:contact_id', contactController.delete);
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *     {
- *         "contact": {
- *             "user": "55c421354037f03842898378",
- *             "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large",
- *             "name": "Flore Joffré",
- *             "_id": "55cab7542337df552818e540",
- *             "__v": 0,
- *             "parents": [
+ *         "media": {
+ *             "count": 3,
+ *             "list": [
  *                 {
- *                     "circle": "55c421364037f03842898379",
- *                     "_id": "55cab7542337df552818e541",
- *                     "ancestors": [
- *                         "55c421364037f03842898379"
- *                     ]
+ *                     "provider": "instagram",
+ *                     "id": "1045056700312632485_1244524526",
+ *                     "type": "image",
+ *                     "created_time": 1438800488,
+ *                     "link": "https://instagram.com/p/6AyYgwRryl/",
+ *                     "likes": 21,
+ *                     "media_url": "https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e15/11821140_1458199127814596_2044349920_n.jpg",
+ *                     "text": "40 meses y más a tu lado. \nGracias por estar a mi lado y amarme como lo haces. \nNo existe nadie como vos! Te amo para siempre 💕\n\"Ahora cambiemos el mundo, amigo, que tu ya has cambiado el mio\"",
+ *                     "user_has_liked": true
+ *                 },
+ *                 {
+ *                     "provider": "twitter",
+ *                     "id": "628942328963702784",
+ *                     "type": "text",
+ *                     "created_time": 1438786511,
+ *                     "link": "https://twitter.com/statuses/628942328963702784",
+ *                     "likes": 0,
+ *                     "text": "@eugeniiazarco no te rias del niño acento que el viernes voy a pasar a ser yo ``````````",
+ *                     "user_has_liked": false
+ *                 },
+ *                 {
+ *                     "provider": "twitter",
+ *                     "id": "628927833134530560",
+ *                     "type": "video",
+ *                     "created_time": 1438783054,
+ *                     "link": "https://twitter.com/statuses/628927833134530560",
+ *                     "likes": 0,
+ *                     "text": "@eugeniiazarco euchi don't goooo http://t.co/vabQtQzV1Y",
+ *                     "user_has_liked": false
  *                 }
- *             ],
- *             "instagram": {
- *                 "username": "florejoffre",
- *                 "id": "1244524526"
- *             },
- *             "twitter": {
- *                 "username": "FloreJoffre",
- *                 "id": "197249917"
- *             },
- *             "facebook": {
- *                 "display_name": "Flore Joffré",
- *                 "id": "10206413202905994"
- *             },
- *             "media": {
- *                 "count": 70,
- *                 "list": [
- *                     {
- *                         "provider": "twitter",
- *                         "id": "630875516275425280",
- *                         "type": "text",
- *                         "created_time": 1439247418,
- *                         "link": "https://twitter.com/statuses/630875516275425280",
- *                         "likes": 0,
- *                         "text": "RT @joelmarquez90: @FloreJoffre volvió mi escritora favorita, la extrañaba mucho!",
- *                         "user_has_liked": false
- *                     },
- *                     {
- *                         "provider": "instagram",
- *                         "id": "1045056700312632485_1244524526",
- *                         "type": "image",
- *                         "created_time": 1438800488,
- *                         "link": "https://instagram.com/p/6AyYgwRryl/",
- *                         "likes": 21,
- *                         "media_url": "https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e15/11821140_1458199127814596_2044349920_n.jpg",
- *                         "text": "40 meses y más a tu lado. \nGracias por estar a mi lado y amarme como lo haces. \nNo existe nadie como vos! Te amo para siempre 💕\n\"Ahora cambiemos el mundo, amigo, que tu ya has cambiado el mio\"",
- *                         "user_has_liked": true
- *                     },
- *                     {
- *                         "provider": "twitter",
- *                         "id": "628927833134530560",
- *                         "type": "video",
- *                         "created_time": 1438783054,
- *                         "link": "https://twitter.com/statuses/628927833134530560",
- *                         "likes": 0,
- *                         "text": "@eugeniiazarco euchi don't goooo http://t.co/vabQtQzV1Y",
- *                         "user_has_liked": false
- *                     }
- *                 ]
- *             }
+ *             ]
  *         }
  *     }
  */
