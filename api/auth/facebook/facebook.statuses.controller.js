@@ -15,6 +15,7 @@ var facebookUtils = require('./facebook.utils');
 // constantes
 var USER_STATUSES_URL = facebookUtils.getBaseURL() + '/%s/statuses?fields=id,message,updated_time,likes.limit(0).summary(true),comments.limit(0).summary(true)&access_token=%s';
 
+// Devuelve los estados del usuario pasado por parámetro
 module.exports.getStatuses = function(access_token, facebookId, callback) {
 
   var url = util.format(USER_STATUSES_URL, facebookId, access_token);

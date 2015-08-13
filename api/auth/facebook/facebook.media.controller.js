@@ -14,6 +14,7 @@ var facebookPhotos = require('./facebook.photos.controller');
 var facebookVideos = require('./facebook.videos.controller');
 var facebookStatuses = require('./facebook.statuses.controller');
 
+// Se encarga de llamar a los módulos de fotos, videos y estados y luego devuelve los resultados
 module.exports.getMedia = function(access_token, facebookId, callback) {
 
   async.parallel({

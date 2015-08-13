@@ -19,6 +19,7 @@ var MEDIA_URL = 'https://api.instagram.com/v1/media/%s?access_token=%s';
 
 var ACCESS_TOKEN = '';
 
+// Devuelve las fotos y los videos del usuario pasado por parámetro
 module.exports.getMedia = function(access_token, instagramId, callback) {
 
   // FIXME Chanchada, ver como se puede mejorar

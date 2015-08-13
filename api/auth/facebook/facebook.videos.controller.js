@@ -15,6 +15,7 @@ var facebookUtils = require('./facebook.utils');
 // constantes
 var USER_VIDEOS_URL = facebookUtils.getBaseURL() + '/%s/videos?type=uploaded&fields=id,description,length,source,picture,created_time,likes.limit(0).summary(true),comments.limit(0).summary(true)&access_token=%s';
 
+// Devuelve los videos del usuario pasado por parámetro
 module.exports.getVideos = function(access_token, facebookId, callback) {
 
   var url = util.format(USER_VIDEOS_URL, facebookId, access_token);
