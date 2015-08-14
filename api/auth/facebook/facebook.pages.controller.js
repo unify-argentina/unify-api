@@ -48,6 +48,10 @@ var getFacebookData = function(url, callback) {
       logger.error('Error: ' + err ? err : response.body.error.message);
       callback(err ? err : response.body.error.message, null);
     }
+    // Si no vienen datos por cualquier motivo, nos volvemos
+    else if (response.body.data.length === 0) {
+      callback(null, pages);
+    }
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.paging.next) {
       pages.push.apply(pages, response.body.data);

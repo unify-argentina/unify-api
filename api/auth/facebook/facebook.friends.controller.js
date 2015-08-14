@@ -13,7 +13,7 @@ var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
 
 // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Facebook
-var users = [];
+var friends = [];
 
 // Devuelve los amigos de Facebook del usuario loggeado
 module.exports.getFriends = function(access_token, facebookId, callback) {
@@ -48,15 +48,19 @@ var getFacebookData = function(url, callback) {
       logger.error('Error: ' + err ? err : response.body.error.message);
       callback(err ? err : response.body.error.message, null);
     }
+    // Si no vienen datos por cualquier motivo, nos volvemos
+    else if (response.body.data.length === 0) {
+      callback(null, friends);
+    }
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.paging.next) {
-      users.push.apply(users, response.body.data);
+      friends.push.apply(friends, response.body.data);
       getFacebookData(response.body.paging.next, callback);
     }
     // Sino, ya tengo los usuarios y los devuelvo en el callback
     else {
-      users.push.apply(users, response.body.data);
-      callback(null, users);
+      friends.push.apply(friends, response.body.data);
+      callback(null, friends);
     }
   });
 };

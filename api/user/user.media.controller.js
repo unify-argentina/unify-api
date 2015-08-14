@@ -45,7 +45,7 @@ var doGetMedia = function(res, user) {
     function(err, results) {
       if (err) {
         logger.warn('Error searching media ' + err);
-        return res.status(400).send({ errors: [{ msg: 'There was an error obtaining contact media' }] });
+        return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user media' }] });
       }
       else {
         sendMediaResponseFromResults(res, results);
