@@ -155,7 +155,7 @@ var saveContactData = function(req, res, contact, circle) {
       return res.status(400).send({ errors: [{ msg: 'Error saving data ' + err }] });
     }
     else {
-      logger.info('Contact for user: ' + req.user + ' created successfully: ' + contact.toString());
+      logger.debug('Contact for user: ' + req.user + ' created successfully: ' + contact.toString());
       contact.created_at = undefined;
       contact.updated_at = undefined;
       return res.send({ contact: contact });

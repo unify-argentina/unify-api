@@ -37,7 +37,7 @@ module.exports.getFriends = function(access_token, instagramId, callback) {
           list: filteredMappedUsers,
           count: filteredMappedUsers.length
         };
-        logger.info('Instagram Friends: ' + JSON.stringify(result));
+        logger.debug('Instagram Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }

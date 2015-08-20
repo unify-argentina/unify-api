@@ -40,7 +40,7 @@ module.exports.getMedia = function(access_token, twitterId, callback) {
     // Si no hubo error, tenemos que mapear el response
     else {
       async.map(response.body, mapMedia, function(err, mappedMedia) {
-        logger.info('Media: ' + JSON.stringify(mappedMedia));
+        logger.debug('Media: ' + JSON.stringify(mappedMedia));
         callback(err, mappedMedia);
       });
     }

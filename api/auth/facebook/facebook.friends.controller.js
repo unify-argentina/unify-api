@@ -36,7 +36,7 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
           list: filteredMappedUsers,
           count: filteredMappedUsers.length
         };
-        logger.info('Facebook Friends: ' + JSON.stringify(result));
+        logger.debug('Facebook Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }

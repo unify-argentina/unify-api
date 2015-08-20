@@ -50,7 +50,7 @@ module.exports.login = function(req, res) {
             return res.status(400).send({ errors: [{ msg: 'Wrong password' }] });
           }
           else {
-            logger.info('User logged in successfully: ' + user.toString());
+            logger.debug('User logged in successfully: ' + user.toString());
             user.password = undefined;
             return jwt.createJWT(res, user);
           }

@@ -27,7 +27,7 @@ var allowCrossDomain = function(req, res, next) {
 
   // intercept OPTIONS method
   if ('OPTIONS' === req.method) {
-    res.send(200);
+    return res.sendStatus(200);
   }
   else {
     next();

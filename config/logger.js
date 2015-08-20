@@ -4,13 +4,16 @@
  * */
 'use strict';
 
+// requires
 var winston = require('winston');
+var config = require('./index');
+
 winston.emitErrs = true;
 
 var logger = new winston.Logger({
   transports: [
     new winston.transports.Console({
-      level: 'debug',
+      level: config.LOG_LEVEL,
       handleExceptions: true,
       json: false,
       colorize: true

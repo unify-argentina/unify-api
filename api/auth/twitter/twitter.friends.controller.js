@@ -37,7 +37,7 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
           list: filteredMappedUsers,
           count: filteredMappedUsers.length
         };
-        logger.info('Twitter Friends: ' + JSON.stringify(result));
+        logger.debug('Twitter Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }

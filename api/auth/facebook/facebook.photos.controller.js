@@ -31,7 +31,7 @@ module.exports.getPhotos = function(access_token, facebookId, callback) {
     else {
       // Si no hubo error, tenemos que mapear el response
       async.map(response.body.data, mapPhoto, function(err, mappedMedia) {
-        logger.info('Media: ' + JSON.stringify(mappedMedia));
+        logger.debug('Media: ' + JSON.stringify(mappedMedia));
         callback(err, mappedMedia);
       });
     }

@@ -30,7 +30,7 @@ module.exports.unlinkAccount = function(req, res) {
       }
       else {
         user.facebook = undefined;
-        logger.info('Successfully unlinked facebook account for user: ' + user.toString());
+        logger.debug('Successfully unlinked facebook account for user: ' + user.toString());
         return saveUser(res, user);
       }
     });
