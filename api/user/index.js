@@ -173,30 +173,33 @@ userRoutes.put('/:user_id', userController.update);
  *     HTTP/1.1 200 OK
  *     {
  *         "friends": {
- *             "facebook": {
+ *             "facebook_friends": {
  *                 "list": [
  *                     {
- *                         "id": "10205153877979641",
- *                         "name": "Alejo García",
- *                         "picture": "https://graph.facebook.com/v2.3/10205153877979641/picture?type=large",
- *                         "is_friend": true
- *                     },
- *                     {
- *                         "id": "237673679704701",
- *                         "name": "Kinder",
- *                         "picture": "https://graph.facebook.com/v2.3/237673679704701/picture?type=large",
- *                         "is_friend": false
+ *                         "id": "104412116557897",
+ *                         "name": "Juan Losa",
+ *                         "picture": "https://graph.facebook.com/v2.3/104412116557897/picture?type=large"
  *                     }
  *                 ],
- *                 "count": 2
+ *                 "count": 1
+ *             },
+ *             "facebook_pages": {
+ *                 "list": [
+ *                     {
+ *                         "id": "141545972523915",
+ *                         "name": "Back to the Future Trilogy",
+ *                         "picture": "https://graph.facebook.com/v2.3/141545972523915/picture?type=large"
+ *                     }
+ *                 ],
+ *                 "count": 1
  *             },
  *             "instagram": {
  *                 "list": [
  *                     {
- *                         "id": "1748235982",
- *                         "name": "Basta De Todo",
- *                         "picture": "https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11374053_781604678648356_1836083238_a.jpg",
- *                         "username": "bastatodo"
+ *                         "id": "259220806",
+ *                         "name": "9GAG",
+ *                         "picture": "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/10543934_413441348850651_1114644254_a.jpg",
+ *                         "username": "9gag"
  *                     }
  *                 ],
  *                 "count": 1
@@ -204,13 +207,38 @@ userRoutes.put('/:user_id', userController.update);
  *             "twitter": {
  *                 "list": [
  *                     {
- *                         "id": "66780587",
- *                         "name": "Amazon Web Services",
- *                         "picture": "http://pbs.twimg.com/profile_images/2900345382/16ffae8c667bdbc6a4969f6f02090652_bigger.png",
- *                         "username": "awscloud"
+ *                         "id": "6761682",
+ *                         "name": "blink182",
+ *                         "picture": "http://pbs.twimg.com/profile_images/529142117491171330/mRCmdNod_bigger.png",
+ *                         "username": "blink182"
  *                     }
  *                 ],
  *                 "count": 1
+ *             }
+ *         }
+ *     }
+ *
+ * @apiErrorExample Respuesta invalida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "friends": {
+ *         },
+ *         "errors": {
+ *             "facebook_friends": {
+ *                 "code": 190,
+ *                 "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *             },
+ *             "facebook_pages": {
+ *                 "code": 190,
+ *                 "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *             },
+ *             "instagram": {
+ *                 "code": 400,
+ *                 "message": "The access_token provided is invalid."
+ *             },
+ *             "twitter": {
+ *                 "code": 89,
+ *                 "message": "Invalid or expired token."
  *             }
  *         }
  *     }
@@ -279,6 +307,40 @@ userRoutes.get('/:user_id/friends', friendsController.getFriends);
  *                     "text": ""
  *                 }
  *             ]
+ *         }
+ *     }
+ *
+ * @apiErrorExample Respuesta invalida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "media": {
+ *             "count": 0,
+ *             "list": [
+ *             ]
+ *         },
+ *         "errors": {
+ *             "facebook": {
+ *                 "photos": {
+ *                     "code": 190,
+ *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 },
+ *                 "videos": {
+ *                     "code": 190,
+ *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 },
+ *                 "statuses": {
+ *                     "code": 190,
+ *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 }
+ *             },
+ *             "instagram": {
+ *                 "code": 400,
+ *                 "message": "The access_token provided is invalid."
+ *             },
+ *             "twitter": {
+ *                 "code": 89,
+ *                 "message": "Invalid or expired token."
+ *             }
  *         }
  *     }
  */

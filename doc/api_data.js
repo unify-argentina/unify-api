@@ -886,6 +886,15 @@ define({ "api": [
         }
       ]
     },
+    "error": {
+      "examples": [
+        {
+          "title": "Respuesta invalida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"media\": {\n        \"count\": 0,\n        \"list\": [\n        ]\n    },\n    \"errors\": {\n        \"facebook\": {\n            \"photos\": {\n                \"code\": 190,\n                \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            },\n            \"videos\": {\n                \"code\": 190,\n                \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            },\n            \"statuses\": {\n                \"code\": 190,\n                \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            }\n        },\n        \"instagram\": {\n            \"code\": 400,\n            \"message\": \"The access_token provided is invalid.\"\n        },\n        \"twitter\": {\n            \"code\": 89,\n            \"message\": \"Invalid or expired token.\"\n        }\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
     "version": "0.0.0",
     "filename": "api/contact/index.js",
     "groupTitle": "Contactos",
@@ -1797,7 +1806,16 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n    \"friends\": {\n        \"facebook\": {\n            \"list\": [\n                {\n                    \"id\": \"10205153877979641\",\n                    \"name\": \"Alejo García\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large\",\n                    \"is_friend\": true\n                },\n                {\n                    \"id\": \"237673679704701\",\n                    \"name\": \"Kinder\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/237673679704701/picture?type=large\",\n                    \"is_friend\": false\n                }\n            ],\n            \"count\": 2\n        },\n        \"instagram\": {\n            \"list\": [\n                {\n                    \"id\": \"1748235982\",\n                    \"name\": \"Basta De Todo\",\n                    \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11374053_781604678648356_1836083238_a.jpg\",\n                    \"username\": \"bastatodo\"\n                }\n            ],\n            \"count\": 1\n        },\n        \"twitter\": {\n            \"list\": [\n                {\n                    \"id\": \"66780587\",\n                    \"name\": \"Amazon Web Services\",\n                    \"picture\": \"http://pbs.twimg.com/profile_images/2900345382/16ffae8c667bdbc6a4969f6f02090652_bigger.png\",\n                    \"username\": \"awscloud\"\n                }\n            ],\n            \"count\": 1\n        }\n    }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"friends\": {\n        \"facebook_friends\": {\n            \"list\": [\n                {\n                    \"id\": \"104412116557897\",\n                    \"name\": \"Juan Losa\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/104412116557897/picture?type=large\"\n                }\n            ],\n            \"count\": 1\n        },\n        \"facebook_pages\": {\n            \"list\": [\n                {\n                    \"id\": \"141545972523915\",\n                    \"name\": \"Back to the Future Trilogy\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/141545972523915/picture?type=large\"\n                }\n            ],\n            \"count\": 1\n        },\n        \"instagram\": {\n            \"list\": [\n                {\n                    \"id\": \"259220806\",\n                    \"name\": \"9GAG\",\n                    \"picture\": \"https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/10543934_413441348850651_1114644254_a.jpg\",\n                    \"username\": \"9gag\"\n                }\n            ],\n            \"count\": 1\n        },\n        \"twitter\": {\n            \"list\": [\n                {\n                    \"id\": \"6761682\",\n                    \"name\": \"blink182\",\n                    \"picture\": \"http://pbs.twimg.com/profile_images/529142117491171330/mRCmdNod_bigger.png\",\n                    \"username\": \"blink182\"\n                }\n            ],\n            \"count\": 1\n        }\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Respuesta invalida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"friends\": {\n    },\n    \"errors\": {\n        \"facebook_friends\": {\n            \"code\": 190,\n            \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n        },\n        \"facebook_pages\": {\n            \"code\": 190,\n            \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n        },\n        \"instagram\": {\n            \"code\": 400,\n            \"message\": \"The access_token provided is invalid.\"\n        },\n        \"twitter\": {\n            \"code\": 89,\n            \"message\": \"Invalid or expired token.\"\n        }\n    }\n}",
           "type": "json"
         }
       ]
@@ -1866,6 +1884,15 @@ define({ "api": [
         {
           "title": "Respuesta valida",
           "content": "HTTP/1.1 200 OK\n{\n    \"media\": {\n        \"count\": 4,\n        \"list\": [\n            {\n                \"provider\": \"twitter\",\n                \"id\": \"596020075393642496\",\n                \"type\": \"text\",\n                \"created_time\": 1430937234,\n                \"link\": \"https://twitter.com/statuses/596020075393642496\",\n                \"likes\": 0,\n                \"text\": \"LIVE on #Periscope: Working @ Etermax https://t.co/4cS15HwDk1\",\n                \"user_has_liked\": false\n            },\n            {\n                \"provider\": \"instagram\",\n                \"id\": \"960103625562621136_993803680\",\n                \"type\": \"image\",\n                \"created_time\": 1428673292,\n                \"link\": \"https://instagram.com/p/1S-SkdOYTQfgPBMEYnQ3vXzQw0u5-zsRlm9XY0/\",\n                \"likes\": 6,\n                \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11084974_830219477014557_2002237000_n.jpg\",\n                \"text\": \"Máquina de snacks y de cafe en el laburo, cartón lleno!\",\n                \"user_has_liked\": \"\"\n            },\n            {\n                \"provider\": \"facebook\",\n                \"id\": \"10153184467399738\",\n                \"type\": \"image\",\n                \"created_time\": 1427824794,\n                \"link\": \"https://www.facebook.com/photo.php?fbid=10153184467399738&set=a.36885379737.45118.826764737&type=1\",\n                \"likes\": 11,\n                \"media_url\": \"https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-xpt1/t31.0-8/10856832_10153184467399738_425179179183655076_o.jpg\",\n                \"text\": \"Google te pasás loco..\"\n            },\n            {\n                \"provider\": \"facebook\",\n                \"id\": \"104231789737\",\n                \"type\": \"video\",\n                \"created_time\": 1248316817,\n                \"link\": \"\",\n                \"likes\": 0,\n                \"media_url\": \"https://video.xx.fbcdn.net/hvideo-xpa1/v/t42.1790-2/1128968_10151770969524738_48281_n.mp4?oh=5292d676428908d8e4c12316c9c3fd81&oe=55CE3C64\",\n                \"text\": \"\"\n            }\n        ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Respuesta invalida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"media\": {\n        \"count\": 0,\n        \"list\": [\n        ]\n    },\n    \"errors\": {\n        \"facebook\": {\n            \"photos\": {\n                \"code\": 190,\n                \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            },\n            \"videos\": {\n                \"code\": 190,\n                \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            },\n            \"statuses\": {\n                \"code\": 190,\n                \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            }\n        },\n        \"instagram\": {\n            \"code\": 400,\n            \"message\": \"The access_token provided is invalid.\"\n        },\n        \"twitter\": {\n            \"code\": 89,\n            \"message\": \"Invalid or expired token.\"\n        }\n    }\n}",
           "type": "json"
         }
       ]

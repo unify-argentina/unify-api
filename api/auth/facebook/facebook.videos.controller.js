@@ -11,6 +11,7 @@ var async = require('async');
 var moment = require('moment');
 var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
+var facebookErrors = require('./facebook.errors');
 
 // constantes
 var USER_VIDEOS_URL = facebookUtils.getBaseURL() + '/%s/videos?type=uploaded&fields=id,description,length,source,picture,created_time,likes.limit(0).summary(true),comments.limit(0).summary(true)&access_token=%s';
@@ -22,8 +23,10 @@ module.exports.getVideos = function(access_token, facebookId, callback) {
   logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {
-    if (err) {
-      callback(err, null);
+
+    var result = facebookErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(null, result.error);
     }
     else {
       // Si no hubo error, tenemos que mapear el response

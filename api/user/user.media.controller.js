@@ -11,6 +11,7 @@ var facebookMedia = require('../auth/facebook/facebook.media.controller');
 var logger = require('../../config/logger');
 var async = require('async');
 var _ = require('lodash');
+var errorHelper = require('../auth/util/error.helper.js');
 
 // modelos
 var User = require('../user/user.model');
@@ -91,18 +92,11 @@ var getTwitterMedia = function(user, callback) {
 
 // Envía al cliente el contenido del usuario
 var sendMediaResponseFromResults = function(res, results) {
-  var mediaObjects = [];
-  if (results.facebook) {
-    mediaObjects.push.apply(mediaObjects, results.facebook);
-  }
-  if (results.instagram) {
-    mediaObjects.push.apply(mediaObjects, results.instagram);
-  }
-  if (results.twitter) {
-    mediaObjects.push.apply(mediaObjects, results.twitter);
-  }
+
+  var mediaResults = errorHelper.checkMediaErrors(results);
+
   // Una vez que tenemos los contenidos de las 3 redes sociales
-  async.sortBy(mediaObjects, function(media, callback) {
+  async.sortBy(mediaResults.mediaObjects, function(media, callback) {
     // los ordenamos por fecha de creación (los más nuevos primero)
     callback(null, -media.created_time);
     // Una vez que los ordenamos, los enviamos
@@ -111,25 +105,10 @@ var sendMediaResponseFromResults = function(res, results) {
       media: {
         count: sortedMedia.length,
         list: sortedMedia
-      }
+      },
+      errors: mediaResults.errors
     });
   });
-};
-
-// Limpia los datos que no tienen que ser enviados al cliente
-var clearProtectedData = function(result) {
-  if (result.instagram) {
-    result.instagram.id = undefined;
-    result.instagram.access_token = undefined;
-  }
-  if (result.facebook) {
-    result.facebook.id = undefined;
-    result.facebook.access_token = undefined;
-  }
-  if (result.twitter) {
-    result.twitter.id = undefined;
-    result.twitter.access_token = undefined;
-  }
 };
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales

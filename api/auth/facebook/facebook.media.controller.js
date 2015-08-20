@@ -31,11 +31,35 @@ module.exports.getMedia = function(access_token, facebookId, callback) {
     }
   },
 
-  function(err, results) {
-    var totalResults = [];
-    totalResults.push.apply(totalResults, results.photos);
-    totalResults.push.apply(totalResults, results.videos);
-    totalResults.push.apply(totalResults, results.statuses);
-    callback(null, totalResults);
+  function(err, mediaResults) {
+
+    var result = {};
+    result.totalResults = [];
+
+    if (mediaResults.photos.constructor === Array) {
+      result.totalResults.push.apply(result.totalResults, mediaResults.photos);
+    }
+    // Error en photos
+    else {
+      result.photos = mediaResults.photos;
+    }
+
+    if (mediaResults.videos.constructor === Array) {
+      result.totalResults.push.apply(result.totalResults, mediaResults.videos);
+    }
+    // Error en videos
+    else {
+      result.videos = mediaResults.videos;
+    }
+
+    if (mediaResults.statuses.constructor === Array) {
+      result.totalResults.push.apply(result.totalResults, mediaResults.statuses);
+    }
+    // Error en statuses
+    else {
+      result.statuses = mediaResults.statuses;
+    }
+
+    callback(null, result);
   });
 };

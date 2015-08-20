@@ -11,6 +11,7 @@ var async = require('async');
 var _ = require('lodash');
 var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
+var facebookErrors = require('./facebook.errors');
 
 // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Facebook
 var friends = [];
@@ -22,7 +23,7 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
 
   getFacebookData(url, function(err, facebookUsers) {
     if (err) {
-      callback(err, null);
+      callback(null, err);
     }
     else {
       // Mapeamos los usuarios para que sean homogéneos a las 3 redes sociales
@@ -31,8 +32,12 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
         var filteredMappedUsers = _.uniq(mappedUsers, function(mappedUser) {
           return mappedUser.id;
         });
-        logger.info('Friends: ' + JSON.stringify(filteredMappedUsers));
-        callback(err, filteredMappedUsers);
+        var result = {
+          list: filteredMappedUsers,
+          count: filteredMappedUsers.length
+        };
+        logger.info('Facebook Friends: ' + JSON.stringify(result));
+        callback(err, result);
       });
     }
   });
@@ -44,11 +49,11 @@ var getFacebookData = function(url, callback) {
 
   logger.info('URL: ' + url);
   request.get({ url: url, json: true }, function(err, response) {
-    if (err || response.body.error) {
-      logger.error('Error: ' + err ? err : response.body.error.message);
-      callback(err ? err : response.body.error.message, null);
+
+    var result = facebookErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error, null);
     }
-    // Si no vienen datos por cualquier motivo, nos volvemos
     else if (response.body.data.length === 0) {
       callback(null, friends);
     }
@@ -70,8 +75,7 @@ var mapUser = function(facebookUser, callback) {
   var user = {
     id: facebookUser.id,
     name: facebookUser.name,
-    picture: facebookUtils.getFacebookPicture(facebookUser.id),
-    is_friend: true
+    picture: facebookUtils.getFacebookPicture(facebookUser.id)
   };
   callback(null, user);
 };

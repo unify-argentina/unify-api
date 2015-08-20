@@ -290,6 +290,40 @@ contactRoutes.delete('/:contact_id', contactController.delete);
  *             ]
  *         }
  *     }
+ *
+ * @apiErrorExample Respuesta invalida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "media": {
+ *             "count": 0,
+ *             "list": [
+ *             ]
+ *         },
+ *         "errors": {
+ *             "facebook": {
+ *                 "photos": {
+ *                     "code": 190,
+ *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 },
+ *                 "videos": {
+ *                     "code": 190,
+ *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 },
+ *                 "statuses": {
+ *                     "code": 190,
+ *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 }
+ *             },
+ *             "instagram": {
+ *                 "code": 400,
+ *                 "message": "The access_token provided is invalid."
+ *             },
+ *             "twitter": {
+ *                 "code": 89,
+ *                 "message": "Invalid or expired token."
+ *             }
+ *         }
+ *     }
  */
 contactRoutes.get('/:contact_id/media', mediaController.getMedia);
 

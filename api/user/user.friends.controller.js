@@ -11,6 +11,7 @@ var instagramFriends = require('../auth/instagram/instagram.friends.controller')
 var twitterFriends = require('../auth/twitter/twitter.friends.controller');
 var async = require('async');
 var logger = require('../../config/logger');
+var errorHelper = require('../auth/util/error.helper');
 
 // modelos
 var User = require('./user.model.js');
@@ -108,29 +109,11 @@ var selectFields = function() {
 
 // Envía al cliente los amigos del usuario
 var sendFriendsResponseFromResults = function(res, results) {
-  var friends = {};
 
-  if (results.facebook_friends || results.facebook_pages) {
+  var friendResults = errorHelper.checkFriendsErrors(results);
 
-    var facebook = {};
-    facebook.list = [];
-
-    if (results.facebook_friends) {
-      facebook.list.push.apply(facebook.list, results.facebook_friends);
-    }
-    if (results.facebook_pages) {
-      facebook.list.push.apply(facebook.list, results.facebook_pages);
-    }
-
-    facebook.count = facebook.list.length;
-    friends.facebook = facebook;
-  }
-
-  if (results.instagram) {
-    friends.instagram = results.instagram;
-  }
-  if (results.twitter) {
-    friends.twitter = results.twitter;
-  }
-  return res.send({ friends: friends });
+  return res.send({
+    friends: friendResults.friends,
+    errors: friendResults.errors
+  });
 };

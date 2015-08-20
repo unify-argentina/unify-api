@@ -11,6 +11,7 @@ var async = require('async');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
 var twitterOAuthHelper = require('./twitter.auth.helper');
+var twitterErrors = require('./twitter.errors');
 var moment = require('moment');
 
 // modelos
@@ -32,8 +33,9 @@ module.exports.getMedia = function(access_token, twitterId, callback) {
 
   logger.info('URL: ' + USER_MEDIA_URL + 'qs=' + JSON.stringify(qs));
   request.get({ url: USER_MEDIA_URL, oauth: twitterOAuthHelper.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
-    if (err) {
-      callback(err, null);
+    var result = twitterErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(null, result.error);
     }
     // Si no hubo error, tenemos que mapear el response
     else {
@@ -67,6 +69,7 @@ var mapMedia = function(tweet, callback) {
   callback(null, mappedMedia);
 };
 
+// Mapea o una imagen o un video de Twitter al formato unificado
 var mapTweetMedia = function(mappedMedia, tweetMedia) {
 
   var type = tweetMedia.type;
@@ -79,10 +82,11 @@ var mapTweetMedia = function(mappedMedia, tweetMedia) {
   mappedMedia.type = type;
 };
 
+// Mapea un video de Twitter
 var mapTweetVideo = function(mappedMedia, videoInfoArray) {
 
   videoInfoArray.forEach(function(videoInfo) {
-    if (videoInfo['content_type'] === 'video/mp4') {
+    if (videoInfo.content_type === 'video/mp4') {
       mappedMedia.media_url = videoInfo.url;
     }
   });

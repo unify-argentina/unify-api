@@ -9,6 +9,7 @@ var util = require('util');
 var request = require('request');
 var async = require('async');
 var logger = require('../../../config/logger');
+var instagramErrors = require('./instagram.errors');
 
 // modelos
 var Contact = require('../../contact/contact.model');
@@ -29,8 +30,10 @@ module.exports.getMedia = function(access_token, instagramId, callback) {
   logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {
-    if (err) {
-      callback(err, null);
+
+    var result = instagramErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(null, result.error);
     }
     else {
       // Si no hubo error, tenemos que mapear el response

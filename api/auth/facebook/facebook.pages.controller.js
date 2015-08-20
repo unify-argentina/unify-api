@@ -10,7 +10,9 @@ var request = require('request');
 var async = require('async');
 var _ = require('lodash');
 var logger = require('../../../config/logger');
+var errors = require('../../../config/errors');
 var facebookUtils = require('./facebook.utils');
+var facebookErrors = require('./facebook.errors');
 
 // Aquí iremos almacenando las páginas que nos devuelva el servicio paginado de Facebook
 var pages = [];
@@ -22,7 +24,7 @@ module.exports.getPages = function(access_token, facebookId, callback) {
 
   getFacebookData(url, function(err, facebookPages) {
     if (err) {
-      callback(err, null);
+      callback(null, err);
     }
     else {
       // Mapeamos las páginas para que tengan la misma estructura que los amigos de facebook
@@ -31,8 +33,12 @@ module.exports.getPages = function(access_token, facebookId, callback) {
         var filteredMappedPages = _.uniq(mappedPages, function(mappedUser) {
           return mappedUser.id;
         });
-        logger.info('Pages: ' + JSON.stringify(filteredMappedPages));
-        callback(err, filteredMappedPages);
+        var result = {
+          list: filteredMappedPages,
+          count: filteredMappedPages.length
+        };
+        logger.info('Facebook Pages: ' + JSON.stringify(result));
+        callback(err, result);
       });
     }
   });
@@ -44,11 +50,11 @@ var getFacebookData = function(url, callback) {
 
   logger.info('URL: ' + url);
   request.get({ url: url, json: true }, function(err, response) {
-    if (err || response.body.error) {
-      logger.error('Error: ' + err ? err : response.body.error.message);
-      callback(err ? err : response.body.error.message, null);
+
+    var result = facebookErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error, null);
     }
-    // Si no vienen datos por cualquier motivo, nos volvemos
     else if (response.body.data.length === 0) {
       callback(null, pages);
     }
@@ -70,8 +76,7 @@ var mapPage = function(facebookPage, callback) {
   var page = {
     id: facebookPage.id,
     name: facebookPage.name,
-    picture: facebookUtils.getFacebookPicture(facebookPage.id),
-    is_friend: false
+    picture: facebookUtils.getFacebookPicture(facebookPage.id)
   };
   callback(null, page);
 };

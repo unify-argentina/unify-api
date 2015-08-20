@@ -11,6 +11,7 @@ var facebookMedia = require('../auth/facebook/facebook.media.controller');
 var logger = require('../../config/logger');
 var async = require('async');
 var _ = require('lodash');
+var errorHelper = require('../auth/util/error.helper');
 
 // modelos
 var User = require('../user/user.model');
@@ -96,18 +97,11 @@ var getTwitterMedia = function(user, contact, callback) {
 
 // Envía al cliente el contenido del contacto
 var sendMediaResponseFromResults = function(res, results) {
-  var mediaObjects = [];
-  if (results.facebook) {
-    mediaObjects.push.apply(mediaObjects, results.facebook);
-  }
-  if (results.instagram) {
-    mediaObjects.push.apply(mediaObjects, results.instagram);
-  }
-  if (results.twitter) {
-    mediaObjects.push.apply(mediaObjects, results.twitter);
-  }
+
+  var mediaResults = errorHelper.checkMediaErrors(results);
+
   // Una vez que tenemos los contenidos de las 3 redes sociales
-  async.sortBy(mediaObjects, function(media, callback) {
+  async.sortBy(mediaResults.mediaObjects, function(media, callback) {
     // los ordenamos por fecha de creación (los más nuevos primero)
     callback(null, -media.created_time);
   // Una vez que los ordenamos, los enviamos
@@ -116,7 +110,8 @@ var sendMediaResponseFromResults = function(res, results) {
       media: {
         count: sortedMedia.length,
         list: sortedMedia
-      }
+      },
+      errors: mediaResults.errors
     });
   });
 };

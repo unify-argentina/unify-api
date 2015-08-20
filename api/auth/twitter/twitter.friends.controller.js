@@ -11,6 +11,7 @@ var _ = require('lodash');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
 var twitterOAuthHelper = require('./twitter.auth.helper');
+var twitterErrors = require('./twitter.errors');
 
 // constantes
 var TWITTER_USER_FOLLOWS_URL = 'https://api.twitter.com/1.1/friends/list.json';
@@ -23,7 +24,7 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
 
   getTwitterData(TWITTER_USER_FOLLOWS_URL, -1, access_token, twitterId, function(err, twitterUsers) {
     if (err) {
-      callback(err, null);
+      callback(null, err);
     }
     else {
       // Mapeamos los usuarios para que sean homogéneos a las 3 redes sociales
@@ -36,7 +37,7 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
           list: filteredMappedUsers,
           count: filteredMappedUsers.length
         };
-        logger.info('Friends: ' + JSON.stringify(result));
+        logger.info('Twitter Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }
@@ -59,9 +60,10 @@ var getTwitterData = function(url, cursor, access_token, twitterId, callback) {
 
   logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
   request.get({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
-    if (err || (response.body.errors && response.body.errors.length > 0)) {
-      logger.error('Error: ' + err ? err : response.body.errors[0].message);
-      callback(err ? err : response.body.errors[0].message, null);
+
+    var result = twitterErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error, null);
     }
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.next_cursor !== 0) {

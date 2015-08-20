@@ -10,6 +10,7 @@ var request = require('request');
 var async = require('async');
 var _ = require('lodash');
 var logger = require('../../../config/logger');
+var instagramErrors = require('./instagram.errors');
 
 // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Instagram
 var users = [];
@@ -23,7 +24,7 @@ module.exports.getFriends = function(access_token, instagramId, callback) {
 
   getInstagramData(url, function(err, instagramUsers) {
     if (err) {
-      callback(err, null);
+      callback(null, err);
     }
     else {
       // Mapeamos los usuarios para que sean homogéneos a las 3 redes sociales
@@ -36,7 +37,7 @@ module.exports.getFriends = function(access_token, instagramId, callback) {
           list: filteredMappedUsers,
           count: filteredMappedUsers.length
         };
-        logger.info('Friends: ' + JSON.stringify(result));
+        logger.info('Instagram Friends: ' + JSON.stringify(result));
         callback(err, result);
       });
     }
@@ -49,14 +50,10 @@ var getInstagramData = function(url, callback) {
 
   logger.info('URL: ' + url);
   request.get({ url: url, json: true }, function(err, response) {
-    if (!response.body.meta) {
-      logger.error('Could not get instagram friends');
-      callback(new Error('Could not get instagram friends'), null);
-    }
 
-    if (err || response.body.meta.error_type) {
-      logger.error('Error: ' + err ? err : response.body.meta.error_message);
-      callback(err ? err : response.body.meta.error_message, null);
+    var result = instagramErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error, null);
     }
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.pagination.next_url) {
