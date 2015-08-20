@@ -6,7 +6,7 @@
 
 module.exports = {
 
-  CROSS_DOMAIN_URL: process.env.CROSS_DOMAIN_URL || 'http://localhost:9000',
+  CROSS_DOMAIN_URLS: ['http://localhost:9000', 'http://127.0.0.1:9000', 'http://www.myunify.io'],
 
   // Mongo DB
   MONGODB: process.env.MONGODB || 'mongodb://localhost:27017/unify-dev',

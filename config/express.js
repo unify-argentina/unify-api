@@ -13,12 +13,17 @@ var methodOverride = require('method-override');
 var cookieParser = require('cookie-parser');
 var expressValidator = require('express-validator');
 var config = require('./index');
+var logger = require('./logger');
 
 var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', config.CROSS_DOMAIN_URL);
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+
+  var origin = req.get('origin');
+  if (config.CROSS_DOMAIN_URLS.indexOf(origin) > -1) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  }
 
   // intercept OPTIONS method
   if ('OPTIONS' === req.method) {
