@@ -41,24 +41,30 @@ module.exports.unlinkAccount = function(req, res) {
 module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
+
     var qs = getAccessTokenParams(req);
     logger.info('Access token params: ' + JSON.stringify(qs));
+
     // Primero intercambiamos el código de autorización para obtener el access token
     request.get({ url: ACCESS_TOKEN_URL, qs: qs, json: true }, function(err, response, access_token) {
+
       if (response.statusCode !== 200) {
-        logger.error(access_token.error.message);
+        logger.error('Facebook login error');
         return res.status(response.statusCode).send({ errors: [{ msg: access_token.error.message }] });
       }
 
       logger.info('Access token: ' + JSON.stringify(access_token));
+
       // Una vez que tenemos el access_token, obtenemos información del usuario actual
       request.get({ url: GRAPH_USER_URL, qs: access_token, json: true }, function(err, response, profile) {
+
         if (response.statusCode !== 200) {
-          logger.error(access_token.error.message);
+          logger.error('Facebook login error');
           return res.status(response.statusCode).send({ errors: [{ msg: access_token.error.message }] });
         }
 
         logger.info('Facebook profile: ' + JSON.stringify(profile));
+
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
           logger.info('Authenticated user');

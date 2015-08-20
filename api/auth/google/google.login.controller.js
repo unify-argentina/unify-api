@@ -9,6 +9,7 @@ var jwt = require('./../util/jwt');
 var request = require('request');
 var config = require('../../../config');
 var randomstring = require('randomstring');
+var logger = require('../../../config/logger');
 
 // modelos
 var User = require('../../user/user.model');
@@ -27,6 +28,7 @@ module.exports.unlinkAccount = function(req, res) {
       }
       else {
         user.google = undefined;
+        logger.info('Successfully unlinked google account for user: ' + user.toString());
         return saveUser(res, user);
       }
     });
@@ -37,20 +39,41 @@ module.exports.unlinkAccount = function(req, res) {
 module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
+
+    var qs = getAccessTokenParams(req);
+    logger.info('Access token params: ' + JSON.stringify(qs));
+
     // Primero intercambiamos el código de autorización para obtener el access token
-    request.post(ACCESS_TOKEN_URL, { json: true, form: getAccessTokenParams(req) }, function(err, response, token) {
+    request.post(ACCESS_TOKEN_URL, { json: true, form: qs }, function(err, response, token) {
+
+      if (response.statusCode !== 200) {
+        logger.error('Google login error');
+        return res.status(response.statusCode).send({ errors: [{ msg: 'Google login error' }] });
+      }
+
       var access_token = token.access_token;
+      logger.info('Access token: ' + access_token);
+
       var headers = { Authorization: 'Bearer ' + access_token };
 
       // Una vez que tenemos el access_token, obtenemos información del usuario actual
       request.get({ url: PEOPLE_API_URL, headers: headers, json: true }, function(err, response, profile) {
 
+        if (response.statusCode !== 200) {
+          logger.error('Google login error');
+          return res.status(response.statusCode).send({ errors: [{ msg: 'Google login error' }] });
+        }
+
+        logger.info('Google profile: ' + JSON.stringify(profile));
+
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
+          logger.info('Authenticated user');
           handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, access_token);
         }
         // Si no tiene el header de authorization, es porque es un nuevo usuario
         else {
+          logger.info('Not authenticated user');
           handleNotAuthenticatedUser(res, profile, access_token);
         }
       });
@@ -63,6 +86,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_to
   User.findOne({ 'google.id': googleProfile.sub }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
+      logger.info('Existing google user: ' + existingUser.toString());
       return jwt.createJWT(res, existingUser);
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Google
@@ -76,6 +100,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_to
       }
       User.findById(payload.sub, function(err, user) {
         if (err || !user) {
+          logger.warn('User not found: ' + payload.sub);
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
         else {
@@ -84,6 +109,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_to
           if (user.email.indexOf('no-email') > -1) {
             user.email = googleProfile.email;
           }
+          logger.info('Existing unify user: ' + user.toString());
           linkGoogleData(user, googleProfile, access_token);
           return saveUser(res, user);
         }
@@ -98,12 +124,14 @@ var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
     // Si encuentra a uno con el id de Google, es un usuario registrado con Google
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingGoogleUser) {
+      logger.info('Existing google user: ' + existingGoogleUser.toString());
       return jwt.createJWT(res, existingGoogleUser);
     }
     else {
       User.findOne({ 'email': googleProfile.email }, function(err, existingUnifyUser) {
         // Si encuentra a uno con el email de Google, vincula la cuenta local con la de Google
         if (existingUnifyUser) {
+          logger.info('Existing unify user: ' + existingUnifyUser);
           linkGoogleData(existingUnifyUser, googleProfile, access_token);
           return saveUser(res, existingUnifyUser);
         }
@@ -113,6 +141,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
           user.name = googleProfile.name;
           user.email = googleProfile.email;
           user.password = randomstring.generate(20);
+          logger.info('New google user!: ' + user);
           linkGoogleData(user, googleProfile, access_token);
           return saveUser(res, user);
         }

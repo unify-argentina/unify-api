@@ -10,6 +10,7 @@ var request = require('request');
 var config = require('../../../config');
 var qs = require('querystring');
 var randomstring = require('randomstring');
+var logger = require('../../../config/logger');
 
 // modelos
 var User = require('../../user/user.model');
@@ -25,10 +26,12 @@ module.exports.unlinkAccount = function(req, res) {
   process.nextTick(function() {
     User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
+        logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});
       }
       else {
         user.twitter = undefined;
+        logger.info('Successfully unlinked twitter account for user: ' + user.toString());
         return saveUser(res, user);
       }
     });
@@ -50,10 +53,12 @@ module.exports.linkAccount = function(req, res) {
     // Request inicial del cliente
     if (!req.body.oauth_token || !req.body.oauth_verifier) {
 
+      logger.info('Requesting oauth_token and oauth_verifier');
       // Obtenemos el request token para el popup de autorización
       request.post({ url: REQUEST_TOKEN_URL, oauth: getRequestTokenParams() }, function(err, response, body) {
         var oauthToken = qs.parse(body);
 
+        logger.info('Twitter oauth_token: ' + JSON.stringify(oauthToken));
         // Enviamos el token de OAuth para abrir la pantalla de autorización en el cliente
         return res.send(oauthToken);
       });
@@ -68,24 +73,41 @@ module.exports.linkAccount = function(req, res) {
 var handleTokenRequest = function(req, res) {
   // Intercambiamos el oauth token y el oauth verifier para obtener el access token
   var oauth = getAccessTokenParams(req);
+  logger.info('Access token params: ' + JSON.stringify(oauth));
+
   request.post({ url: ACCESS_TOKEN_URL, oauth: oauth }, function(err, response, access_token) {
 
+    if (response.statusCode !== 200) {
+      logger.error('Twitter login error');
+      return res.status(response.statusCode).send({ errors: [{ msg: 'Twitter login error' }] });
+    }
+
     access_token = qs.parse(access_token);
+    logger.info('Access token: ' + JSON.stringify(access_token));
 
     // Una vez tenemos el access token, obtenemos la información del usuario a vincular
     var profileOauth = getProfileParams(access_token.oauth_token);
-    request.get({ url: PROFILE_URL + access_token.screen_name, oauth: profileOauth, json: true },
-      function(err, response, profile) {
 
-        // Si tiene el header de authorization, ya es un usuario registrado
-        if (req.headers.authorization) {
-          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, access_token);
-        }
-        // Si no tiene el header de authorization, es porque es un nuevo usuario
-        else {
-          handleNotAuthenticatedUser(res, profile, access_token);
-        }
-      });
+    request.get({ url: PROFILE_URL + access_token.screen_name, oauth: profileOauth, json: true }, function(err, response, profile) {
+
+      if (response.statusCode !== 200) {
+        logger.error('Twitter login error');
+        return res.status(response.statusCode).send({ errors: [{ msg: 'Twitter login error' }] });
+      }
+
+      logger.info('Twitter profile: ' + JSON.stringify(profile));
+
+      // Si tiene el header de authorization, ya es un usuario registrado
+      if (req.headers.authorization) {
+        logger.info('Authenticated user');
+        handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, access_token);
+      }
+      // Si no tiene el header de authorization, es porque es un nuevo usuario
+      else {
+        logger.info('Not authenticated user');
+        handleNotAuthenticatedUser(res, profile, access_token);
+      }
+    });
   });
 };
 
@@ -94,6 +116,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_t
   User.findOne({ 'twitter.id': twitterProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
+      logger.info('Existing twitter user: ' + existingUser.toString());
       return jwt.createJWT(res, existingUser);
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Twitter
@@ -107,10 +130,12 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_t
       }
       User.findById(payload.sub, function(err, user) {
         if (err || !user) {
+          logger.warn('User not found: ' + payload.sub);
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
         // Si existe un usuario de Unify, vinculamos su cuenta con la de Twitter
         else {
+          logger.info('Existing unify user: ' + user.toString());
           linkTwitterData(user, twitterProfile, access_token);
           return saveUser(res, user);
         }
@@ -125,6 +150,7 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, access_token) {
     // Si encuentra a uno con el id de Twitter, es un usuario registrado con Twitter
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingTwitterUser) {
+      logger.info('Existing twitter user: ' + existingTwitterUser.toString());
       return jwt.createJWT(res, existingTwitterUser);
     }
     // Si no encuentra a uno, no tenemos forma de saber el email de Twitter, ya que es algo que la API
@@ -132,11 +158,12 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, access_token) {
     else {
       var user = new User();
       user.name = twitterProfile.name;
-      // Le ponemos este email para que si llegara a vincular la cuenta con facebook,
+      // Le ponemos este email para que si llegara a vincular la cuenta con facebook o gmail,
       // use ese email. Tiene que ser distinto sí o sí ya que en MongoDB tenemos una
       // restricción de que el email tiene que ser único
       user.email = 'no-email' + randomstring.generate(10) + '@gmail.com';
       user.password = randomstring.generate(20);
+      logger.info('New twitter user!: ' + user);
       linkTwitterData(user, twitterProfile, access_token);
       return saveUser(res, user);
     }

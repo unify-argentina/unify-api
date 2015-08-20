@@ -9,6 +9,7 @@ var jwt = require('./../util/jwt');
 var request = require('request');
 var config = require('../../../config');
 var randomstring = require('randomstring');
+var logger = require('../../../config/logger');
 
 // modelos
 var User = require('../../user/user.model');
@@ -22,10 +23,12 @@ module.exports.unlinkAccount = function(req, res) {
   process.nextTick(function() {
     User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
+        logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});
       }
       else {
         user.instagram = undefined;
+        logger.info('Successfully unlinked instagram account for user: ' + user.toString());
         return saveUser(res, user);
       }
     });
@@ -36,17 +39,29 @@ module.exports.unlinkAccount = function(req, res) {
 module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
+
+    var qs = getAccessTokenParams(req);
+    logger.info('Access token params: ' + JSON.stringify(qs));
+
     // Intercambiamos el código de autorización para obtener el access token
-    request.post({ url: ACCESS_TOKEN_URL, form: getAccessTokenParams(req), json: true }, function(error, response, body) {
+    request.post({ url: ACCESS_TOKEN_URL, form: qs, json: true }, function(error, response, body) {
+
       if (response.statusCode !== 200) {
-        return res.status(response.statusCode).send({ errors: [{ msg: error.message }] });
+        logger.error('Instagram login error');
+        return res.status(response.statusCode).send({ errors: [{ msg: 'Instagram login error' }] });
       }
+
+      logger.info('Access token: ' + JSON.stringify(body.access_token));
+      logger.info('Instagram profile: ' + JSON.stringify(body.user));
+
       // Si tiene el header de authorization, ya es un usuario registrado
       if (req.headers.authorization) {
+        logger.info('Authenticated user');
         handleAuthenticatedUser(res, jwt.getUnifyToken(req), body.user, body.access_token);
       }
       // Si no tiene el header de authorization, es porque es un nuevo usuario
       else {
+        logger.info('Not authenticated user');
         handleNotAuthenticatedUser(res, body.user, body.access_token);
       }
     });
@@ -58,6 +73,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
   User.findOne({ 'instagram.id': instagramProfile.id }, function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
+      logger.info('Existing instagram user: ' + existingUser.toString());
       return jwt.createJWT(res, existingUser);
     }
     // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Instagram
@@ -71,10 +87,12 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
       }
       User.findById(payload.sub, function(err, user) {
         if (err || !user) {
+          logger.warn('User not found: ' + payload.sub);
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
         // Si existe un usuario de Unify, vinculamos su cuenta con la de Instagram
         else {
+          logger.info('Existing unify user: ' + user.toString());
           linkInstagramData(user, instagramProfile, access_token);
           return saveUser(res, user);
         }
@@ -89,6 +107,7 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, access_token) {
   // pero no loggeado, generamos el token y se lo enviamos
   User.findOne({ 'instagram.id': instagramProfile.id }, function(err, existingInstagramUser) {
     if (existingInstagramUser) {
+      logger.info('Existing instagram user: ' + existingInstagramUser.toString());
       return jwt.createJWT(res, existingInstagramUser);
     }
     // Si no encuentra a uno, no tenemos forma de saber el email de Instagram, ya que es algo que la API
@@ -96,11 +115,12 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, access_token) {
     else {
       var user = new User();
       user.name = instagramProfile.full_name;
-      // Le ponemos este email para que si llegara a vincular la cuenta con facebook,
+      // Le ponemos este email para que si llegara a vincular la cuenta con facebook o gmail,
       // use ese email. Tiene que ser distinto sí o sí ya que en MongoDB tenemos una
       // restricción de que el email tiene que ser único
       user.email = 'no-email' + randomstring.generate(10) + '@gmail.com';
       user.password = randomstring.generate(20);
+      logger.info('New instagram user!: ' + user);
       linkInstagramData(user, instagramProfile, access_token);
       return saveUser(res, user);
     }
