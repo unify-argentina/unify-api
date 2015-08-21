@@ -68,7 +68,7 @@ module.exports.checkFriendsErrors = function(results) {
   var friends = {};
 
   if (results.facebook_friends) {
-    if (results.facebook_friends.constructor === Array) {
+    if (results.facebook_friends.list) {
       friends.facebook_friends = results.facebook_friends;
     }
     else {
@@ -77,7 +77,7 @@ module.exports.checkFriendsErrors = function(results) {
   }
 
   if (results.facebook_pages) {
-    if (results.facebook_pages.constructor === Array) {
+    if (results.facebook_pages.list) {
       friends.facebook_pages = results.facebook_pages;
     }
     else {
@@ -86,7 +86,7 @@ module.exports.checkFriendsErrors = function(results) {
   }
 
   if (results.instagram) {
-    if (results.instagram.constructor === Array) {
+    if (results.instagram.list) {
       friends.instagram = results.instagram;
     }
     else {
@@ -95,7 +95,7 @@ module.exports.checkFriendsErrors = function(results) {
   }
 
   if (results.twitter) {
-    if (results.twitter.constructor === Array) {
+    if (results.twitter.list) {
       friends.twitter = results.twitter;
     }
     else {
