@@ -112,8 +112,6 @@ var sendFriendsResponseFromResults = function(res, results) {
 
   var friendResults = errorHelper.checkFriendsErrors(results);
 
-  logger.info('User friends: ' + JSON.stringify(friendResults));
-
   return res.send({
     friends: friendResults.friends,
     errors: friendResults.errors

@@ -67,44 +67,25 @@ module.exports.checkFriendsErrors = function(results) {
   var errors = {};
   var friends = {};
 
-  if (results.facebook_friends) {
-    if (results.facebook_friends.list) {
-      friends.facebook_friends = results.facebook_friends;
-    }
-    else {
-      errors.facebook_friends = results.facebook_friends;
-    }
-  }
-
-  if (results.facebook_pages) {
-    if (results.facebook_pages.list) {
-      friends.facebook_pages = results.facebook_pages;
-    }
-    else {
-      errors.facebook_pages = results.facebook_pages;
-    }
-  }
-
-  if (results.instagram) {
-    if (results.instagram.list) {
-      friends.instagram = results.instagram;
-    }
-    else {
-      errors.instagram = results.instagram;
-    }
-  }
-
-  if (results.twitter) {
-    if (results.twitter.list) {
-      friends.twitter = results.twitter;
-    }
-    else {
-      errors.twitter = results.twitter;
-    }
-  }
+  checkFriendsList(errors, friends, results, 'facebook_friends');
+  checkFriendsList(errors, friends, results, 'facebook_pages');
+  checkFriendsList(errors, friends, results, 'instagram');
+  checkFriendsList(errors, friends, results, 'twitter');
 
   return {
     friends: friends,
     errors: errors
   };
+};
+
+// Verifica que los resultados contengan la cuenta solicitada y que tenga la lista, si no la tiene es un error
+var checkFriendsList = function(errors, friends, results, account) {
+  if (results[account]) {
+    if (results[account].list) {
+      friends[account] = results[account];
+    }
+    else {
+      errors[account] = results[account];
+    }
+  }
 };
