@@ -10,6 +10,7 @@ var request = require('request');
 var config = require('../../../config');
 var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
+var instagramErrors = require('./instagram.errors');
 
 // modelos
 var User = require('../../user/user.model');
@@ -44,11 +45,12 @@ module.exports.linkAccount = function(req, res) {
     logger.info('Access token params: ' + JSON.stringify(qs));
 
     // Intercambiamos el código de autorización para obtener el access token
-    request.post({ url: ACCESS_TOKEN_URL, form: qs, json: true }, function(error, response, body) {
+    request.post({ url: ACCESS_TOKEN_URL, form: qs, json: true }, function(err, response, body) {
 
-      if (response.statusCode !== 200) {
-        logger.error('Instagram login error');
-        return res.status(response.statusCode).send({ errors: [{ msg: 'Instagram login error' }] });
+      var oauthError = instagramErrors.hasError(err);
+      if (oauthError.hasError) {
+        logger.error('Instagram oauth error: ' + JSON.stringify(oauthError.error));
+        return res.status(response.statusCode).send({ errors: [ oauthError.error ] });
       }
 
       logger.info('Access token: ' + JSON.stringify(body.access_token));

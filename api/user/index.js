@@ -226,19 +226,19 @@ userRoutes.put('/:user_id', userController.update);
  *         "errors": {
  *             "facebook_friends": {
  *                 "code": 190,
- *                 "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 "msg": "Error validating access token: The user has not authorized application 805638479520745."
  *             },
  *             "facebook_pages": {
  *                 "code": 190,
- *                 "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 "msg": "Error validating access token: The user has not authorized application 805638479520745."
  *             },
  *             "instagram": {
  *                 "code": 400,
- *                 "message": "The access_token provided is invalid."
+ *                 "msg": "The access_token provided is invalid."
  *             },
  *             "twitter": {
  *                 "code": 89,
- *                 "message": "Invalid or expired token."
+ *                 "msg": "Invalid or expired token."
  *             }
  *         }
  *     }
@@ -322,24 +322,24 @@ userRoutes.get('/:user_id/friends', friendsController.getFriends);
  *             "facebook": {
  *                 "photos": {
  *                     "code": 190,
- *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                     "msg": "Error validating access token: The user has not authorized application 805638479520745."
  *                 },
  *                 "videos": {
  *                     "code": 190,
- *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                     "msg": "Error validating access token: The user has not authorized application 805638479520745."
  *                 },
  *                 "statuses": {
  *                     "code": 190,
- *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                     "msg": "Error validating access token: The user has not authorized application 805638479520745."
  *                 }
  *             },
  *             "instagram": {
  *                 "code": 400,
- *                 "message": "The access_token provided is invalid."
+ *                 "msg": "The access_token provided is invalid."
  *             },
  *             "twitter": {
  *                 "code": 89,
- *                 "message": "Invalid or expired token."
+ *                 "msg": "Invalid or expired token."
  *             }
  *         }
  *     }

@@ -11,6 +11,7 @@ var config = require('../../../config');
 var qs = require('querystring');
 var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
+var twitterErrors = require('./twitter.errors');
 
 // modelos
 var User = require('../../user/user.model');
@@ -77,9 +78,10 @@ var handleTokenRequest = function(req, res) {
 
   request.post({ url: ACCESS_TOKEN_URL, oauth: oauth }, function(err, response, access_token) {
 
-    if (response.statusCode !== 200) {
-      logger.error('Twitter login error');
-      return res.status(response.statusCode).send({ errors: [{ msg: 'Twitter login error' }] });
+    var oauthError = twitterErrors.hasError(err, response);
+    if (oauthError.hasError) {
+      logger.error('Twitter oauth error: ' + JSON.stringify(oauthError.error));
+      return res.status(response.statusCode).send({ errors: [ oauthError.error ] });
     }
 
     access_token = qs.parse(access_token);
@@ -90,9 +92,10 @@ var handleTokenRequest = function(req, res) {
 
     request.get({ url: PROFILE_URL + access_token.screen_name, oauth: profileOauth, json: true }, function(err, response, profile) {
 
-      if (response.statusCode !== 200) {
-        logger.error('Twitter login error');
-        return res.status(response.statusCode).send({ errors: [{ msg: 'Twitter login error' }] });
+      var profileError = twitterErrors.hasError(err, response);
+      if (profileError.hasError) {
+        logger.error('Twitter profile error ' + JSON.stringify(profileError));
+        return res.status(response.statusCode).send({ errors: [ profileError.error ] });
       }
 
       logger.info('Twitter profile: ' + JSON.stringify(profile));

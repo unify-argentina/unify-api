@@ -11,6 +11,7 @@ var config = require('../../../config');
 var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
+var facebookErrors = require('./facebook.errors');
 
 // modelos
 var User = require('../../user/user.model');
@@ -48,9 +49,10 @@ module.exports.linkAccount = function(req, res) {
     // Primero intercambiamos el código de autorización para obtener el access token
     request.get({ url: ACCESS_TOKEN_URL, qs: qs, json: true }, function(err, response, access_token) {
 
-      if (response.statusCode !== 200) {
-        logger.error('Facebook login error');
-        return res.status(response.statusCode).send({ errors: [{ msg: access_token.error.message }] });
+      var oauthError = facebookErrors.hasError(err, response);
+      if (oauthError.hasError) {
+        logger.error('Facebook oauth error: ' + JSON.stringify(oauthError.error));
+        return res.status(response.statusCode).send({ errors: [ oauthError.error ] });
       }
 
       logger.info('Access token: ' + JSON.stringify(access_token));
@@ -58,9 +60,10 @@ module.exports.linkAccount = function(req, res) {
       // Una vez que tenemos el access_token, obtenemos información del usuario actual
       request.get({ url: GRAPH_USER_URL, qs: access_token, json: true }, function(err, response, profile) {
 
-        if (response.statusCode !== 200) {
-          logger.error('Facebook login error');
-          return res.status(response.statusCode).send({ errors: [{ msg: access_token.error.message }] });
+        var profileError = facebookErrors.hasError(err, response);
+        if (profileError.hasError) {
+          logger.error('Facebook profile error: ' + JSON.stringify(profileError.error));
+          return res.status(response.statusCode).send({ errors: [ profileError.error ] });
         }
 
         logger.info('Facebook profile: ' + JSON.stringify(profile));

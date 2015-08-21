@@ -1,5 +1,5 @@
 /*
- * Este módulo maneja los errores posibles de Facebook
+ * Este módulo maneja los errores posibles de Google
  * @author Joel Márquez
  * */
 'use strict';
@@ -10,21 +10,26 @@ var errors = require('../../../config/errors');
 var logger = require('../../../config/logger');
 
 /*
-* Ejemplo de error de Facebook:
+* Ejemplo de error de Google:
 *
 * {
 *   "error": {
-*     "message": "Message describing the error",
-*     "type": "OAuthException",
-*     "code": 190,
-*     "error_subcode": 460,
-*     "error_user_title": "A title",
-*     "error_user_msg": "A message"
+*     "errors": [
+*       {
+*         "domain": "global",
+*         "reason": "authError",
+*         "message": "Invalid Credentials",
+*         "locationType": "header",
+*         "location": "Authorization"
+*       }
+*     ],
+*     "code": 401,
+*     "message": "Invalid Credentials"
 *   }
 * }
 * */
 
-// Chequea los errores que puedan llegar a venir de un response de Facebook
+// Chequea los errores que puedan llegar a venir de un response de Google
 module.exports.hasError = function(err, response) {
 
   var result = { hasError: false, error: '' };
@@ -32,7 +37,7 @@ module.exports.hasError = function(err, response) {
   if (err) {
     logger.error('Error: ' + err);
     result.hasError = true;
-    result.error = util.format(errors.SOCIAL_ERROR, 'Facebook');
+    result.error = util.format(errors.SOCIAL_ERROR, 'Google');
   }
   else if (response.body.error) {
     logger.error('Error: ' + response.body.error.message);

@@ -9,6 +9,19 @@ var util = require('util');
 var errors = require('../../../config/errors');
 var logger = require('../../../config/logger');
 
+/*
+* Ejemplo de error de Twitter:
+*
+* {
+*   "errors": [
+*     {
+*       "message": "Sorry, that page does not exist",
+*       "code": 34
+*     }
+*   ]
+* }
+* */
+
 // Chequea los errores que puedan llegar a venir de un response de Twitter
 module.exports.hasError = function(err, response) {
 
@@ -24,7 +37,7 @@ module.exports.hasError = function(err, response) {
     result.hasError = true;
     result.error = {
       code: response.body.errors[0].code,
-      message: response.body.errors[0].message
+      msg: response.body.errors[0].message
     };
   }
 

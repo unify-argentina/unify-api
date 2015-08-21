@@ -10,6 +10,7 @@ var request = require('request');
 var config = require('../../../config');
 var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
+var googleErrors = require('./google.errors');
 
 // modelos
 var User = require('../../user/user.model');
@@ -46,9 +47,10 @@ module.exports.linkAccount = function(req, res) {
     // Primero intercambiamos el código de autorización para obtener el access token
     request.post(ACCESS_TOKEN_URL, { json: true, form: qs }, function(err, response, token) {
 
-      if (response.statusCode !== 200) {
-        logger.error('Google login error');
-        return res.status(response.statusCode).send({ errors: [{ msg: 'Google login error' }] });
+      var oauthError = googleErrors.hasError(err, response);
+      if (oauthError.hasError) {
+        logger.error('Google oauth error: ' + JSON.stringify(oauthError.error));
+        return res.status(response.statusCode).send({ errors: [ oauthError.error ] });
       }
 
       var access_token = token.access_token;
@@ -59,9 +61,10 @@ module.exports.linkAccount = function(req, res) {
       // Una vez que tenemos el access_token, obtenemos información del usuario actual
       request.get({ url: PEOPLE_API_URL, headers: headers, json: true }, function(err, response, profile) {
 
-        if (response.statusCode !== 200) {
-          logger.error('Google login error');
-          return res.status(response.statusCode).send({ errors: [{ msg: 'Google login error' }] });
+        var profileError = googleErrors.hasError(err, response);
+        if (profileError.hasError) {
+          logger.error('Google profile error: ' + JSON.stringify(profileError.error));
+          return res.status(response.statusCode).send({ errors: [ profileError.error ] });
         }
 
         logger.info('Google profile: ' + JSON.stringify(profile));
