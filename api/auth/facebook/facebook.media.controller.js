@@ -36,28 +36,34 @@ module.exports.getMedia = function(access_token, facebookId, callback) {
     var result = {};
     result.totalResults = [];
 
-    if (mediaResults.photos.constructor === Array) {
-      result.totalResults.push.apply(result.totalResults, mediaResults.photos);
-    }
-    // Error en photos
-    else {
-      result.photos = mediaResults.photos;
-    }
-
-    if (mediaResults.videos.constructor === Array) {
-      result.totalResults.push.apply(result.totalResults, mediaResults.videos);
-    }
-    // Error en videos
-    else {
-      result.videos = mediaResults.videos;
+    if (mediaResults.photos) {
+      if (mediaResults.photos.constructor === Array) {
+        result.totalResults.push.apply(result.totalResults, mediaResults.photos);
+      }
+      // Error en photos
+      else {
+        result.photos = mediaResults.photos;
+      }
     }
 
-    if (mediaResults.statuses.constructor === Array) {
-      result.totalResults.push.apply(result.totalResults, mediaResults.statuses);
+    if (mediaResults.videos) {
+      if (mediaResults.videos.constructor === Array) {
+        result.totalResults.push.apply(result.totalResults, mediaResults.videos);
+      }
+      // Error en videos
+      else {
+        result.videos = mediaResults.videos;
+      }
     }
-    // Error en statuses
-    else {
-      result.statuses = mediaResults.statuses;
+
+    if (mediaResults.statuses) {
+      if (mediaResults.statuses.constructor === Array) {
+        result.totalResults.push.apply(result.totalResults, mediaResults.statuses);
+      }
+      // Error en statuses
+      else {
+        result.statuses = mediaResults.statuses;
+      }
     }
 
     callback(null, result);

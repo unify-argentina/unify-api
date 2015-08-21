@@ -67,32 +67,40 @@ module.exports.checkFriendsErrors = function(results) {
   var errors = {};
   var friends = {};
 
-  if (results.facebook_friends.constructor === Array) {
-    friends.facebook_friends = results.facebook_friends;
-  }
-  else {
-    errors.facebook_friends = results.facebook_friends;
-  }
-
-  if (results.facebook_pages.constructor === Array) {
-    friends.facebook_pages = results.facebook_pages;
-  }
-  else {
-    errors.facebook_pages = results.facebook_pages;
+  if (results.facebook_friends) {
+    if (results.facebook_friends.constructor === Array) {
+      friends.facebook_friends = results.facebook_friends;
+    }
+    else {
+      errors.facebook_friends = results.facebook_friends;
+    }
   }
 
-  if (results.instagram.constructor === Array) {
-    friends.instagram = results.instagram;
-  }
-  else {
-    errors.instagram = results.instagram;
+  if (results.facebook_pages) {
+    if (results.facebook_pages.constructor === Array) {
+      friends.facebook_pages = results.facebook_pages;
+    }
+    else {
+      errors.facebook_pages = results.facebook_pages;
+    }
   }
 
-  if (results.twitter.constructor === Array) {
-    friends.twitter = results.twitter;
+  if (results.instagram) {
+    if (results.instagram.constructor === Array) {
+      friends.instagram = results.instagram;
+    }
+    else {
+      errors.instagram = results.instagram;
+    }
   }
-  else {
-    errors.twitter = results.twitter;
+
+  if (results.twitter) {
+    if (results.twitter.constructor === Array) {
+      friends.twitter = results.twitter;
+    }
+    else {
+      errors.twitter = results.twitter;
+    }
   }
 
   return {
