@@ -43,8 +43,8 @@ module.exports.hasError = function(err, response) {
     logger.error('Error: ' + JSON.stringify(response.body));
     result.hasError = true;
     result.error = {
-      code: response.body.error.code,
-      msg: response.body.error.message
+      code: response.body.error.code || 0,
+      msg: response.body.error.message || response.body.error
     };
   }
 

@@ -13,11 +13,9 @@ var logger = require('../../../config/logger');
 * Ejemplo de error de Instagram:
 *
 * {
-*   "meta": {
-*     "error_type": "OAuthException",
-*     "code": 400,
-*     "error_message": "..."
-*   }
+*   "error_type": "OAuthException",
+*   "code": 400,
+*   "error_message": "..."
 * }
 * */
 
@@ -26,17 +24,17 @@ module.exports.hasError = function(err, response) {
 
   var result = { hasError: false, error: '' };
 
-  if (err || !response.body.meta) {
+  if (err) {
     logger.error('Error: ' + err);
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Instagram');
   }
-  else if (response.body.meta.error_type) {
-    logger.error('Error: ' + response.body.meta.error_message);
+  else if (response.body.error_message) {
+    logger.error('Error: ' + response.body.error_message);
     result.hasError = true;
     result.error = {
-      code: response.body.meta.code,
-      msg: response.body.meta.error_message
+      code: response.body.code,
+      msg: response.body.error_message
     };
   }
 

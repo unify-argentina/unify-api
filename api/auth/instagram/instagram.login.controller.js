@@ -47,7 +47,7 @@ module.exports.linkAccount = function(req, res) {
     // Intercambiamos el código de autorización para obtener el access token
     request.post({ url: ACCESS_TOKEN_URL, form: qs, json: true }, function(err, response, body) {
 
-      var oauthError = instagramErrors.hasError(err);
+      var oauthError = instagramErrors.hasError(err, response);
       if (oauthError.hasError) {
         logger.error('Instagram oauth error: ' + JSON.stringify(oauthError.error));
         return res.status(response.statusCode).send({ errors: [ oauthError.error ] });
