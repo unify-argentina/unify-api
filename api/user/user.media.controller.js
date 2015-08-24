@@ -21,7 +21,7 @@ module.exports.getMedia = function (req, res) {
 
   process.nextTick(function () {
 
-    User.findOne({ _id: req.user }, selectFields())
+    User.findOne({ _id: req.user }, User.socialFields())
       .populate('main_circle')
       .exec(function (err, user) {
       if (err || !user) {
@@ -109,10 +109,4 @@ var sendMediaResponseFromResults = function(res, results) {
       errors: mediaResults.errors
     });
   });
-};
-
-// Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
-var selectFields = function() {
-  return '+facebook.id +facebook.access_token +twitter.id +twitter.access_token.token ' +
-    '+twitter.access_token.token_secret +instagram.id +instagram.access_token';
 };

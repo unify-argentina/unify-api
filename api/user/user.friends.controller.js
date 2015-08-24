@@ -20,7 +20,7 @@ var User = require('./user.model.js');
 module.exports.getFriends = function(req, res) {
 
   process.nextTick(function() {
-    User.findOne({ _id: req.user }, selectFields(), function(err, user) {
+    User.findOne({ _id: req.user }, User.socialFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -99,12 +99,6 @@ var getTwitterFriends = function(user, callback) {
   else {
     callback(null, null);
   }
-};
-
-// Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
-var selectFields = function() {
-  return 'facebook.id facebook.access_token twitter.id twitter.access_token.token ' +
-    'twitter.access_token.token_secret instagram.id instagram.access_token';
 };
 
 // Envía al cliente los amigos del usuario

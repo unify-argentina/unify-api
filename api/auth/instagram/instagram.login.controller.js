@@ -22,10 +22,16 @@ var ACCESS_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
 module.exports.unlinkAccount = function(req, res) {
 
   process.nextTick(function() {
-    User.findOne({ _id: req.user }, function(err, user) {
+    User.findOne({ _id: req.user }, User.socialFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});
+      }
+      // Si el usuario no tiene email ni tiene la cuenta de twitter linkeada, no puede deslinkear instagram
+      // ya que no vamos a tener forma de identificarlo después
+      else if (!user.isValidToRemoveAccount('instagram')) {
+        logger.warn('Cannot unlink Instagram for user: ' + req.user);
+        return res.status(400).send({ errors: [{ msg: 'Cannot unlink Instagram' }]});
       }
       else {
         user.instagram = undefined;
@@ -115,12 +121,9 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, access_token) {
     // Si no encuentra a uno, no tenemos forma de saber el email de Instagram, ya que es algo que la API
     // no lo provee, entonces damos de alta un nuevo usuario de Unify sin email
     else {
+      // No le ponemos email para que si llegara a vincular la cuenta con facebook o gmail, use ese email.
       var user = new User();
       user.name = instagramProfile.full_name;
-      // Le ponemos este email para que si llegara a vincular la cuenta con facebook o gmail,
-      // use ese email. Tiene que ser distinto sí o sí ya que en MongoDB tenemos una
-      // restricción de que el email tiene que ser único
-      user.email = 'no-email' + randomstring.generate(10) + '@gmail.com';
       user.password = randomstring.generate(20);
       logger.info('New instagram user!: ' + user);
       linkInstagramData(user, instagramProfile, access_token);

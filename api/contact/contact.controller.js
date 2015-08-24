@@ -22,7 +22,7 @@ module.exports.create = function(req, res) {
 
     // Encontramos el círculo cuyo usuario es el que está en el request
     Circle.findOne({ _id: req.body.circle_id, user: req.user })
-      .populate('user', selectFields())
+      .populate('user', User.socialFields())
       .exec(function(err, circle) {
       if (err || !circle) {
         logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
@@ -54,7 +54,7 @@ module.exports.update = function(req, res) {
 
     // Revisamos que el usuario tenga efectivamente el círculo pasado por parámetro
     Circle.findOne({ _id: req.body.circle_id, user: req.user })
-      .populate('user', selectFields())
+      .populate('user', User.socialFields())
       .exec(function(err, circle) {
         if (err || !circle) {
           logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
@@ -213,10 +213,4 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
       return res.status(400).send({ errors: [{ msg: 'You have to link your instagram account in order to create a contact with a instagram_id' }] });
     }
   }
-};
-
-// Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
-var selectFields = function() {
-  return '+facebook.id +facebook.access_token +twitter.id +twitter.access_token.token ' +
-    '+twitter.access_token.token_secret +instagram.id +instagram.access_token';
 };

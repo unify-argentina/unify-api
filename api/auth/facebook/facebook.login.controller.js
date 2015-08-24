@@ -107,9 +107,8 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, access_
         }
         // Si existe un usuario de Unify, vinculamos su cuenta con la de Facebook
         else {
-          // Este email puede haber sido generado al hacer un login con Instagram o con Twitter,
-          // por lo que debemos pisarlo y usar un email verdadero
-          if (user.email.indexOf('no-email') > -1 && facebookProfile.email) {
+          // Al hacer un login con Instagram o con Twitter el usuario no tiene mail, por lo que debemos usar el de Facebook
+          if (user.email === undefined) {
             user.email = facebookProfile.email;
           }
           logger.info('Existing unify user: ' + user.toString());

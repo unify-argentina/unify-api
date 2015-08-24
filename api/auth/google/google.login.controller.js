@@ -107,9 +107,8 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_to
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
         }
         else {
-          // Este email puede haber sido generado al hacer un login con Instagram o con Twitter,
-          // por lo que debemos pisarlo y usar un email verdadero
-          if (user.email.indexOf('no-email') > -1) {
+          // Al hacer un login con Instagram o con Twitter el usuario no tiene mail, por lo que debemos usar el de Google
+          if (user.email === undefined) {
             user.email = googleProfile.email;
           }
           logger.info('Existing unify user: ' + user.toString());

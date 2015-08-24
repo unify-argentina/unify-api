@@ -20,7 +20,7 @@ var Contact = require('../contact/contact.model');
 var userSchema = mongoose.Schema({
 
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true, lowercase: true },
+  email: { type: String, unique: true, lowercase: true },
   password: { type: String, required: true, select: false },
   valid_local_user: { type: Boolean, default: false },
   birth_date: Date,
@@ -137,6 +137,29 @@ userSchema.methods.hasLinkedAccount = function(account) {
     hasFields = typeof this[account].access_token === 'string' && typeof this[account].id === 'string';
   }
   return hasFields;
+};
+
+// Verifica que tenga al menos alguna cuenta vinculada y si es la ultima, que tenga email por lo menos
+userSchema.methods.isValidToRemoveAccount = function(account) {
+
+  // Como instagram y twitter no proveen del email del usuario, al linkear una cuenta de estas, si es
+  // la única, y si no tienen el email seteado, no le permitiremos al usuario deslinkear la misma ya que
+  // no va a poder ser identificado más adelante
+  var valid = true;
+  if (account === 'twitter') {
+    valid = this.email !== undefined || this.hasLinkedAccount('instagram');
+  }
+  else if (account === 'instagram') {
+    valid = this.email !== undefined || this.hasLinkedAccount('twitter');
+  }
+
+  return valid;
+};
+
+// Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
+userSchema.statics.socialFields = function() {
+  return '+twitter.id +twitter.access_token.token +twitter.access_token.token_secret +facebook.id ' +
+    '+facebook.access_token +instagram.id +instagram.access_token +google.id +google.access_token';
 };
 
 module.exports = mongoose.model('User', userSchema);
