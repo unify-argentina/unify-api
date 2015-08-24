@@ -145,15 +145,18 @@ contactRoutes.post('/', contactController.create);
  *             ],
  *             "instagram": {
  *                 "username": "florejoffre",
- *                 "id": "1244524526"
+ *                 "id": "1244524526",
+ *                 "valid": true
  *             },
  *             "twitter": {
  *                 "username": "FloreJoffre",
- *                 "id": "197249917"
+ *                 "id": "197249917",
+ *                 "valid": true
  *             },
  *             "facebook": {
  *                 "display_name": "Flore Joffré",
- *                 "id": "10206413202905994"
+ *                 "id": "10206413202905994",
+ *                 "valid": true
  *             }
  *         }
  *     }

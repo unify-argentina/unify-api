@@ -41,7 +41,7 @@ module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
 
-    Contact.find({ 'parents.ancestors': req.circle._id, user: req.user }, function(err, contacts) {
+    Contact.find({ 'parents.circle': req.circle._id, user: req.user }, function(err, contacts) {
       if (err || !contacts) {
         logger.warn('Could not find contacts for circle=' + req.circle._id);
         return res.status(400).send({ errors: [{ msg: 'Could not find contacts for specified circle' }] });

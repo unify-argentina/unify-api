@@ -34,9 +34,16 @@ module.exports.unlinkAccount = function(req, res) {
         return res.status(400).send({ errors: [{ msg: 'Cannot unlink Instagram' }]});
       }
       else {
-        user.instagram = undefined;
-        logger.info('Successfully unlinked instagram account for user: ' + user.toString());
-        return saveUser(res, user);
+        user.toggleSocialAccount('instagram', false, function(err) {
+          if (err) {
+            logger.warn('There was an error trying to unlink Instagram: ' + req.user);
+            return res.status(400).send({ errors: [{ msg: 'There was an error trying to unlink Instagram' }]});
+          }
+          else {
+            logger.info('Successfully unlinked Instagram account for user: ' + user.toString());
+            return saveUser(res, user);
+          }
+        });
       }
     });
   });
@@ -102,7 +109,17 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
         else {
           logger.info('Existing unify user: ' + user.toString());
           linkInstagramData(user, instagramProfile, access_token);
-          return saveUser(res, user);
+          // Habilitamos los posibles contactos que haya creado el usuario previamente al deslinkear la cuenta
+          user.toggleSocialAccount('instagram', true, function(err) {
+            if (err) {
+              logger.warn('There was an error trying to link Instagram: ' + user._id);
+              return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Instagram' }]});
+            }
+            else {
+              logger.info('Successfully linked Instagram account for user: ' + user.toString());
+              return saveUser(res, user);
+            }
+          });
         }
       });
     }

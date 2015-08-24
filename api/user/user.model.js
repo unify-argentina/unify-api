@@ -129,13 +129,17 @@ userSchema.methods.comparePassword = function(password, done) {
 // Chequea que el usuario efectivamente tenga la cuenta asociada
 userSchema.methods.hasLinkedAccount = function(account) {
   var hasFields = false;
-  // El access token de Twitter es un objeto con dos campos
-  if (account === 'twitter') {
-    hasFields = typeof this.twitter.access_token.token === 'string' && typeof this.twitter.access_token.token_secret === 'string';
+
+  if (this[account]) {
+    // El access token de Twitter es un objeto con dos campos
+    if (account === 'twitter') {
+      hasFields = typeof this.twitter.access_token.token === 'string' && typeof this.twitter.access_token.token_secret === 'string';
+    }
+    else {
+      hasFields = typeof this[account].access_token === 'string' && typeof this[account].id === 'string';
+    }
   }
-  else {
-    hasFields = typeof this[account].access_token === 'string' && typeof this[account].id === 'string';
-  }
+
   return hasFields;
 };
 
@@ -154,6 +158,45 @@ userSchema.methods.isValidToRemoveAccount = function(account) {
   }
 
   return valid;
+};
+
+// Este método se encarga de habilitar/deshabilitar el campo válido de la cuenta de cada contacto creado
+userSchema.methods.toggleSocialAccount = function(account, toggle, callback) {
+
+  if (!toggle) {
+    this[account] = undefined;
+  }
+  Contact.find({ user: this._id }, function(err, contacts) {
+    if (err || !contacts) {
+      callback(err);
+    }
+    else {
+      // Filtramos los contactos del usuario que tengan linkeada la cuenta
+      var linkedContacts = contacts.filter(function(contact) {
+        return contact.hasLinkedAccount(account);
+      });
+      if (linkedContacts.length > 0) {
+        var count = 0;
+        // Por cada contacto, le habilitamos/deshabilitamos esa cuenta y lo salvamos
+        linkedContacts.forEach(function(contact) {
+          contact.toggleAccount(account, toggle);
+          contact.save(function(err) {
+            count++;
+            if (err) {
+              callback(err);
+            }
+            else if (count === linkedContacts.length ) {
+              callback(null);
+            }
+          });
+        });
+      }
+      // Si no hay contactos con esa cuenta retornamos
+      else {
+        callback(null);
+      }
+    }
+  });
 };
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales

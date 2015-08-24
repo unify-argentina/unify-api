@@ -25,12 +25,20 @@ module.exports.unlinkAccount = function(req, res) {
   process.nextTick(function() {
     User.findOne({ _id: req.user }, function(err, user) {
       if (err || !user) {
+        logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
-        user.google = undefined;
-        logger.info('Successfully unlinked google account for user: ' + user.toString());
-        return saveUser(res, user);
+        user.toggleSocialAccount('google', false, function(err) {
+          if (err) {
+            logger.warn('There was an error trying to unlink Google: ' + req.user);
+            return res.status(400).send({ errors: [{ msg: 'There was an error trying to unlink Google' }]});
+          }
+          else {
+            logger.info('Successfully unlinked Google account for user: ' + user.toString());
+            return saveUser(res, user);
+          }
+        });
       }
     });
   });
@@ -113,7 +121,16 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_to
           }
           logger.info('Existing unify user: ' + user.toString());
           linkGoogleData(user, googleProfile, access_token);
-          return saveUser(res, user);
+          user.toggleSocialAccount('google', true, function(err) {
+            if (err) {
+              logger.warn('There was an error trying to link Google: ' + user._id);
+              return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Google' }]});
+            }
+            else {
+              logger.info('Successfully linked Google account for user: ' + user.toString());
+              return saveUser(res, user);
+            }
+          });
         }
       });
     }
@@ -135,7 +152,17 @@ var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
         if (existingUnifyUser) {
           logger.info('Existing unify user: ' + existingUnifyUser);
           linkGoogleData(existingUnifyUser, googleProfile, access_token);
-          return saveUser(res, existingUnifyUser);
+          // Habilitamos los posibles contactos que haya creado el usuario previamente al deslinkear la cuenta
+          existingUnifyUser.toggleSocialAccount('google', true, function(err) {
+            if (err) {
+              logger.warn('There was an error trying to link Google: ' + existingUnifyUser._id);
+              return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Google' }]});
+            }
+            else {
+              logger.info('Successfully linked Google account for user: ' + existingUnifyUser.toString());
+              return saveUser(res, existingUnifyUser);
+            }
+          });
         }
         // Si no encuentra a uno, es un usuario nuevo haciendo un login con Google
         else {

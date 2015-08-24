@@ -30,9 +30,16 @@ module.exports.unlinkAccount = function(req, res) {
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
       else {
-        user.facebook = undefined;
-        logger.debug('Successfully unlinked facebook account for user: ' + user.toString());
-        return saveUser(res, user);
+        user.toggleSocialAccount('facebook', false, function(err) {
+          if (err) {
+            logger.warn('There was an error trying to unlink Facebook: ' + req.user);
+            return res.status(400).send({ errors: [{ msg: 'There was an error trying to unlink Facebook' }]});
+          }
+          else {
+            logger.info('Successfully unlinked Facebook account for user: ' + user.toString());
+            return saveUser(res, user);
+          }
+        });
       }
     });
   });
@@ -113,7 +120,17 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, access_
           }
           logger.info('Existing unify user: ' + user.toString());
           linkFacebookData(user, facebookProfile, access_token);
-          return saveUser(res, user);
+          // Habilitamos los posibles contactos que haya creado el usuario previamente al deslinkear la cuenta
+          user.toggleSocialAccount('facebook', true, function(err) {
+            if (err) {
+              logger.warn('There was an error trying to link Facebook: ' + user._id);
+              return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Facebook' }]});
+            }
+            else {
+              logger.info('Successfully linked Facebook account for user: ' + user.toString());
+              return saveUser(res, user);
+            }
+          });
         }
       });
     }
@@ -135,7 +152,17 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
         if (existingUnifyUser) {
           logger.info('Existing unify user: ' + existingUnifyUser);
           linkFacebookData(existingUnifyUser, facebookProfile, access_token);
-          return saveUser(res, existingUnifyUser);
+          // Habilitamos los posibles contactos que haya creado el usuario previamente al deslinkear la cuenta
+          existingUnifyUser.toggleSocialAccount('facebook', true, function(err) {
+            if (err) {
+              logger.warn('There was an error trying to link Facebook: ' + existingUnifyUser._id);
+              return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Facebook' }]});
+            }
+            else {
+              logger.info('Successfully linked Facebook account for user: ' + existingUnifyUser.toString());
+              return saveUser(res, existingUnifyUser);
+            }
+          });
         }
         // Si no encuentra a uno, es un usuario nuevo haciendo un login con Facebook
         else {

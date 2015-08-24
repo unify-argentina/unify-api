@@ -15,22 +15,26 @@ var contactSchema = mongoose.Schema({
 
   facebook: {
     id: String,
-    display_name: String
+    display_name: String,
+    valid: { type: Boolean, default: true }
   },
 
   twitter: {
     id: String,
-    username: String
+    username: String,
+    valid: { type: Boolean, default: true }
   },
 
   instagram: {
     id: String,
-    username: String
+    username: String,
+    valid: { type: Boolean, default: true }
   },
 
   google: {
     id: String,
-    email: String
+    email: String,
+    valid: { type: Boolean, default: true }
   },
 
   // Un contacto puede estar en más de un círculo, entonces creamos tiene que tener una referencia a cada
@@ -63,7 +67,18 @@ contactSchema.methods.toString = function() {
 
 // Chequea que el contacto efectivamente tenga la cuenta asociada
 contactSchema.methods.hasLinkedAccount = function(account) {
-  return typeof this[account].id === 'string';
+  return this[account] !== undefined && typeof this[account].id === 'string';
+};
+
+contactSchema.methods.hasValidAccount = function(account) {
+  return this[account] !== undefined && this[account].valid;
+};
+
+// Habilita/deshabilita la cuenta social vinculada del contacto
+contactSchema.methods.toggleAccount = function(account, toggle) {
+  if (this.hasLinkedAccount(account)) {
+    this[account].valid = toggle;
+  }
 };
 
 module.exports = mongoose.model('Contact', contactSchema);

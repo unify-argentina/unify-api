@@ -37,9 +37,16 @@ module.exports.unlinkAccount = function(req, res) {
         return res.status(400).send({ errors: [{ msg: 'Cannot unlink Twitter' }]});
       }
       else {
-        user.twitter = undefined;
-        logger.info('Successfully unlinked twitter account for user: ' + user.toString());
-        return saveUser(res, user);
+        user.toggleSocialAccount('twitter', false, function(err) {
+          if (err) {
+            logger.warn('There was an error trying to unlink Twitter: ' + req.user);
+            return res.status(400).send({ errors: [{ msg: 'There was an error trying to unlink Twitter' }]});
+          }
+          else {
+            logger.info('Successfully unlinked Twitter account for user: ' + user.toString());
+            return saveUser(res, user);
+          }
+        });
       }
     });
   });
@@ -146,7 +153,17 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_t
         else {
           logger.info('Existing unify user: ' + user.toString());
           linkTwitterData(user, twitterProfile, access_token);
-          return saveUser(res, user);
+          // Habilitamos los posibles contactos que haya creado el usuario previamente al deslinkear la cuenta
+          user.toggleSocialAccount('twitter', true, function(err) {
+            if (err) {
+              logger.warn('There was an error trying to link Twitter: ' + user._id);
+              return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Twitter' }]});
+            }
+            else {
+              logger.info('Successfully linked Twitter account for user: ' + user.toString());
+              return saveUser(res, user);
+            }
+          });
         }
       });
     }
