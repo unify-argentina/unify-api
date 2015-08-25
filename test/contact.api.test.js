@@ -67,8 +67,10 @@ describe('Contacts API', function() {
             circle: user.main_circle._id,
             ancestors: contactAncestors
           });
-          Contact.create({ name: 'Jose', circle: user.main_circle, user: user,
-            picture: GOOGLE_URL, parents: parents, facebook: { id: 'abc123', display_name: 'Jose' } }, done);
+          Contact.create([{ name: 'Jose', circle: user.main_circle, user: user,
+            picture: GOOGLE_URL, parents: parents, facebook: { id: 'abc123', display_name: 'Jose' } },
+            { name: 'Joaquin', circle: user.main_circle, user: user,
+              picture: GOOGLE_URL, parents: parents, facebook: { id: 'abc123', display_name: 'Joaquin' } }], done);
         });
       });
     });
@@ -111,7 +113,7 @@ describe('Contacts API', function() {
             error.param.should.equal('picture');
             error.msg.should.equal('It must be a valid URL');
             error = errors[3];
-            error.param.should.equal('circle_id');
+            error.param.should.equal('circles_ids');
             error.msg.should.equal('Required');
             done();
           });
@@ -123,7 +125,7 @@ describe('Contacts API', function() {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: 234, picture: 'asdasdasd', circle_id: 234 })
+          .send({ name: 234, picture: 'asdasdasd', circles_ids: 234 })
           .end(function(err, data) {
             data.res.statusCode.should.equal(400);
             var errors = data.res.body.errors;
@@ -135,12 +137,59 @@ describe('Contacts API', function() {
       });
     });
 
+    it('should not allow to create a contact with invalid circles_ids', function(done) {
+      login('unify.argentina@gmail.com', 'This is not my real password', function(user, token) {
+        request(API_URL)
+          .post(util.format(CONTACTS_PATH, user._id, ''))
+          .set('Authorization', 'Bearer ' + token)
+          .send({ name: 234, picture: GOOGLE_URL, circles_ids: 234 })
+          .end(function(err, data) {
+            data.res.statusCode.should.equal(400);
+            var errors = data.res.body.errors;
+            var error = errors[0];
+            error.msg.should.equal('You must provide an array of circles_ids');
+            done();
+          });
+      });
+    });
+
+    it('should not allow to create a contact with injection circles_ids', function(done) {
+      login('unify.argentina@gmail.com', 'This is not my real password', function(user, token) {
+        request(API_URL)
+          .post(util.format(CONTACTS_PATH, user._id, ''))
+          .set('Authorization', 'Bearer ' + token)
+          .send({ name: 234, picture: GOOGLE_URL, circles_ids: [{"$gt": "undefined"}] })
+          .end(function(err, data) {
+            data.res.statusCode.should.equal(400);
+            data.res.body.errors[0].msg.should.equal('You must provide a string array of circles_ids');
+            done();
+          });
+      });
+    });
+
+    it('should not allow to create a contact with empty circles_ids', function(done) {
+      login('unify.argentina@gmail.com', 'This is not my real password', function(user, token) {
+        request(API_URL)
+          .post(util.format(CONTACTS_PATH, user._id, ''))
+          .set('Authorization', 'Bearer ' + token)
+          .send({ name: 234, picture: GOOGLE_URL, circles_ids: [] })
+          .end(function(err, data) {
+            data.res.statusCode.should.equal(400);
+            var errors = data.res.body.errors;
+            var error = errors[0];
+            error.param.should.equal('circles_ids');
+            error.msg.should.equal('Required');
+            done();
+          });
+      });
+    });
+
     it('should not allow to create a contact with wrong data', function(done) {
       login('unify.argentina@gmail.com', 'This is not my real password', function(user, token) {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: 234, picture: GOOGLE_URL, circle_id: 234 })
+          .send({ name: 234, picture: GOOGLE_URL, circles_ids: ['asdasdads'] })
           .end(function(err, data) {
             data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
@@ -154,7 +203,7 @@ describe('Contacts API', function() {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: {"$gt": "undefined"}, picture: GOOGLE_URL, circle_id: {"$gt": "undefined"} })
+          .send({ name: {"$gt": "undefined"}, picture: GOOGLE_URL, circles_ids: ['asdasdads'] })
           .end(function(err, data) {
             data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
@@ -168,7 +217,7 @@ describe('Contacts API', function() {
         request(API_URL)
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
-          .send({ name: 'Juan', picture: GOOGLE_URL, circle_id: 'aksdm8zxkcmaksd9343' })
+          .send({ name: 'Juan', picture: GOOGLE_URL, circles_ids: ['asdasdads'] })
           .end(function(err, data) {
             data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should
@@ -184,12 +233,32 @@ describe('Contacts API', function() {
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
           .send({ name: 'Juan', picture: GOOGLE_URL,
-            facebook_id: 'asd33223423asd', facebook_display_name: 'Juan', circle_id: 'aksdm8zxkcmaksd9343' })
+            facebook_id: 'asd33223423asd', facebook_display_name: 'Juan', circles_ids: ['asdasdads'] })
           .end(function(err, data) {
             data.res.statusCode.should.equal(400);
-            data.res.body.errors[0].msg.should.equal("Circle doesn't exists or doesn't belong to current user");
+            data.res.body.errors[0].msg.should.equal("Circles don't exists or don't belong to current user");
             done();
           });
+      });
+    });
+
+    it('should not allow to create a contact with missing valid circle', function(done) {
+      User.findOne({ email: 'unify.argentina@gmail.com' })
+        .populate('main_circle')
+        .exec(function(err, user) {
+        login('unify.argentina2@gmail.com', 'This is not my real password', function(user2, token) {
+          request(API_URL)
+            .post(util.format(CONTACTS_PATH, user2._id, ''))
+            .set('Authorization', 'Bearer ' + token)
+            .send({ name: 'Juan', picture: GOOGLE_URL,
+              facebook_id: 'asd33223423asd', facebook_display_name: 'Juan',
+              circles_ids: [user2.main_circle._id, user.main_circle._id] })
+            .end(function(err, data) {
+              data.res.statusCode.should.equal(400);
+              data.res.body.errors[0].msg.should.equal("One of the circles doesn't belong to current user");
+              done();
+            });
+        });
       });
     });
 
@@ -199,7 +268,7 @@ describe('Contacts API', function() {
           .post(util.format(CONTACTS_PATH, user._id, ''))
           .set('Authorization', 'Bearer ' + token)
           .send({ name: 'Juan', picture: GOOGLE_URL,
-            facebook_id: 'asd33223423asd', facebook_display_name: 'Juan', circle_id: user.main_circle._id })
+            facebook_id: 'asd33223423asd', facebook_display_name: 'Juan', circles_ids: [user.main_circle._id] })
           .end(function(err, data) {
             data.res.statusCode.should.equal(200);
             var jsonContact = data.res.body.contact;
@@ -251,7 +320,7 @@ describe('Contacts API', function() {
             .end(function(err, data) {
               data.res.statusCode.should.equal(200);
               var jsonContact = data.res.body.contact;
-              jsonContact.user.should.equal(user._id.toString());
+              jsonContact.user._id.toString().should.equal(user._id.toString());
               jsonContact.name.should.equal('Jose');
               jsonContact.picture.should.equal(GOOGLE_URL);
               jsonContact.facebook.id.should.equal('abc123');
@@ -298,7 +367,7 @@ describe('Contacts API', function() {
               error.param.should.equal('picture');
               error.msg.should.equal('It must be a valid URL');
               error = errors[3];
-              error.param.should.equal('circle_id');
+              error.param.should.equal('circles_ids');
               error.msg.should.equal('Required');
               done();
             });
@@ -312,7 +381,7 @@ describe('Contacts API', function() {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 234, picture: 233, circle_id: 234 })
+            .send({ name: 234, picture: 233, circles_ids: 234 })
             .end(function(err, data) {
               data.res.statusCode.should.equal(400);
               var errors = data.res.body.errors;
@@ -325,13 +394,66 @@ describe('Contacts API', function() {
       });
     });
 
+    it('should not allow to update a contact with invalid circles_ids', function(done) {
+      login('unify.argentina2@gmail.com', 'This is not my real password', function(user, token) {
+        Contact.findOne({ name: 'Jose' }, function(err, contact) {
+          request(API_URL)
+            .put(util.format(CONTACTS_PATH, user._id, contact._id))
+            .set('Authorization', 'Bearer ' + token)
+            .send({name: 234, picture: GOOGLE_URL, circles_ids: 234})
+            .end(function (err, data) {
+              data.res.statusCode.should.equal(400);
+              var errors = data.res.body.errors;
+              var error = errors[0];
+              error.msg.should.equal('You must provide an array of circles_ids');
+              done();
+            });
+        });
+      });
+    });
+
+    it('should not allow to update a contact with injection circles_ids', function(done) {
+      login('unify.argentina2@gmail.com', 'This is not my real password', function(user, token) {
+        Contact.findOne({ name: 'Jose' }, function(err, contact) {
+          request(API_URL)
+            .put(util.format(CONTACTS_PATH, user._id, contact._id))
+            .set('Authorization', 'Bearer ' + token)
+            .send({name: 234, picture: GOOGLE_URL, circles_ids: [{"$gt": "undefined"}]})
+            .end(function (err, data) {
+              data.res.statusCode.should.equal(400);
+              data.res.body.errors[0].msg.should.equal('You must provide a string array of circles_ids');
+              done();
+            });
+        });
+      });
+    });
+
+    it('should not allow to update a contact with empty circles_ids', function(done) {
+      login('unify.argentina2@gmail.com', 'This is not my real password', function(user, token) {
+        Contact.findOne({ name: 'Jose' }, function(err, contact) {
+          request(API_URL)
+            .put(util.format(CONTACTS_PATH, user._id, contact._id))
+            .set('Authorization', 'Bearer ' + token)
+            .send({name: 234, picture: GOOGLE_URL, circles_ids: []})
+            .end(function (err, data) {
+              data.res.statusCode.should.equal(400);
+              var errors = data.res.body.errors;
+              var error = errors[0];
+              error.param.should.equal('circles_ids');
+              error.msg.should.equal('Required');
+              done();
+            });
+        });
+      });
+    });
+
     it('should not allow to update a contact with wrong data', function(done) {
       login('unify.argentina2@gmail.com', 'This is not my real password', function(user, token) {
         Contact.findOne({ name: 'Jose' }, function(err, contact) {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 234, picture: GOOGLE_URL, circle_id: 234 })
+            .send({ name: 234, picture: GOOGLE_URL, circles_ids: ['asdasdasda'] })
             .end(function(err, data) {
               data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
@@ -347,7 +469,7 @@ describe('Contacts API', function() {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: {"$gt": "undefined"}, picture: GOOGLE_URL, circle_id: {"$gt": "undefined"} })
+            .send({ name: {"$gt": "undefined"}, picture: GOOGLE_URL, circles_ids: ['asdasdasda'] })
             .end(function(err, data) {
               data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
@@ -363,7 +485,7 @@ describe('Contacts API', function() {
           request(API_URL)
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'Joaquin', picture: GOOGLE_URL, circle_id: 'asdasdasdasd' })
+            .send({ name: 'Joaquin', picture: GOOGLE_URL, circles_ids: ['asdasdasdasd'] })
             .end(function(err, data) {
               data.res.statusCode.should.equal(400);
                data.res.body.errors[0].msg.should
@@ -381,14 +503,36 @@ describe('Contacts API', function() {
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
             .send({ name: 'Joaquin', picture: GOOGLE_URL,
-              facebook_id: 'asdasdasd', facebook_display_name: 'Juan', circle_id: 'asdasdasdasd' })
+              facebook_id: 'asdasdasd', facebook_display_name: 'Juan', circles_ids: ['asdasdasdasd'] })
             .end(function(err, data) {
               data.res.statusCode.should.equal(400);
-              data.res.body.errors[0].msg.should.equal("Circle doesn't exists or doesn't belong to current user");
+              data.res.body.errors[0].msg.should.equal("Circles don't exists or don't belong to current user");
               done();
             });
         });
       });
+    });
+
+    it('should not allow to update a contact with missing valid circle', function(done) {
+      User.findOne({ email: 'unify.argentina@gmail.com' })
+        .populate('main_circle')
+        .exec(function(err, user) {
+          login('unify.argentina2@gmail.com', 'This is not my real password', function(user2, token) {
+            Contact.findOne({ name: 'Jose' }, function(err, contact) {
+              request(API_URL)
+                .put(util.format(CONTACTS_PATH, user2._id, contact._id))
+                .set('Authorization', 'Bearer ' + token)
+                .send({ name: 'Juan', picture: GOOGLE_URL,
+                  facebook_id: 'asd33223423asd', facebook_display_name: 'Juan',
+                  circles_ids: [user2.main_circle._id, user.main_circle._id] })
+                .end(function(err, data) {
+                  data.res.statusCode.should.equal(400);
+                  data.res.body.errors[0].msg.should.equal("One of the circles doesn't belong to current user");
+                  done();
+                });
+            });
+          });
+        });
     });
 
     it('should allow to update a contact with valid circle', function(done) {
@@ -398,7 +542,7 @@ describe('Contacts API', function() {
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
             .send({ name: 'Joaquin', picture: 'http://www.facebook.com',
-              facebook_id: 'ansdjnj23234', facebook_display_name: 'Juan', circle_id: user.main_circle._id })
+              facebook_id: 'ansdjnj23234', facebook_display_name: 'Juan', circles_ids: [user.main_circle._id] })
             .end(function(err, data) {
               data.res.statusCode.should.equal(200);
               var jsonContact = data.res.body.contact;

@@ -16,21 +16,26 @@ var Circle = require('../circle/circle.model');
 module.exports.create = function(req, res) {
 
   process.nextTick(function() {
+
     validateParams(req, res);
 
     validateSocialIds(req, res, 'creating');
 
     // Encontramos el círculo cuyo usuario es el que está en el request
-    Circle.findOne({ _id: req.body.circle_id, user: req.user })
+    Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user })
       .populate('user', User.socialFields())
-      .exec(function(err, circle) {
-      if (err || !circle) {
-        logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
-        return res.status(400).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
+      .exec(function(err, circles) {
+      if (err || !circles) {
+        logger.warn("Circles don't exists or don't belong to current user=" + req.user);
+        return res.status(400).send({ errors: [{ msg: "Circles don't exists or don't belong to current user" }] });
+      }
+      else if (req.body.circles_ids.length > circles.length) {
+        logger.warn("One of the circles doesn't belong to current user=" + req.user);
+        return res.status(400).send({ errors: [{ msg: "One of the circles doesn't belong to current user" }] });
       }
       else {
         var contact = new Contact();
-        saveContactData(req, res, contact, circle);
+        saveContactData(req, res, contact, circles, false);
       }
     });
   });
@@ -48,20 +53,23 @@ module.exports.getById = function(req, res) {
 module.exports.update = function(req, res) {
 
   process.nextTick(function() {
+
     validateParams(req, res);
 
     validateSocialIds(req, res, 'updating');
 
     // Revisamos que el usuario tenga efectivamente el círculo pasado por parámetro
-    Circle.findOne({ _id: req.body.circle_id, user: req.user })
-      .populate('user', User.socialFields())
-      .exec(function(err, circle) {
-        if (err || !circle) {
-          logger.warn("Circle=" + req.body.circle_id + " doesn't exists or doesn't belong to current user=" + req.user);
-          return res.status(400).send({ errors: [{ msg: "Circle doesn't exists or doesn't belong to current user" }] });
+    Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user }, function(err, circles) {
+        if (err || !circles) {
+          logger.warn("Circles don't exists or don't belong to current user=" + req.user);
+          return res.status(400).send({ errors: [{ msg: "Circles don't exists or don't belong to current user" }] });
+        }
+        else if (req.body.circles_ids.length > circles.length) {
+          logger.warn("One of the circles doesn't belong to current user=" + req.user);
+          return res.status(400).send({ errors: [{ msg: "One of the circles doesn't belong to current user" }] });
         }
         else {
-          saveContactData(req, res, req.contact, circle);
+          saveContactData(req, res, req.contact, circles, true);
         }
     });
   });
@@ -89,7 +97,7 @@ var validateParams = function(req, res) {
   req.assert('name', 'Required').notEmpty();
   req.assert('picture', 'Required').notEmpty();
   req.assert('picture', 'It must be a valid URL').isURL();
-  req.assert('circle_id', 'Required').notEmpty();
+  req.assert('circles_ids', 'Required').notEmpty();
 
   // Validamos errores
   if (req.validationErrors()) {
@@ -97,12 +105,28 @@ var validateParams = function(req, res) {
     return res.status(400).send({ errors: req.validationErrors()});
   }
 
+  validateCircleArray(req, res);
+
   // Validamos nosql injection
-  if (typeof req.body.name !== 'string' || typeof req.body.circle_id !== 'string' || typeof req.body.picture !== 'string') {
-    logger.warn('No SQL injection - name: ' + req.body.name + ' circle_id: ' + req.body.circle_id +
-      ' picture: ' + req.body.picture);
+  if (typeof req.body.name !== 'string' || typeof req.body.picture !== 'string') {
+    logger.warn('No SQL injection - name: ' + req.body.name + ' picture: ' + req.body.picture);
     return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
+};
+
+// Valida que los ids de los círculos estén en un array y tengan al menos un id
+var validateCircleArray = function(req, res) {
+  // Validamos que circles_ids sea un array
+  if (!req.body.circles_ids || req.body.circles_ids.constructor !== Array) {
+    logger.warn('Invalid circles_ids type: ' + req.body.circles_ids);
+    return res.status(400).send({ errors: [{ msg: 'You must provide an array of circles_ids' }] });
+  }
+  req.body.circles_ids.forEach(function(circleId) {
+    if (typeof circleId !== 'string') {
+      logger.warn('No SQL injection: ' + circleId);
+      return res.status(400).send({ errors: [{ msg: 'You must provide a string array of circles_ids' }] });
+    }
+  });
 };
 
 var validateSocialIds = function(req, res, text) {
@@ -136,9 +160,9 @@ var validateSocialIdsFormat = function(req, res) {
 };
 
 // Salva el contacto y lo envía al cliente
-var saveContactData = function(req, res, contact, circle) {
+var saveContactData = function(req, res, contact, circles, isUpdate) {
 
-  var user = circle.user;
+  var user = isUpdate ? contact.user : circles[0].user;
   // Validamos que el usuario tenga las cuentas asociadas para poder
   // crear un contacto con los ids pasados por parámetro
   validateUserSocialAccounts(req, res, contact, user);
@@ -146,9 +170,8 @@ var saveContactData = function(req, res, contact, circle) {
   // Si la validación está ok, copiamos los datos al contacto y lo devolvemos como json
   contact.name = req.body.name;
   contact.picture = req.body.picture;
-  contact.circle = req.body.circle_id;
   contact.user = req.user;
-  contact.parents = getContactParents(circle);
+  contact.parents = Contact.getContactParents(circles);
   contact.save(function(err) {
     if (err) {
       logger.err(err);
@@ -161,18 +184,6 @@ var saveContactData = function(req, res, contact, circle) {
       return res.send({ contact: contact });
     }
   });
-};
-
-// Este método genera los ancestros de un contacto (el círculo en el cual fue creado más los ancestros del círculo)
-var getContactParents = function(circle) {
-  var parents = [];
-  var contactAncestors = [circle._id];
-  contactAncestors.push.apply(contactAncestors, circle.ancestors);
-  parents.push({
-    circle: circle._id,
-    ancestors: contactAncestors
-  });
-  return parents;
 };
 
 // Este método chequea que si se le pasó un social_id, efectivamente el usuario tenga esa cuenta linkeada

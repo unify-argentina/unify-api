@@ -81,4 +81,20 @@ contactSchema.methods.toggleAccount = function(account, toggle) {
   }
 };
 
+// Este método genera los ancestros de un contacto (el círculo en el cual fue creado más los ancestros del círculo)
+contactSchema.statics.getContactParents = function(circles) {
+  var parents = [];
+
+  circles.forEach(function(circle) {
+    var contactAncestors = [circle._id];
+    contactAncestors.push.apply(contactAncestors, circle.ancestors);
+    parents.push({
+      circle: circle._id,
+      ancestors: contactAncestors
+    });
+  });
+
+  return parents;
+};
+
 module.exports = mongoose.model('Contact', contactSchema);
