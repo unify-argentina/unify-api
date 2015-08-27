@@ -50,7 +50,7 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
  * @apiParam {String} user_id Id del usuario
  * @apiParam {String} name Nombre del contacto a crear
  * @apiParam {String} picture URL de la imagen del contacto
- * @apiParam {String} circle_id Id del círculo en el cual el contacto va a ser creado
+ * @apiParam {Array} circles_ids Ids de los círculos en los cuales el contacto va a ser creado
  * @apiParam {String} [facebook_id] Id del perfil de facebook del contacto
  * @apiParam {String} [facebook_display_name] Nombre del perfil de facebook del contacto
  * @apiParam {String} [twitter_id] Id del perfil de twitter del contacto
@@ -72,7 +72,7 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
  *       "instagram_username": "aleagb23",
  *       "twitter_id": "261365528",
  *       "twitter_username": "aleagb23",
- *       "circle_id":"55c02cc80cce13ec28bd7ec2"
+ *       "circles_ids":["55c02cc80cce13ec28bd7ec2"]
  *     }
  *
  * @apiSuccess {Object} contact Contacto creado
@@ -179,7 +179,7 @@ contactRoutes.get('/:contact_id', contactController.getById);
  * @apiParam {String} contact_id Id del contacto a actualizar
  * @apiParam {String} name Nuevo nombre del contacto a actualizar
  * @apiParam {String} picture URL de la imagen del contacto
- * @apiParam {String} circle_id Id del círculo en el cual el contacto va a ser actualizado
+ * @apiParam {Array} circles_ids Ids de los círculos en los cuales el contacto va a ser actualizado
  * @apiParam {String} [facebook_id] Id del perfil de facebook del contacto
  * @apiParam {String} [twitter_id] Id del perfil de twitter del contacto
  * @apiParam {String} [instagram_id] Id del perfil de instagram del contacto
@@ -195,7 +195,7 @@ contactRoutes.get('/:contact_id', contactController.getById);
  *      "facebook_id":"10205153877979641",
  *      "twitter_id":"261365528",
  *      "instagram_id":"1574863419",
- *      "circle_id":"55a1f0d9d3dc50a522cd0aff"
+ *      "circles_ids":["55a1f0d9d3dc50a522cd0aff"]
  *    }
  *
  * @apiSuccess {Object} contact Contacto actualizado
@@ -203,16 +203,37 @@ contactRoutes.get('/:contact_id', contactController.getById);
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *     {
- *       "contact":{
- *         "user":"55a1f39737bc05b2257c6ae0",
- *         "circle":"55a1f39937bc05b2257c6ae1",
- *         "twitter_id":"261365528",
- *         "facebook_id":"10205153877979641",
- *         "picture":"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large",
- *         "name":"Alejo",
- *         "_id":"55a1f47e71912f3c26602dbe",
- *         "__v":0
- *       }
+ *         "contact": {
+ *             "user": "55c421354037f03842898378",
+ *             "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large",
+ *             "name": "Flore Joffré",
+ *             "_id": "55cab7542337df552818e540",
+ *             "__v": 0,
+ *             "parents": [
+ *                 {
+ *                     "circle": "55c421364037f03842898379",
+ *                     "_id": "55cab7542337df552818e541",
+ *                     "ancestors": [
+ *                         "55c421364037f03842898379"
+ *                     ]
+ *                 }
+ *             ],
+ *             "instagram": {
+ *                 "username": "florejoffre",
+ *                 "id": "1244524526",
+ *                 "valid": true
+ *             },
+ *             "twitter": {
+ *                 "username": "FloreJoffre",
+ *                 "id": "197249917",
+ *                 "valid": true
+ *             },
+ *             "facebook": {
+ *                 "display_name": "Flore Joffré",
+ *                 "id": "10206413202905994",
+ *                 "valid": true
+ *             }
+ *         }
  *     }
  */
 contactRoutes.put('/:contact_id', contactController.update);

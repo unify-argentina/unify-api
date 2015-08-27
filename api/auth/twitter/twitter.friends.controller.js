@@ -16,30 +16,31 @@ var twitterErrors = require('./twitter.errors');
 // constantes
 var TWITTER_USER_FOLLOWS_URL = 'https://api.twitter.com/1.1/friends/list.json';
 
-// Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Twitter
-var users = [];
-
 // Devuelve las personas a las que sigue en Instagram el usuario loggeado
 module.exports.getFriends = function(access_token, twitterId, callback) {
 
-  getTwitterData(TWITTER_USER_FOLLOWS_URL, -1, access_token, twitterId, function(err, twitterUsers) {
+// Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Twitter
+  var users = [];
+
+  getTwitterData(TWITTER_USER_FOLLOWS_URL, -1, access_token, twitterId, users, function(err, twitterUsers) {
     if (err) {
       callback(null, err);
     }
     else {
-      // Mapeamos los usuarios para que sean homogéneos a las 3 redes sociales
+
+      // Mapeamos los usuarios para que sean homogéneos a las 4 cuentas
       async.map(twitterUsers, mapUser, function(err, mappedUsers) {
-        // Filtramos los usuarios duplicados
-        var filteredMappedUsers = _.uniq(mappedUsers, function(mappedUser) {
-          return mappedUser.id;
-        });
+
         // Una vez que tenemos los amigos, los ordenamos alfabeticamente por el
         // nombre completo si es que tiene, sino por el nombre de usuario
-        async.sortBy(filteredMappedUsers, function(user, callback) {
+        async.sortBy(mappedUsers, function(user, callback) {
+
           var criteria = (typeof user.name === 'string' && user.name !== '' ) ? user.name : user.username;
           callback(null, criteria);
-          // Una vez que los ordenamos, los enviamos
+
         }, function(err, sortedUsers) {
+
+          // Una vez que los ordenamos, los enviamos
           var result = {
             list: sortedUsers,
             count: sortedUsers.length
@@ -54,7 +55,7 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
 
 // Le pega a la API de Twitter y en el response, si fue exitoso, van a estar las personas a las que sigue de
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
-var getTwitterData = function(url, cursor, access_token, twitterId, callback) {
+var getTwitterData = function(url, cursor, access_token, twitterId, users, callback) {
 
   var qs = {
     cursor: cursor,
@@ -76,7 +77,7 @@ var getTwitterData = function(url, cursor, access_token, twitterId, callback) {
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.next_cursor !== 0) {
       users.push.apply(users, response.body.users);
-      getTwitterData(TWITTER_USER_FOLLOWS_URL, response.body.next_cursor, access_token, twitterId, callback);
+      getTwitterData(TWITTER_USER_FOLLOWS_URL, response.body.next_cursor, access_token, twitterId, users, callback);
     }
     // Sino, ya tengo los usuarios y los devuelvo en el callback
     else {

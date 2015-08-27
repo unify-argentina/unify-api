@@ -9,6 +9,7 @@ var facebookFriends = require('../auth/facebook/facebook.friends.controller');
 var facebookPages = require('../auth/facebook/facebook.pages.controller');
 var instagramFriends = require('../auth/instagram/instagram.friends.controller');
 var twitterFriends = require('../auth/twitter/twitter.friends.controller');
+var googleContacts = require('../auth/google/google.contacts.controller');
 var async = require('async');
 var logger = require('../../config/logger');
 var errorHelper = require('../auth/util/error.helper');
@@ -39,7 +40,8 @@ var doGetFriends = function(res, user) {
       facebook_friends: getFacebookFriends.bind(null, user),
       facebook_pages: getFacebookPages.bind(null, user),
       instagram: getInstagramFriends.bind(null, user),
-      twitter: getTwitterFriends.bind(null, user)
+      twitter: getTwitterFriends.bind(null, user),
+      google: getGoogleContacts.bind(null, user)
     },
     // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
     function(err, results) {
@@ -92,6 +94,18 @@ var getInstagramFriends = function(user, callback) {
 var getTwitterFriends = function(user, callback) {
   if (user.hasLinkedAccount('twitter')) {
     twitterFriends.getFriends(user.twitter.access_token, user.twitter.id, function(err, results) {
+      callback(err, results);
+    });
+  }
+  // Si no tiene linkeada la cuenta de Twitter, no devolvemos nada
+  else {
+    callback(null, null);
+  }
+};
+
+var getGoogleContacts = function(user, callback) {
+  if (user.hasLinkedAccount('google')) {
+    googleContacts.getContacts(user.google.access_token, user.google.id, function(err, results) {
       callback(err, results);
     });
   }

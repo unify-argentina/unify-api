@@ -13,28 +13,25 @@ var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
 
-// Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Facebook
-var friends = [];
-
 // Devuelve los amigos de Facebook del usuario loggeado
 module.exports.getFriends = function(access_token, facebookId, callback) {
 
   var url = util.format('%s/%s/friends?access_token=%s&limit=1000', facebookUtils.getBaseURL(), facebookId, access_token);
 
-  getFacebookData(url, function(err, facebookUsers) {
+  // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Facebook
+  var friends = [];
+
+  getFacebookData(url, friends, function(err, facebookUsers) {
     if (err) {
       callback(null, err);
     }
     else {
-      // Mapeamos los usuarios para que sean homogéneos a las 3 redes sociales
+      // Mapeamos los usuarios para que sean homogéneos a las 4 cuentas
       async.map(facebookUsers, mapUser, function(err, mappedUsers) {
-        // Filtramos los usuarios duplicados
-        var filteredMappedUsers = _.uniq(mappedUsers, function(mappedUser) {
-          return mappedUser.id;
-        });
+
         var result = {
-          list: filteredMappedUsers,
-          count: filteredMappedUsers.length
+          list: mappedUsers,
+          count: mappedUsers.length
         };
         logger.debug('Facebook Friends: ' + JSON.stringify(result));
         callback(err, result);
@@ -45,7 +42,7 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
 
 // Le pega a la API de Facebook y en el response, si fue exitoso, van a estar los amigos del usuario
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
-var getFacebookData = function(url, callback) {
+var getFacebookData = function(url, friends, callback) {
 
   logger.info('URL: ' + url);
   request.get({ url: url, json: true }, function(err, response) {
@@ -60,7 +57,7 @@ var getFacebookData = function(url, callback) {
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.paging.next) {
       friends.push.apply(friends, response.body.data);
-      getFacebookData(response.body.paging.next, callback);
+      getFacebookData(response.body.paging.next, friends, callback);
     }
     // Sino, ya tengo los usuarios y los devuelvo en el callback
     else {

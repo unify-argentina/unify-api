@@ -30,12 +30,12 @@ module.exports.hasError = function(err, response) {
   var result = { hasError: false, error: '' };
 
   if (err) {
-    logger.error('Error: ' + err);
+    logger.error('Facebook Error: ' + err);
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Facebook');
   }
   else if (response.body.error) {
-    logger.error('Error: ' + response.body.error.message);
+    logger.error('Facebook Error: ' + response.body.error.message);
     result.hasError = true;
     result.error = {
       code: response.body.error.code,

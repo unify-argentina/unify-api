@@ -186,9 +186,9 @@ userRoutes.put('/:user_id', userController.update);
  *             "facebook_pages": {
  *                 "list": [
  *                     {
- *                         "id": "141545972523915",
- *                         "name": "Back to the Future Trilogy",
- *                         "picture": "https://graph.facebook.com/v2.3/141545972523915/picture?type=large"
+ *                         "id": "28686402854",
+ *                         "name": "Fernet Branca",
+ *                         "picture": "https://graph.facebook.com/v2.3/28686402854/picture?type=large"
  *                     }
  *                 ],
  *                 "count": 1
@@ -196,10 +196,10 @@ userRoutes.put('/:user_id', userController.update);
  *             "instagram": {
  *                 "list": [
  *                     {
- *                         "id": "259220806",
- *                         "name": "9GAG",
- *                         "picture": "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/10543934_413441348850651_1114644254_a.jpg",
- *                         "username": "9gag"
+ *                         "id": "13460080",
+ *                         "name": "nike",
+ *                         "picture": "https://igcdn-photos-c-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11809593_769192616523522_1094660024_a.jpg",
+ *                         "username": "nike"
  *                     }
  *                 ],
  *                 "count": 1
@@ -207,14 +207,26 @@ userRoutes.put('/:user_id', userController.update);
  *             "twitter": {
  *                 "list": [
  *                     {
- *                         "id": "6761682",
- *                         "name": "blink182",
- *                         "picture": "http://pbs.twimg.com/profile_images/529142117491171330/mRCmdNod_bigger.png",
- *                         "username": "blink182"
+ *                         "id": "2569881",
+ *                         "name": "Ørta",
+ *                         "picture": "http://pbs.twimg.com/profile_images/594954985244360705/YWx3Fuju_bigger.png",
+ *                         "username": "orta"
+ *                     }
+ *                 ],
+ *                 "count": 1
+ *             },
+ *             "google": {
+ *                 "list": [
+ *                     {
+ *                         "id": "http://www.google.com/m8/feeds/contacts/90joelmarquez%40gmail.com/base/7c6c92a3883ca8f2",
+ *                         "name": "Florencia Aragno",
+ *                         "email": "faragno@ecosistemas.com.ar"
  *                     }
  *                 ],
  *                 "count": 1
  *             }
+ *         },
+ *         "errors": {
  *         }
  *     }
  *
@@ -239,6 +251,10 @@ userRoutes.put('/:user_id', userController.update);
  *             "twitter": {
  *                 "code": 89,
  *                 "msg": "Invalid or expired token."
+ *             },
+ *             "google": {
+ *                 "code": 89,
+ *                 "msg": "Invalid credentials"
  *             }
  *         }
  *     }

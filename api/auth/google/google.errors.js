@@ -35,12 +35,12 @@ module.exports.hasError = function(err, response) {
   var result = { hasError: false, error: '' };
 
   if (err) {
-    logger.error('Error: ' + err);
+    logger.error('Google Error: ' + err);
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Google');
   }
   else if (response.body.error) {
-    logger.error('Error: ' + JSON.stringify(response.body));
+    logger.error('Google Error: ' + JSON.stringify(response.body));
     result.hasError = true;
     result.error = {
       code: response.body.error.code || 0,

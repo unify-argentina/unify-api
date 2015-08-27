@@ -25,12 +25,12 @@ module.exports.hasError = function(err, response) {
   var result = { hasError: false, error: '' };
 
   if (err) {
-    logger.error('Error: ' + err);
+    logger.error('Instagram Error: ' + err);
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Instagram');
   }
   else if (response.body.error_message) {
-    logger.error('Error: ' + response.body.error_message);
+    logger.error('Instagram Error: ' + response.body.error_message);
     result.hasError = true;
     result.error = {
       code: response.body.code,

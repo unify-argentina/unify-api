@@ -28,12 +28,12 @@ module.exports.hasError = function(err, response) {
   var result = { hasError: false, error: '' };
 
   if (err) {
-    logger.error('Error: ' + err);
+    logger.error('Twitter Error: ' + err);
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Twitter');
   }
   else if (response.body.errors && response.body.errors.length > 0) {
-    logger.error('Error: ' + response.body.errors[0].message);
+    logger.error('Twitter Error: ' + response.body.errors[0].message);
     result.hasError = true;
     result.error = {
       code: response.body.errors[0].code,

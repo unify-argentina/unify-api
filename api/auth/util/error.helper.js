@@ -71,6 +71,7 @@ module.exports.checkFriendsErrors = function(results) {
   checkFriendsList(errors, friends, results, 'facebook_pages');
   checkFriendsList(errors, friends, results, 'instagram');
   checkFriendsList(errors, friends, results, 'twitter');
+  checkFriendsList(errors, friends, results, 'google');
 
   return {
     friends: friends,
