@@ -33,12 +33,20 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
         var filteredMappedUsers = _.uniq(mappedUsers, function(mappedUser) {
           return mappedUser.id;
         });
-        var result = {
-          list: filteredMappedUsers,
-          count: filteredMappedUsers.length
-        };
-        logger.debug('Twitter Friends: ' + JSON.stringify(result));
-        callback(err, result);
+        // Una vez que tenemos los amigos, los ordenamos alfabeticamente por el
+        // nombre completo si es que tiene, sino por el nombre de usuario
+        async.sortBy(filteredMappedUsers, function(user, callback) {
+          var criteria = (typeof user.name === 'string' && user.name !== '' ) ? user.name : user.username;
+          callback(null, criteria);
+          // Una vez que los ordenamos, los enviamos
+        }, function(err, sortedUsers) {
+          var result = {
+            list: sortedUsers,
+            count: sortedUsers.length
+          };
+          logger.debug('Twitter Friends: ' + JSON.stringify(result));
+          callback(err, result);
+        });
       });
     }
   });
