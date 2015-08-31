@@ -16,7 +16,8 @@ var logger = new winston.Logger({
       level: config.LOG_LEVEL,
       handleExceptions: true,
       json: false,
-      colorize: true
+      colorize: true,
+      timestamp: true
     })
   ],
   exitOnError: false

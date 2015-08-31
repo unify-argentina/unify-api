@@ -44,19 +44,19 @@ module.exports.getMedia = function (req, res) {
 // Obtiene el contenido del contacto por cada red social que tenga asociada el usuario
 module.exports.doGetMedia = function(user, contact, callback) {
   async.parallel({
-      facebook: getFacebookMedia.bind(null, user, contact),
-      instagram: getInstagramMedia.bind(null, user, contact),
-      twitter: getTwitterMedia.bind(null, user, contact)
-    },
-    // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
-    function(err, results) {
-      if (err) {
-        callback(err, null);
-      }
-      else {
-        callback(null, results);
-      }
-    });
+    facebook: getFacebookMedia.bind(null, user, contact),
+    instagram: getInstagramMedia.bind(null, user, contact),
+    twitter: getTwitterMedia.bind(null, user, contact)
+  },
+  // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
+  function(err, results) {
+    if (err) {
+      callback(err, null);
+    }
+    else {
+      callback(null, results);
+    }
+  });
 };
 
 var getFacebookMedia = function(user, contact, callback) {

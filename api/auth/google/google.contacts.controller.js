@@ -15,9 +15,9 @@ var googleErrors = require('./google.errors');
 // Devuelve los amigos de Google del usuario loggeado
 module.exports.getContacts = function(access_token, googleId, callback) {
 
-  var url = util.format('https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=10000');
+  var url = 'https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=10000';
 
-// Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Google
+  // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Google
   var contacts = [];
 
   getGoogleData(url, access_token, contacts, function(err, googleContacts) {

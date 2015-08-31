@@ -9,6 +9,7 @@
 // requires
 var jwt = require('./../util/jwt');
 var logger = require('../../../config/logger');
+var notificationsController = require('../../email/notifications.controller');
 
 // modelos
 var User = require('../../user/user.model');
@@ -107,6 +108,8 @@ module.exports.signup = function(req, res) {
             user.password = undefined;
             user.created_at = undefined;
             user.updated_at = undefined;
+
+            notificationsController.sendSignupEmailToUser(user);
             return jwt.createJWT(res, user);
           }
         });

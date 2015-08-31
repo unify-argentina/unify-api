@@ -366,4 +366,6 @@ userRoutes.use('/:user_id/circle', require('../circle'));
 
 userRoutes.use('/:user_id/contact', require('../contact'));
 
+userRoutes.use('/:user_id/email', require('../email'));
+
 module.exports = userRoutes;

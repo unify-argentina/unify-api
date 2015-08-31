@@ -133,7 +133,8 @@ userSchema.methods.hasLinkedAccount = function(account) {
   if (this[account]) {
     // El access token de Twitter es un objeto con dos campos
     if (account === 'twitter') {
-      hasFields = typeof this.twitter.access_token.token === 'string' && typeof this.twitter.access_token.token_secret === 'string';
+      hasFields = typeof this.twitter.access_token.token === 'string' &&
+        typeof this.twitter.access_token.token_secret === 'string';
     }
     else {
       hasFields = typeof this[account].access_token === 'string' && typeof this[account].id === 'string';

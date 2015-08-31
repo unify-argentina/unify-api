@@ -15,18 +15,21 @@ module.exports.checkMediaErrors = function(results) {
     if (results.facebook.totalResults.length > 0) {
       mediaObjects.push.apply(mediaObjects, results.facebook.totalResults);
     }
+    // Errores en fotos
     if (results.facebook.photos) {
       if (errors.facebook === undefined) {
         errors.facebook = {};
       }
       errors.facebook.photos = results.facebook.photos;
     }
+    // Errores en videos
     if (results.facebook.videos) {
       if (errors.facebook === undefined) {
         errors.facebook = {};
       }
       errors.facebook.videos = results.facebook.videos;
     }
+    // Errores en estados
     if (results.facebook.statuses) {
       if (errors.facebook === undefined) {
         errors.facebook = {};
@@ -35,25 +38,8 @@ module.exports.checkMediaErrors = function(results) {
     }
   }
 
-  // Chequeando errores de instagram
-  if (results.instagram) {
-    if (results.instagram.constructor === Array) {
-      mediaObjects.push.apply(mediaObjects, results.instagram);
-    }
-    else {
-      errors.instagram = results.instagram;
-    }
-  }
-
-  // Chequeando errores de twitter
-  if (results.twitter) {
-    if (results.twitter.constructor === Array) {
-      mediaObjects.push.apply(mediaObjects, results.twitter);
-    }
-    else {
-      errors.twitter = results.twitter;
-    }
-  }
+  checkArrayResultsList(errors, mediaObjects, results, 'instagram');
+  checkArrayResultsList(errors, mediaObjects, results, 'twitter');
 
   return {
     mediaObjects: mediaObjects,
@@ -67,11 +53,11 @@ module.exports.checkFriendsErrors = function(results) {
   var errors = {};
   var friends = {};
 
-  checkFriendsList(errors, friends, results, 'facebook_friends');
-  checkFriendsList(errors, friends, results, 'facebook_pages');
-  checkFriendsList(errors, friends, results, 'instagram');
-  checkFriendsList(errors, friends, results, 'twitter');
-  checkFriendsList(errors, friends, results, 'google');
+  checkResultsList(errors, friends, results, 'facebook_friends');
+  checkResultsList(errors, friends, results, 'facebook_pages');
+  checkResultsList(errors, friends, results, 'instagram');
+  checkResultsList(errors, friends, results, 'twitter');
+  checkResultsList(errors, friends, results, 'google');
 
   return {
     friends: friends,
@@ -79,11 +65,37 @@ module.exports.checkFriendsErrors = function(results) {
   };
 };
 
+// Chequea los errores que pudieron venir al querer obtener emails
+module.exports.checkEmailErrors = function(results) {
+
+  var errors = {};
+  var emails = [];
+
+  checkArrayResultsList(errors, emails, results, 'google');
+
+  return {
+    emails: emails,
+    errors: errors
+  };
+};
+
 // Verifica que los resultados contengan la cuenta solicitada y que tenga la lista, si no la tiene es un error
-var checkFriendsList = function(errors, friends, results, account) {
+var checkResultsList = function(errors, listObject, results, account) {
   if (results[account]) {
     if (results[account].list) {
-      friends[account] = results[account];
+      listObject[account] = results[account];
+    }
+    else {
+      errors[account] = results[account];
+    }
+  }
+};
+
+// Verifica que los resultados tengan un array con la cuenta solicitada, si lo tienen, agregan los elementos a la lista
+var checkArrayResultsList = function(errors, list, results, account) {
+  if (results[account]) {
+    if (results[account].constructor === Array) {
+      list.push.apply(list, results[account]);
     }
     else {
       errors[account] = results[account];

@@ -38,20 +38,20 @@ module.exports.getMedia = function (req, res) {
 // Una vez que encontramos al usuario, mandamos a consultar su contenido por cada red social que tenga asociada
 var doGetMedia = function(res, user) {
   async.parallel({
-      facebook: getFacebookMedia.bind(null, user),
-      instagram: getInstagramMedia.bind(null, user),
-      twitter: getTwitterMedia.bind(null, user)
-    },
-    // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
-    function(err, results) {
-      if (err) {
-        logger.warn('Error searching media ' + err);
-        return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user media' }] });
-      }
-      else {
-        sendMediaResponseFromResults(res, results);
-      }
-    });
+    facebook: getFacebookMedia.bind(null, user),
+    instagram: getInstagramMedia.bind(null, user),
+    twitter: getTwitterMedia.bind(null, user)
+  },
+  // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
+  function(err, results) {
+    if (err) {
+      logger.warn('Error searching media ' + err);
+      return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user media' }] });
+    }
+    else {
+      sendMediaResponseFromResults(res, results);
+    }
+  });
 };
 
 var getFacebookMedia = function(user, callback) {

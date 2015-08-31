@@ -37,22 +37,22 @@ module.exports.getFriends = function(req, res) {
 // asociada el usuario
 var doGetFriends = function(res, user) {
   async.parallel({
-      facebook_friends: getFacebookFriends.bind(null, user),
-      facebook_pages: getFacebookPages.bind(null, user),
-      instagram: getInstagramFriends.bind(null, user),
-      twitter: getTwitterFriends.bind(null, user),
-      google: getGoogleContacts.bind(null, user)
-    },
-    // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
-    function(err, results) {
-      if (err) {
-        logger.warn('Error searching friends ' + err);
-        return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user friends' }] });
-      }
-      else {
-        sendFriendsResponseFromResults(res, results);
-      }
-    });
+    facebook_friends: getFacebookFriends.bind(null, user),
+    facebook_pages: getFacebookPages.bind(null, user),
+    instagram: getInstagramFriends.bind(null, user),
+    twitter: getTwitterFriends.bind(null, user),
+    google: getGoogleContacts.bind(null, user)
+  },
+  // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
+  function(err, results) {
+    if (err) {
+      logger.warn('Error searching friends ' + err);
+      return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user friends' }] });
+    }
+    else {
+      sendFriendsResponseFromResults(res, results);
+    }
+  });
 };
 
 var getFacebookFriends = function(user, callback) {
