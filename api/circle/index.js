@@ -340,6 +340,7 @@ circleRoutes.delete('/:circle_id', circleController.delete);
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *     {
+ *         "circle_id": "55da99dff7c2a1864235b6fb",
  *         "media": {
  *             "count": 4,
  *             "list": [

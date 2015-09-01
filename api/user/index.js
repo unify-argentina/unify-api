@@ -278,6 +278,7 @@ userRoutes.get('/:user_id/friends', friendsController.getFriends);
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *     {
+ *         "user_id": "55da99dff7c2a1864235b6fb",
  *         "media": {
  *             "count": 4,
  *             "list": [

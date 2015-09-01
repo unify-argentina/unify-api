@@ -33,7 +33,7 @@ module.exports.getMedia = function (req, res) {
             return res.status(400).send({ errors: [{ msg: 'There was an error obtaining contact media' }] });
           }
           else {
-            sendMediaResponseFromResults(res, results);
+            sendMediaResponseFromResults(res, results, req.contact._id);
           }
         });
       }
@@ -96,7 +96,7 @@ var getTwitterMedia = function(user, contact, callback) {
 };
 
 // Envía al cliente el contenido del contacto
-var sendMediaResponseFromResults = function(res, results) {
+var sendMediaResponseFromResults = function(res, results, contactId) {
 
   var mediaResults = errorHelper.checkMediaErrors(results);
 
@@ -106,7 +106,8 @@ var sendMediaResponseFromResults = function(res, results) {
     callback(null, -media.created_time);
   // Una vez que los ordenamos, los enviamos
   }, function(err, sortedMedia) {
-    return res.send({ 
+    return res.send({
+      contact_id: contactId,
       media: {
         count: sortedMedia.length,
         list: sortedMedia

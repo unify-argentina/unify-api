@@ -49,7 +49,7 @@ var doGetMedia = function(res, user) {
       return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user media' }] });
     }
     else {
-      sendMediaResponseFromResults(res, results);
+      sendMediaResponseFromResults(res, results, user._id);
     }
   });
 };
@@ -91,7 +91,7 @@ var getTwitterMedia = function(user, callback) {
 };
 
 // Envía al cliente el contenido del usuario
-var sendMediaResponseFromResults = function(res, results) {
+var sendMediaResponseFromResults = function(res, results, userId) {
 
   var mediaResults = errorHelper.checkMediaErrors(results);
 
@@ -102,6 +102,7 @@ var sendMediaResponseFromResults = function(res, results) {
     // Una vez que los ordenamos, los enviamos
   }, function(err, sortedMedia) {
     return res.send({
+      user_id: userId,
       media: {
         count: sortedMedia.length,
         list: sortedMedia

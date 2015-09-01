@@ -205,6 +205,7 @@ emailRoutes.get('/draft', emailController.listDraft);
  */
 emailRoutes.get('/trash', emailController.listTrash);
 
+// TODO ver si se va a usar
 emailRoutes.get('/:email_id', emailController.getById);
 
 emailRoutes.post('/', emailController.create);

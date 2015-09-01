@@ -279,6 +279,7 @@ contactRoutes.delete('/:contact_id', contactController.delete);
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  *     {
+ *         "contact_id": "55da99dff7c2a1864235b6fb",
  *         "media": {
  *             "count": 3,
  *             "list": [
