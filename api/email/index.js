@@ -40,7 +40,9 @@ emailRoutes.param('email_id', function(req, res, next, emailId) {
  *                     "provider": "google",
  *                     "date": 1439511241,
  *                     "from": "\"Joel Márquez\" <90joelmarquez@gmail.com>",
- *                     "to": "universidades@santanderrio.com.ar",
+ *                     "to": [ 
+ *                         "universidades@santanderrio.com.ar"
+ *                     ],
  *                     "cc": [
  *                         "\"Alejo García\" <aleagb.rclm@gmail.com>",
  *                         "Cristian Mastronardi <cristian.1078@gmail.com>",
@@ -88,7 +90,9 @@ emailRoutes.get('/inbox', emailController.listInbox);
  *                     "provider": "google",
  *                     "date": 1439511241,
  *                     "from": "\"Joel Márquez\" <90joelmarquez@gmail.com>",
- *                     "to": "universidades@santanderrio.com.ar",
+ *                     "to": [
+ *                         "universidades@santanderrio.com.ar"
+ *                     ],
  *                     "cc": [
  *                         "\"Alejo García\" <aleagb.rclm@gmail.com>",
  *                         "Cristian Mastronardi <cristian.1078@gmail.com>",
@@ -136,7 +140,9 @@ emailRoutes.get('/sent', emailController.listSent);
  *                     "provider": "google",
  *                     "date": 1439511241,
  *                     "from": "\"Joel Márquez\" <90joelmarquez@gmail.com>",
- *                     "to": "universidades@santanderrio.com.ar",
+ *                     "to": [
+ *                         "universidades@santanderrio.com.ar"
+ *                     ],
  *                     "cc": [
  *                         "\"Alejo García\" <aleagb.rclm@gmail.com>",
  *                         "Cristian Mastronardi <cristian.1078@gmail.com>",
@@ -184,7 +190,9 @@ emailRoutes.get('/draft', emailController.listDraft);
  *                     "provider": "google",
  *                     "date": 1439511241,
  *                     "from": "\"Joel Márquez\" <90joelmarquez@gmail.com>",
- *                     "to": "universidades@santanderrio.com.ar",
+ *                     "to": [
+ *                         "universidades@santanderrio.com.ar"
+ *                     ],
  *                     "cc": [
  *                         "\"Alejo García\" <aleagb.rclm@gmail.com>",
  *                         "Cristian Mastronardi <cristian.1078@gmail.com>",
