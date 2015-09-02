@@ -9,6 +9,7 @@ var util = require('util');
 var request = require('request');
 var async = require('async');
 var logger = require('../../../config/logger');
+var _ = require('lodash');
 
 var facebookPhotos = require('./facebook.photos.controller');
 var facebookVideos = require('./facebook.videos.controller');
@@ -18,14 +19,15 @@ var facebookStatuses = require('./facebook.statuses.controller');
 module.exports.getMedia = function(access_token, facebookId, callback) {
 
   async.parallel({
-    photos: function(callback) {
-      facebookPhotos.getPhotos(access_token, facebookId, callback);
+    uploadedPhotos: function(callback) {
+      facebookPhotos.getPhotos(access_token, facebookId, true, callback);
     },
-
+    taggedPhotos: function(callback) {
+      facebookPhotos.getPhotos(access_token, facebookId, false, callback);
+    },
     videos: function(callback) {
       facebookVideos.getVideos(access_token, facebookId, callback);
     },
-
     statuses: function(callback) {
       facebookStatuses.getStatuses(access_token, facebookId, callback);
     }
@@ -36,14 +38,33 @@ module.exports.getMedia = function(access_token, facebookId, callback) {
     var result = {};
     result.totalResults = [];
 
-    if (mediaResults.photos) {
-      if (mediaResults.photos.constructor === Array) {
-        result.totalResults.push.apply(result.totalResults, mediaResults.photos);
+    var photos = [];
+
+    if (mediaResults.uploadedPhotos) {
+      if (mediaResults.uploadedPhotos.constructor === Array) {
+        photos.push.apply(photos, mediaResults.uploadedPhotos);
       }
       // Error en photos
       else {
-        result.photos = mediaResults.photos;
+        result.photos = mediaResults.uploadedPhotos;
       }
+    }
+
+    if (mediaResults.taggedPhotos) {
+      if (mediaResults.taggedPhotos.constructor === Array) {
+        photos.push.apply(photos, mediaResults.taggedPhotos);
+      }
+      // Error en photos
+      else {
+        result.photos = mediaResults.taggedPhotos;
+      }
+    }
+
+    if (photos.length > 0) {
+      var uniquePhotos = _.uniq(photos, function(photo) {
+        return photo.id;
+      });
+      result.totalResults.push.apply(result.totalResults, uniquePhotos);
     }
 
     if (mediaResults.videos) {
