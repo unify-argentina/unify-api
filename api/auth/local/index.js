@@ -61,7 +61,8 @@ var jwt = require('../util/jwt');
  *                 "email": "90joelmarquez@gmail.com",
  *                 "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
  *             },
- *             "valid_local_user": true
+ *             "valid_local_user": true,
+ *             "verified": true
  *         }
  *     }
  */
@@ -103,7 +104,8 @@ localRoutes.post('/login', localController.login);
  *             "email": "90joelmarquez2@gmail.com",
  *             "name": "Joel",
  *             "_id": "55b83ed3f4601fc111ab721f",
- *             "valid_local_user": true
+ *             "valid_local_user": true,
+ *             "verified": false
  *         }
  *     }
  */

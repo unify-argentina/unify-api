@@ -197,6 +197,7 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, access_token) {
 var saveUser = function(res, user) {
   user.save(function(err) {
     if (err) {
+      logger.error('Twitter Error saving on DB: ' + err);
       return res.status(400).send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
     }
     else {

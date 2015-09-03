@@ -23,6 +23,7 @@ var userSchema = mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
   password: { type: String, required: true, select: false },
   valid_local_user: { type: Boolean, default: false },
+  verified: { type: Boolean, default: false },
   birth_date: Date,
   main_circle: { type: ObjectId, ref: 'Circle' },
 

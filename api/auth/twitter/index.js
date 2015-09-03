@@ -11,7 +11,7 @@ var jwt = require('../util/jwt');
 
 /**
  * @api {post} /auth/twitter Twitter login
- * @apiGroup Social
+ * @apiGroup Autenticacion Social
  *
  * @apiParam {String} oauth_token Oauth token para obtener el request token
  * @apiParam {String} oauth_verifier Oauth verificador para obtener el request token
@@ -47,7 +47,8 @@ var jwt = require('../util/jwt');
  *           "email": "90joelmarquez@gmail.com",
  *           "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
  *         },
- *         "valid_local_user": true
+ *         "valid_local_user": true,
+ *         "verified": true
  *       }
  *     }
  */
@@ -55,7 +56,7 @@ twitterRouter.post('/', twitterController.linkAccount);
 
 /**
  * @api {get} /auth/twitter/callback Twitter login callback
- * @apiGroup Social
+ * @apiGroup Autenticacion Social
  *
  * @apiParam {String} oauth_token Oauth token para obtener el request token
  * @apiParam {String} oauth_verifier Oauth verificador para obtener el request token
@@ -72,7 +73,7 @@ twitterRouter.get('/callback', twitterController.handleCallback);
 
 /**
  * @api {delete} /auth/twitter Twitter unlink
- * @apiGroup Social
+ * @apiGroup Autenticacion Social
  *
  * @apiHeader {String} Authorization Bearer token
  * @apiHeaderExample {json} Header-Example:

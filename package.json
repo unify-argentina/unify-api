@@ -23,6 +23,7 @@
     "moment": "^2.10.3",
     "mongoose": "^4.0.5",
     "morgan": "^1.6.0",
+    "node-uuid": "^1.4.3",
     "nodemailer": "^1.4.0",
     "querystring": "^0.2.0",
     "randomstring": "^1.0.6",

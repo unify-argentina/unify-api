@@ -81,7 +81,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWJjM2MyN2JmYTU0MGVhMmM0MzJjZGMiLCJpYXQiOjE0MzgzOTk2NDUsImV4cCI6MTQ0MDk5MTY0NX0.lrrs4_S3qZ7roqmJeCr3nNAXxmPURlYhZlUA7IOcn2w\",\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55bc3c27bfa540ea2c432cdc\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55bc3c27bfa540ea2c432cdc\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55bc3c29bfa540ea2c432cdd\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true\n    }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWJjM2MyN2JmYTU0MGVhMmM0MzJjZGMiLCJpYXQiOjE0MzgzOTk2NDUsImV4cCI6MTQ0MDk5MTY0NX0.lrrs4_S3qZ7roqmJeCr3nNAXxmPURlYhZlUA7IOcn2w\",\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55bc3c27bfa540ea2c432cdc\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55bc3c27bfa540ea2c432cdc\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55bc3c29bfa540ea2c432cdd\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true,\n        \"verified\": true\n    }\n}",
           "type": "json"
         }
       ]
@@ -157,7 +157,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI4M2VkM2Y0NjAxZmMxMTFhYjcyMWY\",\n    \"user\": {\n        \"main_circle\": {\n            \"__v\": 0,\n            \"user\": \"55b83ed3f4601fc111ab721f\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55b83ed4f4601fc111ab7220\",\n            \"ancestors\": [\n            ]\n        },\n        \"__v\": 0,\n        \"email\": \"90joelmarquez2@gmail.com\",\n        \"name\": \"Joel\",\n        \"_id\": \"55b83ed3f4601fc111ab721f\",\n        \"valid_local_user\": true\n    }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI4M2VkM2Y0NjAxZmMxMTFhYjcyMWY\",\n    \"user\": {\n        \"main_circle\": {\n            \"__v\": 0,\n            \"user\": \"55b83ed3f4601fc111ab721f\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55b83ed4f4601fc111ab7220\",\n            \"ancestors\": [\n            ]\n        },\n        \"__v\": 0,\n        \"email\": \"90joelmarquez2@gmail.com\",\n        \"name\": \"Joel\",\n        \"_id\": \"55b83ed3f4601fc111ab721f\",\n        \"valid_local_user\": true,\n        \"verified\": false\n    }\n}",
           "type": "json"
         }
       ]
@@ -169,6 +169,522 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:8080/auth/signup"
+      }
+    ]
+  },
+  {
+    "type": "delete",
+    "url": "/auth/facebook",
+    "title": "Facebook unlink",
+    "group": "Autenticacion_Social",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/facebook/index.js",
+    "groupTitle": "Autenticacion_Social",
+    "name": "DeleteAuthFacebook",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/facebook"
+      }
+    ]
+  },
+  {
+    "type": "delete",
+    "url": "/auth/google",
+    "title": "Google unlink",
+    "group": "Autenticacion_Social",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/google/index.js",
+    "groupTitle": "Autenticacion_Social",
+    "name": "DeleteAuthGoogle",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/google"
+      }
+    ]
+  },
+  {
+    "type": "delete",
+    "url": "/auth/instagram",
+    "title": "Instagram unlink",
+    "group": "Autenticacion_Social",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/instagram/index.js",
+    "groupTitle": "Autenticacion_Social",
+    "name": "DeleteAuthInstagram",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/instagram"
+      }
+    ]
+  },
+  {
+    "type": "delete",
+    "url": "/auth/twitter",
+    "title": "Twitter unlink",
+    "group": "Autenticacion_Social",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/twitter/index.js",
+    "groupTitle": "Autenticacion_Social",
+    "name": "DeleteAuthTwitter",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/twitter"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/auth/twitter/callback",
+    "title": "Twitter login callback",
+    "group": "Autenticacion_Social",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "oauth_token",
+            "description": "<p>Oauth token para obtener el request token</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "oauth_verifier",
+            "description": "<p>Oauth verificador para obtener el request token</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/twitter/index.js",
+    "groupTitle": "Autenticacion_Social",
+    "name": "GetAuthTwitterCallback",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/twitter/callback"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/auth/facebook",
+    "title": "Facebook login",
+    "group": "Autenticacion_Social",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Código de autorización de Facebook</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "clientId",
+            "description": "<p>Id de la app</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "redirectUri",
+            "description": "<p>La uri a la cual se va a redireccionar</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"main_circle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"username\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"username\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"valid_local_user\": true,\n    \"verified\": true\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/facebook/index.js",
+    "groupTitle": "Autenticacion_Social",
+    "name": "PostAuthFacebook",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/facebook"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/auth/google",
+    "title": "Google login",
+    "group": "Autenticacion_Social",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Código de autorización de Google</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "clientId",
+            "description": "<p>Id de la app</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "redirectUri",
+            "description": "<p>La uri a la cual se va a redireccionar</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"main_circle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"username\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"username\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"valid_local_user\": true,\n    \"verified\": true\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/google/index.js",
+    "groupTitle": "Autenticacion_Social",
+    "name": "PostAuthGoogle",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/google"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/auth/instagram",
+    "title": "Instagram login",
+    "group": "Autenticacion_Social",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Código de autorización de Instagram</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "clientId",
+            "description": "<p>Id de la app</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "redirectUri",
+            "description": "<p>La uri a la cual se va a redireccionar</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"main_circle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"username\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"username\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"valid_local_user\": true,\n    \"verified\": true\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/instagram/index.js",
+    "groupTitle": "Autenticacion_Social",
+    "name": "PostAuthInstagram",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/instagram"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/auth/twitter",
+    "title": "Twitter login",
+    "group": "Autenticacion_Social",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "oauth_token",
+            "description": "<p>Oauth token para obtener el request token</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "oauth_verifier",
+            "description": "<p>Oauth verificador para obtener el request token</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"main_circle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"username\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"username\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"valid_local_user\": true,\n    \"verified\": true\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/twitter/index.js",
+    "groupTitle": "Autenticacion_Social",
+    "name": "PostAuthTwitter",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/twitter"
       }
     ]
   },
@@ -1442,522 +1958,6 @@ define({ "api": [
     ]
   },
   {
-    "type": "delete",
-    "url": "/auth/facebook",
-    "title": "Facebook unlink",
-    "group": "Social",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/facebook/index.js",
-    "groupTitle": "Social",
-    "name": "DeleteAuthFacebook",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/facebook"
-      }
-    ]
-  },
-  {
-    "type": "delete",
-    "url": "/auth/google",
-    "title": "Google unlink",
-    "group": "Social",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/google/index.js",
-    "groupTitle": "Social",
-    "name": "DeleteAuthGoogle",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/google"
-      }
-    ]
-  },
-  {
-    "type": "delete",
-    "url": "/auth/instagram",
-    "title": "Instagram unlink",
-    "group": "Social",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/instagram/index.js",
-    "groupTitle": "Social",
-    "name": "DeleteAuthInstagram",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/instagram"
-      }
-    ]
-  },
-  {
-    "type": "delete",
-    "url": "/auth/twitter",
-    "title": "Twitter unlink",
-    "group": "Social",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/twitter/index.js",
-    "groupTitle": "Social",
-    "name": "DeleteAuthTwitter",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/twitter"
-      }
-    ]
-  },
-  {
-    "type": "get",
-    "url": "/auth/twitter/callback",
-    "title": "Twitter login callback",
-    "group": "Social",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "oauth_token",
-            "description": "<p>Oauth token para obtener el request token</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "oauth_verifier",
-            "description": "<p>Oauth verificador para obtener el request token</p> "
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0.akRndKmfCPSRumw8ybquxCjba7MsgfBdK_ZuHINGNNs\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/twitter/index.js",
-    "groupTitle": "Social",
-    "name": "GetAuthTwitterCallback",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/twitter/callback"
-      }
-    ]
-  },
-  {
-    "type": "post",
-    "url": "/auth/facebook",
-    "title": "Facebook login",
-    "group": "Social",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "code",
-            "description": "<p>Código de autorización de Facebook</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "clientId",
-            "description": "<p>Id de la app</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "redirectUri",
-            "description": "<p>La uri a la cual se va a redireccionar</p> "
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"main_circle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"username\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"username\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"valid_local_user\": true\n  }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/facebook/index.js",
-    "groupTitle": "Social",
-    "name": "PostAuthFacebook",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/facebook"
-      }
-    ]
-  },
-  {
-    "type": "post",
-    "url": "/auth/google",
-    "title": "Google login",
-    "group": "Social",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "code",
-            "description": "<p>Código de autorización de Google</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "clientId",
-            "description": "<p>Id de la app</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "redirectUri",
-            "description": "<p>La uri a la cual se va a redireccionar</p> "
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"main_circle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"username\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"username\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"valid_local_user\": true\n  }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/google/index.js",
-    "groupTitle": "Social",
-    "name": "PostAuthGoogle",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/google"
-      }
-    ]
-  },
-  {
-    "type": "post",
-    "url": "/auth/instagram",
-    "title": "Instagram login",
-    "group": "Social",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "code",
-            "description": "<p>Código de autorización de Instagram</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "clientId",
-            "description": "<p>Id de la app</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "redirectUri",
-            "description": "<p>La uri a la cual se va a redireccionar</p> "
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"main_circle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"username\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"username\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"valid_local_user\": true\n  }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/instagram/index.js",
-    "groupTitle": "Social",
-    "name": "PostAuthInstagram",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/instagram"
-      }
-    ]
-  },
-  {
-    "type": "post",
-    "url": "/auth/twitter",
-    "title": "Twitter login",
-    "group": "Social",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "oauth_token",
-            "description": "<p>Oauth token para obtener el request token</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "oauth_verifier",
-            "description": "<p>Oauth verificador para obtener el request token</p> "
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Token de acceso valido</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NWI2ZmJhOTczMTkxYTc0MjhkODBjOTQiL\",\n  \"user\": {\n    \"__v\": 0,\n    \"_id\": \"55b6fba973191a7428d80c94\",\n    \"email\": \"90joelmarquez@gmail.com\",\n    \"main_circle\": \"55b6fbaa73191a7428d80c95\",\n    \"name\": \"Joel Marquez\",\n    \"google\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n    },\n    \"instagram\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1209539_349750521886382_2055550828_a.jpg\",\n      \"username\": \"joe__marquez\"\n    },\n    \"twitter\": {\n      \"display_name\": \"Joel Márquez\",\n      \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n      \"username\": \"joelmarquez90\"\n    },\n    \"facebook\": {\n      \"display_name\": \"Joel Márquez\",\n      \"email\": \"90joelmarquez@gmail.com\",\n      \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n    },\n    \"valid_local_user\": true\n  }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/auth/twitter/index.js",
-    "groupTitle": "Social",
-    "name": "PostAuthTwitter",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:8080/auth/twitter"
-      }
-    ]
-  },
-  {
     "type": "get",
     "url": "/api/user/:user_id",
     "title": "Obtener usuario",
@@ -2279,6 +2279,54 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:8080/api/user/:user_id"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/auth/verify/:token",
+    "title": "Verificacion de token",
+    "group": "Verificacion_de_cuenta",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de verificacion</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Token de acceso valido</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9H0Z2_5o\",\n  \"user\": {\n    \"created_at\": \"2015-09-03T04:05:21.846Z\",\n    \"updated_at\": \"2015-09-03T04:05:21.846Z\",\n    \"__v\": 0,\n    \"_id\": \"55e7c6f80fdc3a922952aefc\",\n    \"email\": \"unify.argentina@gmail.com\",\n    \"main_circle\": \"55e7c6f90fdc3a922952aefd\",\n    \"name\": \"joel\",\n    \"verified\": true,\n    \"valid_local_user\": true\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/auth/verify-token/index.js",
+    "groupTitle": "Verificacion_de_cuenta",
+    "name": "GetAuthVerifyToken",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/auth/verify/:token"
       }
     ]
   }

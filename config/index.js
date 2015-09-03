@@ -31,5 +31,8 @@ module.exports = {
   INSTAGRAM_SECRET: process.env.INSTAGRAM_SECRET || 'INSTAGRAM secret',
 
   // Google
-  GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'GOOGLE secret'
+  GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'GOOGLE secret',
+
+  EMAIL_USERNAME: process.env.EMAIL_USERNAME || 'unify',
+  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || 'unify'
 };

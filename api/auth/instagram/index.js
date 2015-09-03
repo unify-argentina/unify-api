@@ -11,7 +11,7 @@ var jwt = require('../util/jwt');
 
 /**
  * @api {post} /auth/instagram Instagram login
- * @apiGroup Social
+ * @apiGroup Autenticacion Social
  *
  * @apiParam {String} code Código de autorización de Instagram
  * @apiParam {String} clientId Id de la app
@@ -49,7 +49,8 @@ var jwt = require('../util/jwt');
  *           "email": "90joelmarquez@gmail.com",
  *           "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
  *         },
- *         "valid_local_user": true
+ *         "valid_local_user": true,
+ *         "verified": true
  *       }
  *     }
  */
@@ -57,7 +58,7 @@ instagramRouter.post('/', instagramController.linkAccount);
 
 /**
  * @api {delete} /auth/instagram Instagram unlink
- * @apiGroup Social
+ * @apiGroup Autenticacion Social
  *
  * @apiHeader {String} Authorization Bearer token
  * @apiHeaderExample {json} Header-Example:
