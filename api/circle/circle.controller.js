@@ -75,10 +75,8 @@ module.exports.update = function (req, res) {
         .populate('user')
         .exec(function(err, parentCircle) {
           if (err || !parentCircle) {
-            logger
-              .warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
-            return res.status(400)
-              .send({errors: [{msg: "Paren't circle doesn't exists or doesn't belong to current user"}]});
+            logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
+            return res.status(400).send({errors: [{msg: "Paren't circle doesn't exists or doesn't belong to current user"}]});
           }
           else {
             saveCircleData(req, res, req.circle, parentCircle);
@@ -148,8 +146,8 @@ var saveCircleData = function(req, res, circle, foundCircle) {
   circle.name = req.body.name;
   circle.parent = req.body.parent_id;
   circle.picture = req.body.picture;
-  var ancestors = foundCircle.ancestors;
-  ancestors.push(req.body.parent_id);
+  var ancestors = [req.body.parent_id];
+  ancestors.push.apply(ancestors, foundCircle.ancestors);
   circle.ancestors = ancestors;
   circle.save(function(err) {
     if (err) {
@@ -195,6 +193,7 @@ module.exports.getTree = function (req, res) {
   });
 };
 
+// Que noche mágica Ciudad de Buenos ires
 var makeTree = function(options) {
   var children, e, i, id, j, len, len1, o, pid, ref, ref1, temp;
   id = options.id || "_id";

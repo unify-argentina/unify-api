@@ -171,14 +171,14 @@ var saveContactData = function(req, res, contact, circles, isUpdate) {
   contact.name = req.body.name;
   contact.picture = req.body.picture;
   contact.user = req.user;
-  contact.parents = Contact.getContactParents(circles);
+  contact.parents = Contact.getContactParentsFromCircles(circles);
   contact.save(function(err) {
     if (err) {
       logger.err(err);
       return res.status(400).send({ errors: [{ msg: 'Error saving data ' + err }] });
     }
     else {
-      logger.debug('Contact for user: ' + req.user + ' created successfully: ' + contact.toString());
+      logger.debug('Contact for user: ' + req.user + (isUpdate ? ' updated' : ' created') + ' successfully: ' + contact.toString());
       contact.created_at = undefined;
       contact.updated_at = undefined;
       return res.send({ contact: contact });

@@ -8,6 +8,9 @@
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
 
+// modelos
+var Contact = require('../contact/contact.model');
+
 var circleSchema = mongoose.Schema({
 
   name: { type: String, required: true },
@@ -28,6 +31,27 @@ circleSchema.pre('save', function(next) {
     this.created_at = now;
   }
   next();
+});
+
+// Una vez salvado el círculo buscamos los contactos que lo tengan como ancestro para actualizarlos
+circleSchema.post('save', function(circle, next) {
+  Contact.find({ 'parents.ancestors': circle._id }, function(err, contacts) {
+    if (err || !contacts || contacts.length === 0) {
+      next();
+    }
+    else {
+      contacts.forEach(function(contact) {
+        var count = 0;
+        contact.getContactParentsFromCircle(circle);
+        contact.save(function(err) {
+          count++;
+          if (err || count === contacts.length) {
+            next();
+          }
+        });
+      });
+    }
+  });
 });
 
 circleSchema.methods.toString = function() {

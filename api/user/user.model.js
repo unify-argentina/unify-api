@@ -92,7 +92,7 @@ userSchema.pre('save', function(next) {
 userSchema.post('save', function(user, next) {
   if (user.main_circle === undefined) {
     var main_circle = new Circle();
-    main_circle.name = 'Main Circle';
+    main_circle.name = 'Principal';
     main_circle.user = user._id;
     main_circle.save(function(err) {
       user.main_circle = main_circle;
@@ -187,7 +187,7 @@ userSchema.methods.toggleSocialAccount = function(account, toggle, callback) {
             if (err) {
               callback(err);
             }
-            else if (count === linkedContacts.length ) {
+            else if (count === linkedContacts.length) {
               callback(null);
             }
           });
