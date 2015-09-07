@@ -129,6 +129,16 @@ contactSchema.methods.getContactParentsFromCircle = function(circle) {
   logger.debug('New parents: ' + JSON.stringify(this.parents));
 };
 
+// Elimina los parents que tengan como ancestor el id del circulo,
+// Si no queda ningún parent, entonces el contacto puede ser eliminado
+contactSchema.methods.shouldRemoveFromCircle = function(circleId) {
+
+  // rejectedParents son los parents que no tienen como ancestor el circleId
+  var rejectedParents = _.reject(this.parents, { ancestors: [circleId] });
+  this.parents = rejectedParents;
+  return rejectedParents.length === 0;
+};
+
 // Este método genera los ancestros de un contacto (el círculo en el cual fue creado más los ancestros del círculo)
 contactSchema.statics.getContactParentsFromCircles = function(circles) {
   var parents = [];

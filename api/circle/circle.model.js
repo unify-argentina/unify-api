@@ -54,6 +54,41 @@ circleSchema.post('save', function(circle, next) {
   });
 });
 
+// Una vez que se elimina un circulo, tenemos que eliminar todos los subcirculos y los
+// contactos que lo tengan dentro de sus ancestros si es que se encuentran solo en ese circulo,
+// si se encuentran en mas de un circulo, entonces borramos ese elemento de los parents
+circleSchema.pre('remove', function(next) {
+  var circleId = this._id;
+  Contact.find({ 'parents.ancestors': circleId }, function(err, contacts) {
+    if (err || !contacts || contacts.length === 0) {
+      next();
+    }
+    else {
+      contacts.forEach(function(contact) {
+        var count = 0;
+        // Si el contacto tiene un solo parent, entonces lo eliminamos
+        if (contact.shouldRemoveFromCircle(circleId)) {
+          contact.remove(function(err) {
+            count++;
+            if (err || count === contacts.length) {
+              next();
+            }
+          });
+        }
+        // Sino, guardamos ese contacto
+        else {
+          contact.save(function(err) {
+            count++;
+            if (err || count === contacts.length) {
+              next();
+            }
+          });
+        }
+      });
+    }
+  });
+});
+
 circleSchema.methods.toString = function() {
   return 'ID: ' + this._id + ' Name: ' + this.name + ' parent: ' + this.parent;
 };
