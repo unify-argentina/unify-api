@@ -94,49 +94,67 @@ module.exports.linkAccount = function(req, res) {
 
 // Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_token) {
-  User.findOne({ 'google.id': googleProfile.sub })
+
+  // Primero verificamos el Unify token
+  var payload = null;
+  try {
+    payload = jwt.verify(unifyToken);
+  }
+  catch (err) {
+    return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
+  }
+
+  // En caso de que exista ese usuario, nos fijamos si el id de Google ya está asociado con otra cuenta
+  User.findOne({ _id: payload.sub}, User.socialFields())
     .populate('main_circle')
-    .exec(function(err, existingUser) {
-    // Si ya existe un usuario con ese id generamos un nuevo unifyToken
-    if (existingUser) {
-      logger.info('Existing google user: ' + existingUser.toString());
-      return jwt.createJWT(res, existingUser);
+    .exec(function(err, unifyUser) {
+
+    if (err || !unifyUser) {
+      logger.warn('User not found: ' + payload.sub);
+      return res.status(400).send({ errors: [{ msg: 'User not found' }] });
     }
-    // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Google
-    else {
-      var payload = null;
-      try {
-        payload = jwt.verify(unifyToken);
-      }
-      catch(err) {
-        return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
-      }
-      User.findOne({ _id: payload.sub })
+
+    // Si existe un usuario de Unify, nos fijamos si no tiene su cuenta asociada con Google
+    else if (!unifyUser.hasLinkedAccount('google')) {
+
+      // Y si no la tiene, nos fijamos que no haya otro usuario en Unify con ese Google id
+      User.findOne({ 'google.id': googleProfile.sub })
         .populate('main_circle')
-        .exec(function(err, user) {
-        if (err || !user) {
-          logger.warn('User not found: ' + payload.sub);
-          return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+        .exec(function(err, existingUser) {
+
+        // Si ya existe un usuario con ese id devolvemos error ya que no queremos desvincular la cuenta ya vinculada de ese usuario
+        if (existingUser) {
+          logger.warn('User with Google social account already exists: ' + existingUser.toString());
+          return res.status(400).send({ errors: [{ msg: "Can't disassociate Google account for existing user" }] });
         }
+
+        // Si no existe un usuario de Unify con ese Google id entonces le asociamos la cuenta al usuario
         else {
+
           // Al hacer un login con Instagram o con Twitter el usuario no tiene mail, por lo que debemos usar el de Google
-          if (user.email === undefined) {
-            user.email = googleProfile.email;
+          if (unifyUser.email === undefined) {
+            unifyUser.email = googleProfile.email;
           }
-          logger.info('Existing unify user: ' + user.toString());
-          linkGoogleData(user, googleProfile, access_token);
-          user.toggleSocialAccount('google', true, function(err) {
+          logger.info('Existing Unify user: ' + unifyUser.toString());
+          linkGoogleData(unifyUser, googleProfile, access_token);
+          unifyUser.toggleSocialAccount('google', true, function(err) {
             if (err) {
-              logger.warn('There was an error trying to link Google: ' + user._id);
+              logger.warn('There was an error trying to link Google: ' + unifyUser._id);
               return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Google' }]});
             }
             else {
-              logger.info('Successfully linked Google account for user: ' + user.toString());
-              return saveUser(res, user);
+              logger.info('Successfully linked Google account for user: ' + unifyUser.toString());
+              return saveUser(res, unifyUser);
             }
           });
         }
       });
+    }
+
+    // Si ya tiene linkeada su cuenta no hacemos nada y devolvemos el token mas el usuario
+    else {
+      logger.info('Existing Google user: ' + unifyUser.toString());
+      return jwt.createJWT(res, unifyUser);
     }
   });
 };
@@ -158,7 +176,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
         .exec(function(err, existingUnifyUser) {
         // Si encuentra a uno con el email de Google, vincula la cuenta local con la de Google
         if (existingUnifyUser) {
-          logger.info('Existing unify user: ' + existingUnifyUser);
+          logger.info('Existing Unify user: ' + existingUnifyUser);
           linkGoogleData(existingUnifyUser, googleProfile, access_token);
           // Habilitamos los posibles contactos que haya creado el usuario previamente al deslinkear la cuenta
           existingUnifyUser.toggleSocialAccount('google', true, function(err) {

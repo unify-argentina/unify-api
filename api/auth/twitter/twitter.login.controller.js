@@ -129,49 +129,66 @@ var handleTokenRequest = function(req, res) {
 
 // Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_token) {
-  User.findOne({ 'twitter.id': twitterProfile.id })
+
+  // Primero verificamos el Unify token
+  var payload = null;
+  try {
+    payload = jwt.verify(unifyToken);
+  }
+  catch (err) {
+    return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
+  }
+
+  // En caso de que exista ese usuario, nos fijamos si el id de Twitter ya está asociado con otra cuenta
+  User.findOne({ _id: payload.sub}, User.socialFields())
     .populate('main_circle')
-    .exec(function(err, existingUser) {
-    // Si ya existe un usuario con ese id generamos un nuevo unifyToken
-    if (existingUser) {
-      logger.info('Existing twitter user: ' + existingUser.toString());
-      return jwt.createJWT(res, existingUser);
-    }
-    // Si no existe uno, buscamos el usuario de Unify autenticado para vincularle la cuenta de Twitter
-    else {
-      var payload = null;
-      try {
-        payload = jwt.verify(unifyToken);
+    .exec(function(err, unifyUser) {
+
+      if (err || !unifyUser) {
+        logger.warn('User not found: ' + payload.sub);
+        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
       }
-      catch(err) {
-        return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
-      }
-      User.findOne({ _id: payload.sub })
-        .populate('main_circle')
-        .exec(function(err, user) {
-        if (err || !user) {
-          logger.warn('User not found: ' + payload.sub);
-          return res.status(400).send({ errors: [{ msg: 'User not found' }] });
-        }
-        // Si existe un usuario de Unify, vinculamos su cuenta con la de Twitter
-        else {
-          logger.info('Existing unify user: ' + user.toString());
-          linkTwitterData(user, twitterProfile, access_token);
-          // Habilitamos los posibles contactos que haya creado el usuario previamente al deslinkear la cuenta
-          user.toggleSocialAccount('twitter', true, function(err) {
-            if (err) {
-              logger.warn('There was an error trying to link Twitter: ' + user._id);
-              return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Twitter' }]});
+
+      // Si existe un usuario de Unify, nos fijamos si no tiene su cuenta asociada con Twitter
+      else if (!unifyUser.hasLinkedAccount('twitter')) {
+
+        // Y si no la tiene, nos fijamos que no haya otro usuario en Unify con ese Twitter id
+        User.findOne({ 'twitter.id': twitterProfile.id })
+          .populate('main_circle')
+          .exec(function(err, existingUser) {
+
+            // Si ya existe un usuario con ese id devolvemos error ya que no queremos desvincular la cuenta ya vinculada de ese usuario
+            if (existingUser) {
+              logger.warn('User with Twitter social account already exists: ' + existingUser.toString());
+              return res.status(400).send({ errors: [{ msg: "Can't disassociate Twitter account for existing user" }] });
             }
+
+            // Si no existe un usuario de Unify con ese Twitter id entonces le asociamos la cuenta al usuario
             else {
-              logger.info('Successfully linked Twitter account for user: ' + user.toString());
-              return saveUser(res, user);
+
+              logger.info('Existing unify user: ' + unifyUser.toString());
+              linkTwitterData(unifyUser, twitterProfile, access_token);
+              // Habilitamos los posibles contactos que haya creado el usuario previamente al deslinkear la cuenta
+              unifyUser.toggleSocialAccount('twitter', true, function(err) {
+                if (err) {
+                  logger.warn('There was an error trying to link Twitter: ' + unifyUser._id);
+                  return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Twitter' }]});
+                }
+                else {
+                  logger.info('Successfully linked Twitter account for user: ' + unifyUser.toString());
+                  return saveUser(res, unifyUser);
+                }
+              });
             }
           });
-        }
-      });
-    }
-  });
+      }
+
+      // Si ya tiene linkeada su cuenta no hacemos nada y devolvemos el token mas el usuario
+      else {
+        logger.info('Existing Twitter user: ' + unifyUser.toString());
+        return jwt.createJWT(res, unifyUser);
+      }
+    });
 };
 
 // Maneja el caso de un usuario no autenticado
