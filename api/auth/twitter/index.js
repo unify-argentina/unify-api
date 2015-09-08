@@ -25,7 +25,14 @@ var jwt = require('../util/jwt');
  *         "__v": 0,
  *         "_id": "55b6fba973191a7428d80c94",
  *         "email": "90joelmarquez@gmail.com",
- *         "main_circle": "55b6fbaa73191a7428d80c95",
+ *         "main_circle": {
+ *             "__v": 0,
+ *             "user": "55b83ed3f4601fc111ab721f",
+ *             "name": "Main Circle",
+ *             "_id": "55b83ed4f4601fc111ab7220",
+ *             "ancestors": [
+ *             ]
+ *         }
  *         "name": "Joel Marquez",
  *         "google": {
  *           "display_name": "Joel Márquez",

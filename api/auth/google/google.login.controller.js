@@ -94,7 +94,9 @@ module.exports.linkAccount = function(req, res) {
 
 // Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_token) {
-  User.findOne({ 'google.id': googleProfile.sub }, function(err, existingUser) {
+  User.findOne({ 'google.id': googleProfile.sub })
+    .populate('main_circle')
+    .exec(function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
       logger.info('Existing google user: ' + existingUser.toString());
@@ -109,7 +111,9 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_to
       catch(err) {
         return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
       }
-      User.findById(payload.sub, function(err, user) {
+      User.findOne({ _id: payload.sub })
+        .populate('main_circle')
+        .exec(function(err, user) {
         if (err || !user) {
           logger.warn('User not found: ' + payload.sub);
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -139,7 +143,9 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_to
 
 // Maneja el caso de un usuario no autenticado
 var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
-  User.findOne({ 'google.id': googleProfile.sub }, function(err, existingGoogleUser) {
+  User.findOne({ 'google.id': googleProfile.sub })
+    .populate('main_circle')
+    .exec(function(err, existingGoogleUser) {
     // Si encuentra a uno con el id de Google, es un usuario registrado con Google
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingGoogleUser) {
@@ -147,7 +153,9 @@ var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
       return jwt.createJWT(res, existingGoogleUser);
     }
     else {
-      User.findOne({ 'email': googleProfile.email }, function(err, existingUnifyUser) {
+      User.findOne({ 'email': googleProfile.email })
+        .populate('main_circle')
+        .exec(function(err, existingUnifyUser) {
         // Si encuentra a uno con el email de Google, vincula la cuenta local con la de Google
         if (existingUnifyUser) {
           logger.info('Existing unify user: ' + existingUnifyUser);

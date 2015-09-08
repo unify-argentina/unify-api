@@ -85,7 +85,9 @@ module.exports.linkAccount = function(req, res) {
 
 // Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access_token) {
-  User.findOne({ 'instagram.id': instagramProfile.id }, function(err, existingUser) {
+  User.findOne({ 'instagram.id': instagramProfile.id })
+    .populate('main_circle')
+    .exec(function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
       logger.info('Existing instagram user: ' + existingUser.toString());
@@ -100,7 +102,9 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
       catch(err) {
         return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
       }
-      User.findById(payload.sub, function(err, user) {
+      User.findOne({ _id: payload.sub })
+        .populate('main_circle')
+        .exec(function(err, user) {
         if (err || !user) {
           logger.warn('User not found: ' + payload.sub);
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -130,7 +134,9 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
 var handleNotAuthenticatedUser = function(res, instagramProfile, access_token) {
   // Si encuentra a uno con el id de Instagram, es un usuario registrado con Twitter
   // pero no loggeado, generamos el token y se lo enviamos
-  User.findOne({ 'instagram.id': instagramProfile.id }, function(err, existingInstagramUser) {
+  User.findOne({ 'instagram.id': instagramProfile.id })
+    .populate('main_circle')
+    .exec(function(err, existingInstagramUser) {
     if (existingInstagramUser) {
       logger.info('Existing instagram user: ' + existingInstagramUser.toString());
       return jwt.createJWT(res, existingInstagramUser);

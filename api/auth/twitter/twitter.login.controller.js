@@ -129,7 +129,9 @@ var handleTokenRequest = function(req, res) {
 
 // Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_token) {
-  User.findOne({ 'twitter.id': twitterProfile.id }, function(err, existingUser) {
+  User.findOne({ 'twitter.id': twitterProfile.id })
+    .populate('main_circle')
+    .exec(function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
       logger.info('Existing twitter user: ' + existingUser.toString());
@@ -144,7 +146,9 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_t
       catch(err) {
         return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
       }
-      User.findById(payload.sub, function(err, user) {
+      User.findOne({ _id: payload.sub })
+        .populate('main_circle')
+        .exec(function(err, user) {
         if (err || !user) {
           logger.warn('User not found: ' + payload.sub);
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -172,7 +176,9 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_t
 
 // Maneja el caso de un usuario no autenticado
 var handleNotAuthenticatedUser = function(res, twitterProfile, access_token) {
-  User.findOne({ 'twitter.id': twitterProfile.id }, function(err, existingTwitterUser) {
+  User.findOne({ 'twitter.id': twitterProfile.id })
+    .populate('main_circle')
+    .exec(function(err, existingTwitterUser) {
     // Si encuentra a uno con el id de Twitter, es un usuario registrado con Twitter
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingTwitterUser) {

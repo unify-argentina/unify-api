@@ -92,7 +92,9 @@ module.exports.linkAccount = function(req, res) {
 
 // Maneja el caso de un autenticado con un token de Unify
 var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, access_token) {
-  User.findOne({ 'facebook.id': facebookProfile.id }, function(err, existingUser) {
+  User.findOne({ 'facebook.id': facebookProfile.id })
+    .populate('main_circle')
+    .exec(function(err, existingUser) {
     // Si ya existe un usuario con ese id generamos un nuevo unifyToken
     if (existingUser) {
       logger.info('Existing facebook user: ' + existingUser.toString());
@@ -107,7 +109,9 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, access_
       catch(err) {
         return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
       }
-      User.findById(payload.sub, function(err, user) {
+      User.findOne({ _id: payload.sub})
+        .populate('main_circle')
+        .exec(function(err, user) {
         if (err || !user) {
           logger.warn('User not found: ' + payload.sub);
           return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -139,7 +143,9 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, access_
 
 // Maneja el caso de un usuario no autenticado
 var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
-  User.findOne({ 'facebook.id': facebookProfile.id }, function(err, existingFacebookUser) {
+  User.findOne({ 'facebook.id': facebookProfile.id })
+    .populate('main_circle')
+    .exec(function(err, existingFacebookUser) {
     // Si encuentra a uno con el id de Facebook, es un usuario registrado con Facebook
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingFacebookUser) {
@@ -147,7 +153,9 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
       return jwt.createJWT(res, existingFacebookUser);
     }
     else {
-      User.findOne({ 'email': facebookProfile.email }, function(err, existingUnifyUser) {
+      User.findOne({ 'email': facebookProfile.email })
+        .populate('main_circle')
+        .exec(function(err, existingUnifyUser) {
         // Si encuentra a uno con el email de Facebook, vincula la cuenta local con la de Facebook
         if (existingUnifyUser) {
           logger.info('Existing unify user: ' + existingUnifyUser);
