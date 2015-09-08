@@ -189,6 +189,8 @@ var saveContactData = function(req, res, contact, circles, isUpdate) {
 // Este método chequea que si se le pasó un social_id, efectivamente el usuario tenga esa cuenta linkeada
 var validateUserSocialAccounts = function(req, res, contact, user) {
 
+  contact.cleanSocialAccounts();
+
   // Si vino como parámetro el id de facebook del contacto y el usuario tiene asociado facebook, lo agregamos
   if (typeof req.body.facebook_id === 'string') {
     if (user.hasLinkedAccount('facebook')) {

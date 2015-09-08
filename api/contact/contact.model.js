@@ -139,6 +139,14 @@ contactSchema.methods.shouldRemoveFromCircle = function(circleId) {
   return rejectedParents.length === 0;
 };
 
+// Este método limpia a cero las cuentas del contacto para poder actualizarlo
+contactSchema.methods.cleanSocialAccounts = function() {
+  this.facebook = undefined;
+  this.twitter = undefined;
+  this.instagram = undefined;
+  this.google = undefined;
+};
+
 // Este método genera los ancestros de un contacto (el círculo en el cual fue creado más los ancestros del círculo)
 contactSchema.statics.getContactParentsFromCircles = function(circles) {
   var parents = [];
