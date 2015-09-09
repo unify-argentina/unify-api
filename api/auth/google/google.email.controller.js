@@ -210,6 +210,11 @@ var getBodyFromPayload = function(googleEmail, contentType) {
 // Encuentra recursivamente el valor del part pasado como parámetro en mimeType
 var findPartValue = function(parts, mimeType) {
 
+  // Chequea que parts sea un array para poder continuar la función, si no lo es vuelve
+  if (!parts || parts.constructor !== Array) {
+    return '';
+  }
+
   var part = _.find(parts, { mimeType: mimeType });
   if (part && part.filename === '') {
     return part.body.data || '';
