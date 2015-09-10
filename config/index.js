@@ -7,7 +7,7 @@
 module.exports = {
 
   // Accepted origins
-  CROSS_DOMAIN_URLS: ['http://localhost:9000', 'http://127.0.0.1:9000', 'http://www.myunify.io'],
+  CROSS_DOMAIN_URLS: ['http://localhost:9000', 'http://127.0.0.1:9000', 'http://www.myunify.io', 'http://test-unify.herokuapp.com'],
 
   // Logger
   LOG_LEVEL: process.env.LOG_LEVEL || 'debug',
