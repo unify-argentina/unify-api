@@ -20,7 +20,7 @@ var Contact = require('../contact/contact.model');
 var userSchema = mongoose.Schema({
 
   name: { type: String, required: true },
-  email: { type: String, unique: true, lowercase: true },
+  email: { type: String, lowercase: true },
   password: { type: String, required: true, select: false },
   valid_local_user: { type: Boolean, default: false },
   verified: { type: Boolean, default: false },

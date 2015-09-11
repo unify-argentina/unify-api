@@ -213,9 +213,33 @@ emailRoutes.get('/draft', emailController.listDraft);
  */
 emailRoutes.get('/trash', emailController.listTrash);
 
-// TODO ver si se va a usar
-emailRoutes.get('/:email_id', emailController.getById);
-
+/**
+ * @api {post} /api/user/:user_id/email Enviar un email
+ * @apiGroup Email
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {Array} to Lista de emails válidos a enviar el email
+ * @apiParam {String} subject Asunto del email
+ * @apiParam {String} text Cuerpo del email
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *     {
+ *       "to":["unify.argentina@gmail.com"],
+ *       "cc":["aleagb.rclm@gmail.com"],
+ *       "cco":["juan.cistaro@gmail.com"],
+ *       "subject":"Hola querido",
+ *       "text":"Todo bien?"
+ *     }
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
 emailRoutes.post('/', emailController.create);
 
 emailRoutes.delete('/:email_id', emailController.delete);

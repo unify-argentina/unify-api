@@ -33,13 +33,15 @@ module.exports.sendSignupEmailToUser = function(user) {
 
       transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
-          return console.log(error);
+          return logger.error('Error sending signup email to user ' + user + ': ' + error);
         }
-        console.log('Message sent: ' + info.response);
+        else {
+          logger.info('Signup email sent to user ' + user + ': ' + info.response);
+        }
       });
     }
     else {
-      logger.error('Error creating verify token: ' + err);
+      logger.error('Error creating signup verify token for user: ' + user + ': ' + err);
     }
   });
 };

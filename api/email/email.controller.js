@@ -11,6 +11,7 @@ var googleEmails = require('../auth/google/google.email.controller');
 var logger = require('../../config/logger');
 var async = require('async');
 var _ = require('lodash');
+var validator = require('validator');
 
 // modelos
 var User = require('../user/user.model');
@@ -57,9 +58,7 @@ module.exports.listTrash = function (req, res) {
 // Se encarga de obtener los emails de la carpeta especificada en 'functionName'
 var list = function (req, res, functionName) {
 
-  User.findOne({ _id: req.user }, User.socialFields())
-    .populate('main_circle')
-    .exec(function (err, user) {
+  User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
     if (err || !user) {
       logger.warn('User not found: ' + req.user);
       return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -121,19 +120,43 @@ var sendEmailResponseFromResults = function(res, results) {
   });
 };
 
-// TODO
-module.exports.getById = function (req, res) {
-
-  process.nextTick(function () {
-    return res.sendStatus(200);
-  });
-};
-
-// TODO
+// Envia un email con la cuenta de Google
 module.exports.create = function (req, res) {
 
   process.nextTick(function () {
-    return res.sendStatus(200);
+
+    User.findOne({ _id: req.user }, User.socialFields())
+      .populate('main_circle')
+      .exec(function (err, user) {
+      if (err || !user) {
+        logger.warn('User not found: ' + req.user);
+        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+      }
+      // Si no tiene la cuenta linkeada de Google no lo dejaremos enviar un correo
+      else if (!user.hasLinkedAccount('google')) {
+        logger.warn('User have not linked Google account: ' + req.user);
+        return res.status(400).send({ errors: [{ msg: 'User has not linked his Google account' }] });
+      }
+      // Si esta todo ok procedemos a crear y enviar el email
+      else {
+        doCreateEmail(req, res, user);
+      }
+    });
+  });
+};
+
+// Crea el mail y lo envía
+var doCreateEmail = function(req, res, user) {
+
+  googleEmails.create(user.google.access_token, user.google.email, req.body, function(err) {
+    if (err) {
+      logger.warn('There was an error creating email for user: ' + req.user);
+      return res.status(400).send({ errors: [{ msg: 'There was an error creating email' }] });
+    }
+    else {
+      logger.info('Email sent ok for user: ' + req.user);
+      return res.sendStatus(200);
+    }
   });
 };
 

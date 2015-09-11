@@ -22,6 +22,8 @@ var USER_EMAIL_TRASH_LIST_URL = util.format(USER_EMAIL_GENERIC_LIST_URL, 'TRASH'
 
 var USER_EMAIL_DETAIL_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s';
 
+var USER_EMAIL_SEND_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/send';
+
 // formato de fecha de gmail
 var GMAIL_DATE_FORMAT = 'dd[,] DD MMM YYYY HH:mm:ss ZZ';
 
@@ -226,4 +228,50 @@ var findPartValue = function(parts, mimeType) {
     }
     return result;
   }
+};
+
+// Create a Gmail email
+module.exports.create = function(access_token, from, body, callback) {
+/*
+  From: Unify Argentina <unify.argentina@gmail.com>
+  To: Joel Márquez <90joelmarquez@gmail.com>, Unify Argentina <unify.argentina@gmail.com>
+  Subject: Probando la fucking API de Gmail
+
+  Holaaa
+* */
+
+  var recipients = body.to.map(function(recipient) {
+    return '<' + recipient + '>';
+  }).join(', ');
+
+  var ccs = body.cc.map(function(eachCc) {
+    return '<' + eachCc + '>';
+  }).join(', ');
+
+  var ccos = body.cco.map(function(eachCco) {
+    return '<' + eachCco + '>';
+  }).join(', ');
+
+  var email = 'From: <' + from + '>\n' +
+    'To: ' + recipients + '\n' + 'Cc: ' + ccs + '\n' + 'Bcc: ' + ccos + '\n' +
+    'Subject: ' + body.subject + '\n\n' + body.text;
+  logger.debug('Email: ' + email);
+
+  var emailEncodedBase64 = new Buffer(email).toString('base64');
+  var emailEncodedURLBase64 = emailEncodedBase64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+  logger.info('URL: ' + USER_EMAIL_SEND_URL);
+  var headers = { Authorization: 'Bearer ' + access_token };
+
+  // Enviamos el email en formato url base 64
+  request.post({ url: USER_EMAIL_SEND_URL, headers: headers, json: { raw: emailEncodedURLBase64 } }, function(err, response) {
+
+    var result = googleErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      callback(null);
+    }
+  });
 };
