@@ -27,6 +27,9 @@ var USER_EMAIL_LABELS_URL = 'https://www.googleapis.com/gmail/v1/users/me/labels
 // envío de email
 var USER_EMAIL_SEND_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/send';
 
+// marcar como visto un email
+var USER_EMAIL_MARK_AS_SEEN_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s/modify';
+
 // formato de fecha de gmail
 var GMAIL_DATE_FORMAT = 'dd[,] DD MMM YYYY HH:mm:ss ZZ';
 
@@ -301,6 +304,25 @@ module.exports.create = function(access_token, from, body, callback) {
   // Enviamos el email en formato url base 64
   request.post({ url: USER_EMAIL_SEND_URL, headers: headers, json: { raw: emailEncodedURLBase64 } }, function(err, response) {
 
+    var result = googleErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      callback(null);
+    }
+  });
+};
+
+// Marca el emailId como leído
+module.exports.markEmailSeen = function(access_token, emailId, callback) {
+
+  var url = util.format(USER_EMAIL_MARK_AS_SEEN_URL, emailId);
+  logger.info('URL: ' + USER_EMAIL_SEND_URL);
+
+  var headers = { Authorization: 'Bearer ' + access_token };
+
+  request.post({ url: url, headers: headers, json: { removeLabelIds: ['UNREAD'] } }, function(err, response) {
     var result = googleErrors.hasError(err, response);
     if (result.hasError) {
       callback(result.error);

@@ -142,9 +142,7 @@ module.exports.create = function (req, res) {
       return res.status(400).send({ errors: req.validationErrors() });
     }
 
-    User.findOne({ _id: req.user }, User.socialFields())
-      .populate('main_circle')
-      .exec(function (err, user) {
+    User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
@@ -181,6 +179,45 @@ var doCreateEmail = function(req, res, user) {
 module.exports.delete = function (req, res) {
 
   process.nextTick(function () {
+    return res.sendStatus(200);
+  });
+};
+
+// TODO
+module.exports.markEmailSeen = function (req, res) {
+
+  process.nextTick(function () {
+
+    req.assert('email_id', 'Email id must be a string').isString();
+
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
+      return res.status(400).send({ errors: req.validationErrors() });
+    }
+
+    User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
+      if (err || !user) {
+        logger.warn('User not found: ' + req.user);
+        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+      }
+      // Si no tiene la cuenta linkeada de Google no lo dejaremos marcar como visto un email
+      else if (!user.hasLinkedAccount('google')) {
+        logger.warn('User have not linked Google account: ' + req.user);
+        return res.status(400).send({ errors: [{ msg: 'User has not linked his Google account' }] });
+      }
+      // Si esta todo ok procedemos a marcar el email como visto
+      else {
+        doMarkEmailSeen(req, res, user);
+      }
+    });
+  });
+};
+
+// Marca un email como visto
+var doMarkEmailSeen = function(req, res, user) {
+
+  googleEmails.markEmailSeen(user.google.access_token, req.params.email_id, function(err) {
     return res.sendStatus(200);
   });
 };

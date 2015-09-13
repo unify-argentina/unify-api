@@ -225,8 +225,8 @@ emailRoutes.get('/trash', emailController.listTrash);
  *
  * @apiParam {String} user_id Id del usuario
  * @apiParam {Array} to Lista de emails válidos a enviar el email
- * @apiParam [{Array}] cc Lista de emails válidos a enviar como cc el email
- * @apiParam [{Array}] cco Lista de emails válidos a enviar como cco el email
+ * @apiParam {Array} [cc] Lista de emails válidos a enviar como cc el email
+ * @apiParam {Array} [cco] Lista de emails válidos a enviar como cco el email
  * @apiParam {String} subject Asunto del email
  * @apiParam {String} text Cuerpo del email
  *
@@ -245,5 +245,23 @@ emailRoutes.get('/trash', emailController.listTrash);
 emailRoutes.post('/', emailController.create);
 
 emailRoutes.delete('/:email_id', emailController.delete);
+
+/**
+ * @api {post} /api/user/:user_id/email/:email_id Marcar como leído un email
+ * @apiGroup Email
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} email_id Id del email a marcar como leído
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
+emailRoutes.post('/:email_id', emailController.markEmailSeen);
 
 module.exports = emailRoutes;
