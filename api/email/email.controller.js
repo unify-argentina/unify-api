@@ -110,13 +110,16 @@ var sendEmailResponseFromResults = function(res, results) {
     callback(null, -email.date);
     // Una vez que los ordenamos, los enviamos
   }, function(err, sortedEmails) {
-    return res.send({
+    var o = {
       emails: {
+        total_count: emailResults.count.total_count,
+        unread_count: emailResults.count.unread_count,
         count: sortedEmails.length,
         list: sortedEmails
       },
       errors: emailResults.errors
-    });
+    };
+    return res.send(o);
   });
 };
 
@@ -124,6 +127,20 @@ var sendEmailResponseFromResults = function(res, results) {
 module.exports.create = function (req, res) {
 
   process.nextTick(function () {
+
+    req.assert('subject', 'Required').notEmpty();
+    req.assert('subject', 'Subject must be a string').isString();
+    req.assert('text', 'Required').notEmpty();
+    req.assert('text', 'Text must be a string').isString();
+    req.assert('to', 'To must be an email array').isEmailArray();
+    req.assert('cc', 'Cc must be an email array').optional().isEmailArray();
+    req.assert('cco', 'Cco must be an email array').optional().isEmailArray();
+
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
+      return res.status(400).send({ errors: req.validationErrors() });
+    }
 
     User.findOne({ _id: req.user }, User.socialFields())
       .populate('main_circle')

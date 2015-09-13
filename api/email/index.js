@@ -225,8 +225,8 @@ emailRoutes.get('/trash', emailController.listTrash);
  *
  * @apiParam {String} user_id Id del usuario
  * @apiParam {Array} to Lista de emails válidos a enviar el email
- * @apiParam {Array} cc Lista de emails válidos a enviar como cc el email
- * @apiParam {Array} cco Lista de emails válidos a enviar como cco el email
+ * @apiParam [{Array}] cc Lista de emails válidos a enviar como cc el email
+ * @apiParam [{Array}] cco Lista de emails válidos a enviar como cco el email
  * @apiParam {String} subject Asunto del email
  * @apiParam {String} text Cuerpo del email
  *

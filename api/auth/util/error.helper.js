@@ -70,12 +70,16 @@ module.exports.checkEmailErrors = function(results) {
 
   var errors = {};
   var emails = [];
+  var count = {};
+  count.total_count = 0;
+  count.unread_count = 0;
 
-  checkArrayResultsList(errors, emails, results, 'google');
+  checkEmailsArrayResultsList(errors, emails, results, count, 'google');
 
   return {
     emails: emails,
-    errors: errors
+    errors: errors,
+    count: count
   };
 };
 
@@ -94,8 +98,22 @@ var checkResultsList = function(errors, listObject, results, account) {
 // Verifica que los resultados tengan un array con la cuenta solicitada, si lo tienen, agregan los elementos a la lista
 var checkArrayResultsList = function(errors, list, results, account) {
   if (results[account]) {
-    if (results[account].constructor === Array) {
+    if (results[account] && results[account].constructor === Array) {
       list.push.apply(list, results[account]);
+    }
+    else {
+      errors[account] = results[account];
+    }
+  }
+};
+
+// Verifica que los resultados tengan un array con la cuenta solicitada, si lo tienen, agregan los elementos a la lista
+var checkEmailsArrayResultsList = function(errors, list, results, count, account) {
+  if (results[account]) {
+    if (results[account].emails && results[account].emails.constructor === Array) {
+      list.push.apply(list, results[account].emails);
+      count.total_count += results[account].total_count;
+      count.unread_count += results[account].unread_count;
     }
     else {
       errors[account] = results[account];

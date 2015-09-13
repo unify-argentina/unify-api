@@ -14,14 +14,17 @@ var logger = require('../../../config/logger');
 var googleErrors = require('./google.errors');
 
 // constantes
-var USER_EMAIL_GENERIC_LIST_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages?labelIds=%s';
-var USER_EMAIL_INBOX_LIST_URL = util.format(USER_EMAIL_GENERIC_LIST_URL, 'INBOX');
-var USER_EMAIL_SENT_LIST_URL = util.format(USER_EMAIL_GENERIC_LIST_URL, 'SENT');
-var USER_EMAIL_DRAFT_LIST_URL = util.format(USER_EMAIL_GENERIC_LIST_URL, 'DRAFT');
-var USER_EMAIL_TRASH_LIST_URL = util.format(USER_EMAIL_GENERIC_LIST_URL, 'TRASH');
 
+// listado de emails
+var USER_EMAIL_GENERIC_LIST_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages?labelIds=%s';
+
+// detalle de un email
 var USER_EMAIL_DETAIL_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s';
 
+// detalle de un label
+var USER_EMAIL_LABELS_URL = 'https://www.googleapis.com/gmail/v1/users/me/labels/%s';
+
+// envío de email
 var USER_EMAIL_SEND_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/send';
 
 // formato de fecha de gmail
@@ -36,45 +39,50 @@ var MIMETYPES = {
 // Lista los mensajes de la bandeja de entrada
 module.exports.listInbox = function(access_token, callback) {
 
-  list(access_token, USER_EMAIL_INBOX_LIST_URL, callback);
+  list(access_token, 'INBOX', callback);
 };
 
 // Lista los mensajes enviados
 module.exports.listSent = function(access_token, callback) {
 
-  list(access_token, USER_EMAIL_SENT_LIST_URL, callback);
+  list(access_token, 'SENT', callback);
 };
 
 // Lista los mensajes borradores
 module.exports.listDraft = function(access_token, callback) {
 
-  list(access_token, USER_EMAIL_DRAFT_LIST_URL, callback);
+  list(access_token, 'DRAFT', callback);
 };
 
 // Lista los mensajes de la papelera de reciclaje
 module.exports.listTrash = function(access_token, callback) {
 
-  list(access_token, USER_EMAIL_TRASH_LIST_URL, callback);
+  list(access_token, 'TRASH', callback);
 };
 
 // Devuelve los emails de la cuenta de google del usuario loggeado
-var list = function(access_token, url, callback) {
+var list = function(access_token, labelId, callback) {
 
   // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Google
   var emails = [];
 
+  var url = util.format(USER_EMAIL_GENERIC_LIST_URL, labelId);
+
+  // Primero obtenemos los emails con el labelId correspondiente
   getGoogleData(url, access_token, emails, function(err, googleEmails) {
     if (err) {
       callback(null, err);
     }
     else {
 
+      var headers = { Authorization: 'Bearer ' + access_token };
+
+      // Una vez que los tenemos, mapeamos la lista de ids de emails al email propiamente dicho
       async.map(googleEmails, function(email, mapCallback) {
 
         var url = util.format(USER_EMAIL_DETAIL_URL, email.id);
 
-        var headers = { Authorization: 'Bearer ' + access_token };
-
+        // Haciendo un request por cada email
         request.get({ url: url, headers: headers, json: true }, function(err, response) {
           var result = googleErrors.hasError(err, response);
           if (result.hasError) {
@@ -88,7 +96,26 @@ var list = function(access_token, url, callback) {
       }, function(err, googleDetailedEmails) {
 
         logger.debug('Google emails: ' + JSON.stringify(googleDetailedEmails));
-        callback(err, googleDetailedEmails);
+
+        var url = util.format(USER_EMAIL_LABELS_URL, labelId);
+        logger.info('URL: ' + url);
+
+        // Por último, una vez que tenemos la lista de todos los emails, pedimos la info de ese labelId
+        request.get({ url: url, headers: headers, json: true }, function(err, response) {
+
+          var result = googleErrors.hasError(err, response);
+          if (result.hasError) {
+            callback(result.error, null);
+          }
+          else {
+            var emailResults = {
+              total_count: response.body.messagesTotal,
+              unread_count: response.body.messagesUnread,
+              emails: googleDetailedEmails
+            };
+            callback(err, emailResults);
+          }
+        });
       });
     }
   });
@@ -123,12 +150,14 @@ var mapEmail = function(googleEmail) {
 
   var emailValues = getValuesFromPayload(googleEmail);
   var bodyValues = getBodyFromPayload(googleEmail);
+  var unread = googleEmail.labelIds && googleEmail.labelIds.constructor === Array && googleEmail.labelIds.indexOf('UNREAD') > -1;
   
   return {
     id: googleEmail.id,
     threadId: googleEmail.threadId,
     snippet: googleEmail.snippet,
     provider: 'google',
+    unread: unread,
     date: emailValues.date,
     from: emailValues.from,
     to: emailValues.to,
@@ -244,16 +273,22 @@ module.exports.create = function(access_token, from, body, callback) {
     return '<' + recipient + '>';
   }).join(', ');
 
-  var ccs = body.cc.map(function(eachCc) {
-    return '<' + eachCc + '>';
-  }).join(', ');
+  var ccs = '';
+  if (body.cc) {
+    ccs = 'Cc: ' + body.cc.map(function(eachCc) {
+      return '<' + eachCc + '>';
+    }).join(', ') + '\n';
+  }
 
-  var ccos = body.cco.map(function(eachCco) {
-    return '<' + eachCco + '>';
-  }).join(', ');
+  var ccos = '';
+  if (body.cco) {
+    ccos = 'Bcc: ' + body.cco.map(function(eachCco) {
+      return '<' + eachCco + '>';
+    }).join(', ') + '\n';
+  }
 
   var email = 'From: <' + from + '>\n' +
-    'To: ' + recipients + '\n' + 'Cc: ' + ccs + '\n' + 'Bcc: ' + ccos + '\n' +
+    'To: ' + recipients + '\n' + ccs + ccos +
     'Subject: ' + body.subject + '\n\n' + body.text;
   logger.debug('Email: ' + email);
 
