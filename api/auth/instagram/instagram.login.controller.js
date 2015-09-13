@@ -22,7 +22,9 @@ var ACCESS_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
 module.exports.unlinkAccount = function(req, res) {
 
   process.nextTick(function() {
-    User.findOne({ _id: req.user }, User.socialFields(), function(err, user) {
+    User.findOne({ _id: req.user }, User.socialFields())
+      .populate('main_circle')
+      .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }]});

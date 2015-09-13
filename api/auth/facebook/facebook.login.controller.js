@@ -24,7 +24,9 @@ var GRAPH_USER_URL = facebookUtils.getBaseURL() + '/me';
 module.exports.unlinkAccount = function(req, res) {
 
   process.nextTick(function() {
-    User.findOne({ _id: req.user }, function(err, user) {
+    User.findOne({ _id: req.user })
+      .populate('main_circle')
+      .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'User not found' }] });
