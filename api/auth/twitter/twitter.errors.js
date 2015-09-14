@@ -32,7 +32,7 @@ module.exports.hasError = function(err, response) {
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Twitter');
   }
-  else if (response.body.errors && response.body.errors.length > 0) {
+  else if (response.body && response.body.errors && response.body.errors.length > 0) {
     logger.error('Twitter Error: ' + response.body.errors[0].message);
     result.hasError = true;
     result.error = {

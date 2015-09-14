@@ -34,7 +34,7 @@ module.exports.hasError = function(err, response) {
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Facebook');
   }
-  else if (response.body.error) {
+  else if (response.body && response.body.error) {
     logger.error('Facebook Error: ' + response.body.error.message);
     result.hasError = true;
     result.error = {

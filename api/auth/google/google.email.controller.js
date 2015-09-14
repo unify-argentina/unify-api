@@ -28,7 +28,12 @@ var USER_EMAIL_LABELS_URL = 'https://www.googleapis.com/gmail/v1/users/me/labels
 var USER_EMAIL_SEND_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/send';
 
 // marcar como visto un email
-var USER_EMAIL_MARK_AS_SEEN_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s/modify';
+var USER_EMAIL_TOGGLE_SEEN_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s/modify';
+
+// mover a papelera un email
+var USER_EMAIL_TOGGLE_TRASH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s/%s';
+
+var USER_EMAIL_DELETE_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s';
 
 // formato de fecha de gmail
 var GMAIL_DATE_FORMAT = 'dd[,] DD MMM YYYY HH:mm:ss ZZ';
@@ -317,8 +322,8 @@ module.exports.create = function(access_token, from, body, callback) {
 // Marca el emailId como leído
 module.exports.toggleEmailSeen = function(access_token, emailId, toggle, callback) {
 
-  var url = util.format(USER_EMAIL_MARK_AS_SEEN_URL, emailId);
-  logger.info('URL: ' + USER_EMAIL_SEND_URL);
+  var url = util.format(USER_EMAIL_TOGGLE_SEEN_URL, emailId);
+  logger.info('URL: ' + url);
 
   var headers = { Authorization: 'Bearer ' + access_token };
 
@@ -333,6 +338,44 @@ module.exports.toggleEmailSeen = function(access_token, emailId, toggle, callbac
   }
 
   request.post({ url: url, headers: headers, json: body }, function(err, response) {
+    var result = googleErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      callback(null);
+    }
+  });
+};
+
+// Elimina un email de google
+module.exports.delete = function(access_token, emailId, callback) {
+
+  var url = util.format(USER_EMAIL_DELETE_URL, emailId);
+  logger.info('URL: ' + url);
+
+  var headers = { Authorization: 'Bearer ' + access_token };
+
+  request.del({ url: url, headers: headers, json: true }, function(err, response) {
+    var result = googleErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      callback(null);
+    }
+  });
+};
+
+// Mueve a la papelera de reciclaje un email
+module.exports.toggleEmailTrash = function(access_token, emailId, toggle, callback) {
+
+  var url = util.format(USER_EMAIL_TOGGLE_TRASH_URL, emailId, toggle ? 'trash' : 'untrash');
+  logger.info('URL: ' + url);
+
+  var headers = { Authorization: 'Bearer ' + access_token };
+
+  request.post({ url: url, headers: headers, json: true }, function(err, response) {
     var result = googleErrors.hasError(err, response);
     if (result.hasError) {
       callback(result.error);

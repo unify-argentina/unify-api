@@ -29,7 +29,7 @@ module.exports.hasError = function(err, response) {
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Instagram');
   }
-  else if (response.body.error_message) {
+  else if (response.body && response.body.error_message) {
     logger.error('Instagram Error: ' + response.body.error_message);
     result.hasError = true;
     result.error = {

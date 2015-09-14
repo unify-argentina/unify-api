@@ -8,9 +8,18 @@
 var emailRoutes = require('express').Router();
 var emailController = require('./email.controller');
 
-// TODO ver si validamos o no
 emailRoutes.param('email_id', function(req, res, next, emailId) {
-  next();
+
+  req.assert('email_id', 'Email id must be a string').isString();
+
+  // Validamos errores
+  if (req.validationErrors()) {
+    logger.warn('Validation errors: ' + req.validationErrors());
+    return res.status(400).send({ errors: req.validationErrors() });
+  }
+  else {
+    next();
+  }
 });
 
 /**
@@ -280,10 +289,58 @@ emailRoutes.post('/:email_id/seen', emailController.markEmailSeen);
  */
 emailRoutes.post('/:email_id/unseen', emailController.markEmailUnseen);
 
+/**
+ * @api {delete} /api/user/:user_id/email/:email_id Eliminar completamente un email
+ * @apiGroup Email
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} email_id Id del email a eliminar completamente
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
 emailRoutes.delete('/:email_id', emailController.delete);
 
-/*emailRoutes.delete('/:email_id', emailController.trash);
+/**
+ * @api {post} /api/user/:user_id/email/:email_id/trash Mover a papelera un email
+ * @apiGroup Email
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} email_id Id del email a mover a la papelera
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
+emailRoutes.post('/:email_id/trash', emailController.trash);
 
- emailRoutes.delete('/:email_id', emailController.untrash);*/
+/**
+ * @api {post} /api/user/:user_id/email/:email_id/untrash Quitar de la papelera un email
+ * @apiGroup Email
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} email_id Id del email a quitar de la papelera
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
+emailRoutes.post('/:email_id/untrash', emailController.untrash);
 
 module.exports = emailRoutes;

@@ -1686,6 +1686,70 @@ define({ "api": [
     ]
   },
   {
+    "type": "delete",
+    "url": "/api/user/:user_id/email/:email_id",
+    "title": "Eliminar completamente un email",
+    "group": "Email",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "email_id",
+            "description": "<p>Id del email a eliminar completamente</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/email/index.js",
+    "groupTitle": "Email",
+    "name": "DeleteApiUserUser_idEmailEmail_id",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/email/:email_id"
+      }
+    ]
+  },
+  {
     "type": "get",
     "url": "/api/user/:user_id/email/draft",
     "title": "Obtener borradores",
@@ -2122,6 +2186,70 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/api/user/:user_id/email/:email_id/trash",
+    "title": "Mover a papelera un email",
+    "group": "Email",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "email_id",
+            "description": "<p>Id del email a mover a la papelera</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/email/index.js",
+    "groupTitle": "Email",
+    "name": "PostApiUserUser_idEmailEmail_idTrash",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/email/:email_id/trash"
+      }
+    ]
+  },
+  {
+    "type": "post",
     "url": "/api/user/:user_id/email/:email_id/unseen",
     "title": "Marcar como no leído un email",
     "group": "Email",
@@ -2181,6 +2309,70 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:8080/api/user/:user_id/email/:email_id/unseen"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/api/user/:user_id/email/:email_id/untrash",
+    "title": "Quitar de la papelera un email",
+    "group": "Email",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "email_id",
+            "description": "<p>Id del email a quitar de la papelera</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/email/index.js",
+    "groupTitle": "Email",
+    "name": "PostApiUserUser_idEmailEmail_idUntrash",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/email/:email_id/untrash"
       }
     ]
   },

@@ -142,17 +142,10 @@ module.exports.create = function (req, res) {
       return res.status(400).send({ errors: req.validationErrors() });
     }
 
-    User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
-      if (err || !user) {
-        logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+    findUserAndThen(req, function(err, user) {
+      if (err) {
+        return res.status(400).send(err);
       }
-      // Si no tiene la cuenta linkeada de Google no lo dejaremos enviar un correo
-      else if (!user.hasLinkedAccount('google')) {
-        logger.warn('User have not linked Google account: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User has not linked his Google account' }] });
-      }
-      // Si esta todo ok procedemos a crear y enviar el email
       else {
         doCreateEmail(req, res, user);
       }
@@ -175,14 +168,7 @@ var doCreateEmail = function(req, res, user) {
   });
 };
 
-// TODO
-module.exports.delete = function (req, res) {
-
-  process.nextTick(function () {
-    return res.sendStatus(200);
-  });
-};
-
+// Marca como leído un email
 module.exports.markEmailSeen = function (req, res) {
 
   process.nextTick(function () {
@@ -190,6 +176,7 @@ module.exports.markEmailSeen = function (req, res) {
   });
 };
 
+// Marca como no leído un email
 module.exports.markEmailUnseen = function (req, res) {
 
   process.nextTick(function () {
@@ -197,37 +184,84 @@ module.exports.markEmailUnseen = function (req, res) {
   });
 };
 
+// Marca como leído / no leído un email
 var toggleEmailSeen = function (req, res, toggle) {
 
-  req.assert('email_id', 'Email id must be a string').isString();
-
-  // Validamos errores
-  if (req.validationErrors()) {
-    logger.warn('Validation errors: ' + req.validationErrors());
-    return res.status(400).send({ errors: req.validationErrors() });
-  }
-
-  User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
-    if (err || !user) {
-      logger.warn('User not found: ' + req.user);
-      return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+  findUserAndThen(req, function(err, user) {
+    if (err) {
+      return res.status(400).send(err);
     }
-    // Si no tiene la cuenta linkeada de Google no lo dejaremos marcar como visto un email
-    else if (!user.hasLinkedAccount('google')) {
-      logger.warn('User have not linked Google account: ' + req.user);
-      return res.status(400).send({ errors: [{ msg: 'User has not linked his Google account' }] });
-    }
-    // Si esta todo ok procedemos a marcar el email como visto
     else {
-      doToggleEmailSeen(req, res, user, toggle);
+      googleEmails.toggleEmailSeen(user.google.access_token, req.params.email_id, toggle, function(err) {
+        return res.sendStatus(200);
+      });
     }
   });
 };
 
-// Marca un email como visto o no visto
-var doToggleEmailSeen = function(req, res, user, toggle) {
+// Elimina el email
+module.exports.delete = function (req, res) {
 
-  googleEmails.toggleEmailSeen(user.google.access_token, req.params.email_id, toggle, function(err) {
-    return res.sendStatus(200);
+  process.nextTick(function () {
+
+    findUserAndThen(req, function(err, user) {
+      if (err) {
+        return res.status(400).send(err);
+      }
+      else {
+        googleEmails.delete(user.google.access_token, req.params.email_id, function(err) {
+          return res.sendStatus(200);
+        });
+      }
+    });
+  });
+};
+
+// Mueve a la papelera de reciclaje un email
+module.exports.trash = function (req, res) {
+
+  process.nextTick(function () {
+    toggleEmailTrash(req, res, true);
+  });
+};
+
+// Saca de la papelera de reciclaje un email
+module.exports.untrash = function (req, res) {
+
+  process.nextTick(function () {
+    toggleEmailTrash(req, res, false);
+  });
+};
+
+var toggleEmailTrash = function(req, res, toggle) {
+
+  findUserAndThen(req, function(err, user) {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    else {
+      googleEmails.toggleEmailTrash(user.google.access_token, req.params.email_id, toggle, function(err) {
+        return res.sendStatus(200);
+      });
+    }
+  });
+};
+
+// Funcion que encuentra al usuario y chequea que tenga la cuenta de google linkeada
+var findUserAndThen = function(req, callback) {
+  User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
+    if (err || !user) {
+      logger.warn('User not found: ' + req.user);
+      callback({ errors: [{ msg: 'User not found' }] }, null);
+    }
+    // Si no tiene la cuenta linkeada de Google no lo dejaremos enviar un correo
+    else if (!user.hasLinkedAccount('google')) {
+      logger.warn('User have not linked Google account: ' + req.user);
+      callback({ errors: [{ msg: 'User has not linked his Google account' }] }, null);
+    }
+    // Si esta todo ok procedemos a crear y enviar el email
+    else {
+      callback(null, user);
+    }
   });
 };
