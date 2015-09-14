@@ -315,14 +315,24 @@ module.exports.create = function(access_token, from, body, callback) {
 };
 
 // Marca el emailId como leído
-module.exports.markEmailSeen = function(access_token, emailId, callback) {
+module.exports.toggleEmailSeen = function(access_token, emailId, toggle, callback) {
 
   var url = util.format(USER_EMAIL_MARK_AS_SEEN_URL, emailId);
   logger.info('URL: ' + USER_EMAIL_SEND_URL);
 
   var headers = { Authorization: 'Bearer ' + access_token };
 
-  request.post({ url: url, headers: headers, json: { removeLabelIds: ['UNREAD'] } }, function(err, response) {
+  var body = {};
+  // Marcar como leído
+  if (toggle) {
+    body.removeLabelIds = ['UNREAD'];
+  }
+  // Marcar como no leído
+  else {
+    body.addLabelIds = ['UNREAD'];
+  }
+
+  request.post({ url: url, headers: headers, json: body }, function(err, response) {
     var result = googleErrors.hasError(err, response);
     if (result.hasError) {
       callback(result.error);

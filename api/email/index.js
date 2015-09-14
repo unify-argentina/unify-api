@@ -244,10 +244,8 @@ emailRoutes.get('/trash', emailController.listTrash);
  */
 emailRoutes.post('/', emailController.create);
 
-emailRoutes.delete('/:email_id', emailController.delete);
-
 /**
- * @api {post} /api/user/:user_id/email/:email_id Marcar como leído un email
+ * @api {post} /api/user/:user_id/email/:email_id/seen Marcar como leído un email
  * @apiGroup Email
  *
  * @apiHeader {String} Authorization Bearer token
@@ -262,6 +260,30 @@ emailRoutes.delete('/:email_id', emailController.delete);
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  */
-emailRoutes.post('/:email_id', emailController.markEmailSeen);
+emailRoutes.post('/:email_id/seen', emailController.markEmailSeen);
+
+/**
+ * @api {post} /api/user/:user_id/email/:email_id/unseen Marcar como no leído un email
+ * @apiGroup Email
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} email_id Id del email a marcar como no leído
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
+emailRoutes.post('/:email_id/unseen', emailController.markEmailUnseen);
+
+emailRoutes.delete('/:email_id', emailController.delete);
+
+/*emailRoutes.delete('/:email_id', emailController.trash);
+
+ emailRoutes.delete('/:email_id', emailController.untrash);*/
 
 module.exports = emailRoutes;

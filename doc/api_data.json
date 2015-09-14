@@ -2058,7 +2058,7 @@
   },
   {
     "type": "post",
-    "url": "/api/user/:user_id/email/:email_id",
+    "url": "/api/user/:user_id/email/:email_id/seen",
     "title": "Marcar como leído un email",
     "group": "Email",
     "header": {
@@ -2113,10 +2113,74 @@
     "version": "0.0.0",
     "filename": "api/email/index.js",
     "groupTitle": "Email",
-    "name": "PostApiUserUser_idEmailEmail_id",
+    "name": "PostApiUserUser_idEmailEmail_idSeen",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/:email_id"
+        "url": "http://localhost:8080/api/user/:user_id/email/:email_id/seen"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/api/user/:user_id/email/:email_id/unseen",
+    "title": "Marcar como no leído un email",
+    "group": "Email",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "email_id",
+            "description": "<p>Id del email a marcar como no leído</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/email/index.js",
+    "groupTitle": "Email",
+    "name": "PostApiUserUser_idEmailEmail_idUnseen",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/email/:email_id/unseen"
       }
     ]
   },
