@@ -56,7 +56,7 @@ var userSchema = mongoose.Schema({
 
   google: {
     id: { type: String, index: true, select: false },
-    access_token: { type: String, select: false },
+    refresh_token: { type: String, select: false },
     email: String,
     picture: String,
     display_name: String
@@ -138,7 +138,7 @@ userSchema.methods.hasLinkedAccount = function(account) {
         typeof this.twitter.access_token.token_secret === 'string';
     }
     else {
-      hasFields = typeof this[account].access_token === 'string' && typeof this[account].id === 'string';
+      hasFields = typeof this[account].id === 'string';
     }
   }
 
@@ -166,7 +166,16 @@ userSchema.methods.isValidToRemoveAccount = function(account) {
 userSchema.methods.toggleSocialAccount = function(account, toggle, callback) {
 
   if (!toggle) {
-    this[account] = undefined;
+    // Si es Google, el refresh_token lo debemos dejar por las dudas de que linkee de nuevo la cuenta
+    if (account === 'google') {
+      this.google.id = undefined;
+      this.google.email = undefined;
+      this.google.picture = undefined;
+      this.google.display_name = undefined;
+    }
+    else {
+      this[account] = undefined;
+    }
   }
   Contact.find({ user: this._id }, function(err, contacts) {
     if (err || !contacts) {
@@ -204,7 +213,7 @@ userSchema.methods.toggleSocialAccount = function(account, toggle, callback) {
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 userSchema.statics.socialFields = function() {
   return '+twitter.id +twitter.access_token.token +twitter.access_token.token_secret +facebook.id ' +
-    '+facebook.access_token +instagram.id +instagram.access_token +google.id +google.access_token';
+    '+facebook.access_token +instagram.id +instagram.access_token +google.id +google.refresh_token';
 };
 
 module.exports = mongoose.model('User', userSchema);

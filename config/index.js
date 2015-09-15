@@ -32,6 +32,7 @@ module.exports = {
 
   // Google
   GOOGLE_SECRET: process.env.GOOGLE_SECRET || 'GOOGLE secret',
+  GOOGLE_ID: process.env.GOOGLE_ID || 'GOOGLE id',
 
   EMAIL_USERNAME: process.env.EMAIL_USERNAME || 'unify',
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || 'unify'

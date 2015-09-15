@@ -34,7 +34,7 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
           count: mappedUsers.length
         };
         logger.debug('Facebook Friends: ' + JSON.stringify(result));
-        callback(err, result);
+        callback(null, result);
       });
     }
   });

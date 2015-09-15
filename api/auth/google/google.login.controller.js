@@ -7,16 +7,16 @@
 // requires
 var jwt = require('./../util/jwt');
 var request = require('request');
-var config = require('../../../config');
 var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
 var googleErrors = require('./google.errors');
+var googleAuth = require('./google.auth.helper');
 
 // modelos
 var User = require('../../user/user.model');
 
 // constantes
-var ACCESS_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token';
+var REFRESH_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token';
 var PEOPLE_API_URL = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
 
 // Desconecta la cuenta de Google de la de Unify
@@ -51,17 +51,20 @@ module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
 
-    var qs = getAccessTokenParams(req);
+    var qs = googleAuth.getAccessTokenParams(req);
     logger.info('Access token params: ' + JSON.stringify(qs));
 
     // Primero intercambiamos el código de autorización para obtener el access token
-    request.post(ACCESS_TOKEN_URL, { json: true, form: qs }, function(err, response, token) {
+    request.post(REFRESH_TOKEN_URL, { json: true, form: qs }, function(err, response, token) {
 
       var oauthError = googleErrors.hasError(err, response);
       if (oauthError.hasError) {
         logger.error('Google oauth error: ' + JSON.stringify(oauthError.error));
         return res.status(response.statusCode).send({ errors: [ oauthError.error ] });
       }
+
+      // Necesitamos este refresh token para poder pedir futuros access_tokens
+      var refresh_token = token.refresh_token;
 
       var access_token = token.access_token;
       logger.info('Access token: ' + access_token);
@@ -82,12 +85,12 @@ module.exports.linkAccount = function(req, res) {
         // Si tiene el header de authorization, ya es un usuario registrado
         if (req.headers.authorization) {
           logger.info('Authenticated user');
-          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, access_token);
+          handleAuthenticatedUser(res, jwt.getUnifyToken(req), profile, refresh_token);
         }
         // Si no tiene el header de authorization, es porque es un nuevo usuario
         else {
           logger.info('Not authenticated user');
-          handleNotAuthenticatedUser(res, profile, access_token);
+          handleNotAuthenticatedUser(res, profile, refresh_token);
         }
       });
     });
@@ -95,7 +98,7 @@ module.exports.linkAccount = function(req, res) {
 };
 
 // Maneja el caso de un autenticado con un token de Unify
-var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_token) {
+var handleAuthenticatedUser = function(res, unifyToken, googleProfile, refresh_token) {
 
   // Primero verificamos el Unify token
   var payload = null;
@@ -138,7 +141,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_to
             unifyUser.email = googleProfile.email;
           }
           logger.info('Existing Unify user: ' + unifyUser.toString());
-          linkGoogleData(unifyUser, googleProfile, access_token);
+          linkGoogleData(unifyUser, googleProfile, refresh_token);
           unifyUser.toggleSocialAccount('google', true, function(err) {
             if (err) {
               logger.warn('There was an error trying to link Google: ' + unifyUser._id);
@@ -162,7 +165,7 @@ var handleAuthenticatedUser = function(res, unifyToken, googleProfile, access_to
 };
 
 // Maneja el caso de un usuario no autenticado
-var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
+var handleNotAuthenticatedUser = function(res, googleProfile, refresh_token) {
   User.findOne({ 'google.id': googleProfile.sub })
     .populate('main_circle')
     .exec(function(err, existingGoogleUser) {
@@ -179,7 +182,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
         // Si encuentra a uno con el email de Google, vincula la cuenta local con la de Google
         if (existingUnifyUser) {
           logger.info('Existing Unify user: ' + existingUnifyUser);
-          linkGoogleData(existingUnifyUser, googleProfile, access_token);
+          linkGoogleData(existingUnifyUser, googleProfile, refresh_token);
           // Habilitamos los posibles contactos que haya creado el usuario previamente al deslinkear la cuenta
           existingUnifyUser.toggleSocialAccount('google', true, function(err) {
             if (err) {
@@ -199,7 +202,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, access_token) {
           user.email = googleProfile.email;
           user.password = randomstring.generate(20);
           logger.info('New google user!: ' + user);
-          linkGoogleData(user, googleProfile, access_token);
+          linkGoogleData(user, googleProfile, refresh_token);
           return saveUser(res, user);
         }
       });
@@ -222,21 +225,12 @@ var saveUser = function(res, user) {
 };
 
 // Copia los datos de Google en la cuenta de Unify
-var linkGoogleData = function(unifyUser, googleProfile, access_token) {
+var linkGoogleData = function(unifyUser, googleProfile, refresh_token) {
   unifyUser.google.id = googleProfile.sub;
   unifyUser.google.email = googleProfile.email;
-  unifyUser.google.access_token = access_token;
+  if (unifyUser.google.refresh_token === undefined) {
+    unifyUser.google.refresh_token = refresh_token;
+  }
   unifyUser.google.picture = googleProfile.picture.replace('sz=50', 'sz=200');
   unifyUser.google.display_name = googleProfile.name;
-};
-
-// Devuelve los parámetros necesarios para el intercambio del access_token
-var getAccessTokenParams = function(req) {
-  return {
-    code: req.body.code,
-    client_id: req.body.clientId,
-    client_secret: config.GOOGLE_SECRET,
-    redirect_uri: req.body.redirectUri,
-    grant_type: 'authorization_code'
-  };
 };

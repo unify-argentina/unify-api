@@ -89,7 +89,7 @@ var doGetEmails = function(res, user, functionName) {
 
 var getGoogleEmails = function(user, functionName, callback) {
   if (user.hasLinkedAccount('google')) {
-    googleEmails[functionName](user.google.access_token, function(err, results) {
+    googleEmails[functionName](user.google.refresh_token, function(err, results) {
       callback(err, results);
     });
   }
@@ -156,7 +156,7 @@ module.exports.create = function (req, res) {
 // Crea el mail y lo envía
 var doCreateEmail = function(req, res, user) {
 
-  googleEmails.create(user.google.access_token, user.google.email, req.body, function(err) {
+  googleEmails.create(user.google.refresh_token, user.google.email, req.body, function(err) {
     if (err) {
       logger.warn('There was an error creating email for user: ' + req.user);
       return res.status(400).send({ errors: [{ msg: 'There was an error creating email' }] });
@@ -192,7 +192,7 @@ var toggleEmailSeen = function (req, res, toggle) {
       return res.status(400).send(err);
     }
     else {
-      googleEmails.toggleEmailSeen(user.google.access_token, req.params.email_id, toggle, function(err) {
+      googleEmails.toggleEmailSeen(user.google.refresh_token, req.params.email_id, toggle, function(err) {
         return res.sendStatus(200);
       });
     }
@@ -209,7 +209,7 @@ module.exports.delete = function (req, res) {
         return res.status(400).send(err);
       }
       else {
-        googleEmails.delete(user.google.access_token, req.params.email_id, function(err) {
+        googleEmails.delete(user.google.refresh_token, req.params.email_id, function(err) {
           return res.sendStatus(200);
         });
       }
@@ -240,7 +240,7 @@ var toggleEmailTrash = function(req, res, toggle) {
       return res.status(400).send(err);
     }
     else {
-      googleEmails.toggleEmailTrash(user.google.access_token, req.params.email_id, toggle, function(err) {
+      googleEmails.toggleEmailTrash(user.google.refresh_token, req.params.email_id, toggle, function(err) {
         return res.sendStatus(200);
       });
     }

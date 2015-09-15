@@ -46,7 +46,7 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
             count: sortedUsers.length
           };
           logger.debug('Twitter Friends: ' + JSON.stringify(result));
-          callback(err, result);
+          callback(null, result);
         });
       });
     }

@@ -38,7 +38,7 @@ module.exports.getPages = function(access_token, facebookId, callback) {
           count: filteredMappedPages.length
         };
         logger.debug('Facebook Pages: ' + JSON.stringify(result));
-        callback(err, result);
+        callback(null, result);
       });
     }
   });

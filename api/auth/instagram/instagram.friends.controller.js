@@ -46,7 +46,7 @@ module.exports.getFriends = function(access_token, instagramId, callback) {
             count: sortedUsers.length
           };
           logger.debug('Instagram Friends: ' + JSON.stringify(result));
-          callback(err, result);
+          callback(null, result);
         });
       });
     }

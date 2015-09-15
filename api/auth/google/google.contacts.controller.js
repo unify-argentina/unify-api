@@ -11,34 +11,43 @@ var async = require('async');
 var _ = require('lodash');
 var logger = require('../../../config/logger');
 var googleErrors = require('./google.errors');
+var googleAuth = require('./google.auth.helper');
 
 // Devuelve los amigos de Google del usuario loggeado
-module.exports.getContacts = function(access_token, googleId, callback) {
+module.exports.getContacts = function(refresh_token, googleId, callback) {
 
   var url = 'https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=10000';
 
   // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Google
   var contacts = [];
 
-  getGoogleData(url, access_token, contacts, function(err, googleContacts) {
+  googleAuth.getAccessToken(refresh_token, function(err, access_token) {
+
     if (err) {
       callback(null, err);
     }
     else {
+      getGoogleData(url, access_token, contacts, function(err, googleContacts) {
 
-      // Filtramos los usuarios que no tengan email
-      async.filter(googleContacts, filter, function(emailContacts) {
-        
-        // Mapeamos los usuarios para que sean homogéneos a las 4 cuentas
-        async.map(emailContacts, mapContact, function(err, mappedUsers) {
+        if (err) {
+          callback(null, err);
+        }
+        else {
+          // Filtramos los usuarios que no tengan email
+          async.filter(googleContacts, filter, function(emailContacts) {
 
-          var result = {
-            list: mappedUsers,
-            count: mappedUsers.length
-          };
-          logger.debug('Google Contacts: ' + JSON.stringify(result));
-          callback(err, result);
-        });
+            // Mapeamos los usuarios para que sean homogéneos a las 4 cuentas
+            async.map(emailContacts, mapContact, function(err, mappedUsers) {
+
+              var result = {
+                list: mappedUsers,
+                count: mappedUsers.length
+              };
+              logger.debug('Google Contacts: ' + JSON.stringify(result));
+              callback(null, result);
+            });
+          });
+        }
       });
     }
   });

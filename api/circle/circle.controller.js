@@ -193,7 +193,7 @@ module.exports.getTree = function (req, res) {
   });
 };
 
-// Que noche mágica Ciudad de Buenos ires
+// Que noche mágica Ciudad de Buenos Aires
 var makeTree = function(options) {
   var children, e, i, id, j, len, len1, o, pid, ref, ref1, temp;
   id = options.id || "_id";

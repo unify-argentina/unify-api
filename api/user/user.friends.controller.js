@@ -105,7 +105,7 @@ var getTwitterFriends = function(user, callback) {
 
 var getGoogleContacts = function(user, callback) {
   if (user.hasLinkedAccount('google')) {
-    googleContacts.getContacts(user.google.access_token, user.google.id, function(err, results) {
+    googleContacts.getContacts(user.google.refresh_token, user.google.id, function(err, results) {
       callback(err, results);
     });
   }
