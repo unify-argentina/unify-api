@@ -340,43 +340,6 @@ module.exports.create = function(refresh_token, from, body, callback) {
   });
 };
 
-// Marca el emailId como leído
-module.exports.toggleEmailSeen = function(refresh_token, emailId, toggle, callback) {
-
-  googleAuth.getAccessToken(refresh_token, function(err, access_token) {
-
-    if (err) {
-      callback(err);
-    }
-    else {
-      var url = util.format(USER_EMAIL_TOGGLE_SEEN_URL, emailId);
-      logger.info('URL: ' + url);
-
-      var headers = {Authorization: 'Bearer ' + access_token};
-
-      var body = {};
-      // Marcar como leído
-      if (toggle) {
-        body.removeLabelIds = ['UNREAD'];
-      }
-      // Marcar como no leído
-      else {
-        body.addLabelIds = ['UNREAD'];
-      }
-
-      request.post({ url: url, headers: headers, json: body }, function (err, response) {
-        var result = googleErrors.hasError(err, response);
-        if (result.hasError) {
-          callback(result.error);
-        }
-        else {
-          callback(null);
-        }
-      });
-    }
-  });
-};
-
 // Elimina un email de google
 module.exports.delete = function(refresh_token, emailId, callback) {
 
@@ -404,8 +367,8 @@ module.exports.delete = function(refresh_token, emailId, callback) {
   });
 };
 
-// Mueve a la papelera de reciclaje un email
-module.exports.toggleEmailTrash = function(refresh_token, emailId, toggle, callback) {
+// Marca el emailId como leído
+module.exports.toggleEmailSeen = function(refresh_token, emailIds, toggle, callback) {
 
   googleAuth.getAccessToken(refresh_token, function(err, access_token) {
 
@@ -413,19 +376,68 @@ module.exports.toggleEmailTrash = function(refresh_token, emailId, toggle, callb
       callback(err);
     }
     else {
-      var url = util.format(USER_EMAIL_TOGGLE_TRASH_URL, emailId, toggle ? 'trash' : 'untrash');
-      logger.info('URL: ' + url);
+      var count = 0;
+      // Por cada emailId, lo marcamos como leído o no leído
+      emailIds.forEach(function(emailId) {
 
-      var headers = { Authorization: 'Bearer ' + access_token };
+        count++;
+        var url = util.format(USER_EMAIL_TOGGLE_SEEN_URL, emailId);
+        logger.info('URL: ' + url);
 
-      request.post({ url: url, headers: headers, json: true }, function(err, response) {
-        var result = googleErrors.hasError(err, response);
-        if (result.hasError) {
-          callback(result.error);
+        var headers = {Authorization: 'Bearer ' + access_token};
+
+        var body = {};
+        // Marcar como leído
+        if (toggle) {
+          body.removeLabelIds = ['UNREAD'];
         }
+        // Marcar como no leído
         else {
-          callback(null);
+          body.addLabelIds = ['UNREAD'];
         }
+
+        request.post({ url: url, headers: headers, json: body }, function (err, response) {
+          var result = googleErrors.hasError(err, response);
+          if (result.hasError) {
+            callback(result.error);
+          }
+          else if (count === emailIds.length) {
+            callback(null);
+          }
+        });
+      });
+    }
+  });
+};
+
+// Mueve a la papelera de reciclaje un email
+module.exports.toggleEmailTrash = function(refresh_token, emailIds, toggle, callback) {
+
+  googleAuth.getAccessToken(refresh_token, function(err, access_token) {
+
+    if (err) {
+      callback(err);
+    }
+    else {
+      var count = 0;
+      // Por cada emailId, lo movemos o lo sacamos de la papelera
+      emailIds.forEach(function(emailId) {
+
+        count++;
+        var url = util.format(USER_EMAIL_TOGGLE_TRASH_URL, emailId, toggle ? 'trash' : 'untrash');
+        logger.info('URL: ' + url);
+
+        var headers = { Authorization: 'Bearer ' + access_token };
+
+        request.post({ url: url, headers: headers, json: true }, function(err, response) {
+          var result = googleErrors.hasError(err, response);
+          if (result.hasError) {
+            callback(result.error);
+          }
+          else if (count === emailIds.length) {
+            callback(null);
+          }
+        });
       });
     }
   });

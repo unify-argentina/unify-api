@@ -45,6 +45,16 @@ var isEmailArray = function(possibleArray) {
   return isEmailArray;
 };
 
+var isStringArray = function(possibleArray) {
+  var isStringArray = possibleArray !== undefined && possibleArray.constructor === Array;
+  var i = 0;
+  while (isStringArray && i < possibleArray.length) {
+    isStringArray = typeof possibleArray[i] === 'string';
+    i++;
+  }
+  return isStringArray;
+};
+
 var isString = function(possibleString) {
   return typeof possibleString === 'string';
 };
@@ -53,7 +63,7 @@ module.exports = function(app) {
   app.use(compression());
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
-  app.use(expressValidator({ customValidators: { isEmailArray: isEmailArray, isString: isString }}));
+  app.use(expressValidator({ customValidators: { isEmailArray: isEmailArray, isStringArray: isStringArray, isString: isString }}));
   app.use(methodOverride());
   app.use(morgan('dev'));
   app.use(cookieParser());

@@ -228,7 +228,7 @@ var saveUser = function(res, user) {
 var linkGoogleData = function(unifyUser, googleProfile, refresh_token) {
   unifyUser.google.id = googleProfile.sub;
   unifyUser.google.email = googleProfile.email;
-  if (unifyUser.google.refresh_token === undefined) {
+  if (refresh_token !== undefined) {
     unifyUser.google.refresh_token = refresh_token;
   }
   unifyUser.google.picture = googleProfile.picture.replace('sz=50', 'sz=200');

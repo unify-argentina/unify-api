@@ -7,6 +7,7 @@
 // requires
 var emailRoutes = require('express').Router();
 var emailController = require('./email.controller');
+var logger = require('../../config/logger');
 
 emailRoutes.param('email_id', function(req, res, next, emailId) {
 
@@ -258,42 +259,6 @@ emailRoutes.get('/trash', emailController.listTrash);
 emailRoutes.post('/', emailController.create);
 
 /**
- * @api {post} /api/user/:user_id/email/:email_id/seen Marcar como leído un email
- * @apiGroup Email
- *
- * @apiHeader {String} Authorization Bearer token
- * @apiHeaderExample {json} Header-Example:
- *     {
- *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
- *     }
- *
- * @apiParam {String} user_id Id del usuario
- * @apiParam {String} email_id Id del email a marcar como leído
- *
- * @apiSuccessExample Respuesta valida
- *     HTTP/1.1 200 OK
- */
-emailRoutes.post('/:email_id/seen', emailController.markEmailSeen);
-
-/**
- * @api {post} /api/user/:user_id/email/:email_id/unseen Marcar como no leído un email
- * @apiGroup Email
- *
- * @apiHeader {String} Authorization Bearer token
- * @apiHeaderExample {json} Header-Example:
- *     {
- *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
- *     }
- *
- * @apiParam {String} user_id Id del usuario
- * @apiParam {String} email_id Id del email a marcar como no leído
- *
- * @apiSuccessExample Respuesta valida
- *     HTTP/1.1 200 OK
- */
-emailRoutes.post('/:email_id/unseen', emailController.markEmailUnseen);
-
-/**
  * @api {delete} /api/user/:user_id/email/:email_id Eliminar completamente un email
  * @apiGroup Email
  *
@@ -312,7 +277,7 @@ emailRoutes.post('/:email_id/unseen', emailController.markEmailUnseen);
 emailRoutes.delete('/:email_id', emailController.delete);
 
 /**
- * @api {post} /api/user/:user_id/email/:email_id/trash Mover a papelera un email
+ * @api {post} /api/user/:user_id/email/seen Marcar como leído
  * @apiGroup Email
  *
  * @apiHeader {String} Authorization Bearer token
@@ -322,15 +287,20 @@ emailRoutes.delete('/:email_id', emailController.delete);
  *     }
  *
  * @apiParam {String} user_id Id del usuario
- * @apiParam {String} email_id Id del email a mover a la papelera
+ * @apiParam {Array} email_ids Ids de los emails a marcar como leído
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *     {
+ *       "email_ids":["14fc4c48e3cf666f", "14fc39727ae1b4fb", "14fbc6fff0f342c2", "14fba734a9975a7e"]
+ *     }
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  */
-emailRoutes.post('/:email_id/trash', emailController.trash);
+emailRoutes.post('/seen', emailController.markEmailSeen);
 
 /**
- * @api {post} /api/user/:user_id/email/:email_id/untrash Quitar de la papelera un email
+ * @api {post} /api/user/:user_id/email/unseen Marcar como no leído
  * @apiGroup Email
  *
  * @apiHeader {String} Authorization Bearer token
@@ -340,11 +310,62 @@ emailRoutes.post('/:email_id/trash', emailController.trash);
  *     }
  *
  * @apiParam {String} user_id Id del usuario
- * @apiParam {String} email_id Id del email a quitar de la papelera
+ * @apiParam {Array} email_ids Ids de los emails a marcar como no leído
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *     {
+ *       "email_ids":["14fc4c48e3cf666f", "14fc39727ae1b4fb", "14fbc6fff0f342c2", "14fba734a9975a7e"]
+ *     }
  *
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  */
-emailRoutes.post('/:email_id/untrash', emailController.untrash);
+emailRoutes.post('/unseen', emailController.markEmailUnseen);
+
+/**
+ * @api {post} /api/user/:user_id/email/trash Mover a papelera
+ * @apiGroup Email
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {Array} email_ids Ids de los emails a mover a la papelera
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *     {
+ *       "email_ids":["14fc4c48e3cf666f", "14fc39727ae1b4fb", "14fbc6fff0f342c2", "14fba734a9975a7e"]
+ *     }
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
+emailRoutes.post('/trash', emailController.trash);
+
+/**
+ * @api {post} /api/user/:user_id/email/untrash Quitar de la papelera
+ * @apiGroup Email
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {Array} email_ids Ids de los emails a quitar de la papelera
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *     {
+ *       "email_ids":["14fc4c48e3cf666f", "14fc39727ae1b4fb", "14fbc6fff0f342c2", "14fba734a9975a7e"]
+ *     }
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
+emailRoutes.post('/untrash', emailController.untrash);
 
 module.exports = emailRoutes;

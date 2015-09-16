@@ -168,37 +168,6 @@ var doCreateEmail = function(req, res, user) {
   });
 };
 
-// Marca como leído un email
-module.exports.markEmailSeen = function (req, res) {
-
-  process.nextTick(function () {
-    toggleEmailSeen(req, res, true);
-  });
-};
-
-// Marca como no leído un email
-module.exports.markEmailUnseen = function (req, res) {
-
-  process.nextTick(function () {
-    toggleEmailSeen(req, res, false);
-  });
-};
-
-// Marca como leído / no leído un email
-var toggleEmailSeen = function (req, res, toggle) {
-
-  findUserAndThen(req, function(err, user) {
-    if (err) {
-      return res.status(400).send(err);
-    }
-    else {
-      googleEmails.toggleEmailSeen(user.google.refresh_token, req.params.email_id, toggle, function(err) {
-        return res.sendStatus(200);
-      });
-    }
-  });
-};
-
 // Elimina el email
 module.exports.delete = function (req, res) {
 
@@ -217,10 +186,68 @@ module.exports.delete = function (req, res) {
   });
 };
 
+// Marca como leído un email
+module.exports.markEmailSeen = function (req, res) {
+
+  process.nextTick(function () {
+
+    req.assert('email_ids', 'Email_ids must be a string array').isStringArray();
+
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
+      return res.status(400).send({ errors: req.validationErrors() });
+    }
+
+    toggleEmailSeen(req, res, true);
+  });
+};
+
+// Marca como no leído un email
+module.exports.markEmailUnseen = function (req, res) {
+
+  process.nextTick(function () {
+
+    req.assert('email_ids', 'Email_ids must be a string array').isStringArray();
+
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
+      return res.status(400).send({ errors: req.validationErrors() });
+    }
+
+    toggleEmailSeen(req, res, false);
+  });
+};
+
+// Marca como leído / no leído un email
+var toggleEmailSeen = function (req, res, toggle) {
+
+  findUserAndThen(req, function(err, user) {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    else {
+      googleEmails.toggleEmailSeen(user.google.refresh_token, req.body.email_ids, toggle, function(err) {
+        return res.sendStatus(200);
+      });
+    }
+  });
+};
+
 // Mueve a la papelera de reciclaje un email
 module.exports.trash = function (req, res) {
 
   process.nextTick(function () {
+
+    req.assert('email_ids', 'Email_ids must be a string array').isStringArray();
+
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
+      return res.status(400).send({ errors: req.validationErrors() });
+    }
+
     toggleEmailTrash(req, res, true);
   });
 };
@@ -229,6 +256,15 @@ module.exports.trash = function (req, res) {
 module.exports.untrash = function (req, res) {
 
   process.nextTick(function () {
+
+    req.assert('email_ids', 'Email_ids must be a string array').isStringArray();
+
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
+      return res.status(400).send({ errors: req.validationErrors() });
+    }
+
     toggleEmailTrash(req, res, false);
   });
 };
@@ -240,7 +276,7 @@ var toggleEmailTrash = function(req, res, toggle) {
       return res.status(400).send(err);
     }
     else {
-      googleEmails.toggleEmailTrash(user.google.refresh_token, req.params.email_id, toggle, function(err) {
+      googleEmails.toggleEmailTrash(user.google.refresh_token, req.body.email_ids, toggle, function(err) {
         return res.sendStatus(200);
       });
     }
