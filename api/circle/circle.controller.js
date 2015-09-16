@@ -193,28 +193,75 @@ module.exports.getTree = function (req, res) {
   });
 };
 
-// Que noche mágica Ciudad de Buenos Aires
+// Construye el árbol de círculos y subcírculos
 var makeTree = function(options) {
-  var children, e, i, id, j, len, len1, o, pid, ref, ref1, temp;
-  id = options.id || "_id";
-  pid = options.parentid || "parent";
-  children = options.children || "subcircles";
-  temp = {};
-  ref = options.q;
-  for (i = 0, len = ref.length; i < len; i++) {
-    e = ref[i];
-    e[children] = [];
-    temp[e[id]] = e;
+  var tempCircle, firstIndex, secondIndex;
+  var id = options.id || "_id";
+  var pid = options.parentid || "parent";
+  var children = options.children || "subcircles";
+  var circlesIds = {};
+  var firstArray = options.q;
+  for (firstIndex = 0; firstIndex < firstArray.length; firstIndex++) {
+    /* En tempCircle se guarda cada círculo
+    * _id = 43532532532425
+    * name = "Principal"
+    * picture = "http://www.google.com/"
+    * parent = 3245324234234
+    * */
+    tempCircle = firstArray[firstIndex];
+
+    /*
+    * Luego creamos un array vacío llamado subcircles dentro del circulo
+    * _id = 43532532532425
+    * name = "Principal"
+    * picture = "http://www.google.com/"
+    * parent = 3245324234234
+    * subcircles = []
+    * */
+    tempCircle[children] = [];
+
+    /*
+    * Por último, en circlesIds vamos a almacenar un objeto que va a tener como claves los ids
+    * de cada circulo y como valores el circulo propiamente dicho
+    * circlesIds[43532532532425] = {
+    *   _id = 43532532532425
+    *   name = "Principal"
+    *   picture = "http://www.google.com/"
+    *   parent = 3245324234234
+    *   subcircles = []
+    * }
+    * */
+    circlesIds[tempCircle[id]] = tempCircle;
   }
-  o = [];
-  ref1 = options.q;
-  for (j = 0, len1 = ref1.length; j < len1; j++) {
-    e = ref1[j];
-    if (temp[e[pid]] !== undefined) {
-      temp[e[pid]][children].push(e);
+  /*
+  * o va a ser el array de círculos que va a tener un sólo elemento, el círculo raíz
+  * */
+  var o = [];
+  var secondArray = options.q;
+  for (secondIndex = 0; secondIndex < secondArray.length; secondIndex++) {
+    /* En tempCircle se guarda cada círculo nuevamente
+     * _id = 43532532532425
+     * name = "Principal"
+     * picture = "http://www.google.com/"
+     * parent = 3245324234234
+     * */
+    tempCircle = secondArray[secondIndex];
+
+    /*
+    * Luego nos fijamos si en el objeto de ids, se encuentra el círculo padre del círculo en tempCircle
+    * */
+    if (circlesIds[tempCircle[pid]] !== undefined) {
+      /*
+      * Si se encuentra, entonces a ese círculo padre le pusheamos en el array de childrens, tempCircle
+      * */
+      circlesIds[tempCircle[pid]][children].push(tempCircle);
     }
     else {
-      o.push(e);
+      /*
+      * Si no se encuentra, quiere decir que es el círculo padre, por lo que lo agregamos y será
+      * el círculo principal que va a tener a todos los subcirculos
+      * */
+      o.push(tempCircle);
     }
   }
   return o;
