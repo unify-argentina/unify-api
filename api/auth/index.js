@@ -26,4 +26,7 @@ authRoutes.use('/google', require('./google'));
 // /auth/verify
 authRoutes.use('/verify', require('./verify-token'));
 
+// /auth/recover
+authRoutes.use('/recover', require('./recovery-password'));
+
 module.exports = authRoutes;

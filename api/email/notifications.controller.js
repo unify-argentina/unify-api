@@ -9,6 +9,7 @@ var nodemailer = require('nodemailer');
 var config = require('../../config');
 var logger = require('../../config/logger');
 var verifyTokenController = require('../auth/verify-token/verify-token.controller');
+var recoveryPasswordController = require('../auth/recovery-password/recovery-password.controller');
 
 var transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -42,6 +43,33 @@ module.exports.sendSignupEmailToUser = function(user) {
     }
     else {
       logger.error('Error creating signup verify token for user: ' + user + ': ' + err);
+    }
+  });
+};
+
+module.exports.sendRecoveryPasswordEmailToUser = function(user) {
+
+  recoveryPasswordController.createRecoveryPassword(user, function(err, recoveryPassword) {
+    if (!err && recoveryPassword) {
+
+      var mailOptions = {
+        to: user.email,
+        subject: 'Recupera tu contraseña',
+        text: 'Recupera tu contraseña',
+        html: 'http://localhost:8080/auth/recover/' + recoveryPassword.token
+      };
+
+      transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+          return logger.error('Error sending recovery password email to user ' + user + ': ' + error);
+        }
+        else {
+          logger.info('Recovery password email sent to user ' + user + ': ' + info.response);
+        }
+      });
+    }
+    else {
+      logger.error('Error creating recovery password for user: ' + user + ': ' + err);
     }
   });
 };
