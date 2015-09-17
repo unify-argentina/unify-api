@@ -6,9 +6,11 @@
 
 // requires
 var nodemailer = require('nodemailer');
+var randomstring = require('randomstring');
 var config = require('../../config');
 var logger = require('../../config/logger');
 var verifyTokenController = require('../auth/verify-token/verify-token.controller');
+var recoveryPasswordController = require('../auth/recovery-password/recovery-password.controller');
 
 var transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -42,6 +44,34 @@ module.exports.sendSignupEmailToUser = function(user) {
     }
     else {
       logger.error('Error creating signup verify token for user: ' + user + ': ' + err);
+    }
+  });
+};
+
+module.exports.sendRecoveryPasswordEmailToUser = function(user) {
+
+  var password = randomstring.generate(10);
+  user.password = password;
+  user.save(function(err) {
+    if (err) {
+      logger.error('Error reseting password for user: ' + user + ': ' + err);
+    }
+    else {
+      var mailOptions = {
+        to: user.email,
+        subject: 'Se ha reseteado tu contraseña',
+        text: 'Se ha reseteado tu contraseña',
+        html: 'Tu nueva contraseña es ' + password + '. Por favor cámbiala cuando ingreses nuevamente a Unify por alguna que recuerdes'
+      };
+
+      transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+          return logger.error('Error sending recovery password email to user ' + user + ': ' + error);
+        }
+        else {
+          logger.info('Recovery password email sent to user ' + user + ': ' + info.response);
+        }
+      });
     }
   });
 };

@@ -1,5 +1,5 @@
 /*
- * Este módulo se encarga de manejar las rutas de verificacion de cuenta
+ * Este módulo se encarga de manejar la verificación de cuenta
  * @author Joel Márquez
  * */
 'use strict';

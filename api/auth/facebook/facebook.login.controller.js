@@ -12,6 +12,7 @@ var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
 var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
+var notificationsController = require('../../email/notifications.controller');
 
 // modelos
 var User = require('../../user/user.model');
@@ -200,7 +201,17 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
           user.password = randomstring.generate(20);
           logger.info('New facebook user!: ' + user);
           linkFacebookData(user, facebookProfile, access_token);
-          return saveUser(res, user);
+          user.save(function(err) {
+            if (err) {
+              logger.error('Facebook Error saving on DB: ' + err);
+              return res.status(400).send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
+            }
+            else {
+              user.password = undefined;
+              notificationsController.sendSignupEmailToUser(user);
+              return jwt.createJWT(res, user);
+            }
+          });
         }
       });
     }

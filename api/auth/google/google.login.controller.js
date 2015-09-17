@@ -11,6 +11,7 @@ var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
 var googleErrors = require('./google.errors');
 var googleAuth = require('./google.auth.helper');
+var notificationsController = require('../../email/notifications.controller');
 
 // modelos
 var User = require('../../user/user.model');
@@ -203,7 +204,17 @@ var handleNotAuthenticatedUser = function(res, googleProfile, refresh_token) {
           user.password = randomstring.generate(20);
           logger.info('New google user!: ' + user);
           linkGoogleData(user, googleProfile, refresh_token);
-          return saveUser(res, user);
+          user.save(function(err) {
+            if (err) {
+              logger.error('Google Error saving on DB: ' + err);
+              return res.status(400).send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
+            }
+            else {
+              user.password = undefined;
+              notificationsController.sendSignupEmailToUser(user);
+              return jwt.createJWT(res, user);
+            }
+          });
         }
       });
     }
