@@ -9,8 +9,8 @@ var recoveryPasswordController = require('./recovery-password.controller');
 var recoveryRoutes = require('express').Router();
 
 /**
- * @api {post} /auth/recover Enviar email de recuperacion
- * @apiGroup Recuperacion de cuenta
+ * @api {post} /auth/recover Recuperacion de cuenta
+ * @apiGroup Autenticacion
  *
  * @apiParam {String} email Email de la cuenta a recuperar
  *

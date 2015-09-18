@@ -9,8 +9,8 @@ var verifyTokenController = require('./verify-token.controller');
 var verifyRoutes = require('express').Router();
 
 /**
- * @api {get} /auth/verify/:token Verificacion de token
- * @apiGroup Verificacion de cuenta
+ * @api {get} /auth/verify/:token Verificacion de cuenta
+ * @apiGroup Autenticacion
  *
  * @apiParam {String} token Token de verificacion
  *
