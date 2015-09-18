@@ -16,8 +16,8 @@ var User = require('../../user/user.model');
 module.exports.recover = function(req, res) {
 
 	process.nextTick(function() {
-    req.assert('email', 'Required').notEmpty();
-    req.assert('email', 'Valid email required').isEmail();
+    req.assert('email', 'Email requerido').notEmpty();
+    req.assert('email', 'Email válido requerido').isEmail();
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -30,7 +30,7 @@ module.exports.recover = function(req, res) {
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.body.email);
-        return res.status(400).send({ errors: [{ msg: "User doesn't exist" }] });
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       // Si lo encontramos, generamos un token y se lo enviamos
       else {

@@ -19,7 +19,7 @@ module.exports.create = function(req, res) {
 
     validateParams(req, res);
 
-    validateSocialIds(req, res, 'creating');
+    validateSocialIds(req, res, 'crear');
 
     // Encontramos el círculo cuyo usuario es el que está en el request
     Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user })
@@ -27,11 +27,11 @@ module.exports.create = function(req, res) {
       .exec(function(err, circles) {
       if (err || !circles) {
         logger.warn("Circles don't exists or don't belong to current user=" + req.user);
-        return res.status(400).send({ errors: [{ msg: "Circles don't exists or don't belong to current user" }] });
+        return res.status(400).send({ errors: [{ msg: 'Los círculos especificados no pertenecen al usuario actual' }] });
       }
       else if (req.body.circles_ids.length > circles.length) {
         logger.warn("One of the circles doesn't belong to current user=" + req.user);
-        return res.status(400).send({ errors: [{ msg: "One of the circles doesn't belong to current user" }] });
+        return res.status(400).send({ errors: [{ msg: 'Alguno de los círculos especificados no pertenece al usuario actual' }] });
       }
       else {
         var contact = new Contact();
@@ -56,17 +56,17 @@ module.exports.update = function(req, res) {
 
     validateParams(req, res);
 
-    validateSocialIds(req, res, 'updating');
+    validateSocialIds(req, res, 'actualizar');
 
     // Revisamos que el usuario tenga efectivamente el círculo pasado por parámetro
     Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user }, function(err, circles) {
         if (err || !circles) {
           logger.warn("Circles don't exists or don't belong to current user=" + req.user);
-          return res.status(400).send({ errors: [{ msg: "Circles don't exists or don't belong to current user" }] });
+          return res.status(400).send({ errors: [{ msg: 'Los círculos especificados no pertenecen al usuario actual' }] });
         }
         else if (req.body.circles_ids.length > circles.length) {
           logger.warn("One of the circles doesn't belong to current user=" + req.user);
-          return res.status(400).send({ errors: [{ msg: "One of the circles doesn't belong to current user" }] });
+          return res.status(400).send({ errors: [{ msg: 'Alguno de los círculos especificados no pertenece al usuario actual' }] });
         }
         else {
           saveContactData(req, res, req.contact, circles, true);
@@ -83,7 +83,7 @@ module.exports.delete = function(req, res) {
     contact.remove(function(err) {
       if (err) {
         logger.err(err);
-        return res.status(400).send({ errors: [{ msg: 'Error removing contact ' + err }] });
+        return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
       }
       else {
         return res.send({ contact: contact._id });
@@ -94,39 +94,15 @@ module.exports.delete = function(req, res) {
 
 // Valida que los parámetros sean correctos
 var validateParams = function(req, res) {
-  req.assert('name', 'Required').notEmpty();
-  req.assert('picture', 'Required').notEmpty();
-  req.assert('picture', 'It must be a valid URL').isURL();
-  req.assert('circles_ids', 'Required').notEmpty();
+  req.assert('name', 'Nombre válido requerido').isString();
+  req.assert('picture', 'URL de foto válida requerida').isURL();
+  req.assert('circles_ids', 'Ids de círculos válidos requeridos').isStringArray();
 
   // Validamos errores
   if (req.validationErrors()) {
     logger.warn('Validation errors: ' + req.validationErrors());
     return res.status(400).send({ errors: req.validationErrors()});
   }
-
-  validateCircleArray(req, res);
-
-  // Validamos nosql injection
-  if (typeof req.body.name !== 'string' || typeof req.body.picture !== 'string') {
-    logger.warn('No SQL injection - name: ' + req.body.name + ' picture: ' + req.body.picture);
-    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
-  }
-};
-
-// Valida que los ids de los círculos estén en un array y tengan al menos un id
-var validateCircleArray = function(req, res) {
-  // Validamos que circles_ids sea un array
-  if (!req.body.circles_ids || req.body.circles_ids.constructor !== Array) {
-    logger.warn('Invalid circles_ids type: ' + req.body.circles_ids);
-    return res.status(400).send({ errors: [{ msg: 'You must provide an array of circles_ids' }] });
-  }
-  req.body.circles_ids.forEach(function(circleId) {
-    if (typeof circleId !== 'string') {
-      logger.warn('No SQL injection: ' + circleId);
-      return res.status(400).send({ errors: [{ msg: 'You must provide a string array of circles_ids' }] });
-    }
-  });
 };
 
 var validateSocialIds = function(req, res, text) {
@@ -141,21 +117,24 @@ var validateSocialIdsExistance = function(req, res, text) {
   if (!req.body.facebook_id && !req.body.twitter_id && !req.body.instagram_id) {
     logger.warn("Requester didn't suplied a facebook, twitter or instagram id for creating a contact");
     return res.status(400).send({ errors: [{ msg:
-    'You have to suply a facebook, twitter or instagram id for ' + text + ' a contact' }] });
+    'Tienes que proveer al menos un id de Facebook, o de Twitter, o de Instagram para ' + text + ' un contacto' }] });
   }
 };
 
+// TODO agregar validación para Google
 // Validamos que si hay alguno, tenga un formato válido
 var validateSocialIdsFormat = function(req, res) {
-  if (req.body.facebook_id && typeof req.body.facebook_id !== 'string' ||
-    req.body.facebook_display_name && typeof req.body.facebook_display_name !== 'string' ||
-    req.body.twitter_id && typeof req.body.twitter_id !== 'string' ||
-    req.body.twitter_username && typeof req.body.twitter_username !== 'string' ||
-    req.body.instagram_id && typeof req.body.instagram_id !== 'string' ||
-    req.body.instagram_username && typeof req.body.instagram_username !== 'string') {
-    logger.warn('No SQL injection - facebook_id: ' + req.body.facebook_id +
-      ' twitter_id: ' + req.body.twitter_id + ' instagram_id: ' + req.body.instagram_id);
-    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+  req.assert('facebook_id', 'Id de Facebook válido').optional().isString();
+  req.assert('facebook_display_name', 'Nombre de Facebook válido').optional().isString();
+  req.assert('twitter_id', 'Id de Twitter válido').optional().isString();
+  req.assert('twitter_username', 'Nombre de usuario de Twitter válido').optional().isString();
+  req.assert('instagram_id', 'Id de Instagram válido').optional().isString();
+  req.assert('instagram_username', 'Nombre de usuario de Instagram válido').optional().isString();
+
+  // Validamos errores
+  if (req.validationErrors()) {
+    logger.warn('Validation errors: ' + req.validationErrors());
+    return res.status(400).send({ errors: req.validationErrors()});
   }
 };
 
@@ -175,7 +154,7 @@ var saveContactData = function(req, res, contact, circles, isUpdate) {
   contact.save(function(err) {
     if (err) {
       logger.err(err);
-      return res.status(400).send({ errors: [{ msg: 'Error saving data ' + err }] });
+      return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
     }
     else {
       logger.debug('Contact for user: ' + req.user + (isUpdate ? ' updated' : ' created') + ' successfully: ' + contact.toString());
@@ -199,7 +178,7 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
     }
     // Sino, devolvemos error ya que no tiene linkeada esa cuenta
     else {
-      return res.status(400).send({ errors: [{ msg: 'You have to link your facebook account in order to create a contact with a facebook_id' }] });
+      return res.status(400).send({ errors: [{ msg: 'Debes vincular tu cuenta de Facebook para poder crear un contacto con una cuenta de Facebook' }] });
     }
   }
 
@@ -211,7 +190,7 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
     }
     // Sino, devolvemos error ya que no tiene linkeada esa cuenta
     else {
-      return res.status(400).send({ errors: [{ msg: 'You have to link your twitter account in order to create a contact with a twitter_id' }] });
+      return res.status(400).send({ errors: [{ msg: 'Debes vincular tu cuenta de Twitter para poder crear un contacto con una cuenta de Twitter' }] });
     }
   }
 
@@ -223,7 +202,7 @@ var validateUserSocialAccounts = function(req, res, contact, user) {
     }
     // Sino, devolvemos error ya que no tiene linkeada esa cuenta
     else {
-      return res.status(400).send({ errors: [{ msg: 'You have to link your instagram account in order to create a contact with a instagram_id' }] });
+      return res.status(400).send({ errors: [{ msg: 'Debes vincular tu cuenta de Instagram para poder crear un contacto con una cuenta de Instagram' }] });
     }
   }
 };

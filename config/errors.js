@@ -5,7 +5,7 @@
 'use strict';
 
 module.exports = {
-  USER_NOT_FOUND: 'User not found',
+  USER_NOT_FOUND: 'El usuario no ha podido ser encontrado',
   TOKEN_VERIFICATION_FAILED: 'Error verifying json web token',
   DB_ERROR: 'Error saving on DB',
   INVALID_TYPES: "You're trying to send invalid data types",

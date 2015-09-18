@@ -26,7 +26,7 @@ module.exports.getMedia = function (req, res) {
       .exec(function (err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
         doGetMedia(res, user);
@@ -46,7 +46,7 @@ var doGetMedia = function(res, user) {
   function(err, results) {
     if (err) {
       logger.warn('Error searching media ' + err);
-      return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user media' }] });
+      return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del usuario actual' }] });
     }
     else {
       sendMediaResponseFromResults(res, results, user._id);

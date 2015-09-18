@@ -24,13 +24,13 @@ module.exports.getMedia = function (req, res) {
     User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
         module.exports.doGetMedia(user, req.contact, function(err, results) {
           if (err) {
             logger.warn('Error searching media ' + err);
-            return res.status(400).send({ errors: [{ msg: 'There was an error obtaining contact media' }] });
+            return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del contacto especificado' }] });
           }
           else {
             sendMediaResponseFromResults(res, results, req.contact._id);

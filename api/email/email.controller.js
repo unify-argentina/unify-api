@@ -61,7 +61,7 @@ var list = function (req, res, functionName) {
   User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
     if (err || !user) {
       logger.warn('User not found: ' + req.user);
-      return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+      return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
     }
     else {
       doGetEmails(res, user, functionName);
@@ -79,7 +79,7 @@ var doGetEmails = function(res, user, functionName) {
   function(err, results) {
     if (err) {
       logger.warn('Error searching ' + functionName + ' emails ' + err);
-      return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user emails' }] });
+      return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener los emails' }] });
     }
     else {
       sendEmailResponseFromResults(res, results);
@@ -159,7 +159,7 @@ var doCreateEmail = function(req, res, user) {
   googleEmails.create(user.google.refresh_token, user.google.email, req.body, function(err) {
     if (err) {
       logger.warn('There was an error creating email for user: ' + req.user);
-      return res.status(400).send({ errors: [{ msg: 'There was an error creating email' }] });
+      return res.status(400).send({ errors: [{ msg: 'Hubo un error al crear un email' }] });
     }
     else {
       logger.info('Email sent ok for user: ' + req.user);
@@ -288,7 +288,7 @@ var findUserAndThen = function(req, callback) {
   User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
     if (err || !user) {
       logger.warn('User not found: ' + req.user);
-      callback({ errors: [{ msg: 'User not found' }] }, null);
+      callback({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] }, null);
     }
     // Si no tiene la cuenta linkeada de Google no lo dejaremos enviar un correo
     else if (!user.hasLinkedAccount('google')) {

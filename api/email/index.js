@@ -10,8 +10,7 @@ var emailController = require('./email.controller');
 var logger = require('../../config/logger');
 
 emailRoutes.param('email_id', function(req, res, next, emailId) {
-
-  req.assert('email_id', 'Email id must be a string').isString();
+  req.assert('email_id', 'Id del email válido requerido').isString();
 
   // Validamos errores
   if (req.validationErrors()) {

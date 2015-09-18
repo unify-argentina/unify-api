@@ -17,30 +17,32 @@ var User = require('../../user/user.model');
 module.exports.verifyToken = function (req, res) {
 
   process.nextTick(function () {
+    req.assert('token', 'Token válido requerido').isString();
 
-    if (typeof req.params.token !== 'string') {
-      logger.warn('No SQL injection - token: ' + req.params.token);
-      return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
+      return res.status(400).send({ errors: req.validationErrors() });
     }
     // Si el token es un string, lo buscamos en la tabla
     else {
       VerifyToken.findOne({ token: req.params.token }, function(err, verifyToken) {
         if (err || !verifyToken) {
           logger.warn('Token not found: ' + req.params.token);
-          return res.status(400).send({ errors: [{ msg: 'Token not found' }] });
+          return res.status(400).send({ errors: [{ msg: 'Hubo un error al verificar la cuenta de Unify' }] });
         }
         else {
           User.findOne({ _id: verifyToken.user }, function (err, user) {
             if (err || !user) {
               logger.warn('User not found: ' + req.user);
-              return res.status(400).send({errors: [{msg: 'User not found'}]});
+              return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
             }
             else {
               user.verified = true;
               user.save(function(err) {
                 if (err) {
-                  logger.error('Error saving on DB: ' + err);
-                  return res.status(400).send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
+                  logger.error('Hubo un error inesperado');
+                  return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
                 }
                 else {
                   verifyToken.remove();

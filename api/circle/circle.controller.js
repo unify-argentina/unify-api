@@ -25,7 +25,7 @@ module.exports.create = function(req, res) {
       .exec(function(err, parentCircle) {
         if (err || !parentCircle) {
           logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
-          return res.status(400).send({ errors: [{ msg: "Paren't circle doesn't exists or doesn't belong to current user" }] });
+          return res.status(400).send({ errors: [{ msg: 'El círculo padre no existe o no le pertenece al usuario actual' }] });
         }
         else {
           var circle = new Circle();
@@ -44,7 +44,7 @@ module.exports.getById = function(req, res) {
     Contact.find({ 'parents.circle': req.circle._id, user: req.user }, function(err, contacts) {
       if (err || !contacts) {
         logger.warn('Could not find contacts for circle=' + req.circle._id);
-        return res.status(400).send({ errors: [{ msg: 'Could not find contacts for specified circle' }] });
+        return res.status(400).send({ errors: [{ msg: 'Hubo un error al encontrar contactos para el círculo especificado' }] });
       }
       else {
         var contactsObject = {
@@ -67,7 +67,7 @@ module.exports.update = function (req, res) {
     // Si el círculo a modificar es el principal, devolvemos error
     if (req.circle._id.equals(req.circle.user.main_circle)) {
       logger.warn("Main circle can't be modified for user=" + req.circle.user._id);
-      return res.status(400).send({ errors: [{ msg: "Main circle can't be modified" }] });
+      return res.status(400).send({ errors: [{ msg: 'El círculo principal no puede ser modificado' }] });
     }
     // Sino, encontramos el circulo padre, verificamos que pertenezca al usuario y lo actualizamos
     else {
@@ -76,7 +76,7 @@ module.exports.update = function (req, res) {
         .exec(function(err, parentCircle) {
           if (err || !parentCircle) {
             logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
-            return res.status(400).send({errors: [{msg: "Paren't circle doesn't exists or doesn't belong to current user"}]});
+            return res.status(400).send({ errors: [{ msg: 'El círculo padre no existe o no le pertenece al usuario actual' }] });
           }
           else {
             saveCircleData(req, res, req.circle, parentCircle);
@@ -97,20 +97,20 @@ module.exports.delete = function(req, res) {
       .exec(function (err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
         var circle = req.circle;
         if (user.main_circle._id.equals(circle._id)) {
           logger.warn('Cannot delete users main circle: ' + circle._id);
-          return res.status(400).send({ errors: [{ msg: 'Cannot delete users main circle' }] });
+          return res.status(400).send({ errors: [{ msg: 'El círculo principal no puede ser eliminado' }] });
         }
         // Si no es el círculo principal, lo borramos y devolvemos el id del círculo recientemente borrado
         else {
           circle.remove(function(err) {
             if (err) {
               logger.err(err);
-              return res.status(400).send({ errors: [{ msg: 'Error removing circle ' + err }] });
+              return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar eliminar el círculo especificado' }] });
             }
             else {
               return res.send({ circle: circle._id });
@@ -124,20 +124,14 @@ module.exports.delete = function(req, res) {
 
 // Valida que los parámetros sean correctos
 var validateParams = function(req, res) {
-  req.assert('name', 'Required').notEmpty();
-  req.assert('picture', 'It must be a valid URL').optional().isURL();
-  req.assert('parent_id', 'Required').notEmpty();
+  req.assert('name', 'Nombre válido requerido').isString();
+  req.assert('picture', 'URL de foto válida').optional().isURL();
+  req.assert('parent_id', 'Id del padre válido requerido').isString();
 
   // Validamos errores
   if (req.validationErrors()) {
     logger.warn('Validation errors: ' + req.validationErrors());
     return res.status(400).send({ errors: req.validationErrors()});
-  }
-
-  // Validamos nosql injection
-  if (typeof req.body.name !== 'string' || typeof req.body.parent_id !== 'string') {
-    logger.warn('No SQL injection - name: ' + req.body.name + ' parentId: ' + req.body.parent_id);
-    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
   }
 };
 
@@ -152,7 +146,7 @@ var saveCircleData = function(req, res, circle, foundCircle) {
   circle.save(function(err) {
     if (err) {
       logger.err(err);
-      return res.status(400).send({ errors: [{ msg: 'Error saving data ' + err }] });
+      return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
     }
     else {
       logger.debug('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
@@ -172,7 +166,7 @@ module.exports.getTree = function (req, res) {
       .exec(function(err, circles) {
       if (err || !circles) {
         logger.warn('Could not find subcircles for circle=' + req.circle._id);
-        return res.status(400).send({ errors: [{ msg: 'Could not find subcircles for specified circle' }] });
+        return res.status(400).send({ errors: [{ msg: 'No se pudieron encontrar subcírculos para el círculo especificado' }] });
       }
       else {
         logger.debug('Subcircles for circle=' + req.circle._id + ' for user=' + req.user);

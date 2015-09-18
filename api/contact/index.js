@@ -16,9 +16,12 @@ var Contact = require('./contact.model');
 
 // Este método chequea que el contact_id pasado por parámetro pertenezca al usuario loggeado
 contactRoutes.param('contact_id', function(req, res, next, contactId) {
-  // Validamos nosql injection
-  if (typeof contactId !== 'string') {
-    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+  req.assert('contact_id', 'Id del contacto válido requerido').isString();
+
+  // Validamos errores
+  if (req.validationErrors()) {
+    logger.warn('Validation errors: ' + req.validationErrors());
+    return res.status(400).send({ errors: req.validationErrors()});
   }
 
   // Buscamos que el contacto pedido pertenezca al usuario loggeado
@@ -27,7 +30,7 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
     .exec(function (err, contact) {
     if (err || !contact) {
       logger.warn("You are trying to find a contact=" + contactId + " that doesn't belong to you");
-      return res.status(400).send({ errors: [{ msg: "You are trying to find a contact that doesn't belong to you" }] });
+      return res.status(400).send({ errors: [{ msg: 'Estás queriendo acceder a un contacto que no te pertenece' }] });
     }
     // Si pertenece, incorporamos el id al request y continuamos
     else {

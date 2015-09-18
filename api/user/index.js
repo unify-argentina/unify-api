@@ -9,6 +9,7 @@ var userRoutes = require('express').Router();
 var userController = require('./user.controller');
 var mediaController = require('./user.media.controller');
 var friendsController = require('./user.friends.controller');
+var logger = require('../../config/logger');
 
 // modelos
 var User = require('./user.model.js');
@@ -16,15 +17,18 @@ var User = require('./user.model.js');
 // Esto lo que hace es verificar que cada vez que se envíe un user_id como parámetro en una ruta,
 // coincida con el user que está en el request, previamente validado con el Json Web Token
 userRoutes.param('user_id', function(req, res, next, userId) {
-  // Validamos nosql injection
-  if (typeof userId !== 'string') {
-    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+  req.assert('user_id', 'Id del usuario válido requerido').isString();
+
+  // Validamos errores
+  if (req.validationErrors()) {
+    logger.warn('Validation errors: ' + req.validationErrors());
+    return res.status(400).send({ errors: req.validationErrors() });
   }
 
   // Si el req.user, ya habiendo pasado por la verificación del token es el mismo
   // que el del req.params.id, enviamos el user
-  if (req.user !== userId) {
-    return res.status(400).send({ errors: [{ msg: 'You are trying to find a different user' }]});
+  else if (req.user !== userId) {
+    return res.status(400).send({ errors: [{ msg: 'Estás queriendo acceder a un usuario distinto al tuyo' }]});
   }
   else {
     next();

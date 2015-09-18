@@ -27,19 +27,19 @@ module.exports.unlinkAccount = function(req, res) {
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }]});
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }]});
       }
       // Si el usuario no tiene email ni tiene la cuenta de twitter linkeada, no puede deslinkear instagram
       // ya que no vamos a tener forma de identificarlo después
       else if (!user.isValidToRemoveAccount('instagram')) {
         logger.warn('Cannot unlink Instagram for user: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'Cannot unlink Instagram' }]});
+        return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar desvincular tu cuenta de Instagram' }]});
       }
       else {
         user.toggleSocialAccount('instagram', false, function(err) {
           if (err) {
             logger.warn('There was an error trying to unlink Instagram: ' + req.user);
-            return res.status(400).send({ errors: [{ msg: 'There was an error trying to unlink Instagram' }]});
+            return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar desvincular tu cuenta de Instagram' }]});
           }
           else {
             logger.info('Successfully unlinked Instagram account for user: ' + user.toString());
@@ -94,7 +94,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
     payload = jwt.verify(unifyToken);
   }
   catch (err) {
-    return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
+    return res.status(401).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
   }
 
   // En caso de que exista ese usuario, nos fijamos si el id de Instagram ya está asociado con otra cuenta
@@ -104,7 +104,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
 
     if (err || !unifyUser) {
       logger.warn('User not found: ' + payload.sub);
-      return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+      return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
     }
 
     // Si existe un usuario de Unify, nos fijamos si no tiene su cuenta asociada con Instagram
@@ -118,7 +118,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
         // Si ya existe un usuario con ese id devolvemos error ya que no queremos desvincular la cuenta ya vinculada de ese usuario
         if (existingUser) {
           logger.warn('User with Instagram social account already exists: ' + existingUser.toString());
-          return res.status(400).send({ errors: [{ msg: "Can't disassociate Instagram account for existing user" }] });
+          return res.status(400).send({ errors: [{ msg: 'La cuenta de Instagram ya está asociada con otro usuario de Unify' }] });
         }
 
         // Si no existe un usuario de Unify con ese Instagram id entonces le asociamos la cuenta al usuario
@@ -130,7 +130,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
           unifyUser.toggleSocialAccount('instagram', true, function(err) {
             if (err) {
               logger.warn('There was an error trying to link Instagram: ' + unifyUser._id);
-              return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Instagram' }]});
+              return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar vincular tu cuenta de Instagram' }]});
             }
             else {
               logger.info('Successfully linked Instagram account for user: ' + unifyUser.toString());
@@ -178,7 +178,7 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, access_token) {
 var saveUser = function(res, user) {
   user.save(function(err) {
     if (err) {
-      return res.status(400).send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
+      return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
     }
     else {
       user.password = undefined;

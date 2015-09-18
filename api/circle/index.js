@@ -17,9 +17,12 @@ var Circle = require('./circle.model');
 // Esto lo que hace es verificar que cada vez que se envíe un circle_id como parámetro en una ruta,
 // efectivamente pertenezca al usuario loggeado
 circleRoutes.param('circle_id', function(req, res, next, circleId) {
-  // Validamos nosql injection
-  if (typeof circleId !== 'string') {
-    return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
+  req.assert('circle_id', 'Id del círculo válido requerido').isString();
+
+  // Validamos errores
+  if (req.validationErrors()) {
+    logger.warn('Validation errors: ' + req.validationErrors());
+    return res.status(400).send({ errors: req.validationErrors()});
   }
 
   // Buscamos el usuario del request y verificamos que el circle_id pertenezca a este usuario
@@ -28,7 +31,7 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
     .exec(function(err, circle) {
       if (err || !circle) {
         logger.warn("You are trying to find a circle=" + circleId + " that doesn't belong to you");
-        return res.status(400).send({ errors: [{ msg: "You are trying to find a circle that doesn't belong to you" }] });
+        return res.status(400).send({ errors: [{ msg: 'Estás queriendo acceder a un círculo que no te pertenece' }] });
       }
       else {
         req.circle = circle;

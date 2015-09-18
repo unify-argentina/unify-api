@@ -42,7 +42,7 @@ module.exports.ensureAuthenticated = function(req, res, next) {
   process.nextTick(function() {
     if (!req.headers.authorization) {
       logger.warn('Unauthorized: no token set');
-      return res.status(401).send({ errors: [{ msg: 'Please make sure your request has an Authorization header' }] });
+      return res.status(401).send({ errors: [{ msg: 'Por favor asegúrate de que tu pedido esté autorizado' }] });
     }
     var token = module.exports.getUnifyToken(req);
 
@@ -52,13 +52,13 @@ module.exports.ensureAuthenticated = function(req, res, next) {
     }
     catch (err) {
       logger.error('Error verifying token: ' + err.message);
-      return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
+      return res.status(401).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
     }
 
     logger.debug('Token payload: ' + JSON.stringify(payload));
     if (payload.exp <= moment().unix()) {
       logger.warn('Token has expired: ' + payload.exp + ' is older than ' + moment().unix());
-      return res.status(401).send({ errors: [{ msg: 'Token has expired' }] });
+      return res.status(401).send({ errors: [{ msg: 'La sesión ha expirado' }] });
     }
     req.user = payload.sub;
     next();

@@ -30,19 +30,19 @@ module.exports.unlinkAccount = function(req, res) {
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }]});
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }]});
       }
       // Si el usuario no tiene email ni tiene la cuenta de instagram linkeada, no puede deslinkear twitter
       // ya que no vamos a tener forma de identificarlo después
       else if (!user.isValidToRemoveAccount('twitter')) {
         logger.warn('Cannot unlink Twitter for user: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'Cannot unlink Twitter' }]});
+        return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar desvincular tu cuenta de Twitter' }]});
       }
       else {
         user.toggleSocialAccount('twitter', false, function(err) {
           if (err) {
             logger.warn('There was an error trying to unlink Twitter: ' + req.user);
-            return res.status(400).send({ errors: [{ msg: 'There was an error trying to unlink Twitter' }]});
+            return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar desvincular tu cuenta de Twitter' }]});
           }
           else {
             logger.info('Successfully unlinked Twitter account for user: ' + user.toString());
@@ -138,7 +138,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_t
     payload = jwt.verify(unifyToken);
   }
   catch (err) {
-    return res.status(401).send({ errors: [{ msg: 'Error verifying json web token' }] });
+    return res.status(401).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
   }
 
   // En caso de que exista ese usuario, nos fijamos si el id de Twitter ya está asociado con otra cuenta
@@ -148,7 +148,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_t
 
       if (err || !unifyUser) {
         logger.warn('User not found: ' + payload.sub);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
 
       // Si existe un usuario de Unify, nos fijamos si no tiene su cuenta asociada con Twitter
@@ -162,7 +162,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_t
             // Si ya existe un usuario con ese id devolvemos error ya que no queremos desvincular la cuenta ya vinculada de ese usuario
             if (existingUser) {
               logger.warn('User with Twitter social account already exists: ' + existingUser.toString());
-              return res.status(400).send({ errors: [{ msg: "Can't disassociate Twitter account for existing user" }] });
+              return res.status(400).send({ errors: [{ msg: 'La cuenta de Twitter ya está asociada con otro usuario de Unify' }] });
             }
 
             // Si no existe un usuario de Unify con ese Twitter id entonces le asociamos la cuenta al usuario
@@ -174,7 +174,7 @@ var handleAuthenticatedUser = function(res, unifyToken, twitterProfile, access_t
               unifyUser.toggleSocialAccount('twitter', true, function(err) {
                 if (err) {
                   logger.warn('There was an error trying to link Twitter: ' + unifyUser._id);
-                  return res.status(400).send({ errors: [{ msg: 'There was an error trying to link Twitter' }]});
+                  return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar vincular tu cuenta de Twitter' }]});
                 }
                 else {
                   logger.info('Successfully linked Twitter account for user: ' + unifyUser.toString());
@@ -223,7 +223,7 @@ var saveUser = function(res, user) {
   user.save(function(err) {
     if (err) {
       logger.error('Twitter Error saving on DB: ' + err);
-      return res.status(400).send({ errors: [{ msg: 'Error saving on DB: ' + err }] });
+      return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
     }
     else {
       user.password = undefined;

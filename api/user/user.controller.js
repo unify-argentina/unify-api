@@ -24,7 +24,7 @@ module.exports.getById = function(req, res) {
       .exec(function(err, user) {
         if (err || !user) {
           logger.warn('User not found: ' + req.user);
-          return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+          return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
         }
         else {
           logger.debug('Get user by id: ' + req.params.user_id);
@@ -38,11 +38,12 @@ module.exports.getById = function(req, res) {
 module.exports.update = function(req, res) {
 
   process.nextTick(function() {
-    req.assert('email', 'Required').notEmpty();
-    req.assert('email', 'Valid email required').isEmail();
-    req.assert('password', 'Password should have at least 6 characters of length').len(6, 100);
-    req.assert('confirm_password', 'Required').notEmpty();
-    req.assert('confirm_password', 'Confirm password must be equal to password').equals(req.body.password);
+    req.assert('email', 'Email válido requerido').isEmail();
+    req.assert('name', 'Nombre válido requerido').isString();
+    req.assert('password', 'Password válido requerido').isString();
+    req.assert('password', 'Password debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
+    req.assert('confirm_password', 'Confirmación de password válido requerido').isString();
+    req.assert('confirm_password', 'Confirmación de password debe ser igual al password').equals(req.body.password);
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -50,18 +51,11 @@ module.exports.update = function(req, res) {
       return res.status(400).send({ errors: req.validationErrors() });
     }
 
-    // Validamos nosql injection
-    if (typeof req.body.email !== 'string' || (typeof req.body.name && typeof req.body.name !== 'string') ||
-      typeof req.body.password !== 'string' || typeof req.body.confirm_password !== 'string') {
-      logger.warn('No SQL injection - email: ' + req.body.email + ' password: ' + req.body.password);
-      return res.status(400).send({ errors: [{ msg: "You're trying to send invalid data types" }] });
-    }
-
     // Si no encontramos un usuario con ese email, está disponible
     User.findOne({ email: req.body.email }, function(err, existingUser) {
       if (existingUser && !existingUser._id.equals(req.user)) {
         logger.debug('User already exists: ' + existingUser);
-        return res.status(400).send({ errors: [{ param: 'email', msg: 'Email is already taken' }] });
+        return res.status(400).send({ errors: [{ param: 'email', msg: 'El email ' + req.body.email + ' ya está registrado en Unify' }] });
       }
       else {
         // Encontramos un usuario con el id del token y le actualizamos los datos
@@ -70,7 +64,7 @@ module.exports.update = function(req, res) {
           .exec(function(err, user) {
             if (err || !user) {
               logger.warn('User not found: ' + req.user);
-              return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+              return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
             }
             else {
               user.email = req.body.email;
@@ -79,7 +73,7 @@ module.exports.update = function(req, res) {
               user.save(function(err) {
                 if (err) {
                   logger.error(err);
-                  return res.status(400).send({ errors: [{ msg: 'Error saving data ' + err }] });
+                  return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
                 }
                 else {
                   user.password = undefined;

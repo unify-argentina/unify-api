@@ -24,7 +24,7 @@ module.exports.getFriends = function(req, res) {
     User.findOne({ _id: req.user }, User.socialFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
         doGetFriends(res, user);
@@ -47,7 +47,7 @@ var doGetFriends = function(res, user) {
   function(err, results) {
     if (err) {
       logger.warn('Error searching friends ' + err);
-      return res.status(400).send({ errors: [{ msg: 'There was an error obtaining user friends' }] });
+      return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener los amigos del usuario actual' }] });
     }
     else {
       sendFriendsResponseFromResults(res, results);

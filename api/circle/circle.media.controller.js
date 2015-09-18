@@ -23,21 +23,21 @@ module.exports.getMedia = function (req, res) {
     User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user);
-        return res.status(400).send({ errors: [{ msg: 'User not found' }] });
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
         // Una vez que tenemos al usuario buscamos los contactos que tienen como ancestro al círculo a buscar
         Contact.find({ 'parents.ancestors': req.circle._id, user: req.user }, function(err, contacts) {
           if (err || !contacts) {
             logger.warn('Contacts not found for circle: ' + req.circle._id);
-            return res.status(400).send({ errors: [{ msg: 'No contacts found for circle' }] });
+            return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del círculo especificado' }] });
           }
           else {
             // Si no hubo error, vamos a buscar el contenido de cada contacto encontrado
             doGetMedia(res, user, contacts, function(err, results) {
               if (err) {
                 logger.warn('Error searching media ' + err);
-                return res.status(400).send({ errors: [{ msg: 'There was an error obtaining circle media' }] });
+                return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del círculo especificado' }] });
               }
               else {
                 sendMediaResponseFromResults(res, results, req.circle._id);
