@@ -120,8 +120,13 @@ var sendFriendsResponseFromResults = function(res, results) {
 
   var friendResults = errorHelper.checkFriendsErrors(results);
 
-  return res.send({
-    friends: friendResults.friends,
-    errors: friendResults.errors
-  });
+  var response = {
+    friends: friendResults.friends
+  };
+
+  if (friendResults.errors) {
+    response.errors = friendResults.errors;
+  }
+
+  return res.send(response);
 };

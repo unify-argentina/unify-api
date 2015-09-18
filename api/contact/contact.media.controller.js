@@ -106,13 +106,19 @@ var sendMediaResponseFromResults = function(res, results, contactId) {
     callback(null, -media.created_time);
   // Una vez que los ordenamos, los enviamos
   }, function(err, sortedMedia) {
-    return res.send({
+
+    var response = {
       contact_id: contactId,
       media: {
         count: sortedMedia.length,
         list: sortedMedia
-      },
-      errors: mediaResults.errors
-    });
+      }
+    };
+
+    if (mediaResults.errors) {
+      response.errors = mediaResults.errors;
+    }
+
+    return res.send(response);
   });
 };

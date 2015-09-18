@@ -4,6 +4,8 @@
  * */
 'use strict';
 
+var _ = require('lodash');
+
 // Chequea los errores que pudieron venir de las distintas APIs al querer obtener contenido
 module.exports.checkMediaErrors = function(results) {
 
@@ -41,10 +43,15 @@ module.exports.checkMediaErrors = function(results) {
   checkArrayResultsList(errors, mediaObjects, results, 'instagram');
   checkArrayResultsList(errors, mediaObjects, results, 'twitter');
 
-  return {
-    mediaObjects: mediaObjects,
-    errors: errors
+  var result = {
+    mediaObjects: mediaObjects
   };
+
+  if (!_.isEmpty(errors)) {
+    result.errors = errors;
+  }
+
+  return result;
 };
 
 // Chequea los errores que pudieron venir de las distintas APIs al querer obtener amigos
@@ -59,10 +66,15 @@ module.exports.checkFriendsErrors = function(results) {
   checkResultsList(errors, friends, results, 'twitter');
   checkResultsList(errors, friends, results, 'google');
 
-  return {
-    friends: friends,
-    errors: errors
+  var result = {
+    friends: friends
   };
+
+  if (!_.isEmpty(errors)) {
+    result.errors = errors;
+  }
+
+  return result;
 };
 
 // Chequea los errores que pudieron venir al querer obtener emails
@@ -76,11 +88,16 @@ module.exports.checkEmailErrors = function(results) {
 
   checkEmailsArrayResultsList(errors, emails, results, count, 'google');
 
-  return {
+  var result = {
     emails: emails,
-    errors: errors,
     count: count
   };
+
+  if (_.isEmpty(errors)) {
+    result.errors = errors;
+  }
+
+  return result;
 };
 
 // Verifica que los resultados contengan la cuenta solicitada y que tenga la lista, si no la tiene es un error
