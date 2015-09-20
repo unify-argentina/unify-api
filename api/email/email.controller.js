@@ -128,13 +128,11 @@ module.exports.create = function (req, res) {
 
   process.nextTick(function () {
 
-    req.assert('subject', 'Required').notEmpty();
-    req.assert('subject', 'Subject must be a string').isString();
-    req.assert('text', 'Required').notEmpty();
-    req.assert('text', 'Text must be a string').isString();
-    req.assert('to', 'To must be an email array').isEmailArray();
-    req.assert('cc', 'Cc must be an email array').optional().isEmailArray();
-    req.assert('cco', 'Cco must be an email array').optional().isEmailArray();
+    req.assert('subject', 'Asunto válido requerido').isString();
+    req.assert('text', 'Texto válido requerido').isString();
+    req.assert('to', 'Destinatarios válidos requeridos').isEmailArray();
+    req.assert('cc', 'Con copia válidos requeridos').optional().isEmailArray();
+    req.assert('cco', 'Con copia oculta válidos requeridos').optional().isEmailArray();
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -191,15 +189,16 @@ module.exports.markEmailSeen = function (req, res) {
 
   process.nextTick(function () {
 
-    req.assert('email_ids', 'Email_ids must be a string array').isStringArray();
+    req.assert('email_ids', 'Ids de los emails válidos requeridos').isStringArray();
 
     // Validamos errores
     if (req.validationErrors()) {
       logger.warn('Validation errors: ' + req.validationErrors());
       return res.status(400).send({ errors: req.validationErrors() });
     }
-
-    toggleEmailSeen(req, res, true);
+    else {
+      toggleEmailSeen(req, res, true);
+    }
   });
 };
 
@@ -208,15 +207,16 @@ module.exports.markEmailUnseen = function (req, res) {
 
   process.nextTick(function () {
 
-    req.assert('email_ids', 'Email_ids must be a string array').isStringArray();
+    req.assert('email_ids', 'Ids de los emails válidos requeridos').isStringArray();
 
     // Validamos errores
     if (req.validationErrors()) {
       logger.warn('Validation errors: ' + req.validationErrors());
       return res.status(400).send({ errors: req.validationErrors() });
     }
-
-    toggleEmailSeen(req, res, false);
+    else {
+      toggleEmailSeen(req, res, false);
+    }
   });
 };
 
@@ -240,15 +240,16 @@ module.exports.trash = function (req, res) {
 
   process.nextTick(function () {
 
-    req.assert('email_ids', 'Email_ids must be a string array').isStringArray();
+    req.assert('email_ids', 'Ids de los emails válidos requeridos').isStringArray();
 
     // Validamos errores
     if (req.validationErrors()) {
       logger.warn('Validation errors: ' + req.validationErrors());
       return res.status(400).send({ errors: req.validationErrors() });
     }
-
-    toggleEmailTrash(req, res, true);
+    else {
+      toggleEmailTrash(req, res, true);
+    }
   });
 };
 
@@ -257,15 +258,16 @@ module.exports.untrash = function (req, res) {
 
   process.nextTick(function () {
 
-    req.assert('email_ids', 'Email_ids must be a string array').isStringArray();
+    req.assert('email_ids', 'Ids de los emails válidos requeridos').isStringArray();
 
     // Validamos errores
     if (req.validationErrors()) {
       logger.warn('Validation errors: ' + req.validationErrors());
       return res.status(400).send({ errors: req.validationErrors() });
     }
-
-    toggleEmailTrash(req, res, false);
+    else {
+      toggleEmailTrash(req, res, false);
+    }
   });
 };
 

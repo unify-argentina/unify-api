@@ -29,11 +29,9 @@ var USER_EMAIL_LABELS_URL = 'https://www.googleapis.com/gmail/v1/users/me/labels
 var USER_EMAIL_SEND_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/send';
 
 // marcar como visto un email
-var USER_EMAIL_TOGGLE_SEEN_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s/modify';
+var USER_EMAIL_MODIFY_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s/modify';
 
-// mover a papelera un email
-var USER_EMAIL_TOGGLE_TRASH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s/%s';
-
+// borra un email
 var USER_EMAIL_DELETE_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s';
 
 // formato de fecha de gmail
@@ -112,7 +110,7 @@ var list = function(refresh_token, labelId, callback) {
 
           }, function(err, googleDetailedEmails) {
 
-            logger.debug('Google emails: ' + JSON.stringify(googleDetailedEmails));
+            logger.debug('Google emails count: ' + googleDetailedEmails.length);
 
             var url = util.format(USER_EMAIL_LABELS_URL, labelId);
             logger.info('URL: ' + url);
@@ -170,7 +168,9 @@ var mapEmail = function(googleEmail) {
   var emailValues = getValuesFromPayload(googleEmail);
   var bodyValues = getBodyFromPayload(googleEmail);
   var unread = googleEmail.labelIds && googleEmail.labelIds.constructor === Array && googleEmail.labelIds.indexOf('UNREAD') > -1;
-  
+
+  logger.debug('Google email: id=' + googleEmail.id + ' subject: ' + emailValues.subject);
+
   return {
     id: googleEmail.id,
     threadId: googleEmail.threadId,
@@ -377,14 +377,17 @@ module.exports.toggleEmailSeen = function(refresh_token, emailIds, toggle, callb
     }
     else {
       var count = 0;
+
+      var authenticatedRequest = request.defaults({
+        headers: { Authorization: 'Bearer ' + access_token }
+      });
+
       // Por cada emailId, lo marcamos como leído o no leído
       emailIds.forEach(function(emailId) {
 
         count++;
-        var url = util.format(USER_EMAIL_TOGGLE_SEEN_URL, emailId);
+        var url = util.format(USER_EMAIL_MODIFY_URL, emailId);
         logger.info('URL: ' + url);
-
-        var headers = {Authorization: 'Bearer ' + access_token};
 
         var body = {};
         // Marcar como leído
@@ -396,7 +399,7 @@ module.exports.toggleEmailSeen = function(refresh_token, emailIds, toggle, callb
           body.addLabelIds = ['UNREAD'];
         }
 
-        request.post({ url: url, headers: headers, json: body }, function (err, response) {
+        authenticatedRequest.post({ url: url, json: body }, function (err, response) {
           var result = googleErrors.hasError(err, response);
           if (result.hasError) {
             callback(result.error);
@@ -420,16 +423,30 @@ module.exports.toggleEmailTrash = function(refresh_token, emailIds, toggle, call
     }
     else {
       var count = 0;
+
+      var authenticatedRequest = request.defaults({
+        headers: { Authorization: 'Bearer ' + access_token }
+      });
+
       // Por cada emailId, lo movemos o lo sacamos de la papelera
       emailIds.forEach(function(emailId) {
 
         count++;
-        var url = util.format(USER_EMAIL_TOGGLE_TRASH_URL, emailId, toggle ? 'trash' : 'untrash');
+        var url = util.format(USER_EMAIL_MODIFY_URL, emailId);
         logger.info('URL: ' + url);
 
-        var headers = { Authorization: 'Bearer ' + access_token };
+        var body = {};
+        // Lo movemos a la papelera
+        if (toggle) {
+          body.addLabelIds = ['TRASH'];
+        }
+        // Lo sacamos de la papelera y lo movemos a la bandeja de entrada
+        else {
+          body.removeLabelIds = ['TRASH'];
+          body.addLabelIds = ['INBOX'];
+        }
 
-        request.post({ url: url, headers: headers, json: true }, function(err, response) {
+        authenticatedRequest.post({ url: url, json: body }, function(err, response) {
           var result = googleErrors.hasError(err, response);
           if (result.hasError) {
             callback(result.error);
