@@ -249,8 +249,9 @@ var getBodyFromPayload = function(googleEmail, contentType) {
         result.html = findPartValue(parts, MIMETYPES.HTML);
       }
     }
-    else if (payload.mimeType === MIMETYPES.HTML) {
+    else if (payload.mimeType === MIMETYPES.HTML || payload.mimeType === MIMETYPES.TEXT) {
       result.html = payload.body.data;
+      result.text = payload.body.data;
     }
   }
 
