@@ -26,6 +26,7 @@ var userSchema = mongoose.Schema({
   verified: { type: Boolean, default: false },
   birth_date: Date,
   main_circle: { type: ObjectId, ref: 'Circle' },
+  picture: String,
 
   facebook: {
     id: { type: String, index: true, select: false },

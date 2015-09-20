@@ -44,6 +44,7 @@ module.exports.update = function(req, res) {
     req.assert('password', 'Password debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
     req.assert('confirm_password', 'Confirmación de password válido requerido').isString();
     req.assert('confirm_password', 'Confirmación de password debe ser igual al password').equals(req.body.password);
+    req.assert('picture', 'URL de foto válida requerida').optional().isURL();
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -70,6 +71,7 @@ module.exports.update = function(req, res) {
               user.email = req.body.email;
               user.password = req.body.password;
               user.name = req.body.name || user.name;
+              user.picture = req.body.picture || user.picture;
               user.save(function(err) {
                 if (err) {
                   logger.error(err);

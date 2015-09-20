@@ -66,8 +66,21 @@ module.exports.update = function (req, res) {
 
     // Si el círculo a modificar es el principal, devolvemos error
     if (req.circle._id.equals(req.circle.user.main_circle)) {
-      logger.warn("Main circle can't be modified for user=" + req.circle.user._id);
-      return res.status(400).send({ errors: [{ msg: 'El círculo principal no puede ser modificado' }] });
+      var circle = req.circle;
+      circle.name = req.body.name;
+      circle.picture = req.body.picture;
+      circle.save(function(err) {
+        if (err) {
+          logger.err(err);
+          return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
+        }
+        else {
+          logger.debug('Circle for user: ' + req.user + ' updated successfully: ' + circle.toString());
+          circle.created_at = undefined;
+          circle.updated_at = undefined;
+          return res.send({ circle: circle });
+        }
+      });
     }
     // Sino, encontramos el circulo padre, verificamos que pertenezca al usuario y lo actualizamos
     else {
@@ -126,7 +139,7 @@ module.exports.delete = function(req, res) {
 var validateParams = function(req, res) {
   req.assert('name', 'Nombre válido requerido').isString();
   req.assert('picture', 'URL de foto válida').optional().isURL();
-  req.assert('parent_id', 'Id del padre válido requerido').isString();
+  req.assert('parent_id', 'Id del padre válido requerido').optional().isString();
 
   // Validamos errores
   if (req.validationErrors()) {

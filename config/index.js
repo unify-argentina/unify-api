@@ -35,5 +35,10 @@ module.exports = {
   GOOGLE_ID: process.env.GOOGLE_ID || 'GOOGLE id',
 
   EMAIL_USERNAME: process.env.EMAIL_USERNAME || 'unify',
-  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || 'unify'
+  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || 'unify',
+
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || 'Amazon key id',
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || 'Amazon secret access key',
+  AWS_BUCKET: process.env.AWS_BUCKET || 'unifyargentina',
+  AWS_REGION: process.env.AWS_REGION || 'us-west-2'
 };

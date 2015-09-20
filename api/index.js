@@ -36,4 +36,7 @@ apiRoutes.use(jwt.ensureAuthenticated);
 // Rutas de los usuarios
 apiRoutes.use('/user', require('./user'));
 
+// Rutas para subida de archivos
+apiRoutes.use('/sign', require('./files'));
+
 module.exports = apiRoutes;

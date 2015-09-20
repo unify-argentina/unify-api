@@ -36,6 +36,81 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/api/sign?file_type=type",
+    "title": "Obtener URL de archivo",
+    "group": "Archivos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "file_type",
+            "description": "<p>El Content-Type del archivo a subir</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "signed_request",
+            "description": "<p>Request firmada por Amazon</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "url",
+            "description": "<p>URL del archivo final</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"signed_request\": \"https://unifyargentina.s3-us-west-2.amazonaws.com/fb3.png?Content-Type=imag…a5d06b2ef11e321&X-Amz-SignedHeaders=host%3Bx-amz-acl&x-amz-acl=public-read\",\n    \"url\" : \"https://unifyargentina.s3.amazonaws.com/fb3.png\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/files/index.js",
+    "groupTitle": "Archivos",
+    "name": "GetApiSignFile_typeType",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/sign?file_type=type"
+      }
+    ]
+  },
+  {
+    "type": "get",
     "url": "/auth/verify/:token",
     "title": "Verificacion de cuenta",
     "group": "Autenticacion",

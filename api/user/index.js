@@ -367,10 +367,13 @@ userRoutes.get('/:user_id/friends', friendsController.getFriends);
  */
 userRoutes.get('/:user_id/media', mediaController.getMedia);
 
+// Rutas de un círculo
 userRoutes.use('/:user_id/circle', require('../circle'));
 
+// Rutas de un contacto
 userRoutes.use('/:user_id/contact', require('../contact'));
 
+// Rutas de los emails
 userRoutes.use('/:user_id/email', require('../email'));
 
 module.exports = userRoutes;

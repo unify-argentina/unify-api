@@ -10,8 +10,9 @@
 4. Clonar el **repositorio** de unify-api ejecutando `git clone https://<user>@bitbucket.org/unifyargentina/unify-api.git` 
 5. Dirigirse al directorio `unify-api` e instalar los módulos ejecutando `npm install`.
 6. Levantar **Mongo DB** (ver las instrucciones para [Windows](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/#start-mongodb) y para [Ubuntu](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/#run-mongodb)).
-7. Levantar la **API** ejecutando el script start.sh (con las claves correctas), o si quieren que en cada cambio que le hagan a la API se vuelva a levantar automáticamente, deberán instalar [Nodemon](http://nodemon.io) y en el script.sh al final reemplazar `node app.js` por `nodemon app.js`.
-8. La **API** debería estar levantada en la ruta [`http://localhost:8080`](http://localhost:8080).
+7. Copiarse el start.sh.example y renombrarlo a start.sh, poniendo las claves correctas para cada servicio.
+8. Levantar la **API** ejecutando el script start.sh, o si quieren que en cada cambio que le hagan a la API se vuelva a levantar automáticamente, deberán instalar [Nodemon](http://nodemon.io) y en el script.sh al final reemplazar `node app.js` por `nodemon app.js`.
+9. La **API** debería estar levantada en la ruta [`http://localhost:8080`](http://localhost:8080).
 
 ##Heroku
 

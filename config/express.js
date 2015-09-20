@@ -16,7 +16,7 @@ var validator = require('validator');
 var config = require('./index');
 var logger = require('./logger');
 
-var allowCrossDomain = function(req, res, next) {
+var allowCrossDomainConfig = function(req, res, next) {
 
   var origin = req.get('origin');
   if (config.CROSS_DOMAIN_URLS.indexOf(origin) > -1) {
@@ -67,5 +67,5 @@ module.exports = function(app) {
   app.use(methodOverride());
   app.use(morgan('dev'));
   app.use(cookieParser());
-  app.use(allowCrossDomain);
+  app.use(allowCrossDomainConfig);
 };
