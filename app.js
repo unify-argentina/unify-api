@@ -22,17 +22,16 @@ require('./routes')(app);
 
 // mongodb
 mongoose.connect(config.MONGODB, function(err) {
-  if (!err) {
-    logger.info('Connected to MongoDB at ' + config.MONGODB);
-  }
-  else {
+  if (err) {
     logger.error('There was an error connecting to MongoDB at ' + config.MONGODB + ' shutting down Unify API');
     process.exit(1);
+  }
+  else {
+    logger.info('Connected to MongoDB at ' + config.MONGODB);
   }
 });
 
 // start app
-var port = process.env.PORT || 8080;
-app.listen(port, function() {
-  logger.info('Unify API started at port ' + port);
+app.listen(config.PORT, function() {
+  logger.info('Unify API started at port ' + config.PORT);
 });

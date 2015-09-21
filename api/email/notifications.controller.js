@@ -6,36 +6,46 @@
 
 // requires
 var nodemailer = require('nodemailer');
+var mandrillTransport = require('nodemailer-mandrill-transport');
 var randomstring = require('randomstring');
+var util = require('util');
 var config = require('../../config');
 var logger = require('../../config/logger');
 var verifyTokenController = require('../auth/verify-token/verify-token.controller');
-var recoveryPasswordController = require('../auth/recovery-password/recovery-password.controller');
 
-var transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: config.EMAIL_USERNAME,
-    pass: config.EMAIL_PASSWORD
-  }
-});
+var transporter = null;
+if (config.EMAIL_SERVICE === 'Gmail') {
+  transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: config.EMAIL_USERNAME,
+      pass: config.EMAIL_PASSWORD
+    }
+  });
+}
+else {
+  transporter = nodemailer.createTransport(mandrillTransport({ auth: { apiKey: config.EMAIL_PASSWORD } }));
+}
+
 
 module.exports.sendSignupEmailToUser = function(user) {
 
   verifyTokenController.createVerificationToken(user, function(err, verifyToken) {
     if (!err && verifyToken) {
 
+      var html = util.format('<a href="%s/auth/verify/%s">Verificar cuenta</a>', config.BASE_API_URL, verifyToken.token);
+      logger.debug('Verify token HTML: ' + html);
       var mailOptions = {
-        //from: 'Unify <login@unifyme.io>',
+        from: 'Unify <unify.argentina@gmail.com>',
         to: user.email,
         subject: 'Bienvenido a Unify',
         text: 'Bienvenido a Unify',
-        html: 'http://localhost:8080/auth/verify/' + verifyToken.token
+        html: html
       };
 
       transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
-          return logger.error('Error sending signup email to user ' + user + ': ' + error);
+          logger.error('Error sending signup email to user ' + user + ': ' + error);
         }
         else {
           logger.info('Signup email sent to user ' + user + ': ' + info.response);
@@ -66,7 +76,7 @@ module.exports.sendRecoveryPasswordEmailToUser = function(user) {
 
       transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
-          return logger.error('Error sending recovery password email to user ' + user + ': ' + error);
+          logger.error('Error sending recovery password email to user ' + user + ': ' + error);
         }
         else {
           logger.info('Recovery password email sent to user ' + user + ': ' + info.response);
