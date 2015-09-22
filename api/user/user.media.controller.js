@@ -163,7 +163,7 @@ var doPostLike = function(req, res, user) {
       return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar darle like a un determinado contenido' }] });
     }
     else {
-      res.sendStatus(200);
+      return res.sendStatus(200);
     }
   });
 };
