@@ -29,13 +29,21 @@ module.exports.getStatuses = function(access_token, facebookId, callback) {
       callback(null, result.error);
     }
     else {
-      // Si no hubo error, tenemos que mapear el response
-      async.map(response.body.data, mapStatus, function(err, mappedMedia) {
-        logger.debug('Media: ' + JSON.stringify(mappedMedia));
-        callback(err, mappedMedia);
+      // Primero filtramos los estados que no tienen mensaje
+      async.filter(response.body.data, filter, function(filteredMedia) {
+        // Ahora si, tenemos que mapear el response
+        async.map(filteredMedia, mapStatus, function(err, mappedMedia) {
+          logger.debug('Media: ' + JSON.stringify(mappedMedia));
+          callback(err, mappedMedia);
+        });
       });
     }
   });
+};
+
+// Esta función filtra los estados que no tienen ningún mensaje
+var filter = function(facebookMedia, callback) {
+  callback(facebookMedia.message !== undefined);
 };
 
 // Recibe un objeto de tipo imagen y devuelve uno homogéneo a las 3 redes sociales

@@ -85,8 +85,8 @@ var doGetMedia = function(res, user, contacts, mediaCallback) {
 // Arma el array de contenido chequeando si contiene contenido por cada red social
 var buildMediaArray = function(media) {
   var mediaArray = [];
-  if (media.facebook) {
-    mediaArray.push.apply(mediaArray, media.facebook);
+  if (media.facebook && media.facebook.totalResults) {
+    mediaArray.push.apply(mediaArray, media.facebook.totalResults);
   }
   if (media.instagram) {
     mediaArray.push.apply(mediaArray, media.instagram);
