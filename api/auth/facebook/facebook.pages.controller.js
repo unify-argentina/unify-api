@@ -14,31 +14,37 @@ var errors = require('../../../config/errors');
 var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
 
-// Aquí iremos almacenando las páginas que nos devuelva el servicio paginado de Facebook
-var pages = [];
-
 // Devuelve las páginas de Facebook del usuario loggeado
 module.exports.getPages = function(access_token, facebookId, callback) {
 
   var url = util.format('%s/%s/likes?access_token=%s&limit=1000', facebookUtils.getBaseURL(), facebookId, access_token);
 
-  getFacebookData(url, function(err, facebookPages) {
+  // Aquí iremos almacenando las páginas que nos devuelva el servicio paginado de Facebook
+  var pages = [];
+
+  getFacebookData(url, pages, function(err, facebookPages) {
     if (err) {
       callback(null, err);
     }
     else {
       // Mapeamos las páginas para que tengan la misma estructura que los amigos de facebook
       async.map(facebookPages, mapPage, function(err, mappedPages) {
-        // Filtramos las páginas duplicadas
-        var filteredMappedPages = _.uniq(mappedPages, function(mappedUser) {
-          return mappedUser.id;
+
+        // Una vez que tenemos las páginas, las ordenamos alfabeticamente por el nombre
+        async.sortBy(mappedPages, function(page, callback) {
+
+          callback(null, page.name);
+
+        }, function(err, sortedPages) {
+
+          // Una vez que los ordenamos, los enviamos
+          var result = {
+            list: sortedPages,
+            count: sortedPages.length
+          };
+          logger.debug('Facebook Pages: ' + JSON.stringify(result));
+          callback(null, result);
         });
-        var result = {
-          list: filteredMappedPages,
-          count: filteredMappedPages.length
-        };
-        logger.debug('Facebook Pages: ' + JSON.stringify(result));
-        callback(null, result);
       });
     }
   });
@@ -46,7 +52,7 @@ module.exports.getPages = function(access_token, facebookId, callback) {
 
 // Le pega a la API de Facebook y en el response, si fue exitoso, van a estar las páginas que le gustan al usuario
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
-var getFacebookData = function(url, callback) {
+var getFacebookData = function(url, pages, callback) {
 
   logger.info('URL: ' + url);
   request.get({ url: url, json: true }, function(err, response) {
@@ -61,7 +67,7 @@ var getFacebookData = function(url, callback) {
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.paging.next) {
       pages.push.apply(pages, response.body.data);
-      getFacebookData(response.body.paging.next, callback);
+      getFacebookData(response.body.paging.next, pages, callback);
     }
     // Sino, ya tengo las páginas y los devuelvo en el callback
     else {

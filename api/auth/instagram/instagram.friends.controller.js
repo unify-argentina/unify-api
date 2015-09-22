@@ -31,12 +31,10 @@ module.exports.getFriends = function(access_token, instagramId, callback) {
       // Mapeamos los usuarios para que sean homogéneos a las 4 cuentas
       async.map(instagramUsers, mapUser, function(err, mappedUsers) {
 
-        // Una vez que tenemos los amigos, los ordenamos alfabeticamente por el
-        // nombre completo si es que tiene, sino por el nombre de usuario
+        // Una vez que tenemos los amigos, los ordenamos alfabeticamente por el nombre de usuario
         async.sortBy(mappedUsers, function(user, callback) {
 
-          var criteria = (typeof user.name === 'string' && user.name !== '' ) ? user.name : user.username;
-          callback(null, criteria);
+          callback(null, user.username);
 
         }, function(err, sortedUsers) {
 

@@ -29,12 +29,21 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
       // Mapeamos los usuarios para que sean homogéneos a las 4 cuentas
       async.map(facebookUsers, mapUser, function(err, mappedUsers) {
 
-        var result = {
-          list: mappedUsers,
-          count: mappedUsers.length
-        };
-        logger.debug('Facebook Friends: ' + JSON.stringify(result));
-        callback(null, result);
+        // Una vez que tenemos los amigos, los ordenamos alfabeticamente por el nombre
+        async.sortBy(mappedUsers, function(friend, callback) {
+
+          callback(null, friend.name);
+
+        }, function(err, sortedFriends) {
+
+          // Una vez que los ordenamos, los enviamos
+          var result = {
+            list: sortedFriends,
+            count: sortedFriends.length
+          };
+          logger.debug('Facebook Friends: ' + JSON.stringify(result));
+          callback(null, result);
+        });
       });
     }
   });

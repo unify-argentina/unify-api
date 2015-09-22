@@ -39,12 +39,21 @@ module.exports.getContacts = function(refresh_token, googleId, callback) {
             // Mapeamos los usuarios para que sean homogéneos a las 4 cuentas
             async.map(emailContacts, mapContact, function(err, mappedUsers) {
 
-              var result = {
-                list: mappedUsers,
-                count: mappedUsers.length
-              };
-              logger.debug('Google Contacts: ' + JSON.stringify(result));
-              callback(null, result);
+              // Una vez que tenemos los amigos, los ordenamos alfabeticamente por el nombre de usuario
+              async.sortBy(mappedUsers, function(user, callback) {
+
+                callback(null, user.name);
+
+              }, function(err, sortedUsers) {
+
+                // Una vez que los ordenamos, los enviamos
+                var result = {
+                  list: sortedUsers,
+                  count: sortedUsers.length
+                };
+                logger.debug('Google Contacts: ' + JSON.stringify(result));
+                callback(null, result);
+              });
             });
           });
         }
