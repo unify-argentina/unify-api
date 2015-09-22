@@ -14,6 +14,11 @@ var _ = require('lodash');
 var facebookPhotos = require('./facebook.photos.controller');
 var facebookVideos = require('./facebook.videos.controller');
 var facebookStatuses = require('./facebook.statuses.controller');
+var facebookUtils = require('./facebook.utils');
+var facebookErrors = require('./facebook.errors');
+
+// constantes
+var USER_LIKE_URL = facebookUtils.getBaseURL() + '/%s/likes?access_token=%s';
 
 // Se encarga de llamar a los módulos de fotos, videos y estados y luego devuelve los resultados
 module.exports.getMedia = function(access_token, facebookId, callback) {
@@ -88,5 +93,23 @@ module.exports.getMedia = function(access_token, facebookId, callback) {
     }
 
     callback(null, result);
+  });
+};
+
+// Esta función hace un post con un like a un contenido de Facebook
+module.exports.postLike = function(access_token, facebookMediaId, callback) {
+
+  var url = util.format(USER_LIKE_URL, facebookMediaId, access_token);
+  logger.info('URL: ' + url);
+
+  request.post({ url: url, json: true }, function(err, response) {
+
+    var result = facebookErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      callback(null);
+    }
   });
 };

@@ -2794,6 +2794,85 @@ define({ "api": [
     ]
   },
   {
+    "type": "post",
+    "url": "/api/user/:user_id/media",
+    "title": "Dar like",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "facebook_media_id",
+            "description": "<p>Id del contenido de Facebook a darle like</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "twitter_media_id",
+            "description": "<p>Id del contenido de Twitter a darle fav</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"facebook_media_id\": \"10205843678664227\",\n  \"twitter_media_id\": \"581605355672715264\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Aclaración: si bien los ids de los contenidos son opcionales, al menos uno es requerido para poder darle like en esa red social</p> ",
+    "success": {
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "PostApiUserUser_idMedia",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/media"
+      }
+    ]
+  },
+  {
     "type": "put",
     "url": "/api/user/:user_id",
     "title": "Actualizar usuario",

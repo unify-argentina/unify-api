@@ -16,6 +16,7 @@ var Contact = require('../../contact/contact.model');
 
 // constantes
 var USER_MEDIA_URL = 'https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s';
+var USER_LIKE_URL = 'https://api.instagram.com/v1/media/%s/likes/?access_token=%s';
 var MEDIA_URL = 'https://api.instagram.com/v1/media/%s?access_token=%s';
 
 var ACCESS_TOKEN = '';
@@ -126,3 +127,21 @@ var mapImage = function(instagramImage, callback) {
   };
   callback(image);
 };
+
+// Esta función hace un post con un like a un contenido de Instagram
+module.exports.postLike = function(access_token, instagramMediaId, callback) {
+
+  var url = util.format(USER_LIKE_URL, instagramMediaId, access_token);
+  logger.info('URL: ' + url);
+
+  request.post({ url: url, json: true }, function(err, response) {
+    var result = instagramErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      callback(null);
+    }
+  });
+};
+

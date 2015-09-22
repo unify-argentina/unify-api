@@ -8,16 +8,17 @@
 var util = require('util');
 var request = require('request');
 var async = require('async');
+var moment = require('moment');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
 var twitterOAuthHelper = require('./twitter.auth.helper');
 var twitterErrors = require('./twitter.errors');
-var moment = require('moment');
 
 // modelos
 var Contact = require('../../contact/contact.model');
 
 // constantes
+var USER_LIKE_URL = 'https://api.twitter.com/1.1/favorites/create.json?id=%s';
 var USER_MEDIA_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
 var TWITTER_DATE_FORMAT = 'dd MMM DD HH:mm:ss ZZ YYYY';
 var TWITTER_STATUS_URL = 'https://twitter.com/statuses/';
@@ -88,6 +89,23 @@ var mapTweetVideo = function(mappedMedia, videoInfoArray) {
   videoInfoArray.forEach(function(videoInfo) {
     if (videoInfo.content_type === 'video/mp4') {
       mappedMedia.media_url = videoInfo.url;
+    }
+  });
+};
+
+// Esta función hace un post con un like a un contenido de Twitter
+module.exports.postLike = function(access_token, twitterMediaId, callback) {
+
+  var url = util.format(USER_LIKE_URL, twitterMediaId);
+  logger.info('URL: ' + url);
+
+  request.post({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), json: true }, function(err, response) {
+    var result = twitterErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      callback(null);
     }
   });
 };

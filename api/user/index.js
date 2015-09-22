@@ -367,6 +367,34 @@ userRoutes.get('/:user_id/friends', friendsController.getFriends);
  */
 userRoutes.get('/:user_id/media', mediaController.getMedia);
 
+/**
+ * @api {post} /api/user/:user_id/media Dar like
+ * @apiGroup Usuarios
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} [facebook_media_id] Id del contenido de Facebook a darle like
+ * @apiParam {String} [twitter_media_id] Id del contenido de Twitter a darle fav
+ *
+ * @apiDescription Aclaración: si bien los ids de los contenidos son opcionales,
+ * al menos uno es requerido para poder darle like en esa red social
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *    {
+ *      "facebook_media_id": "10205843678664227",
+ *      "twitter_media_id": "581605355672715264"
+ *    }
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
+userRoutes.post('/:user_id/media', mediaController.like);
+
 // Rutas de un círculo
 userRoutes.use('/:user_id/circle', require('../circle'));
 
