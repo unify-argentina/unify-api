@@ -58,6 +58,37 @@ module.exports.sendSignupEmailToUser = function(user) {
   });
 };
 
+
+module.exports.sendVerifyEmailToUser = function(user) {
+
+  verifyTokenController.createVerificationToken(user, function(err, verifyToken) {
+    if (!err && verifyToken) {
+
+      var html = util.format('<a href="%s/auth/verify/%s">Verificar cuenta</a>', config.BASE_API_URL, verifyToken.token);
+      logger.debug('Verify token HTML: ' + html);
+      var mailOptions = {
+        from: 'Unify <unify.argentina@gmail.com>',
+        to: user.email,
+        subject: 'Verifica tu email',
+        text: 'Verifica tu email',
+        html: html
+      };
+
+      transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+          logger.error('Error sending verify email to user ' + user + ': ' + error);
+        }
+        else {
+          logger.info('Verify email sent to user ' + user + ': ' + info.response);
+        }
+      });
+    }
+    else {
+      logger.error('Error creating verify token for user: ' + user + ': ' + err);
+    }
+  });
+};
+
 module.exports.sendRecoveryPasswordEmailToUser = function(user) {
 
   var password = randomstring.generate(10);

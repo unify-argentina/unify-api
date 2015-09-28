@@ -85,7 +85,8 @@ userRoutes.param('user_id', function(req, res, next, userId) {
  *                 "email": "90joelmarquez@gmail.com",
  *                 "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
  *             },
- *             "valid_local_user": true
+ *             "valid_local_user": true,
+ *             "verified": true
  *         }
  *     }
  */
@@ -102,17 +103,15 @@ userRoutes.get('/:user_id', userController.getById);
  *     }
  *
  * @apiParam {String} user_id Id del usuario
- * @apiParam {String} email Email del usuario
- * @apiParam {String} name Nombre del usuario
- * @apiParam {String} password Password del usuario, debera tener 6 caracteres como minimo
- * @apiParam {String} confirm_password Tiene que ser igual que el password
+ * @apiParam {String} [email] Email del usuario
+ * @apiParam {String} [name] Nombre del usuario
+ * @apiParam {String} [picture] Foto del usuario
  *
  * @apiParamExample {json} Ejemplo de request
  *    {
  *      "email":"unify.argentina@gmail.com",
  *      "name":"Juan Losa",
- *      "confirm_password":"hola1234",
- *      "password":"hola1234"
+ *      "picture":"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200"
  *    }
  *
  * @apiSuccess {Object} user Usuario
@@ -153,11 +152,83 @@ userRoutes.get('/:user_id', userController.getById);
  *                 "email": "90joelmarquez@gmail.com",
  *                 "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
  *             },
- *             "valid_local_user": true
+ *             "valid_local_user": true,
+ *             "verified": true
  *         }
  *     }
  */
 userRoutes.put('/:user_id', userController.update);
+
+/**
+ * @api {put} /api/user/:user_id/password Actualizar password del usuario
+ * @apiGroup Usuarios
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} password Nueva password del usuario
+ * @apiParam {String} confirm_password Confirmación de la nueva password del usuario
+ * @apiParam {String} [old_password] Antigua password del usuario
+ *
+ * @apiDescription Aclaración: el old_password se tiene que enviar cuando el usuario tiene el atributo
+ * valid_local_user en true, ya que si el usuario se registró con alguna red social, nunca le habrá puesto
+ * password a su cuenta, por lo tanto valid_local_user va a estar en false y en ese caso no se tiene que enviar
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *    {
+ *      "password":"hola1234",
+ *      "confirm_password":"hola1234",
+ *      "old_password":"hola123456"
+ *    }
+ *
+ * @apiSuccess {Object} user Usuario
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "user": {
+ *             "__v": 0,
+ *             "_id": "55c421354037f03842898378",
+ *             "email": "90joelmarquez@gmail.com",
+ *             "main_circle": {
+ *                 "user": "55c421354037f03842898378",
+ *                 "name": "Main Circle",
+ *                 "_id": "55c421364037f03842898379",
+ *                 "__v": 0,
+ *                 "ancestors": [
+ *                 ]
+ *             },
+ *             "name": "Joel Márquez",
+ *             "google": {
+ *                 "display_name": "Joel Márquez",
+ *                 "email": "90joelmarquez@gmail.com",
+ *                 "picture": "https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200"
+ *             },
+ *             "instagram": {
+ *                 "display_name": "Joel Márquez",
+ *                 "picture": "https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg",
+ *                 "username": "joe__marquez"
+ *             },
+ *             "twitter": {
+ *                 "display_name": "Joel Márquez",
+ *                 "picture": "http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg",
+ *                 "username": "joelmarquez90"
+ *             },
+ *             "facebook": {
+ *                 "display_name": "Joel Márquez",
+ *                 "email": "90joelmarquez@gmail.com",
+ *                 "picture": "https://graph.facebook.com/v2.3/10153267328674738/picture?type=large"
+ *             },
+ *             "valid_local_user": true,
+ *             "verified": true
+ *         }
+ *     }
+ */
+userRoutes.put('/:user_id/password', userController.updatePassword);
 
 /**
  * @api {get} /api/user/:user_id/friends Obtener los amigos del usuario

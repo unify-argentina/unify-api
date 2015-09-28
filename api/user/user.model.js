@@ -211,6 +211,11 @@ userSchema.methods.toggleSocialAccount = function(account, toggle, callback) {
   });
 };
 
+// Controla que el email no sea el mismo del usuario y que en el request haya venido el email
+userSchema.methods.shouldResetVerificatedAccount = function(email) {
+  return typeof email !== undefined && this.email !== email;
+};
+
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 userSchema.statics.socialFields = function() {
   return '+twitter.id +twitter.access_token.token +twitter.access_token.token_secret +facebook.id ' +

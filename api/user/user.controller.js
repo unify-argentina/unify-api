@@ -5,11 +5,10 @@
 'use strict';
 
 // requires
-var facebookFriends = require('../auth/facebook/facebook.friends.controller');
-var instagramFriends = require('../auth/instagram/instagram.friends.controller');
-var twitterFriends = require('../auth/twitter/twitter.friends.controller');
 var async = require('async');
 var logger = require('../../config/logger');
+var jwt = require('../auth/util/jwt');
+var notificationsController = require('../email/notifications.controller');
 
 // modelos
 var User = require('./user.model.js');
@@ -38,13 +37,9 @@ module.exports.getById = function(req, res) {
 module.exports.update = function(req, res) {
 
   process.nextTick(function() {
-    req.assert('email', 'Email válido requerido').isEmail();
-    req.assert('name', 'Nombre válido requerido').isString();
-    req.assert('password', 'Password válido requerido').isString();
-    req.assert('password', 'Password debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
-    req.assert('confirm_password', 'Confirmación de password válido requerido').isString();
-    req.assert('confirm_password', 'Confirmación de password debe ser igual al password').equals(req.body.password);
-    req.assert('picture', 'URL de foto válida requerida').optional().isURL();
+    req.assert('email', 'Email válido').optional().isEmail();
+    req.assert('name', 'Nombre válido').optional().isString();
+    req.assert('picture', 'URL de foto válida').optional().isURL();
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -68,8 +63,11 @@ module.exports.update = function(req, res) {
               return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
             }
             else {
-              user.email = req.body.email;
-              user.password = req.body.password;
+              var reset = user.shouldResetVerificatedAccount(req.body.email);
+              if (reset) {
+                user.verified = false;
+              }
+              user.email = req.body.email || user.email;
               user.name = req.body.name || user.name;
               user.picture = req.body.picture || user.picture;
               user.save(function(err) {
@@ -78,15 +76,102 @@ module.exports.update = function(req, res) {
                   return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
                 }
                 else {
-                  user.password = undefined;
                   logger.debug('Updated user: ' + user.toString());
                   user.created_at = undefined;
                   user.updated_at = undefined;
-                  return res.send({ user: user });
+
+                  if (reset) {
+                    notificationsController.sendVerifyEmailToUser(user);
+                  }
+                  return jwt.createJWT(res, user);
                 }
               });
             }
         });
+      }
+    });
+  });
+};
+
+// Actualiza la password del usuario
+module.exports.updatePassword = function (req, res) {
+
+  process.nextTick(function () {
+    req.assert('password', 'Password válido requerido').isString();
+    req.assert('password', 'Password debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
+    req.assert('confirm_password', 'Confirmación de password válido requerido').isString();
+    req.assert('confirm_password', 'Confirmación de password debe ser igual al password').equals(req.body.password);
+
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
+      return res.status(400).send({ errors: req.validationErrors() });
+    }
+
+    // Encontramos un usuario con el id del token y le actualizamos la password
+    User.findOne({ _id: req.user }, '+password')
+      .populate('main_circle')
+      .exec(function(err, user) {
+      if (err || !user) {
+        logger.warn('User not found: ' + req.user);
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+      }
+      else {
+
+        // Verificamos que si el usuario es válido, entonces pase la contraseña anterior
+        if (user.valid_local_user) {
+          req.assert('old_password', 'Password anterior válido requerido').isString();
+          req.assert('old_password', 'Password no puede ser igual al password anterior').notEquals(req.body.password);
+        }
+
+        // Validamos errores
+        if (req.validationErrors()) {
+          logger.warn('Validation errors: ' + req.validationErrors());
+          return res.status(400).send({ errors: req.validationErrors() });
+        }
+
+        if (req.body.old_password) {
+          // Si lo encontramos comparamos passwords
+          user.comparePassword(req.body.old_password, function(err, isMatch) {
+            // Si coincide, le actualizamos la password y lo guardamos
+            if (!isMatch) {
+              logger.warn('Wrong password for user: ' + user.toString());
+              return res.status(400).send({ errors: [{ msg: 'Password errónea' }] });
+            }
+            else {
+              user.password = req.body.password;
+              user.save(function(err) {
+                if (err) {
+                  logger.error(err);
+                  return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
+                }
+                else {
+                  logger.debug('Updated user: ' + user.toString());
+                  user.created_at = undefined;
+                  user.updated_at = undefined;
+                  user.password = undefined;
+                  return jwt.createJWT(res, user);
+                }
+              });
+            }
+          });
+        }
+        else {
+          user.valid_local_user = true;
+          user.save(function(err) {
+            if (err) {
+              logger.error(err);
+              return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
+            }
+            else {
+              logger.debug('Updated user: ' + user.toString());
+              user.created_at = undefined;
+              user.updated_at = undefined;
+              user.password = undefined;
+              return jwt.createJWT(res, user);
+            }
+          });
+        }
       }
     });
   });

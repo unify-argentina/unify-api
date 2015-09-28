@@ -142,7 +142,7 @@
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9H0Z2_5o\",\n  \"user\": {\n    \"created_at\": \"2015-09-03T04:05:21.846Z\",\n    \"updated_at\": \"2015-09-03T04:05:21.846Z\",\n    \"__v\": 0,\n    \"_id\": \"55e7c6f80fdc3a922952aefc\",\n    \"email\": \"unify.argentina@gmail.com\",\n    \"main_circle\": \"55e7c6f90fdc3a922952aefd\",\n    \"name\": \"joel\",\n    \"verified\": true,\n    \"valid_local_user\": true\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true,\n        \"verified\": true\n    }\n}",
           "type": "json"
         }
       ]
@@ -2624,7 +2624,7 @@
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true\n    }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true,\n        \"verified\": true\n    }\n}",
           "type": "json"
         }
       ]
@@ -2910,37 +2910,30 @@
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
-            "optional": false,
+            "optional": true,
             "field": "email",
             "description": "<p>Email del usuario</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
-            "optional": false,
+            "optional": true,
             "field": "name",
             "description": "<p>Nombre del usuario</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
-            "optional": false,
-            "field": "password",
-            "description": "<p>Password del usuario, debera tener 6 caracteres como minimo</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "confirm_password",
-            "description": "<p>Tiene que ser igual que el password</p> "
+            "optional": true,
+            "field": "picture",
+            "description": "<p>Foto del usuario</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo de request",
-          "content": "{\n  \"email\":\"unify.argentina@gmail.com\",\n  \"name\":\"Juan Losa\",\n  \"confirm_password\":\"hola1234\",\n  \"password\":\"hola1234\"\n}",
+          "content": "{\n  \"email\":\"unify.argentina@gmail.com\",\n  \"name\":\"Juan Losa\",\n  \"picture\":\"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n}",
           "type": "json"
         }
       ]
@@ -2960,7 +2953,7 @@
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true\n    }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true,\n        \"verified\": true\n    }\n}",
           "type": "json"
         }
       ]
@@ -2972,6 +2965,103 @@
     "sampleRequest": [
       {
         "url": "http://localhost:8080/api/user/:user_id"
+      }
+    ]
+  },
+  {
+    "type": "put",
+    "url": "/api/user/:user_id/password",
+    "title": "Actualizar password del usuario",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Nueva password del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "confirm_password",
+            "description": "<p>Confirmación de la nueva password del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "old_password",
+            "description": "<p>Antigua password del usuario</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"password\":\"hola1234\",\n  \"confirm_password\":\"hola1234\",\n  \"old_password\":\"hola123456\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Aclaración: el old_password se tiene que enviar cuando el usuario tiene el atributo valid_local_user en true, ya que si el usuario se registró con alguna red social, nunca le habrá puesto password a su cuenta, por lo tanto valid_local_user va a estar en false y en ese caso no se tiene que enviar</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "user",
+            "description": "<p>Usuario</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"user\": {\n        \"__v\": 0,\n        \"_id\": \"55c421354037f03842898378\",\n        \"email\": \"90joelmarquez@gmail.com\",\n        \"main_circle\": {\n            \"user\": \"55c421354037f03842898378\",\n            \"name\": \"Main Circle\",\n            \"_id\": \"55c421364037f03842898379\",\n            \"__v\": 0,\n            \"ancestors\": [\n            ]\n        },\n        \"name\": \"Joel Márquez\",\n        \"google\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://lh5.googleusercontent.com/-QnDa8Ya8z38/AAAAAAAAAAI/AAAAAAAARw0/ye1DoA5JF9Y/photo.jpg?sz=200\"\n        },\n        \"instagram\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11385614_441266499409188_453477140_a.jpg\",\n            \"username\": \"joe__marquez\"\n        },\n        \"twitter\": {\n            \"display_name\": \"Joel Márquez\",\n            \"picture\": \"http://pbs.twimg.com/profile_images/490125015044456449/O-wWpWq0_bigger.jpeg\",\n            \"username\": \"joelmarquez90\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Joel Márquez\",\n            \"email\": \"90joelmarquez@gmail.com\",\n            \"picture\": \"https://graph.facebook.com/v2.3/10153267328674738/picture?type=large\"\n        },\n        \"valid_local_user\": true,\n        \"verified\": true\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "PutApiUserUser_idPassword",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8080/api/user/:user_id/password"
       }
     ]
   }

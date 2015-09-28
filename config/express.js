@@ -59,13 +59,22 @@ var isString = function(possibleString) {
   return typeof possibleString === 'string';
 };
 
+var notEquals = function (str, comparison) {
+  return str !== comparison;
+};
+
 module.exports = function(app) {
   app.use(compression());
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
-  app.use(expressValidator({ customValidators: { isEmailArray: isEmailArray, isStringArray: isStringArray, isString: isString }}));
   app.use(methodOverride());
   app.use(morgan('dev'));
   app.use(cookieParser());
   app.use(allowCrossDomainConfig);
+  app.use(expressValidator({ customValidators: {
+    isEmailArray: isEmailArray,
+    isStringArray: isStringArray,
+    isString: isString,
+    notEquals: notEquals
+  }}));
 };

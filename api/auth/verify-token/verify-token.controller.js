@@ -32,7 +32,9 @@ module.exports.verifyToken = function (req, res) {
           return res.status(400).send({ errors: [{ msg: 'Hubo un error al verificar la cuenta de Unify' }] });
         }
         else {
-          User.findOne({ _id: verifyToken.user }, function (err, user) {
+          User.findOne({ _id: verifyToken.user })
+            .populate('main_circle')
+            .exec(function (err, user) {
             if (err || !user) {
               logger.warn('User not found: ' + req.user);
               return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
