@@ -20,14 +20,14 @@ module.exports.getMedia = function (req, res) {
 
   process.nextTick(function () {
 
-    User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
+    User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
         // Una vez que tenemos al usuario buscamos los contactos que tienen como ancestro al círculo a buscar
-        Contact.find({ 'parents.ancestors': req.circle._id, user: req.user }, function(err, contacts) {
+        Contact.find({ 'parents.ancestors': req.circle._id, user: req.user_id }, function(err, contacts) {
           if (err || !contacts) {
             logger.warn('Contacts not found for circle: ' + req.circle._id);
             return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del círculo especificado' }] });

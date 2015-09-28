@@ -25,7 +25,7 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
   }
 
   // Buscamos que el contacto pedido pertenezca al usuario loggeado
-  Contact.findOne({ _id: contactId, user: req.user })
+  Contact.findOne({ _id: contactId, user: req.user_id })
     .populate('user', User.socialFields())
     .exec(function (err, contact) {
     if (err || !contact) {

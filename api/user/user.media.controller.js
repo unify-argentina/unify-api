@@ -21,9 +21,9 @@ module.exports.getMedia = function (req, res) {
 
   process.nextTick(function () {
 
-    User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
+    User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
@@ -136,9 +136,9 @@ module.exports.like = function (req, res) {
       return res.status(400).send({ errors: [{ msg: 'Tenes que proveer al menos un media id' }] });
     }
 
-    User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
+    User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {

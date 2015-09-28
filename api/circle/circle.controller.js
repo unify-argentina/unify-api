@@ -20,11 +20,11 @@ module.exports.create = function(req, res) {
     validateParams(req, res);
 
     // Encontramos al parent circle y verificamos que pertenezca al usuario loggeado
-    Circle.findOne({ _id: req.body.parent_id, user: req.user })
+    Circle.findOne({ _id: req.body.parent_id, user: req.user_id })
       .populate('user')
       .exec(function(err, parentCircle) {
         if (err || !parentCircle) {
-          logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
+          logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user_id);
           return res.status(400).send({ errors: [{ msg: 'El círculo padre no existe o no le pertenece al usuario actual' }] });
         }
         else {
@@ -41,7 +41,7 @@ module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
 
-    Contact.find({ 'parents.circle': req.circle._id, user: req.user }, function(err, contacts) {
+    Contact.find({ 'parents.circle': req.circle._id, user: req.user_id }, function(err, contacts) {
       if (err || !contacts) {
         logger.warn('Could not find contacts for circle=' + req.circle._id);
         return res.status(400).send({ errors: [{ msg: 'Hubo un error al encontrar contactos para el círculo especificado' }] });
@@ -75,7 +75,7 @@ module.exports.update = function (req, res) {
           return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
         }
         else {
-          logger.debug('Circle for user: ' + req.user + ' updated successfully: ' + circle.toString());
+          logger.debug('Circle for user: ' + req.user_id + ' updated successfully: ' + circle.toString());
           circle.created_at = undefined;
           circle.updated_at = undefined;
           return res.send({ circle: circle });
@@ -84,11 +84,11 @@ module.exports.update = function (req, res) {
     }
     // Sino, encontramos el circulo padre, verificamos que pertenezca al usuario y lo actualizamos
     else {
-      Circle.findOne({ _id: req.body.parent_id, user: req.user })
+      Circle.findOne({ _id: req.body.parent_id, user: req.user_id })
         .populate('user')
         .exec(function(err, parentCircle) {
           if (err || !parentCircle) {
-            logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user);
+            logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user_id);
             return res.status(400).send({ errors: [{ msg: 'El círculo padre no existe o no le pertenece al usuario actual' }] });
           }
           else {
@@ -105,11 +105,11 @@ module.exports.delete = function(req, res) {
   process.nextTick(function() {
     // Primero buscamos el usuario loggeado, para luego ver si el círculo pasado por parámetro
     // no es el círculo principal del usuario
-    User.findOne({ _id: req.user })
+    User.findOne({ _id: req.user_id })
       .populate('main_circle')
       .exec(function (err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
@@ -162,7 +162,7 @@ var saveCircleData = function(req, res, circle, foundCircle) {
       return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
     }
     else {
-      logger.debug('Circle for user: ' + req.user + ' created successfully: ' + circle.toString());
+      logger.debug('Circle for user: ' + req.user_id + ' created successfully: ' + circle.toString());
       circle.created_at = undefined;
       circle.updated_at = undefined;
       return res.send({ circle: circle });
@@ -182,7 +182,7 @@ module.exports.getTree = function (req, res) {
         return res.status(400).send({ errors: [{ msg: 'No se pudieron encontrar subcírculos para el círculo especificado' }] });
       }
       else {
-        logger.debug('Subcircles for circle=' + req.circle._id + ' for user=' + req.user);
+        logger.debug('Subcircles for circle=' + req.circle._id + ' for user=' + req.user_id);
         circles.push(req.circle);
         var mappedIdCircles = circles.map(function(circle) {
           return {

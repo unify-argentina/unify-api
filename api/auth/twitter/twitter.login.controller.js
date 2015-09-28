@@ -25,23 +25,23 @@ var PROFILE_URL = 'https://api.twitter.com/1.1/users/show.json?screen_name=';
 module.exports.unlinkAccount = function(req, res) {
 
   process.nextTick(function() {
-    User.findOne({ _id: req.user }, User.socialFields())
+    User.findOne({ _id: req.user_id }, User.socialFields())
       .populate('main_circle')
       .exec(function(err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }]});
       }
       // Si el usuario no tiene email ni tiene la cuenta de Instagram linkeada, no puede deslinkear twitter
       // ya que no vamos a tener forma de identificarlo después
       else if (!user.isValidToRemoveAccount('twitter')) {
-        logger.warn('Cannot unlink Twitter for user: ' + req.user);
+        logger.warn('Cannot unlink Twitter for user: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar desvincular tu cuenta de Twitter' }]});
       }
       else {
         user.toggleSocialAccount('twitter', false, function(err) {
           if (err) {
-            logger.warn('There was an error trying to unlink Twitter: ' + req.user);
+            logger.warn('There was an error trying to unlink Twitter: ' + req.user_id);
             return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar desvincular tu cuenta de Twitter' }]});
           }
           else {

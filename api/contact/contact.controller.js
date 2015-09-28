@@ -21,24 +21,24 @@ module.exports.create = function(req, res) {
 
     validateSocialIds(req, res, 'crear');
 
-    User.findOne({ _id: req.user })
+    User.findOne({ _id: req.user_id })
       .populate('main_circle')
       .exec(function(err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
         // Encontramos el círculo cuyo usuario es el que está en el request
-        Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user })
+        Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user_id })
           .populate('user', User.socialFields())
           .exec(function(err, circles) {
           if (err || !circles) {
-            logger.warn("Circles don't exists or don't belong to current user=" + req.user);
+            logger.warn("Circles don't exists or don't belong to current user=" + req.user_id);
             return res.status(400).send({ errors: [{ msg: 'Los círculos especificados no pertenecen al usuario actual' }] });
           }
           else if (req.body.circles_ids.length > circles.length) {
-            logger.warn("One of the circles doesn't belong to current user=" + req.user);
+            logger.warn("One of the circles doesn't belong to current user=" + req.user_id);
             return res.status(400).send({ errors: [{ msg: 'Alguno de los círculos especificados no pertenece al usuario actual' }] });
           }
           else {
@@ -68,24 +68,24 @@ module.exports.update = function(req, res) {
 
     validateSocialIds(req, res, 'actualizar');
 
-    User.findOne({ _id: req.user })
+    User.findOne({ _id: req.user_id })
       .populate('main_circle')
       .exec(function(err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({errors: [{msg: 'El usuario no ha podido ser encontrado'}]});
       }
       else {
         // Revisamos que el usuario tenga efectivamente el círculo pasado por parámetro
-        Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user })
+        Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user_id })
           .populate('user', User.socialFields())
           .exec(function(err, circles) {
           if (err || !circles) {
-            logger.warn("Circles don't exists or don't belong to current user=" + req.user);
+            logger.warn("Circles don't exists or don't belong to current user=" + req.user_id);
             return res.status(400).send({ errors: [{ msg: 'Los círculos especificados no pertenecen al usuario actual' }] });
           }
           else if (req.body.circles_ids.length > circles.length) {
-            logger.warn("One of the circles doesn't belong to current user=" + req.user);
+            logger.warn("One of the circles doesn't belong to current user=" + req.user_id);
             return res.status(400).send({ errors: [{ msg: 'Alguno de los círculos especificados no pertenece al usuario actual' }] });
           }
           else {
@@ -177,7 +177,7 @@ var saveContactData = function(req, res, contact, circles, isUpdate) {
   // Si la validación está ok, copiamos los datos al contacto y lo devolvemos como json
   contact.name = req.body.name;
   contact.picture = req.body.picture;
-  contact.user = req.user;
+  contact.user = req.user_id;
   contact.parents = Contact.getContactParentsFromCircles(circles);
   contact.save(function(err) {
     if (err) {
@@ -185,7 +185,7 @@ var saveContactData = function(req, res, contact, circles, isUpdate) {
       return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
     }
     else {
-      logger.debug('Contact for user: ' + req.user + (isUpdate ? ' updated' : ' created') + ' successfully: ' + contact.toString());
+      logger.debug('Contact for user: ' + req.user_id + (isUpdate ? ' updated' : ' created') + ' successfully: ' + contact.toString());
       contact.created_at = undefined;
       contact.updated_at = undefined;
       return res.send({ contact: contact });

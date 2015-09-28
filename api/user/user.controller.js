@@ -21,7 +21,7 @@ module.exports.getById = function(req, res) {
       .populate('main_circle')
       .exec(function(err, user) {
         if (err || !user) {
-          logger.warn('User not found: ' + req.user);
+          logger.warn('User not found: ' + req.user_id);
           return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
         }
         else {
@@ -48,17 +48,17 @@ module.exports.update = function(req, res) {
 
     // Si no encontramos un usuario con ese email, está disponible
     User.findOne({ email: req.body.email }, function(err, existingUser) {
-      if (existingUser && !existingUser._id.equals(req.user)) {
+      if (existingUser && !existingUser._id.equals(req.user_id)) {
         logger.debug('User already exists: ' + existingUser);
         return res.status(400).send({ errors: [{ param: 'email', msg: 'El email ' + req.body.email + ' ya está registrado en Unify' }] });
       }
       else {
         // Encontramos un usuario con el id del token y le actualizamos los datos
-        User.findOne({ _id: req.user })
+        User.findOne({ _id: req.user_id })
           .populate('main_circle')
           .exec(function(err, user) {
             if (err || !user) {
-              logger.warn('User not found: ' + req.user);
+              logger.warn('User not found: ' + req.user_id);
               return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
             }
             else {
@@ -108,11 +108,11 @@ module.exports.updatePassword = function (req, res) {
     }
 
     // Encontramos un usuario con el id del token y le actualizamos la password
-    User.findOne({ _id: req.user }, '+password')
+    User.findOne({ _id: req.user_id }, '+password')
       .populate('main_circle')
       .exec(function(err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {

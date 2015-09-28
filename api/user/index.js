@@ -25,9 +25,9 @@ userRoutes.param('user_id', function(req, res, next, userId) {
     return res.status(400).send({ errors: req.validationErrors() });
   }
 
-  // Si el req.user, ya habiendo pasado por la verificación del token es el mismo
+  // Si el req.user_id, ya habiendo pasado por la verificación del token es el mismo
   // que el del req.params.id, enviamos el user
-  else if (req.user !== userId) {
+  else if (req.user_id !== userId) {
     return res.status(400).send({ errors: [{ msg: 'Estás queriendo acceder a un usuario distinto al tuyo' }]});
   }
   else {

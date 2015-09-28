@@ -24,17 +24,17 @@ var PEOPLE_API_URL = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect
 module.exports.unlinkAccount = function(req, res) {
 
   process.nextTick(function() {
-    User.findOne({ _id: req.user })
+    User.findOne({ _id: req.user_id })
       .populate('main_circle')
       .exec(function(err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
         user.toggleSocialAccount('google', false, function(err) {
           if (err) {
-            logger.warn('There was an error trying to unlink Google: ' + req.user);
+            logger.warn('There was an error trying to unlink Google: ' + req.user_id);
             return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar desvincular tu cuenta de Google' }]});
           }
           else {

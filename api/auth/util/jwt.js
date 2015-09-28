@@ -60,7 +60,7 @@ module.exports.ensureAuthenticated = function(req, res, next) {
       logger.warn('Token has expired: ' + payload.exp + ' is older than ' + moment().unix());
       return res.status(401).send({ errors: [{ msg: 'La sesión ha expirado' }] });
     }
-    req.user = payload.sub;
+    req.user_id = payload.sub;
     next();
   });
 };

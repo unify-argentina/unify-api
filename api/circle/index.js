@@ -26,7 +26,7 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
   }
 
   // Buscamos el usuario del request y verificamos que el circle_id pertenezca a este usuario
-  Circle.findOne({ _id: circleId, user: req.user })
+  Circle.findOne({ _id: circleId, user: req.user_id })
     .populate('user ancestors')
     .exec(function(err, circle) {
       if (err || !circle) {

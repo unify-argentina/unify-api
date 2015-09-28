@@ -25,17 +25,17 @@ var GRAPH_USER_URL = facebookUtils.getBaseURL() + '/me';
 module.exports.unlinkAccount = function(req, res) {
 
   process.nextTick(function() {
-    User.findOne({ _id: req.user })
+    User.findOne({ _id: req.user_id })
       .populate('main_circle')
       .exec(function(err, user) {
       if (err || !user) {
-        logger.warn('User not found: ' + req.user);
+        logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
       }
       else {
         user.toggleSocialAccount('facebook', false, function(err) {
           if (err) {
-            logger.warn('There was an error trying to unlink Facebook: ' + req.user);
+            logger.warn('There was an error trying to unlink Facebook: ' + req.user_id);
             return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar desvincular tu cuenta de Facebook' }]});
           }
           else {
