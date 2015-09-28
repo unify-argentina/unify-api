@@ -14,7 +14,7 @@ var googleErrors = require('./google.errors');
 // constantes
 var REFRESH_TOKEN_URL = 'https://www.googleapis.com/oauth2/v3/token';
 
-// Obtiene un access token de google en base al refresh token guardado
+// Obtiene un access token de Google en base al refresh token guardado
 module.exports.getAccessToken = function(refresh_token, callback) {
 
   var qs = getRefreshTokenParams(refresh_token);

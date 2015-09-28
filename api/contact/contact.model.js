@@ -34,7 +34,6 @@ var contactSchema = mongoose.Schema({
   },
 
   google: {
-    id: String,
     email: String,
     valid: { type: Boolean, default: true }
   },

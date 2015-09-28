@@ -170,7 +170,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
     // Si encuentra a uno con el id de Facebook, es un usuario registrado con Facebook
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingFacebookUser) {
-      logger.info('Existing facebook user: ' + existingFacebookUser.toString());
+      logger.info('Existing Facebook user: ' + existingFacebookUser.toString());
       return jwt.createJWT(res, existingFacebookUser);
     }
     else {
@@ -199,7 +199,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
           user.name = facebookProfile.name;
           user.email = facebookProfile.email;
           user.password = randomstring.generate(20);
-          logger.info('New facebook user!: ' + user);
+          logger.info('New Facebook user!: ' + user);
           linkFacebookData(user, facebookProfile, access_token);
           user.save(function(err) {
             if (err) {

@@ -149,7 +149,7 @@ userSchema.methods.hasLinkedAccount = function(account) {
 // Verifica que tenga al menos alguna cuenta vinculada y si es la ultima, que tenga email por lo menos
 userSchema.methods.isValidToRemoveAccount = function(account) {
 
-  // Como instagram y twitter no proveen del email del usuario, al linkear una cuenta de estas, si es
+  // Como Instagram y Twitter no proveen del email del usuario, al linkear una cuenta de estas, si es
   // la única, y si no tienen el email seteado, no le permitiremos al usuario deslinkear la misma ya que
   // no va a poder ser identificado más adelante
   var valid = true;

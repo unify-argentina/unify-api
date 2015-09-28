@@ -285,7 +285,7 @@ var toggleEmailTrash = function(req, res, toggle) {
   });
 };
 
-// Funcion que encuentra al usuario y chequea que tenga la cuenta de google linkeada
+// Funcion que encuentra al usuario y chequea que tenga la cuenta de Google linkeada
 var findUserAndThen = function(req, callback) {
   User.findOne({ _id: req.user }, User.socialFields(), function (err, user) {
     if (err || !user) {

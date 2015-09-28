@@ -32,7 +32,7 @@ module.exports.unlinkAccount = function(req, res) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }]});
       }
-      // Si el usuario no tiene email ni tiene la cuenta de instagram linkeada, no puede deslinkear twitter
+      // Si el usuario no tiene email ni tiene la cuenta de Instagram linkeada, no puede deslinkear twitter
       // ya que no vamos a tener forma de identificarlo después
       else if (!user.isValidToRemoveAccount('twitter')) {
         logger.warn('Cannot unlink Twitter for user: ' + req.user);
@@ -201,17 +201,17 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, access_token) {
     // Si encuentra a uno con el id de Twitter, es un usuario registrado con Twitter
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingTwitterUser) {
-      logger.info('Existing twitter user: ' + existingTwitterUser.toString());
+      logger.info('Existing Twitter user: ' + existingTwitterUser.toString());
       return jwt.createJWT(res, existingTwitterUser);
     }
     // Si no encuentra a uno, no tenemos forma de saber el email de Twitter, ya que es algo que la API
     // no lo provee, entonces damos de alta un nuevo usuario de Unify sin email
     else {
-      // No le ponemos email para que si llegara a vincular la cuenta con facebook o gmail, use ese email.
+      // No le ponemos email para que si llegara a vincular la cuenta con Facebook o gmail, use ese email.
       var user = new User();
       user.name = twitterProfile.name;
       user.password = randomstring.generate(20);
-      logger.info('New twitter user!: ' + user);
+      logger.info('New Twitter user!: ' + user);
       linkTwitterData(user, twitterProfile, access_token);
       return saveUser(res, user);
     }

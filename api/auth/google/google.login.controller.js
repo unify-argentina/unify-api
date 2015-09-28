@@ -173,7 +173,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, refresh_token) {
     // Si encuentra a uno con el id de Google, es un usuario registrado con Google
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingGoogleUser) {
-      logger.info('Existing google user: ' + existingGoogleUser.toString());
+      logger.info('Existing Google user: ' + existingGoogleUser.toString());
       return jwt.createJWT(res, existingGoogleUser);
     }
     else {
@@ -202,7 +202,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, refresh_token) {
           user.name = googleProfile.name;
           user.email = googleProfile.email;
           user.password = randomstring.generate(20);
-          logger.info('New google user!: ' + user);
+          logger.info('New Google user!: ' + user);
           linkGoogleData(user, googleProfile, refresh_token);
           user.save(function(err) {
             if (err) {

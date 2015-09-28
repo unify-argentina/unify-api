@@ -1649,49 +1649,56 @@ define({ "api": [
             "type": "<p>String</p> ",
             "optional": true,
             "field": "facebook_id",
-            "description": "<p>Id del perfil de facebook del contacto</p> "
+            "description": "<p>Id del perfil de Facebook del contacto</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": true,
             "field": "facebook_display_name",
-            "description": "<p>Nombre del perfil de facebook del contacto</p> "
+            "description": "<p>Nombre del perfil de Facebook del contacto</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": true,
             "field": "twitter_id",
-            "description": "<p>Id del perfil de twitter del contacto</p> "
+            "description": "<p>Id del perfil de Twitter del contacto</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": true,
             "field": "twitter_username",
-            "description": "<p>Username del perfil de twitter del contacto</p> "
+            "description": "<p>Username del perfil de Twitter del contacto</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": true,
             "field": "instagram_id",
-            "description": "<p>Id del perfil de instagram del contacto</p> "
+            "description": "<p>Id del perfil de Instagram del contacto</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": true,
             "field": "instagram_username",
-            "description": "<p>Username del perfil de instagram del contacto</p> "
+            "description": "<p>Username del perfil de Instagram del contacto</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "email",
+            "description": "<p>Email del contacto</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo de request",
-          "content": "{\n  \"name\":\"Alejo\",\n  \"picture\":\"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg\",\n  \"facebook_id\": \"10205153877979641\",\n  \"facebook_display_name\": \"Alejo García\",\n  \"instagram_id\":\"1574863419\",\n  \"instagram_username\": \"aleagb23\",\n  \"twitter_id\": \"261365528\",\n  \"twitter_username\": \"aleagb23\",\n  \"circles_ids\":[\"55c02cc80cce13ec28bd7ec2\"]\n}",
+          "content": "{\n  \"name\":\"Alejo\",\n  \"picture\":\"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg\",\n  \"facebook_id\": \"10205153877979641\",\n  \"facebook_display_name\": \"Alejo García\",\n  \"instagram_id\":\"1574863419\",\n  \"instagram_username\": \"aleagb23\",\n  \"twitter_id\": \"261365528\",\n  \"twitter_username\": \"aleagb23\",\n  \"circles_ids\":[\"55c02cc80cce13ec28bd7ec2\"],\n  \"email\":\"aleagb.rclm@gmail.com\"\n}",
           "type": "json"
         }
       ]
@@ -1712,7 +1719,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n    \"contact\": {\n        \"__v\": 0,\n        \"user\": \"55c02cc70cce13ec28bd7ec1\",\n        \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg\",\n        \"name\": \"Alejo\",\n        \"_id\": \"55c0316dccab88ba31786d73\",\n        \"parents\": [\n            {\n                \"circle\": \"55c02cc80cce13ec28bd7ec2\",\n                \"_id\": \"55c0316dccab88ba31786d74\",\n                \"ancestors\": [\n                    \"55c02cc80cce13ec28bd7ec2\"\n                ]\n            }\n        ],\n        \"instagram\": {\n            \"username\": \"aleagb23\",\n            \"id\": \"1574863419\"\n        },\n        \"twitter\": {\n            \"username\": \"aleagb23\",\n            \"id\": \"261365528\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Alejo García\",\n            \"id\": \"10205153877979641\"\n        }\n    }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"contact\": {\n        \"__v\": 0,\n        \"user\": \"55c02cc70cce13ec28bd7ec1\",\n        \"picture\": \"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg\",\n        \"name\": \"Alejo\",\n        \"_id\": \"55c0316dccab88ba31786d73\",\n        \"parents\": [\n            {\n                \"circle\": \"55c02cc80cce13ec28bd7ec2\",\n                \"_id\": \"55c0316dccab88ba31786d74\",\n                \"ancestors\": [\n                    \"55c02cc80cce13ec28bd7ec2\"\n                ]\n            }\n        ],\n        \"instagram\": {\n            \"username\": \"aleagb23\",\n            \"id\": \"1574863419\"\n        },\n        \"twitter\": {\n            \"username\": \"aleagb23\",\n            \"id\": \"261365528\"\n        },\n        \"facebook\": {\n            \"display_name\": \"Alejo García\",\n            \"id\": \"10205153877979641\"\n        },\n        \"google\": {\n            \"email\": \"aleagb.rclm@gmail.com\"\n        }\n    }\n}",
           "type": "json"
         }
       ]
@@ -1795,28 +1802,35 @@ define({ "api": [
             "type": "<p>String</p> ",
             "optional": true,
             "field": "facebook_id",
-            "description": "<p>Id del perfil de facebook del contacto</p> "
+            "description": "<p>Id del perfil de Facebook del contacto</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": true,
             "field": "twitter_id",
-            "description": "<p>Id del perfil de twitter del contacto</p> "
+            "description": "<p>Id del perfil de Twitter del contacto</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": true,
             "field": "instagram_id",
-            "description": "<p>Id del perfil de instagram del contacto</p> "
+            "description": "<p>Id del perfil de Instagram del contacto</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "email",
+            "description": "<p>Email del contacto</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Ejemplo de request",
-          "content": "{\n  \"name\":\"Alejo\",\n  \"picture\":\"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large\",\n  \"facebook_id\":\"10205153877979641\",\n  \"twitter_id\":\"261365528\",\n  \"instagram_id\":\"1574863419\",\n  \"circles_ids\":[\"55a1f0d9d3dc50a522cd0aff\"]\n}",
+          "content": "{\n   \"name\":\"Alejo\",\n   \"picture\":\"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg\",\n   \"facebook_id\": \"10205153877979641\",\n   \"facebook_display_name\": \"Alejo García\",\n   \"instagram_id\":\"1574863419\",\n   \"instagram_username\": \"aleagb23\",\n   \"twitter_id\": \"261365528\",\n   \"twitter_username\": \"aleagb23\",\n   \"circles_ids\":[\"55c02cc80cce13ec28bd7ec2\"],\n   \"email\":\"aleagb.rclm@gmail.com\"\n}",
           "type": "json"
         }
       ]
@@ -1837,7 +1851,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n    \"contact\": {\n        \"user\": \"55c421354037f03842898378\",\n        \"picture\": \"https://graph.facebook.com/v2.3/10206413202905994/picture?type=large\",\n        \"name\": \"Flore Joffré\",\n        \"_id\": \"55cab7542337df552818e540\",\n        \"__v\": 0,\n        \"parents\": [\n            {\n                \"circle\": \"55c421364037f03842898379\",\n                \"_id\": \"55cab7542337df552818e541\",\n                \"ancestors\": [\n                    \"55c421364037f03842898379\"\n                ]\n            }\n        ],\n        \"instagram\": {\n            \"username\": \"florejoffre\",\n            \"id\": \"1244524526\",\n            \"valid\": true\n        },\n        \"twitter\": {\n            \"username\": \"FloreJoffre\",\n            \"id\": \"197249917\",\n            \"valid\": true\n        },\n        \"facebook\": {\n            \"display_name\": \"Flore Joffré\",\n            \"id\": \"10206413202905994\",\n            \"valid\": true\n        }\n    }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n    \"contact\": {\n        \"user\": \"55c421354037f03842898378\",\n        \"picture\": \"https://graph.facebook.com/v2.3/10206413202905994/picture?type=large\",\n        \"name\": \"Flore Joffré\",\n        \"_id\": \"55cab7542337df552818e540\",\n        \"__v\": 0,\n        \"parents\": [\n            {\n                \"circle\": \"55c421364037f03842898379\",\n                \"_id\": \"55cab7542337df552818e541\",\n                \"ancestors\": [\n                    \"55c421364037f03842898379\"\n                ]\n            }\n        ],\n        \"instagram\": {\n            \"username\": \"florejoffre\",\n            \"id\": \"1244524526\",\n            \"valid\": true\n        },\n        \"twitter\": {\n            \"username\": \"FloreJoffre\",\n            \"id\": \"197249917\",\n            \"valid\": true\n        },\n        \"facebook\": {\n            \"display_name\": \"Flore Joffré\",\n            \"id\": \"10206413202905994\",\n            \"valid\": true\n        },\n        \"google\": {\n            \"email\": \"aleagb.rclm@gmail.com\"\n        }\n    }\n}",
           "type": "json"
         }
       ]

@@ -17,8 +17,7 @@ var User = require('./user.model.js');
 module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
-    User
-      .findOne({ _id: req.params.user_id })
+    User.findOne({ _id: req.params.user_id })
       .populate('main_circle')
       .exec(function(err, user) {
         if (err || !user) {

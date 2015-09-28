@@ -103,7 +103,7 @@ var getVideoURL = function(videoId, callback) {
       callback(err ? err : response.body.meta.error_message, null);
     }
     else if (!response.body.data.videos.standard_resolution) {
-      logger.error('Error: instagram video with id=' + videoId + ' not found');
+      logger.error('Error: Instagram video with id=' + videoId + ' not found');
       callback(new Error('Instagram video URL not found'), null);
     }
     else {

@@ -29,7 +29,7 @@ module.exports.unlinkAccount = function(req, res) {
         logger.warn('User not found: ' + req.user);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }]});
       }
-      // Si el usuario no tiene email ni tiene la cuenta de twitter linkeada, no puede deslinkear instagram
+      // Si el usuario no tiene email ni tiene la cuenta de Twitter linkeada, no puede deslinkear instagram
       // ya que no vamos a tener forma de identificarlo después
       else if (!user.isValidToRemoveAccount('instagram')) {
         logger.warn('Cannot unlink Instagram for user: ' + req.user);
@@ -157,17 +157,17 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, access_token) {
     .populate('main_circle')
     .exec(function(err, existingInstagramUser) {
     if (existingInstagramUser) {
-      logger.info('Existing instagram user: ' + existingInstagramUser.toString());
+      logger.info('Existing Instagram user: ' + existingInstagramUser.toString());
       return jwt.createJWT(res, existingInstagramUser);
     }
     // Si no encuentra a uno, no tenemos forma de saber el email de Instagram, ya que es algo que la API
     // no lo provee, entonces damos de alta un nuevo usuario de Unify sin email
     else {
-      // No le ponemos email para que si llegara a vincular la cuenta con facebook o gmail, use ese email.
+      // No le ponemos email para que si llegara a vincular la cuenta con Facebook o gmail, use ese email.
       var user = new User();
       user.name = instagramProfile.full_name;
       user.password = randomstring.generate(20);
-      logger.info('New instagram user!: ' + user);
+      logger.info('New Instagram user!: ' + user);
       linkInstagramData(user, instagramProfile, access_token);
       return saveUser(res, user);
     }

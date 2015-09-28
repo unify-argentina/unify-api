@@ -67,7 +67,7 @@ module.exports.listTrash = function(refresh_token, callback) {
   list(refresh_token, 'TRASH', callback);
 };
 
-// Devuelve los emails de la cuenta de google del usuario loggeado
+// Devuelve los emails de la cuenta de Google del usuario loggeado
 var list = function(refresh_token, labelId, callback) {
 
   googleAuth.getAccessToken(refresh_token, function(err, access_token) {

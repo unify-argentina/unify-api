@@ -54,12 +54,13 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
  * @apiParam {String} name Nombre del contacto a crear
  * @apiParam {String} picture URL de la imagen del contacto
  * @apiParam {Array} circles_ids Ids de los círculos en los cuales el contacto va a ser creado
- * @apiParam {String} [facebook_id] Id del perfil de facebook del contacto
- * @apiParam {String} [facebook_display_name] Nombre del perfil de facebook del contacto
- * @apiParam {String} [twitter_id] Id del perfil de twitter del contacto
- * @apiParam {String} [twitter_username] Username del perfil de twitter del contacto
- * @apiParam {String} [instagram_id] Id del perfil de instagram del contacto
- * @apiParam {String} [instagram_username] Username del perfil de instagram del contacto
+ * @apiParam {String} [facebook_id] Id del perfil de Facebook del contacto
+ * @apiParam {String} [facebook_display_name] Nombre del perfil de Facebook del contacto
+ * @apiParam {String} [twitter_id] Id del perfil de Twitter del contacto
+ * @apiParam {String} [twitter_username] Username del perfil de Twitter del contacto
+ * @apiParam {String} [instagram_id] Id del perfil de Instagram del contacto
+ * @apiParam {String} [instagram_username] Username del perfil de Instagram del contacto
+ * @apiParam {String} [email] Email del contacto
  *
  * @apiDescription Aclaración: si bien los ids de las redes sociales son opcionales,
  * al menos uno es requerido para poder crear un contacto y obtener contenido de esa red
@@ -75,7 +76,8 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
  *       "instagram_username": "aleagb23",
  *       "twitter_id": "261365528",
  *       "twitter_username": "aleagb23",
- *       "circles_ids":["55c02cc80cce13ec28bd7ec2"]
+ *       "circles_ids":["55c02cc80cce13ec28bd7ec2"],
+ *       "email":"aleagb.rclm@gmail.com"
  *     }
  *
  * @apiSuccess {Object} contact Contacto creado
@@ -109,6 +111,9 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
  *             "facebook": {
  *                 "display_name": "Alejo García",
  *                 "id": "10205153877979641"
+ *             },
+ *             "google": {
+ *                 "email": "aleagb.rclm@gmail.com"
  *             }
  *         }
  *     }
@@ -183,9 +188,10 @@ contactRoutes.get('/:contact_id', contactController.getById);
  * @apiParam {String} name Nuevo nombre del contacto a actualizar
  * @apiParam {String} picture URL de la imagen del contacto
  * @apiParam {Array} circles_ids Ids de los círculos en los cuales el contacto va a ser actualizado
- * @apiParam {String} [facebook_id] Id del perfil de facebook del contacto
- * @apiParam {String} [twitter_id] Id del perfil de twitter del contacto
- * @apiParam {String} [instagram_id] Id del perfil de instagram del contacto
+ * @apiParam {String} [facebook_id] Id del perfil de Facebook del contacto
+ * @apiParam {String} [twitter_id] Id del perfil de Twitter del contacto
+ * @apiParam {String} [instagram_id] Id del perfil de Instagram del contacto
+ * @apiParam {String} [email] Email del contacto
  *
  * @apiDescription Aclaración: si bien los ids de las redes sociales son opcionales,
  * al menos uno es requerido para poder actualizar un contacto y obtener contenido de esa red
@@ -193,12 +199,16 @@ contactRoutes.get('/:contact_id', contactController.getById);
  *
  * @apiParamExample {json} Ejemplo de request
  *    {
- *      "name":"Alejo",
- *      "picture":"https://graph.facebook.com/v2.3/10205153877979641/picture?type=large",
- *      "facebook_id":"10205153877979641",
- *      "twitter_id":"261365528",
- *      "instagram_id":"1574863419",
- *      "circles_ids":["55a1f0d9d3dc50a522cd0aff"]
+ *       "name":"Alejo",
+ *       "picture":"https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/10832234_314287438773030_212898401_a.jpg",
+ *       "facebook_id": "10205153877979641",
+ *       "facebook_display_name": "Alejo García",
+ *       "instagram_id":"1574863419",
+ *       "instagram_username": "aleagb23",
+ *       "twitter_id": "261365528",
+ *       "twitter_username": "aleagb23",
+ *       "circles_ids":["55c02cc80cce13ec28bd7ec2"],
+ *       "email":"aleagb.rclm@gmail.com"
  *    }
  *
  * @apiSuccess {Object} contact Contacto actualizado
@@ -235,6 +245,9 @@ contactRoutes.get('/:contact_id', contactController.getById);
  *                 "display_name": "Flore Joffré",
  *                 "id": "10206413202905994",
  *                 "valid": true
+ *             },
+ *             "google": {
+ *                 "email": "aleagb.rclm@gmail.com"
  *             }
  *         }
  *     }

@@ -26,9 +26,9 @@ module.exports = {
   CIRCLE_MEDIA_ERROR: 'There was an error obtaining circle media',
   CONTACT_MEDIA_ERROR: 'There was an error obtaining contact media',
   USER_MEDIA_ERROR: 'There was an error obtaining user media',
-  FACEBOOK_ACCOUNT_UNLINKED: 'You have to link your facebook account in order to create a contact with a facebook_id',
-  TWITTER_ACCOUNT_UNLINKED: 'You have to link your twitter account in order to create a contact with a twitter_id',
-  INSTAGRAM_ACCOUNT_UNLINKED: 'You have to link your instagram account in order to create a contact with a instagram_id',
+  FACEBOOK_ACCOUNT_UNLINKED: 'You have to link your Facebook account in order to create a contact with a facebook_id',
+  TWITTER_ACCOUNT_UNLINKED: 'You have to link your Twitter account in order to create a contact with a twitter_id',
+  INSTAGRAM_ACCOUNT_UNLINKED: 'You have to link your Instagram account in order to create a contact with a instagram_id',
   UNABLE_FIND_DIFFERENT_USER: 'You are trying to find a different user',
   UNABLE_FIND_USER_FRIENDS: 'There was an error obtaining user friends',
 

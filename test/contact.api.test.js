@@ -221,7 +221,7 @@ describe('Contacts API', function() {
           .end(function(err, data) {
             data.res.statusCode.should.equal(400);
             data.res.body.errors[0].msg.should
-              .equal('You have to suply a facebook, twitter or instagram id for creating a contact');
+              .equal('You have to suply a Facebook, Twitter or Instagram id for creating a contact');
             done();
           });
       });
@@ -489,7 +489,7 @@ describe('Contacts API', function() {
             .end(function(err, data) {
               data.res.statusCode.should.equal(400);
                data.res.body.errors[0].msg.should
-                 .equal('You have to suply a facebook, twitter or instagram id for updating a contact');
+                 .equal('You have to suply a Facebook, Twitter or Instagram id for updating a contact');
               done();
             });
         });
