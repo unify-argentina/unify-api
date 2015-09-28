@@ -18,7 +18,8 @@ var twitterErrors = require('./twitter.errors');
 var Contact = require('../../contact/contact.model');
 
 // constantes
-var USER_LIKE_URL = 'https://api.twitter.com/1.1/favorites/create.json?id=%s';
+var USER_FAV_URL = 'https://api.twitter.com/1.1/favorites/create.json?id=%s';
+var USER_UNFAV_URL = 'https://api.twitter.com/1.1/favorites/destroy.json?id=%s';
 var USER_MEDIA_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
 var TWITTER_DATE_FORMAT = 'dd MMM DD HH:mm:ss ZZ YYYY';
 var TWITTER_STATUS_URL = 'https://twitter.com/statuses/';
@@ -94,9 +95,9 @@ var mapTweetVideo = function(mappedMedia, videoInfoArray) {
 };
 
 // Esta función hace un post con un like a un contenido de Twitter
-module.exports.postLike = function(access_token, twitterMediaId, callback) {
+module.exports.toggleLike = function(access_token, twitterMediaId, toggleLike, callback) {
 
-  var url = util.format(USER_LIKE_URL, twitterMediaId);
+  var url = util.format(toggleLike ? USER_FAV_URL : USER_UNFAV_URL, twitterMediaId);
   logger.info('URL: ' + url);
 
   request.post({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), json: true }, function(err, response) {

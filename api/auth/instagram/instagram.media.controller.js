@@ -129,19 +129,32 @@ var mapImage = function(instagramImage, callback) {
 };
 
 // Esta función hace un post con un like a un contenido de Instagram
-module.exports.postLike = function(access_token, instagramMediaId, callback) {
+module.exports.toggleLike = function(access_token, instagramMediaId, toggleLike, callback) {
 
   var url = util.format(USER_LIKE_URL, instagramMediaId, access_token);
   logger.info('URL: ' + url);
 
-  request.post({ url: url, json: true }, function(err, response) {
-    var result = instagramErrors.hasError(err, response);
-    if (result.hasError) {
-      callback(result.error);
-    }
-    else {
-      callback(null);
-    }
-  });
+  if (toggleLike) {
+    request.post({ url: url, json: true }, function(err, response) {
+      var result = instagramErrors.hasError(err, response);
+      if (result.hasError) {
+        callback(result.error);
+      }
+      else {
+        callback(null);
+      }
+    });
+  }
+  else {
+    request.del({ url: url, json: true }, function(err, response) {
+      var result = instagramErrors.hasError(err, response);
+      if (result.hasError) {
+        callback(result.error);
+      }
+      else {
+        callback(null);
+      }
+    });
+  }
 };
 

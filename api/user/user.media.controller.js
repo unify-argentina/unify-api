@@ -120,46 +120,59 @@ var sendMediaResponseFromResults = function(res, results, userId) {
 module.exports.like = function (req, res) {
 
   process.nextTick(function () {
-    req.assert('facebook_media_id', 'Id de media de Facebook válido').optional().isString();
-    req.assert('twitter_media_id', 'Id de media de Twitter válido').optional().isString();
-    req.assert('instagram_media_id', 'Id de media de Instagram válido').optional().isString();
+    toggleLike(req, res, true);
+  });
+};
 
-    // Validamos errores
-    if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
-      return res.status(400).send({ errors: req.validationErrors() });
+// Saca el me gusta o desmarca como favorito un tweet
+module.exports.unlike = function (req, res) {
+
+  process.nextTick(function () {
+    toggleLike(req, res, false);
+  });
+};
+
+var toggleLike = function(req, res, toggleLike) {
+  req.assert('facebook_media_id', 'Id de media de Facebook válido').optional().isString();
+  req.assert('twitter_media_id', 'Id de media de Twitter válido').optional().isString();
+  req.assert('instagram_media_id', 'Id de media de Instagram válido').optional().isString();
+
+  // Validamos errores
+  if (req.validationErrors()) {
+    logger.warn('Validation errors: ' + req.validationErrors());
+    return res.status(400).send({ errors: req.validationErrors() });
+  }
+
+  // Si no se pasó ninguno, devolvemos error
+  if (req.body.facebook_media_id === undefined && req.body.twitter_media_id === undefined && req.body.instagram_media_id === undefined) {
+    logger.warn('No media id provided');
+    return res.status(400).send({ errors: [{ msg: 'Tenes que proveer al menos un media id para darle like' }] });
+  }
+
+  User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
+    if (err || !user) {
+      logger.warn('User not found: ' + req.user_id);
+      return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
     }
-
-    // Si no se pasó ninguno, devolvemos error
-    if (req.body.facebook_media_id === undefined && req.body.twitter_media_id === undefined && req.body.instagram_media_id === undefined) {
-      logger.warn('No media id provided');
-      return res.status(400).send({ errors: [{ msg: 'Tenes que proveer al menos un media id' }] });
+    else {
+      doToggleLike(req, res, user, toggleLike);
     }
-
-    User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
-      if (err || !user) {
-        logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
-      }
-      else {
-        doPostLike(req, res, user);
-      }
-    });
   });
 };
 
 // Una vez que encontramos al usuario, mandamos los likes correspondientes
-var doPostLike = function(req, res, user) {
+var doToggleLike = function(req, res, user, toggleLike) {
   // Le pegamos a cada API
   async.parallel({
-    facebook: postFacebookLike.bind(null, user, req.body.facebook_media_id),
-    instagram: postInstagramLike.bind(null, user, req.body.instagram_media_id),
-    twitter: postTwitterLike.bind(null, user, req.body.twitter_media_id)
+    facebook: toggleFacebookLike.bind(null, user, req.body.facebook_media_id, toggleLike),
+    instagram: toggleInstagramLike.bind(null, user, req.body.instagram_media_id, toggleLike),
+    twitter: toggleTwitterLike.bind(null, user, req.body.twitter_media_id, toggleLike)
   },
   // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
   function(err) {
     if (err) {
-      logger.warn('Error searching media ' + err);
+      logger.warn('Error giving like ' + err);
+      // TODO msg
       return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar darle like a un determinado contenido' }] });
     }
     else {
@@ -168,9 +181,9 @@ var doPostLike = function(req, res, user) {
   });
 };
 
-var postFacebookLike = function(user, facebookMediaId, callback) {
+var toggleFacebookLike = function(user, facebookMediaId, toggleLike, callback) {
   if (user.hasLinkedAccount('facebook') && typeof facebookMediaId === 'string') {
-    facebookMedia.postLike(user.facebook.access_token, facebookMediaId, function(err) {
+    facebookMedia.toggleLike(user.facebook.access_token, facebookMediaId, toggleLike, function(err) {
       callback(err);
     });
   }
@@ -180,9 +193,9 @@ var postFacebookLike = function(user, facebookMediaId, callback) {
   }
 };
 
-var postInstagramLike = function(user, instagramMediaId, callback) {
+var toggleInstagramLike = function(user, instagramMediaId, toggleLike, callback) {
   if (user.hasLinkedAccount('instagram') && typeof instagramMediaId === 'string') {
-    instagramMedia.postLike(user.instagram.access_token, instagramMediaId, function(err) {
+    instagramMedia.toggleLike(user.instagram.access_token, instagramMediaId, toggleLike, function(err) {
       callback(err);
     });
   }
@@ -192,9 +205,9 @@ var postInstagramLike = function(user, instagramMediaId, callback) {
   }
 };
 
-var postTwitterLike = function(user, twitterMediaId, callback) {
+var toggleTwitterLike = function(user, twitterMediaId, toggleLike, callback) {
   if (user.hasLinkedAccount('twitter') && typeof twitterMediaId === 'string') {
-    twitterMedia.postLike(user.twitter.access_token, twitterMediaId, function(err) {
+    twitterMedia.toggleLike(user.twitter.access_token, twitterMediaId, toggleLike, function(err) {
       callback(err);
     });
   }

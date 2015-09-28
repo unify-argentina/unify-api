@@ -2586,6 +2586,85 @@ define({ "api": [
     ]
   },
   {
+    "type": "delete",
+    "url": "/api/user/:user_id/media/like",
+    "title": "Dar unlike",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "facebook_media_id",
+            "description": "<p>Id del contenido de Facebook a darle unlike</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "twitter_media_id",
+            "description": "<p>Id del contenido de Twitter a darle unfav</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"facebook_media_id\": \"10205843678664227\",\n  \"twitter_media_id\": \"581605355672715264\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Aclaración: si bien los ids de los contenidos son opcionales, al menos uno es requerido para poder darle unlike en esa red social</p> ",
+    "success": {
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "DeleteApiUserUser_idMediaLike",
+    "sampleRequest": [
+      {
+        "url": "http://api.myunify.io/api/user/:user_id/media/like"
+      }
+    ]
+  },
+  {
     "type": "get",
     "url": "/api/user/:user_id",
     "title": "Obtener usuario",
@@ -2809,7 +2888,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/api/user/:user_id/media",
+    "url": "/api/user/:user_id/media/like",
     "title": "Dar like",
     "group": "Usuarios",
     "header": {
@@ -2879,10 +2958,10 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "api/user/index.js",
     "groupTitle": "Usuarios",
-    "name": "PostApiUserUser_idMedia",
+    "name": "PostApiUserUser_idMediaLike",
     "sampleRequest": [
       {
-        "url": "http://api.myunify.io/api/user/:user_id/media"
+        "url": "http://api.myunify.io/api/user/:user_id/media/like"
       }
     ]
   },

@@ -97,19 +97,31 @@ module.exports.getMedia = function(access_token, facebookId, callback) {
 };
 
 // Esta función hace un post con un like a un contenido de Facebook
-module.exports.postLike = function(access_token, facebookMediaId, callback) {
+module.exports.toggleLike = function(access_token, facebookMediaId, toggleLike, callback) {
 
   var url = util.format(USER_LIKE_URL, facebookMediaId, access_token);
   logger.info('URL: ' + url);
 
-  request.post({ url: url, json: true }, function(err, response) {
-
-    var result = facebookErrors.hasError(err, response);
-    if (result.hasError) {
-      callback(result.error);
-    }
-    else {
-      callback(null);
-    }
-  });
+  if (toggleLike) {
+    request.post({url: url, json: true}, function (err, response) {
+      var result = facebookErrors.hasError(err, response);
+      if (result.hasError) {
+        callback(result.error);
+      }
+      else {
+        callback(null);
+      }
+    });
+  }
+  else {
+    request.del({ url: url, json: true }, function(err, response) {
+      var result = facebookErrors.hasError(err, response);
+      if (result.hasError) {
+        callback(result.error);
+      }
+      else {
+        callback(null);
+      }
+    });
+  }
 };
