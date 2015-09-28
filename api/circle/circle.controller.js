@@ -48,7 +48,8 @@ module.exports.getById = function(req, res) {
       }
       else {
         var contactsObject = {
-          contacts: contacts
+          contacts: contacts,
+          empty_circle: contacts.length === 0
         };
         var result = _.merge(contactsObject, req.circle.toJSON());
         result.user = undefined;
@@ -241,9 +242,9 @@ var makeTree = function(options) {
     circlesIds[tempCircle[id]] = tempCircle;
   }
   /*
-  * o va a ser el array de círculos que va a tener un sólo elemento, el círculo raíz
+  * result va a ser el array de círculos que va a tener un sólo elemento, el círculo raíz
   * */
-  var o = [];
+  var result = [];
   var secondArray = options.q;
   for (secondIndex = 0; secondIndex < secondArray.length; secondIndex++) {
     /* En tempCircle se guarda cada círculo nuevamente
@@ -268,8 +269,8 @@ var makeTree = function(options) {
       * Si no se encuentra, quiere decir que es el círculo padre, por lo que lo agregamos y será
       * el círculo principal que va a tener a todos los subcirculos
       * */
-      o.push(tempCircle);
+      result.push(tempCircle);
     }
   }
-  return o;
+  return result;
 };

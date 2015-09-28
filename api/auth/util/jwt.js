@@ -45,6 +45,7 @@ module.exports.ensureAuthenticated = function(req, res, next) {
       return res.status(401).send({ errors: [{ msg: 'Por favor asegúrate de que tu pedido esté autorizado' }] });
     }
     var token = module.exports.getUnifyToken(req);
+    logger.debug('Unify Token: ' + token);
 
     var payload = null;
     try {

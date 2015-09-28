@@ -160,7 +160,8 @@ circleRoutes.post('/', circleController.create);
  *             "_id": "55c421364037f03842898379",
  *             "__v": 0,
  *             "ancestors": [
- *             ]
+ *             ],
+ *             "empty_circle": false
  *         }
  *     }
  */
