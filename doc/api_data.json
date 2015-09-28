@@ -30,7 +30,7 @@
     "name": "GetApi",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api"
+        "url": "http://api.myunify.io/api"
       }
     ]
   },
@@ -105,7 +105,7 @@
     "name": "GetApiSignFile_typeType",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/sign?file_type=type"
+        "url": "http://api.myunify.io/api/sign?file_type=type"
       }
     ]
   },
@@ -153,7 +153,7 @@
     "name": "GetAuthVerifyToken",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/verify/:token"
+        "url": "http://api.myunify.io/auth/verify/:token"
       }
     ]
   },
@@ -215,7 +215,7 @@
     "name": "PostAuthLogin",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/login"
+        "url": "http://api.myunify.io/auth/login"
       }
     ]
   },
@@ -259,7 +259,7 @@
     "name": "PostAuthRecover",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/recover"
+        "url": "http://api.myunify.io/auth/recover"
       }
     ]
   },
@@ -335,7 +335,7 @@
     "name": "PostAuthSignup",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/signup"
+        "url": "http://api.myunify.io/auth/signup"
       }
     ]
   },
@@ -390,7 +390,7 @@
     "name": "DeleteAuthFacebook",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/facebook"
+        "url": "http://api.myunify.io/auth/facebook"
       }
     ]
   },
@@ -445,7 +445,7 @@
     "name": "DeleteAuthGoogle",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/google"
+        "url": "http://api.myunify.io/auth/google"
       }
     ]
   },
@@ -500,7 +500,7 @@
     "name": "DeleteAuthInstagram",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/instagram"
+        "url": "http://api.myunify.io/auth/instagram"
       }
     ]
   },
@@ -555,7 +555,7 @@
     "name": "DeleteAuthTwitter",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/twitter"
+        "url": "http://api.myunify.io/auth/twitter"
       }
     ]
   },
@@ -610,7 +610,7 @@
     "name": "GetAuthTwitterCallback",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/twitter/callback"
+        "url": "http://api.myunify.io/auth/twitter/callback"
       }
     ]
   },
@@ -672,7 +672,7 @@
     "name": "PostAuthFacebook",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/facebook"
+        "url": "http://api.myunify.io/auth/facebook"
       }
     ]
   },
@@ -734,7 +734,7 @@
     "name": "PostAuthGoogle",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/google"
+        "url": "http://api.myunify.io/auth/google"
       }
     ]
   },
@@ -796,7 +796,7 @@
     "name": "PostAuthInstagram",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/instagram"
+        "url": "http://api.myunify.io/auth/instagram"
       }
     ]
   },
@@ -851,7 +851,7 @@
     "name": "PostAuthTwitter",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/auth/twitter"
+        "url": "http://api.myunify.io/auth/twitter"
       }
     ]
   },
@@ -926,7 +926,7 @@
     "name": "DeleteApiUserUser_idCircleCircle_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id"
+        "url": "http://api.myunify.io/api/user/:user_id/circle/:circle_id"
       }
     ]
   },
@@ -1001,7 +1001,7 @@
     "name": "GetApiUserUser_idCircleCircle_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id"
+        "url": "http://api.myunify.io/api/user/:user_id/circle/:circle_id"
       }
     ]
   },
@@ -1076,7 +1076,7 @@
     "name": "GetApiUserUser_idCircleCircle_idMedia",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id/media"
+        "url": "http://api.myunify.io/api/user/:user_id/circle/:circle_id/media"
       }
     ]
   },
@@ -1151,7 +1151,7 @@
     "name": "GetApiUserUser_idCircleCircle_idTree",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id/tree"
+        "url": "http://api.myunify.io/api/user/:user_id/circle/:circle_id/tree"
       }
     ]
   },
@@ -1247,7 +1247,7 @@
     "name": "PostApiUserUser_idCircle",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/circle"
+        "url": "http://api.myunify.io/api/user/:user_id/circle"
       }
     ]
   },
@@ -1350,7 +1350,7 @@
     "name": "PutApiUserUser_idCircleCircle_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/circle/:circle_id"
+        "url": "http://api.myunify.io/api/user/:user_id/circle/:circle_id"
       }
     ]
   },
@@ -1425,7 +1425,7 @@
     "name": "DeleteApiUserUser_idContactContact_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/contact/:contact_id"
+        "url": "http://api.myunify.io/api/user/:user_id/contact/:contact_id"
       }
     ]
   },
@@ -1500,7 +1500,7 @@
     "name": "GetApiUserUser_idContactContact_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/contact/:contact_id"
+        "url": "http://api.myunify.io/api/user/:user_id/contact/:contact_id"
       }
     ]
   },
@@ -1584,7 +1584,7 @@
     "name": "GetApiUserUser_idContactContact_idMedia",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/contact/:contact_id/media"
+        "url": "http://api.myunify.io/api/user/:user_id/contact/:contact_id/media"
       }
     ]
   },
@@ -1730,7 +1730,7 @@
     "name": "PostApiUserUser_idContact",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/contact"
+        "url": "http://api.myunify.io/api/user/:user_id/contact"
       }
     ]
   },
@@ -1862,7 +1862,7 @@
     "name": "PutApiUserUser_idContactContact_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/contact/:contact_id"
+        "url": "http://api.myunify.io/api/user/:user_id/contact/:contact_id"
       }
     ]
   },
@@ -1926,7 +1926,7 @@
     "name": "DeleteApiUserUser_idEmailEmail_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/:email_id"
+        "url": "http://api.myunify.io/api/user/:user_id/email/:email_id"
       }
     ]
   },
@@ -1994,7 +1994,7 @@
     "name": "GetApiUserUser_idEmailDraft",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/draft"
+        "url": "http://api.myunify.io/api/user/:user_id/email/draft"
       }
     ]
   },
@@ -2062,7 +2062,7 @@
     "name": "GetApiUserUser_idEmailInbox",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/inbox"
+        "url": "http://api.myunify.io/api/user/:user_id/email/inbox"
       }
     ]
   },
@@ -2130,7 +2130,7 @@
     "name": "GetApiUserUser_idEmailSent",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/sent"
+        "url": "http://api.myunify.io/api/user/:user_id/email/sent"
       }
     ]
   },
@@ -2198,7 +2198,7 @@
     "name": "GetApiUserUser_idEmailTrash",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/trash"
+        "url": "http://api.myunify.io/api/user/:user_id/email/trash"
       }
     ]
   },
@@ -2297,7 +2297,7 @@
     "name": "PostApiUserUser_idEmail",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email"
+        "url": "http://api.myunify.io/api/user/:user_id/email"
       }
     ]
   },
@@ -2368,7 +2368,7 @@
     "name": "PostApiUserUser_idEmailSeen",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/seen"
+        "url": "http://api.myunify.io/api/user/:user_id/email/seen"
       }
     ]
   },
@@ -2439,7 +2439,7 @@
     "name": "PostApiUserUser_idEmailTrash",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/trash"
+        "url": "http://api.myunify.io/api/user/:user_id/email/trash"
       }
     ]
   },
@@ -2510,7 +2510,7 @@
     "name": "PostApiUserUser_idEmailUnseen",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/unseen"
+        "url": "http://api.myunify.io/api/user/:user_id/email/unseen"
       }
     ]
   },
@@ -2581,7 +2581,7 @@
     "name": "PostApiUserUser_idEmailUntrash",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/email/untrash"
+        "url": "http://api.myunify.io/api/user/:user_id/email/untrash"
       }
     ]
   },
@@ -2649,7 +2649,7 @@
     "name": "GetApiUserUser_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id"
+        "url": "http://api.myunify.io/api/user/:user_id"
       }
     ]
   },
@@ -2726,7 +2726,7 @@
     "name": "GetApiUserUser_idFriends",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/friends"
+        "url": "http://api.myunify.io/api/user/:user_id/friends"
       }
     ]
   },
@@ -2803,7 +2803,7 @@
     "name": "GetApiUserUser_idMedia",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/media"
+        "url": "http://api.myunify.io/api/user/:user_id/media"
       }
     ]
   },
@@ -2882,7 +2882,7 @@
     "name": "PostApiUserUser_idMedia",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/media"
+        "url": "http://api.myunify.io/api/user/:user_id/media"
       }
     ]
   },
@@ -2978,7 +2978,7 @@
     "name": "PutApiUserUser_id",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id"
+        "url": "http://api.myunify.io/api/user/:user_id"
       }
     ]
   },
@@ -3075,7 +3075,7 @@
     "name": "PutApiUserUser_idPassword",
     "sampleRequest": [
       {
-        "url": "http://localhost:8080/api/user/:user_id/password"
+        "url": "http://api.myunify.io/api/user/:user_id/password"
       }
     ]
   }
