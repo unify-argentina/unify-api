@@ -20,7 +20,7 @@ var USER_STATUSES_URL = facebookUtils.getBaseURL() + '/%s/statuses?fields=id,mes
 // Devuelve los estados del usuario pasado por parámetro
 module.exports.getStatuses = function(access_token, facebookId, callback) {
 
-  var url = util.format(USER_STATUSES_URL, facebookId, config.MAX_MEDIA_COUNT, access_token);
+  var url = util.format(USER_STATUSES_URL, facebookId, config.FACEBOOK_STATUSES_MAX_MEDIA_COUNT, access_token);
   logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {

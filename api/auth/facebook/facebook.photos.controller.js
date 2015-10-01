@@ -21,7 +21,7 @@ var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?%sfields=id,name,
 module.exports.getPhotos = function(access_token, facebookId, uploaded, callback) {
 
   var uploadedString = uploaded ? 'type=uploaded&' : '';
-  var url = util.format(USER_PHOTOS_URL, facebookId, uploadedString, config.MAX_MEDIA_COUNT, access_token);
+  var url = util.format(USER_PHOTOS_URL, facebookId, uploadedString, config.FACEBOOK_PHOTOS_MAX_MEDIA_COUNT, access_token);
   logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {

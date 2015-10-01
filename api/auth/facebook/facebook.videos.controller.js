@@ -20,7 +20,7 @@ var USER_VIDEOS_URL = facebookUtils.getBaseURL() + '/%s/videos?type=uploaded&fie
 // Devuelve los videos del usuario pasado por parámetro
 module.exports.getVideos = function(access_token, facebookId, callback) {
 
-  var url = util.format(USER_VIDEOS_URL, facebookId, config.MAX_MEDIA_COUNT, access_token);
+  var url = util.format(USER_VIDEOS_URL, facebookId, config.FACEBOOK_VIDEOS_MAX_MEDIA_COUNT, access_token);
   logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {

@@ -28,7 +28,7 @@ module.exports.getMedia = function(access_token, instagramId, callback) {
   // FIXME Chanchada, ver como se puede mejorar
   ACCESS_TOKEN = access_token;
 
-  var url = util.format(USER_MEDIA_URL, instagramId, config.MAX_MEDIA_COUNT, access_token);
+  var url = util.format(USER_MEDIA_URL, instagramId, config.INSTAGRAM_MAX_MEDIA_COUNT, access_token);
   logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {
