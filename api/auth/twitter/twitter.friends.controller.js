@@ -34,7 +34,7 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
         // Una vez que tenemos los amigos, los ordenamos alfabeticamente por el nombre de usuario
         async.sortBy(mappedUsers, function(user, callback) {
 
-          callback(null, user.username);
+          callback(null, user.username.toLowerCase());
 
         }, function(err, sortedUsers) {
 
