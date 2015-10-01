@@ -30,7 +30,7 @@ module.exports.getMedia = function(access_token, twitterId, callback) {
   var qs = {
     //cursor: cursor,
     user_id: twitterId,
-    count: 100
+    count: config.MAX_MEDIA_COUNT
   };
 
   logger.info('URL: ' + USER_MEDIA_URL + 'qs=' + JSON.stringify(qs));

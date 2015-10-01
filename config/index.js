@@ -33,6 +33,9 @@ module.exports = {
   // Instagram
   INSTAGRAM_SECRET: process.env.INSTAGRAM_SECRET || 'INSTAGRAM secret',
 
+  // Media limits
+  MAX_MEDIA_COUNT: process.env.MAX_MEDIA_COUNT || 10,
+
   // Logger
   LOG_LEVEL: process.env.LOG_LEVEL || 'debug',
 

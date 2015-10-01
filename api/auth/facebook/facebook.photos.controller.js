@@ -10,17 +10,18 @@ var request = require('request');
 var async = require('async');
 var moment = require('moment');
 var logger = require('../../../config/logger');
+var config = require('../../../config');
 var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
 
 // constantes
-var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?%sfields=id,name,created_time,album,images,link,likes.limit(0).summary(true),comments.limit(0).summary(true)&access_token=%s';
+var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?%sfields=id,name,created_time,album,images,link,likes.limit(0).summary(true),comments.limit(0).summary(true)&limit=%s&access_token=%s';
 
 // Devuelve las fotos del usuario pasado por parámetro
 module.exports.getPhotos = function(access_token, facebookId, uploaded, callback) {
 
   var uploadedString = uploaded ? 'type=uploaded&' : '';
-  var url = util.format(USER_PHOTOS_URL, facebookId, uploadedString, access_token);
+  var url = util.format(USER_PHOTOS_URL, facebookId, uploadedString, config.MAX_MEDIA_COUNT, access_token);
   logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {

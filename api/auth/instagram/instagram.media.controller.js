@@ -9,13 +9,14 @@ var util = require('util');
 var request = require('request');
 var async = require('async');
 var logger = require('../../../config/logger');
+var config = require('../../../config');
 var instagramErrors = require('./instagram.errors');
 
 // modelos
 var Contact = require('../../contact/contact.model');
 
 // constantes
-var USER_MEDIA_URL = 'https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s';
+var USER_MEDIA_URL = 'https://api.instagram.com/v1/users/%s/media/recent/?count=%s&access_token=%s';
 var USER_LIKE_URL = 'https://api.instagram.com/v1/media/%s/likes/?access_token=%s';
 var MEDIA_URL = 'https://api.instagram.com/v1/media/%s?access_token=%s';
 
@@ -27,7 +28,7 @@ module.exports.getMedia = function(access_token, instagramId, callback) {
   // FIXME Chanchada, ver como se puede mejorar
   ACCESS_TOKEN = access_token;
 
-  var url = util.format(USER_MEDIA_URL, instagramId, access_token);
+  var url = util.format(USER_MEDIA_URL, instagramId, config.MAX_MEDIA_COUNT, access_token);
   logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {

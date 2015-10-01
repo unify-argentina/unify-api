@@ -10,16 +10,17 @@ var request = require('request');
 var async = require('async');
 var moment = require('moment');
 var logger = require('../../../config/logger');
+var config = require('../../../config');
 var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
 
 // constantes
-var USER_STATUSES_URL = facebookUtils.getBaseURL() + '/%s/statuses?fields=id,message,updated_time,likes.limit(0).summary(true),comments.limit(0).summary(true)&access_token=%s';
+var USER_STATUSES_URL = facebookUtils.getBaseURL() + '/%s/statuses?fields=id,message,updated_time,likes.limit(0).summary(true),comments.limit(0).summary(true)&limit=%s&access_token=%s';
 
 // Devuelve los estados del usuario pasado por parámetro
 module.exports.getStatuses = function(access_token, facebookId, callback) {
 
-  var url = util.format(USER_STATUSES_URL, facebookId, access_token);
+  var url = util.format(USER_STATUSES_URL, facebookId, config.MAX_MEDIA_COUNT, access_token);
   logger.info('URL: ' + url);
 
   request.get({ url: url, json: true }, function(err, response) {
