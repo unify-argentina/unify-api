@@ -467,7 +467,7 @@ userRoutes.get('/:user_id/media', mediaController.getMedia);
 userRoutes.post('/:user_id/media/like', mediaController.like);
 
 /**
- * @api {delete} /api/user/:user_id/media/like Dar unlike
+ * @api {post} /api/user/:user_id/media/like Dar unlike
  * @apiGroup Usuarios
  *
  * @apiHeader {String} Authorization Bearer token
@@ -492,7 +492,7 @@ userRoutes.post('/:user_id/media/like', mediaController.like);
  * @apiSuccessExample Respuesta valida
  *     HTTP/1.1 200 OK
  */
-userRoutes.delete('/:user_id/media/like', mediaController.unlike);
+userRoutes.post('/:user_id/media/unlike', mediaController.unlike);
 
 // Rutas de un círculo
 userRoutes.use('/:user_id/circle', require('../circle'));
