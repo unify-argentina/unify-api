@@ -20,7 +20,7 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
 
   // Validamos errores
   if (req.validationErrors()) {
-    logger.warn('Validation errors: ' + req.validationErrors());
+    logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
     return res.status(400).send({ errors: req.validationErrors()});
   }
 

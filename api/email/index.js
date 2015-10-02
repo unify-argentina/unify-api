@@ -14,7 +14,7 @@ emailRoutes.param('email_id', function(req, res, next, emailId) {
 
   // Validamos errores
   if (req.validationErrors()) {
-    logger.warn('Validation errors: ' + req.validationErrors());
+    logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
     return res.status(400).send({ errors: req.validationErrors() });
   }
   else {

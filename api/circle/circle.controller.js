@@ -144,7 +144,7 @@ var validateParams = function(req, res) {
 
   // Validamos errores
   if (req.validationErrors()) {
-    logger.warn('Validation errors: ' + req.validationErrors());
+    logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
     return res.status(400).send({ errors: req.validationErrors()});
   }
 };
@@ -154,9 +154,10 @@ var saveCircleData = function(req, res, circle, foundCircle) {
   circle.name = req.body.name;
   circle.parent = req.body.parent_id;
   circle.picture = req.body.picture;
-  var ancestors = [req.body.parent_id];
+  var ancestors = [foundCircle._id];
   ancestors.push.apply(ancestors, foundCircle.ancestors);
   circle.ancestors = ancestors;
+  circle.hook_enabled = true;
   circle.save(function(err) {
     if (err) {
       logger.err(err);

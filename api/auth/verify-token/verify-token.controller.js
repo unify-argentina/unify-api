@@ -21,7 +21,7 @@ module.exports.verifyToken = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
+      logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
       return res.status(400).send({ errors: req.validationErrors() });
     }
     // Si el token es un string, lo buscamos en la tabla

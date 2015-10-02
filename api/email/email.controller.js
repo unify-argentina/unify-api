@@ -136,7 +136,7 @@ module.exports.create = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
+      logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
       return res.status(400).send({ errors: req.validationErrors() });
     }
 
@@ -193,7 +193,7 @@ module.exports.markEmailSeen = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
+      logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
       return res.status(400).send({ errors: req.validationErrors() });
     }
     else {
@@ -211,7 +211,7 @@ module.exports.markEmailUnseen = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
+      logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
       return res.status(400).send({ errors: req.validationErrors() });
     }
     else {
@@ -244,7 +244,7 @@ module.exports.trash = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
+      logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
       return res.status(400).send({ errors: req.validationErrors() });
     }
     else {
@@ -262,7 +262,7 @@ module.exports.untrash = function (req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
+      logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
       return res.status(400).send({ errors: req.validationErrors() });
     }
     else {

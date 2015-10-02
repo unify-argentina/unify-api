@@ -23,7 +23,7 @@ module.exports.login = function(req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
+      logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
       return res.status(400).send({ errors: req.validationErrors() });
     }
 
@@ -67,7 +67,7 @@ module.exports.signup = function(req, res) {
 
     // Validamos errores
     if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
+      logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
       return res.status(400).send({ errors: req.validationErrors() });
     }
 
