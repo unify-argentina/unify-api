@@ -27,6 +27,8 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
   // Buscamos que el contacto pedido pertenezca al usuario loggeado
   Contact.findOne({ _id: contactId, user: req.user_id })
     .populate('user', User.socialFields())
+    .populate('parents.circle')
+    .populate('parents.ancestors')
     .exec(function (err, contact) {
     if (err || !contact) {
       logger.warn("You are trying to find a contact=" + contactId + " that doesn't belong to you");

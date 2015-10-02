@@ -55,6 +55,9 @@ module.exports.create = function(req, res) {
 module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
+
+    req.contact.user = undefined;
+
     return res.send({ contact: req.contact });
   });
 };
