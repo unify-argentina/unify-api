@@ -50,13 +50,22 @@ module.exports.getById = function(req, res) {
         return res.status(400).send({ errors: [{ msg: 'Hubo un error al encontrar contactos para el círculo especificado' }] });
       }
       else {
-        var contactsObject = {
-          contacts: contacts,
-          empty_circle: contacts.length === 0
-        };
-        var result = _.merge(contactsObject, req.circle.toJSON());
-        result.user = undefined;
-        return res.send({ circle: result });
+        // Luego buscamos la cantidad de contactos que lo tengan como ancestro para enviar el empty_circle
+        Contact.count({ 'parents.ancestors' : req.circle._id, user: req.user_id }, function(err, count) {
+          if (err) {
+            logger.warn('Could not count subcontacts for circle=' + req.circle._id);
+            return res.status(400).send({ errors: [{ msg: 'Hubo un error al encontrar contactos para el círculo especificado' }] });
+          }
+          else {
+            var contactsObject = {
+              contacts: contacts,
+              empty_circle: count === 0
+            };
+            var result = _.merge(contactsObject, req.circle.toJSON());
+            result.user = undefined;
+            return res.send({ circle: result });
+          }
+        });
       }
     });
   });
@@ -88,17 +97,18 @@ module.exports.update = function (req, res) {
     }
     // Sino, encontramos el circulo padre, verificamos que pertenezca al usuario y lo actualizamos
     else {
+      // TODO validar que haya venido el parent_id y q no sea hijo del círculo a modificar
       Circle.findOne({ _id: req.body.parent_id, user: req.user_id })
         .populate('user')
         .exec(function(err, parentCircle) {
-          if (err || !parentCircle) {
-            logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user_id);
-            return res.status(400).send({ errors: [{ msg: 'El círculo padre no existe o no le pertenece al usuario actual' }] });
-          }
-          else {
-            saveCircleData(req, res, req.circle, parentCircle);
-          }
-        });
+        if (err || !parentCircle) {
+          logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user_id);
+          return res.status(400).send({ errors: [{ msg: 'El círculo padre no existe o no le pertenece al usuario actual' }] });
+        }
+        else {
+          saveCircleData(req, res, req.circle, parentCircle);
+        }
+      });
     }
   });
 };

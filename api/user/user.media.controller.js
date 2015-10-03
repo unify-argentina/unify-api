@@ -172,7 +172,6 @@ var doToggleLike = function(req, res, user, toggleLike) {
   function(err) {
     if (err) {
       logger.warn('Error giving like ' + err);
-      // TODO msg
       return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar darle like a un determinado contenido' }] });
     }
     else {
