@@ -51,13 +51,24 @@ module.exports.getMedia = function(access_token, twitterId, callback) {
 
 var mapMedia = function(tweet, callback) {
 
+  // Si es un retweet, tenemos que agarrar el texto original del tweet porque puede llegar a truncarse
+  var text = '';
+  if (tweet.retweeted_status) {
+    var retweet = tweet.retweeted_status;
+    text = 'RT @' + retweet.user.screen_name + ': ' + retweet.text;
+  }
+  else {
+    text = tweet.text;
+  }
+
+  logger.debug('Tweet: ' + JSON.stringify(tweet));
   var mappedMedia = {
     provider: 'twitter',
     id: tweet.id_str || '',
     created_time: moment(tweet.created_at, TWITTER_DATE_FORMAT, 'en').unix() || '',
     link: TWITTER_STATUS_URL + tweet.id_str || '',
     likes: tweet.favorite_count,
-    text: tweet.text,
+    text: text,
     user_has_liked: tweet.favorited
   };
 
