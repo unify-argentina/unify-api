@@ -35,9 +35,9 @@ define({ "api": [
     ]
   },
   {
-    "type": "get",
-    "url": "/api/sign?file_type=type",
-    "title": "Obtener URL de archivo",
+    "type": "post",
+    "url": "/api/file",
+    "title": "Subir archivo",
     "group": "Archivos",
     "header": {
       "fields": {
@@ -64,10 +64,10 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "<p>String</p> ",
+            "type": "<p>File</p> ",
             "optional": false,
-            "field": "file_type",
-            "description": "<p>El Content-Type del archivo a subir</p> "
+            "field": "file",
+            "description": "<p>Archivo a subir</p> "
           }
         ]
       }
@@ -79,22 +79,15 @@ define({ "api": [
             "group": "Success 200",
             "type": "<p>String</p> ",
             "optional": false,
-            "field": "signed_request",
-            "description": "<p>Request firmada por Amazon</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
             "field": "url",
-            "description": "<p>URL del archivo final</p> "
+            "description": "<p>URL del archivo subido a Amazon</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK\n{\n    \"signed_request\": \"https://unifyargentina.s3-us-west-2.amazonaws.com/fb3.png?Content-Type=imag…a5d06b2ef11e321&X-Amz-SignedHeaders=host%3Bx-amz-acl&x-amz-acl=public-read\",\n    \"url\" : \"https://unifyargentina.s3.amazonaws.com/fb3.png\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"url\": \"https://unifyargentina.s3-us-west-2.amazonaws.com/56106d1b0b6074091bed5bf8_1444003759_contacto.png\"\n}",
           "type": "json"
         }
       ]
@@ -102,10 +95,10 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "api/files/index.js",
     "groupTitle": "Archivos",
-    "name": "GetApiSignFile_typeType",
+    "name": "PostApiFile",
     "sampleRequest": [
       {
-        "url": "http://api.myunify.io/api/sign?file_type=type"
+        "url": "http://api.myunify.io/api/file"
       }
     ]
   },
@@ -2586,85 +2579,6 @@ define({ "api": [
     ]
   },
   {
-    "type": "delete",
-    "url": "/api/user/:user_id/media/like",
-    "title": "Dar unlike",
-    "group": "Usuarios",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>Id del usuario</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": true,
-            "field": "facebook_media_id",
-            "description": "<p>Id del contenido de Facebook a darle unlike</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": true,
-            "field": "twitter_media_id",
-            "description": "<p>Id del contenido de Twitter a darle unfav</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Ejemplo de request",
-          "content": "{\n  \"facebook_media_id\": \"10205843678664227\",\n  \"twitter_media_id\": \"581605355672715264\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "description": "<p>Aclaración: si bien los ids de los contenidos son opcionales, al menos uno es requerido para poder darle unlike en esa red social</p> ",
-    "success": {
-      "examples": [
-        {
-          "title": "Respuesta valida",
-          "content": "HTTP/1.1 200 OK",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/user/index.js",
-    "groupTitle": "Usuarios",
-    "name": "DeleteApiUserUser_idMediaLike",
-    "sampleRequest": [
-      {
-        "url": "http://api.myunify.io/api/user/:user_id/media/like"
-      }
-    ]
-  },
-  {
     "type": "get",
     "url": "/api/user/:user_id",
     "title": "Obtener usuario",
@@ -2946,6 +2860,85 @@ define({ "api": [
       ]
     },
     "description": "<p>Aclaración: si bien los ids de los contenidos son opcionales, al menos uno es requerido para poder darle like en esa red social</p> ",
+    "success": {
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "PostApiUserUser_idMediaLike",
+    "sampleRequest": [
+      {
+        "url": "http://api.myunify.io/api/user/:user_id/media/like"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/api/user/:user_id/media/like",
+    "title": "Dar unlike",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "facebook_media_id",
+            "description": "<p>Id del contenido de Facebook a darle unlike</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "twitter_media_id",
+            "description": "<p>Id del contenido de Twitter a darle unfav</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"facebook_media_id\": \"10205843678664227\",\n  \"twitter_media_id\": \"581605355672715264\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Aclaración: si bien los ids de los contenidos son opcionales, al menos uno es requerido para poder darle unlike en esa red social</p> ",
     "success": {
       "examples": [
         {

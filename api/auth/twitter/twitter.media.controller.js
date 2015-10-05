@@ -61,7 +61,6 @@ var mapMedia = function(tweet, callback) {
     text = tweet.text;
   }
 
-  logger.debug('Tweet: ' + JSON.stringify(tweet));
   var mappedMedia = {
     provider: 'twitter',
     id: tweet.id_str || '',
