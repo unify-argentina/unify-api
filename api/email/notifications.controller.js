@@ -33,7 +33,7 @@ module.exports.sendSignupEmailToUser = function(user) {
   verifyTokenController.createVerificationToken(user, function(err, verifyToken) {
     if (!err && verifyToken) {
 
-      var html = util.format('<a href="%s/auth/verify/%s">Verificar cuenta</a>', config.BASE_API_URL, verifyToken.token);
+      var html = util.format('<a href="%s/#/auth/verify/%s">Verificar cuenta</a>', config.BASE_CLI_URL, verifyToken.token);
       logger.debug('Verify token HTML: ' + html);
       var mailOptions = {
         from: 'Unify <unify.argentina@gmail.com>',
@@ -64,7 +64,7 @@ module.exports.sendVerifyEmailToUser = function(user) {
   verifyTokenController.createVerificationToken(user, function(err, verifyToken) {
     if (!err && verifyToken) {
 
-      var html = util.format('<a href="%s/auth/verify/%s">Verificar cuenta</a>', config.BASE_API_URL, verifyToken.token);
+      var html = util.format('<a href="%s/#/auth/verify/%s">Verificar cuenta</a>', config.BASE_CLI_URL, verifyToken.token);
       logger.debug('Verify token HTML: ' + html);
       var mailOptions = {
         from: 'Unify <unify.argentina@gmail.com>',

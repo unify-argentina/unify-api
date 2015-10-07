@@ -13,7 +13,7 @@ module.exports = {
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || 'Amazon secret access key',
 
   // Base URL
-  BASE_API_URL: process.env.BASE_API_URL || 'http://localhost:8080',
+  BASE_CLI_URL: process.env.BASE_CLI_URL || 'http://localhost:9000',
 
   // Accepted origins
   CROSS_DOMAIN_URLS: ['http://localhost:9000', 'http://127.0.0.1:9000', 'http://www.myunify.io', 'http://test-unify.herokuapp.com'],
