@@ -39,7 +39,7 @@ var login = function(callback) {
 
 describe('Circles API', function() {
 
-  before(function (done) {
+  before(function(done) {
     mongoose.connect(config.MONGODB_TEST);
     User.remove().exec(function(err) {
       User.create({
@@ -52,7 +52,7 @@ describe('Circles API', function() {
     });
   });
 
-  after(function (done) {
+  after(function(done) {
     mongoose.connection.close(done);
   });
 
@@ -264,7 +264,7 @@ describe('Circles API', function() {
             .put(util.format(CIRCLES_PATH, user._id, circle._id))
             .set('Authorization', 'Bearer ' + token)
             .send({name: {"$gt": "undefined"}, parent_id: {"$gt": "undefined"}})
-            .end(function (err, data) {
+            .end(function(err, data) {
               data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("You're trying to send invalid data types");
               done();
@@ -280,7 +280,7 @@ describe('Circles API', function() {
             .put(util.format(CIRCLES_PATH, user._id, circle._id))
             .set('Authorization', 'Bearer ' + token)
             .send({name: 'Second', parent_id: 'asdasdasdadasd'})
-            .end(function (err, data) {
+            .end(function(err, data) {
               data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal("Paren't circle doesn't exists or doesn't belong to current user");
               done();

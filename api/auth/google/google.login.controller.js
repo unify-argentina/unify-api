@@ -174,7 +174,8 @@ var handleNotAuthenticatedUser = function(res, googleProfile, refresh_token) {
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingGoogleUser) {
       logger.info('Existing Google user: ' + existingGoogleUser.toString());
-      return jwt.createJWT(res, existingGoogleUser);
+      linkGoogleData(existingGoogleUser, googleProfile, refresh_token);
+      return saveUser(res, existingGoogleUser);
     }
     else {
       User.findOne({ 'email': googleProfile.email })
@@ -206,7 +207,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, refresh_token) {
           linkGoogleData(user, googleProfile, refresh_token);
           user.save(function(err) {
             if (err) {
-              logger.error('Google Error saving on DB: ' + err);
+              logger.error('Google Error saving on DB: ' + JSON.stringify(err));
               return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
             }
             else {
@@ -225,7 +226,7 @@ var handleNotAuthenticatedUser = function(res, googleProfile, refresh_token) {
 var saveUser = function(res, user) {
   user.save(function(err) {
     if (err) {
-      logger.error('Google Error saving on DB: ' + err);
+      logger.error('Google Error saving on DB: ' + JSON.stringify(err));
       return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
     }
     else {

@@ -11,7 +11,7 @@ var multer  = require('multer');
 var config = require('../../config');
 var logger = require('../../config/logger');
 
-var upload = multer({ limits: { fileSize: 10 * 1024 * 1024 }, storage: multer.diskStorage({}) });
+var upload = multer({ limits: { fileSize: config.AWS_MAX_FILE_SIZE }, storage: multer.diskStorage({}) });
 
 /**
  * @api {post} /api/file Subir archivo
@@ -24,6 +24,8 @@ var upload = multer({ limits: { fileSize: 10 * 1024 * 1024 }, storage: multer.di
  *     }
  *
  * @apiParam {File} file Archivo a subir
+ *
+ * @apiDescription Aclaración: Máximo tamaño de archivo: 50 Mb.
  *
  * @apiSuccess {String} url URL del archivo subido a Amazon
  *

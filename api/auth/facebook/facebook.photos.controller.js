@@ -9,6 +9,7 @@ var util = require('util');
 var request = require('request');
 var async = require('async');
 var moment = require('moment');
+var fs = require('fs');
 var logger = require('../../../config/logger');
 var config = require('../../../config');
 var facebookUtils = require('./facebook.utils');
@@ -16,6 +17,7 @@ var facebookErrors = require('./facebook.errors');
 
 // constantes
 var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?%sfields=id,name,created_time,album,images,link,likes.limit(0).summary(true),comments.limit(0).summary(true)&limit=%s&access_token=%s';
+var USER_PUBLISH_PHOTO_URL = facebookUtils.getBaseURL() + '/me/photos?access_token=%s';
 
 // Devuelve las fotos del usuario pasado por parámetro
 module.exports.getPhotos = function(access_token, facebookId, uploaded, callback) {
@@ -52,8 +54,30 @@ var mapPhoto = function(facebookMedia, callback) {
     likes: facebookMedia.likes.summary.total_count || 0,
     media_url: facebookMedia.images[0].source,
     text: facebookMedia.name || ''
-    //user_has_liked: facebookMedia.favorited || false
   };
 
   callback(null, mappedMedia);
+};
+
+// Sube una foto a Facebook
+module.exports.publishPhoto = function(access_token, text, file, callback) {
+
+  var url = util.format(USER_PUBLISH_PHOTO_URL, access_token);
+  logger.info('URL: ' + url);
+
+  var formData = {
+    caption: text,
+    source: fs.createReadStream(file.path)
+  };
+
+  request.post({ url: url, formData: formData, json: true }, function(err, response) {
+
+    var result = facebookErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      callback(null);
+    }
+  });
 };

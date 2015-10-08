@@ -72,9 +72,9 @@ module.exports.getById = function(req, res) {
 };
 
 // Se encarga de actualizar el circulo en base al id que se le pase por parámetro
-module.exports.update = function (req, res) {
+module.exports.update = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     validateParams(req, res);
 
     // Si el círculo a modificar es el principal, devolvemos error
@@ -121,7 +121,7 @@ module.exports.delete = function(req, res) {
     // no es el círculo principal del usuario
     User.findOne({ _id: req.user_id })
       .populate('main_circle')
-      .exec(function (err, user) {
+      .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
@@ -186,9 +186,9 @@ var saveCircleData = function(req, res, circle, foundCircle) {
 };
 
 // Este metodo devuelve los subcirculos en una estructura de arbol del circulo pedido
-module.exports.getTree = function (req, res) {
+module.exports.getTree = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     Circle.find({ ancestors: req.circle._id }, 'picture parent name _id')
       .lean()
       .exec(function(err, circles) {

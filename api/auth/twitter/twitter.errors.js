@@ -28,7 +28,7 @@ module.exports.hasError = function(err, response) {
   var result = { hasError: false, error: '' };
 
   if (err) {
-    logger.error('Twitter Error: ' + err);
+    logger.error('Twitter Error: ' + JSON.stringify(err));
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Twitter');
   }

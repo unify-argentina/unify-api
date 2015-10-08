@@ -43,9 +43,9 @@ module.exports.sendSignupEmailToUser = function(user) {
         html: html
       };
 
-      transporter.sendMail(mailOptions, function(error, info) {
-        if (error) {
-          logger.error('Error sending signup email to user ' + user + ': ' + error);
+      transporter.sendMail(mailOptions, function(err, info) {
+        if (err) {
+          logger.error('Error sending signup email to user ' + user + ': ' + JSON.stringify(err));
         }
         else {
           logger.info('Signup email sent to user ' + user + ': ' + info.response);
@@ -53,7 +53,7 @@ module.exports.sendSignupEmailToUser = function(user) {
       });
     }
     else {
-      logger.error('Error creating signup verify token for user: ' + user + ': ' + err);
+      logger.error('Error creating signup verify token for user: ' + user + ': ' + JSON.stringify(err));
     }
   });
 };
@@ -74,9 +74,9 @@ module.exports.sendVerifyEmailToUser = function(user) {
         html: html
       };
 
-      transporter.sendMail(mailOptions, function(error, info) {
-        if (error) {
-          logger.error('Error sending verify email to user ' + user + ': ' + error);
+      transporter.sendMail(mailOptions, function(err, info) {
+        if (err) {
+          logger.error('Error sending verify email to user ' + user + ': ' + JSON.stringify(err));
         }
         else {
           logger.info('Verify email sent to user ' + user + ': ' + info.response);
@@ -84,7 +84,7 @@ module.exports.sendVerifyEmailToUser = function(user) {
       });
     }
     else {
-      logger.error('Error creating verify token for user: ' + user + ': ' + err);
+      logger.error('Error creating verify token for user: ' + user + ': ' + JSON.stringify(err));
     }
   });
 };
@@ -95,7 +95,7 @@ module.exports.sendRecoveryPasswordEmailToUser = function(user) {
   user.password = password;
   user.save(function(err) {
     if (err) {
-      logger.error('Error reseting password for user: ' + user + ': ' + err);
+      logger.error('Error reseting password for user: ' + user + ': ' + JSON.stringify(err));
     }
     else {
       var mailOptions = {
@@ -105,9 +105,9 @@ module.exports.sendRecoveryPasswordEmailToUser = function(user) {
         html: 'Tu nueva contraseña es ' + password + '. Por favor cámbiala cuando ingreses nuevamente a Unify por alguna que recuerdes'
       };
 
-      transporter.sendMail(mailOptions, function(error, info) {
-        if (error) {
-          logger.error('Error sending recovery password email to user ' + user + ': ' + error);
+      transporter.sendMail(mailOptions, function(err, info) {
+        if (err) {
+          logger.error('Error sending recovery password email to user ' + user + ': ' + JSON.stringify(err));
         }
         else {
           logger.info('Recovery password email sent to user ' + user + ': ' + info.response);

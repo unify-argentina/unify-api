@@ -16,11 +16,11 @@ var Contact = require('../contact/contact.model');
 var User = require('../user/user.model');
 
 // Devuelve el contenido de los contactos hijos directos e indirectos (hijos de algún subcírculo)
-module.exports.getMedia = function (req, res) {
+module.exports.getMedia = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
 
-    User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
+    User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
@@ -36,7 +36,7 @@ module.exports.getMedia = function (req, res) {
             // Si no hubo error, vamos a buscar el contenido de cada contacto encontrado
             doGetMedia(res, user, contacts, function(err, results) {
               if (err) {
-                logger.warn('Error searching media ' + err);
+                logger.warn('Error searching media ' + JSON.stringify(err));
                 return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del círculo especificado' }] });
               }
               else {

@@ -400,7 +400,7 @@ module.exports.toggleEmailSeen = function(refresh_token, emailIds, toggle, callb
           body.addLabelIds = ['UNREAD'];
         }
 
-        authenticatedRequest.post({ url: url, json: body }, function (err, response) {
+        authenticatedRequest.post({ url: url, json: body }, function(err, response) {
           var result = googleErrors.hasError(err, response);
           if (result.hasError) {
             callback(result.error);

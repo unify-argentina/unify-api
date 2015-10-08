@@ -46,7 +46,7 @@ var doGetFriends = function(res, user) {
   // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
   function(err, results) {
     if (err) {
-      logger.warn('Error searching friends ' + err);
+      logger.warn('Error searching friends ' + JSON.stringify(err));
       return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener los amigos del usuario actual' }] });
     }
     else {

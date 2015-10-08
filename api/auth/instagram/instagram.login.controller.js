@@ -158,7 +158,8 @@ var handleNotAuthenticatedUser = function(res, instagramProfile, access_token) {
     .exec(function(err, existingInstagramUser) {
     if (existingInstagramUser) {
       logger.info('Existing Instagram user: ' + existingInstagramUser.toString());
-      return jwt.createJWT(res, existingInstagramUser);
+      linkInstagramData(existingInstagramUser, instagramProfile, access_token);
+      return saveUser(res, existingInstagramUser);
     }
     // Si no encuentra a uno, no tenemos forma de saber el email de Instagram, ya que es algo que la API
     // no lo provee, entonces damos de alta un nuevo usuario de Unify sin email

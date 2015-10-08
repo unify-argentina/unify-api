@@ -49,10 +49,10 @@ circleSchema.post('save', function(circle, next) {
         circles: updateCircles.bind(null, circle, self),
         contacts: updateContacts.bind(null, circle)
       },
-      function (err, results) {
+      function(err, results) {
         // Cuando terminamos de procesar todo, volvemos a setear el hook_enabled en false
         self.hook_enabled = false;
-        self.save(function (err) {
+        self.save(function(err) {
           next();
         });
       });
@@ -60,7 +60,7 @@ circleSchema.post('save', function(circle, next) {
     else {
       // Si está habilitado y es nuevo, el círculo se creó recientemente, por lo que tenemos que deshabilitarlo y volver
       self.hook_enabled = false;
-      self.save(function (err) {
+      self.save(function(err) {
         next();
       });
     }

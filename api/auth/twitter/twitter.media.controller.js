@@ -9,6 +9,7 @@ var util = require('util');
 var request = require('request');
 var async = require('async');
 var moment = require('moment');
+var fs = require('fs');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
 var twitterOAuthHelper = require('./twitter.auth.helper');
@@ -21,6 +22,9 @@ var Contact = require('../../contact/contact.model');
 var USER_FAV_URL = 'https://api.twitter.com/1.1/favorites/create.json?id=%s';
 var USER_UNFAV_URL = 'https://api.twitter.com/1.1/favorites/destroy.json?id=%s';
 var USER_MEDIA_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+var USER_PUBLISH_CONTENT_URL = 'https://api.twitter.com/1.1/statuses/update.json?status=%s%s';
+var USER_UPLOAD_MEDIA_URL = 'https://upload.twitter.com/1.1/media/upload.json';
+
 var TWITTER_DATE_FORMAT = 'dd MMM DD HH:mm:ss ZZ YYYY';
 var TWITTER_STATUS_URL = 'https://twitter.com/statuses/';
 
@@ -111,6 +115,7 @@ module.exports.toggleLike = function(access_token, twitterMediaId, toggleLike, c
   logger.info('URL: ' + url);
 
   request.post({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), json: true }, function(err, response) {
+
     var result = twitterErrors.hasError(err, response);
     if (result.hasError) {
       callback(result.error);
@@ -119,4 +124,80 @@ module.exports.toggleLike = function(access_token, twitterMediaId, toggleLike, c
       callback(null);
     }
   });
+};
+
+// Publica un Tweet
+module.exports.publishContent = function(access_token, file, text, callback) {
+
+  // Si es solo texto, lo publicamos como un tweet sólo con texto
+  if (file) {
+    // Video
+    if (file.mimetype.indexOf('image') < 0) {
+      doPublishVideoTweet(access_token, text, file, function(err) {
+        callback(err);
+      });
+    }
+    // Foto
+    else {
+      doPublishPhotoTweet(access_token, text, file, function(err) {
+        callback(err);
+      });
+    }
+  }
+  else {
+    doPublishTweet(access_token, text, '', function(err) {
+      callback(err);
+    });
+  }
+};
+
+// Pubica el tweet a Twitter
+var doPublishTweet = function(access_token, text, mediaId, callback) {
+
+  var mediaIds = mediaId !== '' && mediaId !== undefined ? '&media_ids=' + mediaId : '';
+  var url = util.format(USER_PUBLISH_CONTENT_URL, encodeURIComponent(text), mediaIds);
+  logger.info('URL: ' + url);
+
+  request.post({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), json: true }, function(err, response) {
+
+    var result = twitterErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      callback(null);
+    }
+  });
+};
+
+// Primero sube la foto y luego publica el tweet con ese media id
+var doPublishPhotoTweet = function(access_token, text, file, callback) {
+
+  var url = USER_UPLOAD_MEDIA_URL;
+  logger.info('URL: ' + url);
+
+  var rawFile = fs.createReadStream(file.path);
+
+  var formData = {
+    media_data: new Buffer(rawFile).toString('base64'),
+    media: rawFile
+  };
+
+  request.post({ url: url, formData: formData, oauth: twitterOAuthHelper.getOauthParam(access_token), json: true }, function(err, response) {
+
+    var result = twitterErrors.hasError(err, response);
+    if (result.hasError) {
+      callback(result.error);
+    }
+    else {
+      doPublishTweet(access_token, text, response.body.media_id_string, function(err) {
+        callback(err);
+      });
+    }
+  });
+};
+
+// Primero sube el video y luego publica el tweet con ese media id
+var doPublishVideoTweet = function(access_token, text, file, callback) {
+  callback(null);
 };

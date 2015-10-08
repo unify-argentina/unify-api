@@ -59,7 +59,7 @@ var isString = function(possibleString) {
   return typeof possibleString === 'string';
 };
 
-var notEquals = function (str, comparison) {
+var notEquals = function(str, comparison) {
   return str !== comparison;
 };
 

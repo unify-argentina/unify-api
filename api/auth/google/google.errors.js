@@ -35,7 +35,7 @@ module.exports.hasError = function(err, response) {
   var result = { hasError: false, error: '' };
 
   if (err) {
-    logger.error('Google Error: ' + err);
+    logger.error('Google Error: ' + JSON.stringify(err));
     result.hasError = true;
     result.error = util.format(errors.SOCIAL_ERROR, 'Google');
   }

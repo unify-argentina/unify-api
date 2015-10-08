@@ -11,6 +11,7 @@ module.exports = {
   AWS_BUCKET: process.env.AWS_BUCKET || 'unifyargentina',
   AWS_REGION: process.env.AWS_REGION || 'us-west-2',
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || 'Amazon secret access key',
+  AWS_MAX_FILE_SIZE: process.env.AWS_MAX_FILE_SIZE || 50 * 1024 * 1024,
 
   // Base URL
   BASE_CLI_URL: process.env.BASE_CLI_URL || 'http://localhost:9000',

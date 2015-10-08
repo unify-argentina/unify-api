@@ -9,7 +9,11 @@ var userRoutes = require('express').Router();
 var userController = require('./user.controller');
 var mediaController = require('./user.media.controller');
 var friendsController = require('./user.friends.controller');
+var multer  = require('multer');
+var config = require('../../config');
 var logger = require('../../config/logger');
+
+var upload = multer({ limits: { fileSize: config.AWS_MAX_FILE_SIZE }, storage: multer.diskStorage({}) });
 
 // modelos
 var User = require('./user.model.js');
@@ -493,6 +497,8 @@ userRoutes.post('/:user_id/media/like', mediaController.like);
  *     HTTP/1.1 200 OK
  */
 userRoutes.post('/:user_id/media/unlike', mediaController.unlike);
+
+userRoutes.post('/:user_id/media', upload.single('file'), mediaController.publishContent);
 
 // Rutas de un círculo
 userRoutes.use('/:user_id/circle', require('../circle'));

@@ -16,9 +16,9 @@ aws.config.update({ region: config.AWS_REGION, signatureVersion: 'v4' });
 var s3 = new aws.S3();
 
 // Sube los archivos a Amazon S3 y devuelve error o la url pública del archivo
-module.exports.uploadFile = function (req, res) {
+module.exports.uploadFile = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
 
     var userId = req.user_id;
     var date = moment().unix();
@@ -33,9 +33,9 @@ module.exports.uploadFile = function (req, res) {
       ACL: 'public-read'
     };
 
-    s3.upload(options).send(function (err, data) {
+    s3.upload(options).send(function(err, data) {
       if (err) {
-        logger.error('There was an error trying to upload to Amazon: ' + err);
+        logger.error('There was an error trying to upload to Amazon: ' + JSON.stringify(err));
         return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar subir la foto' }] });
       }
       else {

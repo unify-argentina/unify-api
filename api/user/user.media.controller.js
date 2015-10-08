@@ -17,11 +17,11 @@ var errorHelper = require('../auth/util/error.helper.js');
 var User = require('../user/user.model');
 
 // Obtiene el contenido del usuario
-module.exports.getMedia = function (req, res) {
+module.exports.getMedia = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
 
-    User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
+    User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
         return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
@@ -43,7 +43,7 @@ var doGetMedia = function(res, user) {
   // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
   function(err, results) {
     if (err) {
-      logger.warn('Error searching media ' + err);
+      logger.warn('Error searching media ' + JSON.stringify(err));
       return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del usuario actual' }] });
     }
     else {
@@ -117,17 +117,17 @@ var sendMediaResponseFromResults = function(res, results, userId) {
 };
 
 // Pone me gusta o marca como favorito un tweet
-module.exports.like = function (req, res) {
+module.exports.like = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     toggleLike(req, res, true);
   });
 };
 
 // Saca el me gusta o desmarca como favorito un tweet
-module.exports.unlike = function (req, res) {
+module.exports.unlike = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     toggleLike(req, res, false);
   });
 };
@@ -149,7 +149,7 @@ var toggleLike = function(req, res, toggleLike) {
     return res.status(400).send({ errors: [{ msg: 'Tenes que proveer al menos un media id para darle like' }] });
   }
 
-  User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
+  User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
     if (err || !user) {
       logger.warn('User not found: ' + req.user_id);
       return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
@@ -171,7 +171,7 @@ var doToggleLike = function(req, res, user, toggleLike) {
   // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
   function(err) {
     if (err) {
-      logger.warn('Error giving like ' + err);
+      logger.warn('Error giving like ' + JSON.stringify(err));
       return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar darle like a un determinado contenido' }] });
     }
     else {
@@ -211,6 +211,72 @@ var toggleTwitterLike = function(user, twitterMediaId, toggleLike, callback) {
     });
   }
   // Si no tiene linkeada la cuenta de Twitter o no se pasó un twitter_media_id, no devolvemos nada
+  else {
+    callback(null);
+  }
+};
+
+// Publica el contenido en las redes sociales pasadas por parámetro
+module.exports.publishContent = function(req, res) {
+
+  process.nextTick(function() {
+    req.assert('facebook', 'Facebook válido').isBoolean();
+    req.assert('twitter', 'Twitter válido').isBoolean();
+    req.assert('text', 'Texto válido').optional().isString();
+
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + JSON.stringify(req.validationErrors()));
+      return res.status(400).send({ errors: req.validationErrors() });
+    }
+
+    User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
+      if (err || !user) {
+        logger.warn('User not found: ' + req.user_id);
+        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+      }
+      else {
+        doPublishContent(req, res, user);
+      }
+    });
+  });
+};
+
+// Efectivamente publica el contenido
+var doPublishContent = function(req, res, user) {
+  // Le pegamos a cada API
+  async.parallel({
+    facebook: publishFacebookContent.bind(null, user, req.file, req.body.text, req.body.facebook === 'true'),
+    twitter: publishTwitterContent.bind(null, user, req.file, req.body.text, req.body.twitter === 'true')
+  },
+  function(err) {
+    if (err) {
+      logger.warn('Error publishing content ' + JSON.stringify(err));
+      return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar subir contenido' }] });
+    }
+    else {
+      return res.sendStatus(200);
+    }
+  });
+};
+
+var publishFacebookContent = function(user, file, text, shouldPublish, callback) {
+  if (user.hasLinkedAccount('facebook') && shouldPublish) {
+    facebookMedia.publishContent(user.facebook.access_token, file, text, function(err) {
+      callback(err);
+    });
+  }
+  else {
+    callback(null);
+  }
+};
+
+var publishTwitterContent = function(user, file, text, shouldPublish, callback) {
+  if (user.hasLinkedAccount('twitter') && shouldPublish) {
+    twitterMedia.publishContent(user.twitter.access_token, file, text, function(err) {
+      callback(err);
+    });
+  }
   else {
     callback(null);
   }

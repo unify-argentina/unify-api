@@ -24,41 +24,41 @@ var EMAIL_FUNCTION_NAMES = {
 };
 
 // Lista los emails de la bandeja de entrada del usuario
-module.exports.listInbox = function (req, res) {
+module.exports.listInbox = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     list(req, res, EMAIL_FUNCTION_NAMES.INBOX);
   });
 };
 
 // Lista los emails enviados del usuario
-module.exports.listSent = function (req, res) {
+module.exports.listSent = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     list(req, res, EMAIL_FUNCTION_NAMES.SENT);
   });
 };
 
 // Lista los emails borradores del usuario
-module.exports.listDraft = function (req, res) {
+module.exports.listDraft = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     list(req, res, EMAIL_FUNCTION_NAMES.DRAFT);
   });
 };
 
 // Lista los emails eliminados del usuario
-module.exports.listTrash = function (req, res) {
+module.exports.listTrash = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     list(req, res, EMAIL_FUNCTION_NAMES.TRASH);
   });
 };
 
 // Se encarga de obtener los emails de la carpeta especificada en 'functionName'
-var list = function (req, res, functionName) {
+var list = function(req, res, functionName) {
 
-  User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
+  User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
     if (err || !user) {
       logger.warn('User not found: ' + req.user_id);
       return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
@@ -78,7 +78,7 @@ var doGetEmails = function(res, user, functionName) {
   // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
   function(err, results) {
     if (err) {
-      logger.warn('Error searching ' + functionName + ' emails ' + err);
+      logger.warn('Error searching ' + functionName + ' emails ' + JSON.stringify(err));
       return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener los emails' }] });
     }
     else {
@@ -124,9 +124,9 @@ var sendEmailResponseFromResults = function(res, results) {
 };
 
 // Envia un email con la cuenta de Google
-module.exports.create = function (req, res) {
+module.exports.create = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
 
     req.assert('subject', 'Asunto válido requerido').isString();
     req.assert('text', 'Texto válido requerido').isString();
@@ -167,9 +167,9 @@ var doCreateEmail = function(req, res, user) {
 };
 
 // Elimina el email
-module.exports.delete = function (req, res) {
+module.exports.delete = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
 
     findUserAndThen(req, function(err, user) {
       if (err) {
@@ -185,9 +185,9 @@ module.exports.delete = function (req, res) {
 };
 
 // Marca como leído un email
-module.exports.markEmailSeen = function (req, res) {
+module.exports.markEmailSeen = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
 
     req.assert('email_ids', 'Ids de los emails válidos requeridos').isStringArray();
 
@@ -203,9 +203,9 @@ module.exports.markEmailSeen = function (req, res) {
 };
 
 // Marca como no leído un email
-module.exports.markEmailUnseen = function (req, res) {
+module.exports.markEmailUnseen = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
 
     req.assert('email_ids', 'Ids de los emails válidos requeridos').isStringArray();
 
@@ -221,7 +221,7 @@ module.exports.markEmailUnseen = function (req, res) {
 };
 
 // Marca como leído / no leído un email
-var toggleEmailSeen = function (req, res, toggle) {
+var toggleEmailSeen = function(req, res, toggle) {
 
   findUserAndThen(req, function(err, user) {
     if (err) {
@@ -236,9 +236,9 @@ var toggleEmailSeen = function (req, res, toggle) {
 };
 
 // Mueve a la papelera de reciclaje un email
-module.exports.trash = function (req, res) {
+module.exports.trash = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
 
     req.assert('email_ids', 'Ids de los emails válidos requeridos').isStringArray();
 
@@ -254,9 +254,9 @@ module.exports.trash = function (req, res) {
 };
 
 // Saca de la papelera de reciclaje un email
-module.exports.untrash = function (req, res) {
+module.exports.untrash = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
 
     req.assert('email_ids', 'Ids de los emails válidos requeridos').isStringArray();
 
@@ -287,7 +287,7 @@ var toggleEmailTrash = function(req, res, toggle) {
 
 // Funcion que encuentra al usuario y chequea que tenga la cuenta de Google linkeada
 var findUserAndThen = function(req, callback) {
-  User.findOne({ _id: req.user_id }, User.socialFields(), function (err, user) {
+  User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
     if (err || !user) {
       logger.warn('User not found: ' + req.user_id);
       callback({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] }, null);

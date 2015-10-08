@@ -93,9 +93,9 @@ module.exports.update = function(req, res) {
 };
 
 // Actualiza la password del usuario
-module.exports.updatePassword = function (req, res) {
+module.exports.updatePassword = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     req.assert('password', 'Password válido requerido').isString();
     req.assert('password', 'Password debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
     req.assert('confirm_password', 'Confirmación de password válido requerido').isString();

@@ -103,7 +103,7 @@ module.exports.toggleLike = function(access_token, facebookMediaId, toggleLike, 
   logger.info('URL: ' + url);
 
   if (toggleLike) {
-    request.post({url: url, json: true}, function (err, response) {
+    request.post({ url: url, json: true }, function(err, response) {
       var result = facebookErrors.hasError(err, response);
       if (result.hasError) {
         callback(result.error);
@@ -122,6 +122,31 @@ module.exports.toggleLike = function(access_token, facebookMediaId, toggleLike, 
       else {
         callback(null);
       }
+    });
+  }
+};
+
+// Publica el contenido a Facebook
+module.exports.publishContent = function(access_token, file, text, callback) {
+
+  // Si es solo texto, lo publicamos como un estado
+  if (file) {
+    // Video
+    if (file.mimetype.indexOf('image') < 0) {
+      facebookVideos.publishVideo(access_token, text, file, function(err) {
+        callback(err);
+      });
+    }
+    // Foto
+    else {
+      facebookPhotos.publishPhoto(access_token, text, file, function(err) {
+        callback(err);
+      });
+    }
+  }
+  else {
+    facebookStatuses.publishStatus(access_token, text, function(err) {
+      callback(err);
     });
   }
 };

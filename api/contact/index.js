@@ -29,7 +29,7 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
     .populate('user', User.socialFields())
     .populate('parents.circle')
     .populate('parents.ancestors')
-    .exec(function (err, contact) {
+    .exec(function(err, contact) {
     if (err || !contact) {
       logger.warn("You are trying to find a contact=" + contactId + " that doesn't belong to you");
       return res.status(400).send({ errors: [{ msg: 'Estás queriendo acceder a un contacto que no te pertenece' }] });

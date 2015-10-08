@@ -171,7 +171,8 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingFacebookUser) {
       logger.info('Existing Facebook user: ' + existingFacebookUser.toString());
-      return jwt.createJWT(res, existingFacebookUser);
+      linkFacebookData(existingFacebookUser, facebookProfile, access_token);
+      return saveUser(res, existingFacebookUser);
     }
     else {
       User.findOne({ 'email': facebookProfile.email })
@@ -203,7 +204,7 @@ var handleNotAuthenticatedUser = function(res, facebookProfile, access_token) {
           linkFacebookData(user, facebookProfile, access_token);
           user.save(function(err) {
             if (err) {
-              logger.error('Facebook Error saving on DB: ' + err);
+              logger.error('Facebook Error saving on DB: ' + JSON.stringify(err));
               return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
             }
             else {

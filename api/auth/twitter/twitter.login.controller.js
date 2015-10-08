@@ -202,7 +202,8 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, access_token) {
     // pero no loggeado, generamos el token y se lo enviamos
     if (existingTwitterUser) {
       logger.info('Existing Twitter user: ' + existingTwitterUser.toString());
-      return jwt.createJWT(res, existingTwitterUser);
+      linkTwitterData(existingTwitterUser, twitterProfile, access_token);
+      return saveUser(res, existingTwitterUser);
     }
     // Si no encuentra a uno, no tenemos forma de saber el email de Twitter, ya que es algo que la API
     // no lo provee, entonces damos de alta un nuevo usuario de Unify sin email
@@ -222,7 +223,7 @@ var handleNotAuthenticatedUser = function(res, twitterProfile, access_token) {
 var saveUser = function(res, user) {
   user.save(function(err) {
     if (err) {
-      logger.error('Twitter Error saving on DB: ' + err);
+      logger.error('Twitter Error saving on DB: ' + JSON.stringify(err));
       return res.status(400).send({ errors: [{ msg: 'Hubo un error inesperado' }] });
     }
     else {

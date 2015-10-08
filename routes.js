@@ -4,7 +4,7 @@
 * */
 'use strict';
 
-module.exports = function (app) {
+module.exports = function(app) {
 
   // Rutas principales
   app.use('/api', require('./api'));

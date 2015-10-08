@@ -14,9 +14,9 @@ var VerifyToken = require('./verify-token.model');
 var User = require('../../user/user.model');
 
 // Verifica que el token pasado por parámetro sea válido
-module.exports.verifyToken = function (req, res) {
+module.exports.verifyToken = function(req, res) {
 
-  process.nextTick(function () {
+  process.nextTick(function() {
     req.assert('token', 'Token válido requerido').isString();
 
     // Validamos errores
@@ -34,7 +34,7 @@ module.exports.verifyToken = function (req, res) {
         else {
           User.findOne({ _id: verifyToken.user })
             .populate('main_circle')
-            .exec(function (err, user) {
+            .exec(function(err, user) {
             if (err || !user) {
               logger.warn('User not found: ' + req.user_id);
               return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });

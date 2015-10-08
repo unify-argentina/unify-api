@@ -42,7 +42,7 @@ var login = function(email, password, callback) {
 
 describe('Contacts API', function() {
 
-  before(function (done) {
+  before(function(done) {
     mongoose.connect(config.MONGODB_TEST);
     User.remove().exec(function(err) {
       User.create([{
@@ -76,7 +76,7 @@ describe('Contacts API', function() {
     });
   });
 
-  after(function (done) {
+  after(function(done) {
     mongoose.connection.close(done);
   });
 
@@ -401,7 +401,7 @@ describe('Contacts API', function() {
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
             .send({name: 234, picture: GOOGLE_URL, circles_ids: 234})
-            .end(function (err, data) {
+            .end(function(err, data) {
               data.res.statusCode.should.equal(400);
               var errors = data.res.body.errors;
               var error = errors[0];
@@ -419,7 +419,7 @@ describe('Contacts API', function() {
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
             .send({name: 234, picture: GOOGLE_URL, circles_ids: [{"$gt": "undefined"}]})
-            .end(function (err, data) {
+            .end(function(err, data) {
               data.res.statusCode.should.equal(400);
               data.res.body.errors[0].msg.should.equal('You must provide a string array of circles_ids');
               done();
@@ -435,7 +435,7 @@ describe('Contacts API', function() {
             .put(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
             .send({name: 234, picture: GOOGLE_URL, circles_ids: []})
-            .end(function (err, data) {
+            .end(function(err, data) {
               data.res.statusCode.should.equal(400);
               var errors = data.res.body.errors;
               var error = errors[0];
@@ -575,11 +575,11 @@ describe('Contacts API', function() {
 
     it('should allow to delete users contact', function(done) {
       login('unify.argentina2@gmail.com', 'This is not my real password', function(user, token) {
-        Contact.findOne({ name: 'Joaquin' }, function (err, contact) {
+        Contact.findOne({ name: 'Joaquin' }, function(err, contact) {
           request(API_URL)
             .delete(util.format(CONTACTS_PATH, user._id, contact._id))
             .set('Authorization', 'Bearer ' + token)
-            .end(function (err, data) {
+            .end(function(err, data) {
               data.res.statusCode.should.equal(200);
               data.res.body.contact.should.equal(contact._id.toString());
               done();
