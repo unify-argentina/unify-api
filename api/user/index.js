@@ -498,6 +498,34 @@ userRoutes.post('/:user_id/media/like', mediaController.like);
  */
 userRoutes.post('/:user_id/media/unlike', mediaController.unlike);
 
+/**
+ * @api {post} /api/user/:user_id/media Publicar contenido
+ * @apiGroup Usuarios
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {Boolean} facebook Determina si el contenido va a ser publicado o no a Facebook
+ * @apiParam {Boolean} twitter Determina si el contenido va a ser publicado o no a Twitter
+ * @apiParam {String} [text] El texto que va a contener el contenido
+ * @apiParam {File} [file] Archivo a subir
+ *
+ * @apiDescription Aclaración: Máximo tamaño de archivo: 50 Mb.
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *    {
+ *      "facebook": true,
+ *      "twitter": true,
+ *      "text": "Basta chicos"
+ *    }
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
 userRoutes.post('/:user_id/media', upload.single('file'), mediaController.publishContent);
 
 // Rutas de un círculo

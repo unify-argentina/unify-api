@@ -72,6 +72,7 @@
         ]
       }
     },
+    "description": "<p>Aclaración: Máximo tamaño de archivo: 50 Mb.</p> ",
     "success": {
       "fields": {
         "Success 200": [
@@ -2794,6 +2795,99 @@
     "filename": "api/user/index.js",
     "groupTitle": "Usuarios",
     "name": "GetApiUserUser_idMedia",
+    "sampleRequest": [
+      {
+        "url": "http://api.myunify.io/api/user/:user_id/media"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/api/user/:user_id/media",
+    "title": "Publicar contenido",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Boolean</p> ",
+            "optional": false,
+            "field": "facebook",
+            "description": "<p>Determina si el contenido va a ser publicado o no a Facebook</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Boolean</p> ",
+            "optional": false,
+            "field": "twitter",
+            "description": "<p>Determina si el contenido va a ser publicado o no a Twitter</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "text",
+            "description": "<p>El texto que va a contener el contenido</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>File</p> ",
+            "optional": true,
+            "field": "file",
+            "description": "<p>Archivo a subir</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Ejemplo de request",
+          "content": "{\n  \"facebook\": true,\n  \"twitter\": true,\n  \"text\": \"Basta chicos\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "description": "<p>Aclaración: Máximo tamaño de archivo: 50 Mb.</p> ",
+    "success": {
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "PostApiUserUser_idMedia",
     "sampleRequest": [
       {
         "url": "http://api.myunify.io/api/user/:user_id/media"
