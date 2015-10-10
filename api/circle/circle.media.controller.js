@@ -15,7 +15,7 @@ var Circle = require('./circle.model');
 var Contact = require('../contact/contact.model');
 var User = require('../user/user.model');
 
-// Devuelve el contenido de los contactos hijos directos e indirectos (hijos de algún subcírculo)
+// Devuelve el contenido de los contactos hijos directos e indirectos (hijos de algún subgrupo)
 module.exports.getMedia = function(req, res) {
 
   process.nextTick(function() {
@@ -23,21 +23,21 @@ module.exports.getMedia = function(req, res) {
     User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
       }
       else {
-        // Una vez que tenemos al usuario buscamos los contactos que tienen como ancestro al círculo a buscar
+        // Una vez que tenemos al usuario buscamos los contactos que tienen como ancestro al grupo a buscar
         Contact.find({ 'parents.ancestors': req.circle._id, user: req.user_id }, function(err, contacts) {
           if (err || !contacts) {
             logger.warn('Contacts not found for circle: ' + req.circle._id);
-            return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del círculo especificado' }] });
+            return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del grupo especificado' }] });
           }
           else {
             // Si no hubo error, vamos a buscar el contenido de cada contacto encontrado
             doGetMedia(res, user, contacts, function(err, results) {
               if (err) {
                 logger.warn('Error searching media ' + JSON.stringify(err));
-                return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del círculo especificado' }] });
+                return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del grupo especificado' }] });
               }
               else {
                 sendMediaResponseFromResults(res, results, req.circle._id);
@@ -97,7 +97,7 @@ var buildMediaArray = function(media) {
   return mediaArray;
 };
 
-// Ordena el contenido cronológicamente y le devuelve al cliente los contactos, su contenido e info del círculo
+// Ordena el contenido cronológicamente y le devuelve al cliente los contactos, su contenido e info del grupo
 var sendMediaResponseFromResults = function(res, mediaResults, circleId) {
 
   // Media results es un array de arrays, lo convertimos a un sólo array

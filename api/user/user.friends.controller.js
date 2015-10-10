@@ -24,7 +24,7 @@ module.exports.getFriends = function(req, res) {
     User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
       }
       else {
         doGetFriends(res, user);

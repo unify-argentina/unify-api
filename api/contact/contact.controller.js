@@ -26,20 +26,20 @@ module.exports.create = function(req, res) {
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
       }
       else {
-        // Encontramos el círculo cuyo usuario es el que está en el request
+        // Encontramos el grupo cuyo usuario es el que está en el request
         Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user_id })
           .populate('user', User.socialFields())
           .exec(function(err, circles) {
           if (err || !circles) {
             logger.warn("Circles don't exists or don't belong to current user=" + req.user_id);
-            return res.status(400).send({ errors: [{ msg: 'Los círculos especificados no pertenecen al usuario actual' }] });
+            return res.status(400).send({ errors: [{ msg: 'Los grupos especificados no pertenecen al usuario actual' }] });
           }
           else if (req.body.circles_ids.length > circles.length) {
             logger.warn("One of the circles doesn't belong to current user=" + req.user_id);
-            return res.status(400).send({ errors: [{ msg: 'Alguno de los círculos especificados no pertenece al usuario actual' }] });
+            return res.status(400).send({ errors: [{ msg: 'Alguno de los grupos especificados no pertenece al usuario actual' }] });
           }
           else {
             var contact = new Contact();
@@ -76,20 +76,20 @@ module.exports.update = function(req, res) {
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({errors: [{msg: 'El usuario no ha podido ser encontrado'}]});
+        return res.status(400).send({errors: [{msg: 'No pudimos encontrar el usuario que estás buscando'}]});
       }
       else {
-        // Revisamos que el usuario tenga efectivamente el círculo pasado por parámetro
+        // Revisamos que el usuario tenga efectivamente el grupo pasado por parámetro
         Circle.find({ _id: { $in: req.body.circles_ids }, user: req.user_id })
           .populate('user', User.socialFields())
           .exec(function(err, circles) {
           if (err || !circles) {
             logger.warn("Circles don't exists or don't belong to current user=" + req.user_id);
-            return res.status(400).send({ errors: [{ msg: 'Los círculos especificados no pertenecen al usuario actual' }] });
+            return res.status(400).send({ errors: [{ msg: 'Los grupos especificados no pertenecen al usuario actual' }] });
           }
           else if (req.body.circles_ids.length > circles.length) {
             logger.warn("One of the circles doesn't belong to current user=" + req.user_id);
-            return res.status(400).send({ errors: [{ msg: 'Alguno de los círculos especificados no pertenece al usuario actual' }] });
+            return res.status(400).send({ errors: [{ msg: 'Alguno de los grupos especificados no pertenece al usuario actual' }] });
           }
           else {
             saveContactData(req, res, req.contact, circles, true);
@@ -121,7 +121,7 @@ module.exports.delete = function(req, res) {
 var validateParams = function(req, res) {
   req.assert('name', 'Nombre válido requerido').isString();
   req.assert('picture', 'URL de foto válida requerida').isURL();
-  req.assert('circles_ids', 'Ids de círculos válidos requeridos').isStringArray();
+  req.assert('circles_ids', 'Ids de grupos válidos requeridos').isStringArray();
 
   // Validamos errores
   if (req.validationErrors()) {

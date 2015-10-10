@@ -13,7 +13,7 @@ var User = require('../user/user.model');
 var Circle = require('./circle.model');
 var Contact = require('../contact/contact.model');
 
-// Crea un círculo
+// Crea un grupo
 module.exports.create = function(req, res) {
 
   process.nextTick(function() {
@@ -25,7 +25,7 @@ module.exports.create = function(req, res) {
       .exec(function(err, parentCircle) {
         if (err || !parentCircle) {
           logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user_id);
-          return res.status(400).send({ errors: [{ msg: 'El círculo padre no existe o no le pertenece al usuario actual' }] });
+          return res.status(400).send({ errors: [{ msg: 'El grupo padre no existe o no le pertenece al usuario actual' }] });
         }
         else {
           var circle = new Circle();
@@ -36,7 +36,7 @@ module.exports.create = function(req, res) {
   });
 };
 
-// Devuelve el círculo pedido por Id
+// Devuelve el grupo pedido por Id
 module.exports.getById = function(req, res) {
 
   process.nextTick(function() {
@@ -47,14 +47,14 @@ module.exports.getById = function(req, res) {
       .exec(function(err, contacts) {
       if (err || !contacts) {
         logger.warn('Could not find contacts for circle=' + req.circle._id);
-        return res.status(400).send({ errors: [{ msg: 'Hubo un error al encontrar contactos para el círculo especificado' }] });
+        return res.status(400).send({ errors: [{ msg: 'Hubo un error al encontrar contactos para el grupo especificado' }] });
       }
       else {
         // Luego buscamos la cantidad de contactos que lo tengan como ancestro para enviar el empty_circle
         Contact.count({ 'parents.ancestors' : req.circle._id, user: req.user_id }, function(err, count) {
           if (err) {
             logger.warn('Could not count subcontacts for circle=' + req.circle._id);
-            return res.status(400).send({ errors: [{ msg: 'Hubo un error al encontrar contactos para el círculo especificado' }] });
+            return res.status(400).send({ errors: [{ msg: 'Hubo un error al encontrar contactos para el grupo especificado' }] });
           }
           else {
             var contactsObject = {
@@ -77,7 +77,7 @@ module.exports.update = function(req, res) {
   process.nextTick(function() {
     validateParams(req, res);
 
-    // Si el círculo a modificar es el principal, devolvemos error
+    // Si el grupo a modificar es el principal, devolvemos error
     if (req.circle._id.equals(req.circle.user.main_circle)) {
       var circle = req.circle;
       circle.name = req.body.name;
@@ -97,13 +97,13 @@ module.exports.update = function(req, res) {
     }
     // Sino, encontramos el circulo padre, verificamos que pertenezca al usuario y lo actualizamos
     else {
-      // TODO validar que haya venido el parent_id y q no sea hijo del círculo a modificar
+      // TODO validar que haya venido el parent_id y q no sea hijo del grupo a modificar
       Circle.findOne({ _id: req.body.parent_id, user: req.user_id })
         .populate('user')
         .exec(function(err, parentCircle) {
         if (err || !parentCircle) {
           logger.warn("Paren't circle=" + req.body.parent_id + " doesn't exists or doesn't belong to current user=" + req.user_id);
-          return res.status(400).send({ errors: [{ msg: 'El círculo padre no existe o no le pertenece al usuario actual' }] });
+          return res.status(400).send({ errors: [{ msg: 'El grupo padre no existe o no le pertenece al usuario actual' }] });
         }
         else {
           saveCircleData(req, res, req.circle, parentCircle);
@@ -113,31 +113,31 @@ module.exports.update = function(req, res) {
   });
 };
 
-// Borra el círculo pasado por parámetro
+// Borra el grupo pasado por parámetro
 module.exports.delete = function(req, res) {
 
   process.nextTick(function() {
-    // Primero buscamos el usuario loggeado, para luego ver si el círculo pasado por parámetro
-    // no es el círculo principal del usuario
+    // Primero buscamos el usuario loggeado, para luego ver si el grupo pasado por parámetro
+    // no es el grupo principal del usuario
     User.findOne({ _id: req.user_id })
       .populate('main_circle')
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
       }
       else {
         var circle = req.circle;
         if (user.main_circle._id.equals(circle._id)) {
           logger.warn('Cannot delete users main circle: ' + circle._id);
-          return res.status(400).send({ errors: [{ msg: 'El círculo principal no puede ser eliminado' }] });
+          return res.status(400).send({ errors: [{ msg: 'El grupo principal no puede ser eliminado' }] });
         }
-        // Si no es el círculo principal, lo borramos y devolvemos el id del círculo recientemente borrado
+        // Si no es el grupo principal, lo borramos y devolvemos el id del grupo recientemente borrado
         else {
           circle.remove(function(err) {
             if (err) {
               logger.err(err);
-              return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar eliminar el círculo especificado' }] });
+              return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar eliminar el grupo especificado' }] });
             }
             else {
               return res.send({ circle: circle._id });
@@ -162,7 +162,7 @@ var validateParams = function(req, res) {
   }
 };
 
-// Salva el círculo pasado por parámetro y lo envía al cliente
+// Salva el grupo pasado por parámetro y lo envía al cliente
 var saveCircleData = function(req, res, circle, foundCircle) {
   circle.name = req.body.name;
   circle.parent = req.body.parent_id;
@@ -194,7 +194,7 @@ module.exports.getTree = function(req, res) {
       .exec(function(err, circles) {
       if (err || !circles) {
         logger.warn('Could not find subcircles for circle=' + req.circle._id);
-        return res.status(400).send({ errors: [{ msg: 'No se pudieron encontrar subcírculos para el círculo especificado' }] });
+        return res.status(400).send({ errors: [{ msg: 'No se pudieron encontrar subgrupos para el grupo especificado' }] });
       }
       else {
         logger.debug('Subcircles for circle=' + req.circle._id + ' for user=' + req.user_id);
@@ -215,7 +215,7 @@ module.exports.getTree = function(req, res) {
   });
 };
 
-// Construye el árbol de círculos y subcírculos
+// Construye el árbol de grupos y subgrupos
 var makeTree = function(options) {
   var tempCircle, firstIndex, secondIndex;
   var id = options.id || "_id";
@@ -224,7 +224,7 @@ var makeTree = function(options) {
   var circlesIds = {};
   var firstArray = options.q;
   for (firstIndex = 0; firstIndex < firstArray.length; firstIndex++) {
-    /* En tempCircle se guarda cada círculo
+    /* En tempCircle se guarda cada grupo
     * _id = 43532532532425
     * name = "Principal"
     * picture = "http://www.google.com/"
@@ -256,12 +256,12 @@ var makeTree = function(options) {
     circlesIds[tempCircle[id]] = tempCircle;
   }
   /*
-  * result va a ser el array de círculos que va a tener un sólo elemento, el círculo raíz
+  * result va a ser el array de grupos que va a tener un sólo elemento, el grupo raíz
   * */
   var result = [];
   var secondArray = options.q;
   for (secondIndex = 0; secondIndex < secondArray.length; secondIndex++) {
-    /* En tempCircle se guarda cada círculo nuevamente
+    /* En tempCircle se guarda cada grupo nuevamente
      * _id = 43532532532425
      * name = "Principal"
      * picture = "http://www.google.com/"
@@ -270,18 +270,18 @@ var makeTree = function(options) {
     tempCircle = secondArray[secondIndex];
 
     /*
-    * Luego nos fijamos si en el objeto de ids, se encuentra el círculo padre del círculo en tempCircle
+    * Luego nos fijamos si en el objeto de ids, se encuentra el grupo padre del grupo en tempCircle
     * */
     if (circlesIds[tempCircle[pid]] !== undefined) {
       /*
-      * Si se encuentra, entonces a ese círculo padre le pusheamos en el array de childrens, tempCircle
+      * Si se encuentra, entonces a ese grupo padre le pusheamos en el array de childrens, tempCircle
       * */
       circlesIds[tempCircle[pid]][children].push(tempCircle);
     }
     else {
       /*
-      * Si no se encuentra, quiere decir que es el círculo padre, por lo que lo agregamos y será
-      * el círculo principal que va a tener a todos los subcirculos
+      * Si no se encuentra, quiere decir que es el grupo padre, por lo que lo agregamos y será
+      * el grupo principal que va a tener a todos los subcirculos
       * */
       result.push(tempCircle);
     }

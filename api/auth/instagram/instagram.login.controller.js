@@ -27,7 +27,7 @@ module.exports.unlinkAccount = function(req, res) {
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }]});
+        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }]});
       }
       // Si el usuario no tiene email ni tiene la cuenta de Twitter linkeada, no puede deslinkear instagram
       // ya que no vamos a tener forma de identificarlo después
@@ -104,7 +104,7 @@ var handleAuthenticatedUser = function(res, unifyToken, instagramProfile, access
 
     if (err || !unifyUser) {
       logger.warn('User not found: ' + payload.sub);
-      return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+      return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
     }
 
     // Si existe un usuario de Unify, nos fijamos si no tiene su cuenta asociada con Instagram

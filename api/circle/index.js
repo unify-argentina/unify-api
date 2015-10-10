@@ -17,7 +17,7 @@ var Circle = require('./circle.model');
 // Esto lo que hace es verificar que cada vez que se envíe un circle_id como parámetro en una ruta,
 // efectivamente pertenezca al usuario loggeado
 circleRoutes.param('circle_id', function(req, res, next, circleId) {
-  req.assert('circle_id', 'Id del círculo válido requerido').isString();
+  req.assert('circle_id', 'Id del grupo válido requerido').isString();
 
   // Validamos errores
   if (req.validationErrors()) {
@@ -31,7 +31,7 @@ circleRoutes.param('circle_id', function(req, res, next, circleId) {
     .exec(function(err, circle) {
       if (err || !circle) {
         logger.warn("You are trying to find a circle=" + circleId + " that doesn't belong to you");
-        return res.status(400).send({ errors: [{ msg: 'Estás queriendo acceder a un círculo que no te pertenece' }] });
+        return res.status(400).send({ errors: [{ msg: 'Estás queriendo acceder a un grupo que no te pertenece' }] });
       }
       else {
         req.circle = circle;
@@ -314,7 +314,7 @@ circleRoutes.put('/:circle_id', circleController.update);
  *     }
  *
  * @apiParam {String} user_id Id del usuario
- * @apiParam {String} circle_id Id del circulo a borrar (no puede ser el círculo principal)
+ * @apiParam {String} circle_id Id del circulo a borrar (no puede ser el grupo principal)
  *
  * @apiSuccess {String} circle Id del circulo eliminado
  *

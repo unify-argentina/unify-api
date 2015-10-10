@@ -23,8 +23,8 @@ var circleSchema = mongoose.Schema({
   created_at: { type: Date, select: false },
   updated_at: { type: Date, select: false },
 
-  // El hook_enabled sirve para que el hook post save se ejecute sólamente en el círculo padre
-  // y no en los subcírculos, por eso por default es false y antes de salvar el círculo padre lo ponemos en true
+  // El hook_enabled sirve para que el hook post save se ejecute sólamente en el grupo padre
+  // y no en los subgrupos, por eso por default es false y antes de salvar el grupo padre lo ponemos en true
   hook_enabled:{ type: Boolean, required: false, default: false, select: false }
 });
 
@@ -39,10 +39,10 @@ circleSchema.pre('save', function(next) {
   next();
 });
 
-// Una vez salvado el círculo buscamos los contactos que lo tengan como ancestro para actualizarlos
+// Una vez salvado el grupo buscamos los contactos que lo tengan como ancestro para actualizarlos
 circleSchema.post('save', function(circle, next) {
   var self = this;
-  // Si está habilitado el hook y no es nuevo el círculo (se está haciendo un update)
+  // Si está habilitado el hook y no es nuevo el grupo (se está haciendo un update)
   if (self.hook_enabled) {
     if (!self.wasNew) {
       async.parallel({
@@ -58,7 +58,7 @@ circleSchema.post('save', function(circle, next) {
       });
     }
     else {
-      // Si está habilitado y es nuevo, el círculo se creó recientemente, por lo que tenemos que deshabilitarlo y volver
+      // Si está habilitado y es nuevo, el grupo se creó recientemente, por lo que tenemos que deshabilitarlo y volver
       self.hook_enabled = false;
       self.save(function(err) {
         next();
@@ -112,8 +112,8 @@ var updateCircles = function(circle, self, callback) {
       subcircles.forEach(function(subcircle) {
         var ancestors = [];
         var oldAncestors = subcircle.ancestors;
-        // Recorremos los viejos ancestros hasta encontrar el círculo buscado, luego cortamos ese ciclo,
-        // agregamos el círculo y después lo ancestros del mismo
+        // Recorremos los viejos ancestros hasta encontrar el grupo buscado, luego cortamos ese ciclo,
+        // agregamos el grupo y después lo ancestros del mismo
         if (oldAncestors && oldAncestors.length > 0) {
           for (var i = 0; i < oldAncestors.length; i++) {
             var ancestor = oldAncestors[i];
@@ -124,12 +124,12 @@ var updateCircles = function(circle, self, callback) {
               break;
             }
           }
-          // Una vez encontrado el círculo, lo agregamos y agregamos los ancestros de ese círculo
+          // Una vez encontrado el grupo, lo agregamos y agregamos los ancestros de ese grupo
           ancestors.push(circle._id);
           ancestors.push.apply(ancestors, circle.ancestors);
         }
 
-        // Por último le asignamos los nuevos ancestros y salvamos el círculo, si es el último volvemos
+        // Por último le asignamos los nuevos ancestros y salvamos el grupo, si es el último volvemos
         subcircle.ancestors = ancestors;
       });
 
@@ -137,7 +137,7 @@ var updateCircles = function(circle, self, callback) {
         subcircle.save(callback);
       }, callback);
     }
-    // Si no hubo subcírculos encontrados, volvemos
+    // Si no hubo subgrupos encontrados, volvemos
     else {
       callback(null, null);
     }
@@ -149,7 +149,7 @@ var updateCircles = function(circle, self, callback) {
 // si se encuentran en mas de un circulo, entonces borramos ese elemento de los parents
 circleSchema.pre('remove', function(next) {
   var circleId = this._id;
-  // Primero eliminamos los subcírculos y después los contactos
+  // Primero eliminamos los subgrupos y después los contactos
   this.constructor.find({ ancestors: circleId }).remove().exec(function(err) {
     Contact.find({ 'parents.ancestors': circleId }, function(err, contacts) {
       if (err || !contacts || contacts.length === 0) {

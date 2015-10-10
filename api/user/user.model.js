@@ -89,7 +89,7 @@ userSchema.pre('save', function(next) {
   });
 });
 
-// Recién cuando el usuario haya sido creado exitosamente creamos el círculo principal
+// Recién cuando el usuario haya sido creado exitosamente creamos el grupo principal
 userSchema.post('save', function(user, next) {
   if (user.main_circle === undefined) {
     var main_circle = new Circle();
@@ -107,7 +107,7 @@ userSchema.post('save', function(user, next) {
   }
 });
 
-// Este 'hook' se encarga de eliminar los círculos/contactos del usuario
+// Este 'hook' se encarga de eliminar los grupos/contactos del usuario
 userSchema.pre('remove', function(next) {
   var userId = this._id;
   Circle.remove({ user: userId }, function(err) {

@@ -528,7 +528,7 @@ userRoutes.post('/:user_id/media/unlike', mediaController.unlike);
  */
 userRoutes.post('/:user_id/media', upload.single('file'), mediaController.publishContent);
 
-// Rutas de un círculo
+// Rutas de un grupo
 userRoutes.use('/:user_id/circle', require('../circle'));
 
 // Rutas de un contacto

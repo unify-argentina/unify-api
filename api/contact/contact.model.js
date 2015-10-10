@@ -38,7 +38,7 @@ var contactSchema = mongoose.Schema({
     valid: { type: Boolean, default: true }
   },
 
-  // Un contacto puede estar en más de un círculo, entonces creamos tiene que tener una referencia a cada
+  // Un contacto puede estar en más de un grupo, entonces creamos tiene que tener una referencia a cada
   // uno de sus padres y a sus ancestros
   parents: [{
     circle: { type: ObjectId, required: true, ref: 'Circle' },
@@ -82,16 +82,16 @@ contactSchema.methods.toggleAccount = function(account, toggle) {
   }
 };
 
-// Le genera los parents del contacto en base al círculo
+// Le genera los parents del contacto en base al grupo
 contactSchema.methods.getContactParentsFromCircle = function(circle) {
 
   var newParents = [];
-  // Nos quedamos solamente con los parents cuyos ancestros contengan al círculo
+  // Nos quedamos solamente con los parents cuyos ancestros contengan al grupo
   // filteredParents es un array de parents
   logger.debug('Old parents: ' + JSON.stringify(this.parents));
   var filteredParents = _.filter(this.parents, { ancestors: [circle._id] });
   // Por cada filteredParents, debemos iterar en sus ancestros e ir agregándolos al array de
-  // newParents. Una vez que encontramos al círculo buscado, nos detenemos y le agregamos
+  // newParents. Una vez que encontramos al grupo buscado, nos detenemos y le agregamos
   // los ancestros del circulo
   if (filteredParents && filteredParents.length > 0) {
     for (var i = 0; i < filteredParents.length; i++) {
@@ -99,8 +99,8 @@ contactSchema.methods.getContactParentsFromCircle = function(circle) {
       newParent.circle = filteredParents[i].circle;
       newParent.ancestors = [];
       var oldAncestors = filteredParents[i].ancestors;
-      // Recorremos los viejos ancestros hasta encontrar el círculo buscado, luego cortamos ese ciclo,
-      // agregamos el círculo y después lo ancestros del mismo ya que van a diferir de los del contacto
+      // Recorremos los viejos ancestros hasta encontrar el grupo buscado, luego cortamos ese ciclo,
+      // agregamos el grupo y después lo ancestros del mismo ya que van a diferir de los del contacto
       if (oldAncestors && oldAncestors.length > 0) {
         for (var j = 0; j < oldAncestors.length; j++) {
           var ancestor = oldAncestors[j];
@@ -111,7 +111,7 @@ contactSchema.methods.getContactParentsFromCircle = function(circle) {
             break;
           }
         }
-        // Una vez encontrado el círculo, lo agregamos y agregamos los ancestros de ese círculo
+        // Una vez encontrado el grupo, lo agregamos y agregamos los ancestros de ese grupo
         newParent.ancestors.push(circle._id);
         newParent.ancestors.push.apply(newParent.ancestors, circle.ancestors);
       }
@@ -119,7 +119,7 @@ contactSchema.methods.getContactParentsFromCircle = function(circle) {
     }
   }
 
-  // Por último agregamos aquellos parents en los que no se encontraba el círculo a modificar, por
+  // Por último agregamos aquellos parents en los que no se encontraba el grupo a modificar, por
   // lo que tienen que quedar intactos
   var notContainingCircleParents = _.reject(this.parents, { ancestors: [circle._id] });
   newParents.push.apply(newParents, notContainingCircleParents);
@@ -146,7 +146,7 @@ contactSchema.methods.cleanSocialAccounts = function() {
   this.google = undefined;
 };
 
-// Este método genera los ancestros de un contacto (el círculo en el cual fue creado más los ancestros del círculo)
+// Este método genera los ancestros de un contacto (el grupo en el cual fue creado más los ancestros del grupo)
 contactSchema.statics.getContactParentsFromCircles = function(circles) {
   var parents = [];
 

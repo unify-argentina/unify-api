@@ -55,7 +55,7 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
  * @apiParam {String} user_id Id del usuario
  * @apiParam {String} name Nombre del contacto a crear
  * @apiParam {String} picture URL de la imagen del contacto
- * @apiParam {Array} circles_ids Ids de los círculos en los cuales el contacto va a ser creado
+ * @apiParam {Array} circles_ids Ids de los grupos en los cuales el contacto va a ser creado
  * @apiParam {String} [facebook_id] Id del perfil de Facebook del contacto
  * @apiParam {String} [facebook_display_name] Nombre del perfil de Facebook del contacto
  * @apiParam {String} [twitter_id] Id del perfil de Twitter del contacto
@@ -189,7 +189,7 @@ contactRoutes.get('/:contact_id', contactController.getById);
  * @apiParam {String} contact_id Id del contacto a actualizar
  * @apiParam {String} name Nuevo nombre del contacto a actualizar
  * @apiParam {String} picture URL de la imagen del contacto
- * @apiParam {Array} circles_ids Ids de los círculos en los cuales el contacto va a ser actualizado
+ * @apiParam {Array} circles_ids Ids de los grupos en los cuales el contacto va a ser actualizado
  * @apiParam {String} [facebook_id] Id del perfil de Facebook del contacto
  * @apiParam {String} [twitter_id] Id del perfil de Twitter del contacto
  * @apiParam {String} [instagram_id] Id del perfil de Instagram del contacto

@@ -19,7 +19,7 @@ module.exports.login = function(req, res) {
 
   process.nextTick(function() {
     req.assert('email', 'Email válido requerido').isEmail();
-    req.assert('password', 'Password válida requerida').isString();
+    req.assert('password', 'Contraseña válida requerida').isString();
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -41,7 +41,7 @@ module.exports.login = function(req, res) {
           // Si coincide, enviamos el token con el id del usuario loggeado
           if (!isMatch) {
             logger.warn('Wrong password for user: ' + user.toString());
-            return res.status(400).send({ errors: [{ msg: 'Password errónea' }] });
+            return res.status(400).send({ errors: [{ msg: 'La contraseña es incorrecta' }] });
           }
           else {
             logger.debug('User logged in successfully: ' + user.toString());
@@ -60,10 +60,10 @@ module.exports.signup = function(req, res) {
   process.nextTick(function() {
     req.assert('email', 'Email válido requerido').isEmail();
     req.assert('name', 'Nombre válido requerido').isString();
-    req.assert('password', 'Password válido requerido').isString();
+    req.assert('password', 'Contraseña válida requerida').isString();
     req.assert('password', 'Password debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
-    req.assert('confirm_password', 'Confirmación de password válido requerido').isString();
-    req.assert('confirm_password', 'Confirmación de password debe ser igual al password').equals(req.body.password);
+    req.assert('confirm_password', 'Confirmación de Contraseña válida requerida').isString();
+    req.assert('confirm_password', 'La confirmación de la contraseña debe ser igual a la contraseña').equals(req.body.password);
 
     // Validamos errores
     if (req.validationErrors()) {

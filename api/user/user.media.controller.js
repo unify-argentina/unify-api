@@ -24,7 +24,7 @@ module.exports.getMedia = function(req, res) {
     User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
       }
       else {
         doGetMedia(res, user);
@@ -152,7 +152,7 @@ var toggleLike = function(req, res, toggleLike) {
   User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
     if (err || !user) {
       logger.warn('User not found: ' + req.user_id);
-      return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+      return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
     }
     else {
       doToggleLike(req, res, user, toggleLike);
@@ -233,7 +233,7 @@ module.exports.publishContent = function(req, res) {
     User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
       }
       else {
         doPublishContent(req, res, user);

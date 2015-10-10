@@ -889,7 +889,7 @@ define({ "api": [
             "type": "<p>String</p> ",
             "optional": false,
             "field": "circle_id",
-            "description": "<p>Id del circulo a borrar (no puede ser el círculo principal)</p> "
+            "description": "<p>Id del circulo a borrar (no puede ser el grupo principal)</p> "
           }
         ]
       }
@@ -1636,7 +1636,7 @@ define({ "api": [
             "type": "<p>Array</p> ",
             "optional": false,
             "field": "circles_ids",
-            "description": "<p>Ids de los círculos en los cuales el contacto va a ser creado</p> "
+            "description": "<p>Ids de los grupos en los cuales el contacto va a ser creado</p> "
           },
           {
             "group": "Parameter",
@@ -1789,7 +1789,7 @@ define({ "api": [
             "type": "<p>Array</p> ",
             "optional": false,
             "field": "circles_ids",
-            "description": "<p>Ids de los círculos en los cuales el contacto va a ser actualizado</p> "
+            "description": "<p>Ids de los grupos en los cuales el contacto va a ser actualizado</p> "
           },
           {
             "group": "Parameter",

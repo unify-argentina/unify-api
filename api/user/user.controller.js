@@ -22,7 +22,7 @@ module.exports.getById = function(req, res) {
       .exec(function(err, user) {
         if (err || !user) {
           logger.warn('User not found: ' + req.user_id);
-          return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+          return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
         }
         else {
           logger.debug('Get user by id: ' + req.params.user_id);
@@ -59,7 +59,7 @@ module.exports.update = function(req, res) {
           .exec(function(err, user) {
             if (err || !user) {
               logger.warn('User not found: ' + req.user_id);
-              return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+              return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
             }
             else {
               var reset = user.shouldResetVerificatedAccount(req.body.email);
@@ -96,10 +96,10 @@ module.exports.update = function(req, res) {
 module.exports.updatePassword = function(req, res) {
 
   process.nextTick(function() {
-    req.assert('password', 'Password válido requerido').isString();
+    req.assert('password', 'Contraseña válida requerida').isString();
     req.assert('password', 'Password debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
-    req.assert('confirm_password', 'Confirmación de password válido requerido').isString();
-    req.assert('confirm_password', 'Confirmación de password debe ser igual al password').equals(req.body.password);
+    req.assert('confirm_password', 'Confirmación de Contraseña válida requerida').isString();
+    req.assert('confirm_password', 'La confirmación de la contraseña debe ser igual a la contraseña').equals(req.body.password);
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -113,7 +113,7 @@ module.exports.updatePassword = function(req, res) {
       .exec(function(err, user) {
       if (err || !user) {
         logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'El usuario no ha podido ser encontrado' }] });
+        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
       }
       else {
 
@@ -135,7 +135,7 @@ module.exports.updatePassword = function(req, res) {
             // Si coincide, le actualizamos la password y lo guardamos
             if (!isMatch) {
               logger.warn('Wrong password for user: ' + user.toString());
-              return res.status(400).send({ errors: [{ msg: 'Password errónea' }] });
+              return res.status(400).send({ errors: [{ msg: 'La contraseña es incorrecta' }] });
             }
             else {
               user.password = req.body.password;

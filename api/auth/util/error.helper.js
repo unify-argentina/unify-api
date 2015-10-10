@@ -1,5 +1,5 @@
 /*
- * Este es un helper utilizado en los módulos encargados de obtener el media de un círculo, usuario o contacto
+ * Este es un helper utilizado en los módulos encargados de obtener el media de un grupo, usuario o contacto
  * @author Joel Márquez
  * */
 'use strict';
