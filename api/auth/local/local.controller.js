@@ -18,8 +18,8 @@ var User = require('../../user/user.model');
 module.exports.login = function(req, res) {
 
   process.nextTick(function() {
-    req.assert('email', 'Email válido requerido').isEmail();
-    req.assert('password', 'Contraseña válida requerida').isString();
+    req.assert('email', 'Es necesaria una dirección de email válida').isEmail();
+    req.assert('password', 'Es necesaria una contraseña válida').isString();
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -58,11 +58,11 @@ module.exports.login = function(req, res) {
 module.exports.signup = function(req, res) {
 
   process.nextTick(function() {
-    req.assert('email', 'Email válido requerido').isEmail();
-    req.assert('name', 'Nombre válido requerido').isString();
-    req.assert('password', 'Contraseña válida requerida').isString();
-    req.assert('password', 'Password debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
-    req.assert('confirm_password', 'Confirmación de Contraseña válida requerida').isString();
+    req.assert('email', 'Es necesaria una dirección de email válida').isEmail();
+    req.assert('name', 'Es necesario un nombre válido').isString();
+    req.assert('password', 'Es necesaria una contraseña válida').isString();
+    req.assert('password', 'La contraseña debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
+    req.assert('confirm_password', 'Es necesaria una confirmación de contraseña válida').isString();
     req.assert('confirm_password', 'La confirmación de la contraseña debe ser igual a la contraseña').equals(req.body.password);
 
     // Validamos errores

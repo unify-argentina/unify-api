@@ -17,7 +17,7 @@ var User = require('../../user/user.model');
 module.exports.verifyToken = function(req, res) {
 
   process.nextTick(function() {
-    req.assert('token', 'Token válido requerido').isString();
+    req.assert('token', 'Es necesario un token de autentificación válido').isString();
 
     // Validamos errores
     if (req.validationErrors()) {

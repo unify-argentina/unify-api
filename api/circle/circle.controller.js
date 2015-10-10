@@ -151,7 +151,7 @@ module.exports.delete = function(req, res) {
 
 // Valida que los parámetros sean correctos
 var validateParams = function(req, res) {
-  req.assert('name', 'Nombre válido requerido').isString();
+  req.assert('name', 'Es necesario un nombre válido').isString();
   req.assert('picture', 'URL de foto válida').optional().isURL();
   req.assert('parent_id', 'Id del padre válido requerido').optional().isString();
 

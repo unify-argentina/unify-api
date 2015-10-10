@@ -96,9 +96,9 @@ module.exports.update = function(req, res) {
 module.exports.updatePassword = function(req, res) {
 
   process.nextTick(function() {
-    req.assert('password', 'Contraseña válida requerida').isString();
-    req.assert('password', 'Password debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
-    req.assert('confirm_password', 'Confirmación de Contraseña válida requerida').isString();
+    req.assert('password', 'Es necesaria una contraseña válida').isString();
+    req.assert('password', 'La contraseña debe tener entre 6 y 100 caracteres de longitud').len(6, 100);
+    req.assert('confirm_password', 'Es necesaria una confirmación de contraseña válida').isString();
     req.assert('confirm_password', 'La confirmación de la contraseña debe ser igual a la contraseña').equals(req.body.password);
 
     // Validamos errores
@@ -119,8 +119,8 @@ module.exports.updatePassword = function(req, res) {
 
         // Verificamos que si el usuario es válido, entonces pase la contraseña anterior
         if (user.valid_local_user) {
-          req.assert('old_password', 'Password anterior válido requerido').isString();
-          req.assert('old_password', 'Password no puede ser igual al password anterior').notEquals(req.body.password);
+          req.assert('old_password', 'Es necesario ingresar la contraseña anterior').isString();
+          req.assert('old_password', 'La nueva contraseña no puede ser igual a la anterior').notEquals(req.body.password);
         }
 
         // Validamos errores

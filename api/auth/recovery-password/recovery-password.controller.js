@@ -17,7 +17,7 @@ module.exports.recover = function(req, res) {
 
 	process.nextTick(function() {
     req.assert('email', 'Email requerido').notEmpty();
-    req.assert('email', 'Email válido requerido').isEmail();
+    req.assert('email', 'Es necesaria una dirección de email válida').isEmail();
 
     // Validamos errores
     if (req.validationErrors()) {
