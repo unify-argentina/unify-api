@@ -245,6 +245,12 @@ module.exports.publishContent = function(req, res) {
 // Efectivamente publica el contenido
 var doPublishContent = function(req, res, user) {
   // Le pegamos a cada API
+
+  if (req.file === undefined && req.body.text === undefined) {
+    logger.warn('User not found: ' + req.user_id);
+    return res.status(400).send({ errors: [{ msg: 'Tienes que enviar al menos o un texto o un archivo para poder publicar contenido desde Unify' }] });
+  }
+
   async.parallel({
     facebook: publishFacebookContent.bind(null, user, req.file, req.body.text, req.body.facebook === 'true'),
     twitter: publishTwitterContent.bind(null, user, req.file, req.body.text, req.body.twitter === 'true')
