@@ -17,7 +17,7 @@ var facebookErrors = require('./facebook.errors');
 
 // constantes
 var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?%sfields=id,name,created_time,album,images,link,likes.limit(0).summary(true),comments.limit(0).summary(true)&limit=%s&access_token=%s';
-var USER_PUBLISH_PHOTO_URL = facebookUtils.getBaseURL() + '/me/photos?access_token=%s';
+var USER_PUBLISH_PHOTO_URL = facebookUtils.getBaseURL() + '/me/photos?access_token=%s&debug=all';
 
 // Devuelve las fotos del usuario pasado por parámetro
 module.exports.getPhotos = function(access_token, facebookId, uploaded, callback) {

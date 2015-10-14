@@ -220,6 +220,11 @@ var toggleTwitterLike = function(user, twitterMediaId, toggleLike, callback) {
 module.exports.publishContent = function(req, res) {
 
   process.nextTick(function() {
+
+    if (typeof req.body === 'string') {
+      req.body = JSON.parse(req.body);
+    }
+
     req.assert('facebook', 'Facebook válido').isBoolean();
     req.assert('twitter', 'Twitter válido').isBoolean();
     req.assert('text', 'Texto válido').optional().isString();

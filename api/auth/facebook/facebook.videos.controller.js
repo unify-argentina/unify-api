@@ -62,54 +62,46 @@ module.exports.getVideos = function(access_token, facebookId, callback) {
 // Publica el video en partes a Facebook hasta que termina
 module.exports.publishVideo = function(access_token, text, file, callback) {
 
-  callback(null);
+  var stats = fs.statSync(file.path);
 
-  /*fs.stat(file.path, function(err, stats) {
+  var formData = {
+    access_token: access_token,
+    upload_phase: 'start',
+    file_size: stats.size
+  };
+
+  var url = USER_PUBLISH_VIDEO_URL;
+  logger.info('URL: ' + url + ' qs=' + formData);
+
+  request.post({ url: url, form: formData, json: true }, function(err, response, body) {
 
     if (err) {
       callback(err);
     }
     else {
 
+      var fd = fs.openSync(file.path, 'r');
+
+      var bytesRead, data, offset = 0, bufferLength = 10000000;
+      var buffer = new Buffer(bufferLength);
+
+      bytesRead = fs.readSync(fd, buffer, body.start_offset, body.end_offset, null);
+      data = bytesRead < bufferLength ? buffer.slice(0, bytesRead) : buffer;
+
       var formData = {
-        access_token: access_token,
-        upload_phase: 'start',
-        file_size: stats.size
+        video_file_chunk: '@' + new Buffer(data).toString('base64')
       };
 
-      var url = USER_PUBLISH_VIDEO_URL;
-      logger.info('URL: ' + url + ' qs=' + formData);
+      var qs = {
+        access_token: access_token,
+        upload_phase: 'transfer',
+        start_offset: body.start_offset,
+        upload_session_id: body.upload_session_id
+      };
 
-      request.post({ url: url, form: formData, json: true }, function(err, response, body) {
-
-        if (err) {
-          callback(err);
-        }
-        else {
-          fs.open(file.path, 'r', function(err, fd) {
-            var bytesRead, data, offset = 0, bufferLength = 10000000;
-            var buffer = new Buffer(bufferLength);
-
-            bytesRead = fs.readSync(fd, buffer, body.start_offset, body.end_offset, null);
-            data = bytesRead < bufferLength ? buffer.slice(0, bytesRead) : buffer;
-
-            var formData = {
-              video_file_chunk: '@' + new Buffer(data).toString('base64')
-            };
-
-            var qs = {
-              access_token: access_token,
-              upload_phase: 'transfer',
-              start_offset: body.start_offset,
-              upload_session_id: body.upload_session_id
-            };
-
-            request.post({ url: url, qs: qs, form: formData, json: true }, function(err, response, body) {
-              callback(null);
-            });
-          });
-        }
+      request.post({ url: url, qs: qs, form: formData, json: true }, function (err, response, body) {
+        callback(null);
       });
     }
-  });*/
+  });
 };
