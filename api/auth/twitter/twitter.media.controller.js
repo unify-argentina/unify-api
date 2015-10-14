@@ -183,7 +183,7 @@ var doPublishPhotoTweet = function(access_token, text, file, callback) {
 
   var oauth = twitterUtils.getOauthParam(access_token);
 
-  request.post({ url: url, form: formData, oauth: oauth, json: true }, function(err, response) {
+  request.post({ url: url, formData: formData, oauth: oauth, json: true }, function(err, response) {
 
     var result = twitterErrors.hasError(err, response);
     if (result.hasError) {
