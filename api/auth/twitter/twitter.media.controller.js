@@ -10,24 +10,13 @@ var request = require('request');
 var async = require('async');
 var moment = require('moment');
 var fs = require('fs');
-var qs = require('querystring');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
-var twitterOAuthHelper = require('./twitter.auth.helper');
+var twitterUtils = require('./twitter.utils');
 var twitterErrors = require('./twitter.errors');
 
 // modelos
 var Contact = require('../../contact/contact.model');
-
-// constantes
-var USER_FAV_URL = 'https://api.twitter.com/1.1/favorites/create.json?id=%s';
-var USER_UNFAV_URL = 'https://api.twitter.com/1.1/favorites/destroy.json?id=%s';
-var USER_MEDIA_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
-var USER_PUBLISH_CONTENT_URL = 'https://api.twitter.com/1.1/statuses/update.json?%s';
-var USER_UPLOAD_MEDIA_URL = 'https://upload.twitter.com/1.1/media/upload.json';
-
-var TWITTER_DATE_FORMAT = 'dd MMM DD HH:mm:ss ZZ YYYY';
-var TWITTER_STATUS_URL = 'https://twitter.com/statuses/';
 
 // Devuelve los tweets conteniendo sólo texto, foto o video del usuario pasado por parámetro
 module.exports.getMedia = function(access_token, twitterId, callback) {
@@ -37,9 +26,10 @@ module.exports.getMedia = function(access_token, twitterId, callback) {
     user_id: twitterId,
     count: config.TWITTER_MAX_MEDIA_COUNT
   };
+  var url = twitterUtils.getUserMediaURL();
+  logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
 
-  logger.info('URL: ' + USER_MEDIA_URL + 'qs=' + JSON.stringify(qs));
-  request.get({ url: USER_MEDIA_URL, oauth: twitterOAuthHelper.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
+  request.get({ url: url, oauth: twitterUtils.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
     var result = twitterErrors.hasError(err, response);
     if (result.hasError) {
       callback(null, result.error);
@@ -69,8 +59,8 @@ var mapMedia = function(tweet, callback) {
   var mappedMedia = {
     provider: 'twitter',
     id: tweet.id_str || '',
-    created_time: moment(tweet.created_at, TWITTER_DATE_FORMAT, 'en').unix() || '',
-    link: TWITTER_STATUS_URL + tweet.id_str || '',
+    created_time: moment(tweet.created_at, twitterUtils.getDateFormat(), 'en').unix() || '',
+    link: twitterUtils.getTwitterStatusURL() + tweet.id_str || '',
     likes: tweet.favorite_count,
     text: text,
     user_has_liked: tweet.favorited
@@ -112,10 +102,11 @@ var mapTweetVideo = function(mappedMedia, videoInfoArray) {
 // Esta función hace un post con un like a un contenido de Twitter
 module.exports.toggleLike = function(access_token, twitterMediaId, toggleLike, callback) {
 
-  var url = util.format(toggleLike ? USER_FAV_URL : USER_UNFAV_URL, twitterMediaId);
-  logger.info('URL: ' + url);
+  var qs = { id: twitterMediaId };
+  var url = toggleLike ? twitterUtils.getUserFavURL() : twitterUtils.getUserUnfavURL();
+  logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
 
-  request.post({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), json: true }, function(err, response) {
+  request.post({ url: url, oauth: twitterUtils.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
 
     var result = twitterErrors.hasError(err, response);
     if (result.hasError) {
@@ -155,17 +146,17 @@ module.exports.publishContent = function(access_token, file, text, callback) {
 // Pubica el tweet a Twitter
 var doPublishTweet = function(access_token, text, mediaId, callback) {
 
-  var query = {};
+  var qs = {};
   if (text) {
-    query.status = text;
+    qs.status = text;
   }
   if (mediaId) {
-    query.media_ids = mediaId;
+    qs.media_ids = mediaId;
   }
-  var url = util.format(USER_PUBLISH_CONTENT_URL, qs.stringify(query));
-  logger.info('URL: ' + url);
+  var url = twitterUtils.getUserPublishContentURL();
+  logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
 
-  request.post({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), json: true }, function(err, response) {
+  request.post({ url: url, oauth: twitterUtils.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
 
     var result = twitterErrors.hasError(err, response);
     if (result.hasError) {
@@ -180,7 +171,7 @@ var doPublishTweet = function(access_token, text, mediaId, callback) {
 // Primero sube la foto y luego publica el tweet con ese media id
 var doPublishPhotoTweet = function(access_token, text, file, callback) {
 
-  var url = USER_UPLOAD_MEDIA_URL;
+  var url = twitterUtils.getUserUploadMediaURL();
   logger.info('URL: ' + url);
 
   var rawFile = fs.createReadStream(file.path);
@@ -190,7 +181,7 @@ var doPublishPhotoTweet = function(access_token, text, file, callback) {
     media: rawFile
   };
 
-  request.post({ url: url, formData: formData, oauth: twitterOAuthHelper.getOauthParam(access_token), json: true }, function(err, response) {
+  request.post({ url: url, form: formData, oauth: twitterUtils.getOauthParam(access_token), json: true }, function(err, response) {
 
     var result = twitterErrors.hasError(err, response);
     if (result.hasError) {

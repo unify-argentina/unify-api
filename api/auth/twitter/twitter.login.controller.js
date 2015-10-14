@@ -12,14 +12,10 @@ var qs = require('querystring');
 var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
 var twitterErrors = require('./twitter.errors');
+var twitterUtils = require('./twitter.utils');
 
 // modelos
 var User = require('../../user/user.model');
-
-// constantes
-var REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token';
-var ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token';
-var PROFILE_URL = 'https://api.twitter.com/1.1/users/show.json?screen_name=';
 
 // Desconecta la cuenta de Twitter de la de Unify
 module.exports.unlinkAccount = function(req, res) {
@@ -71,7 +67,7 @@ module.exports.linkAccount = function(req, res) {
 
       logger.info('Requesting oauth_token and oauth_verifier');
       // Obtenemos el request token para el popup de autorización
-      request.post({ url: REQUEST_TOKEN_URL, oauth: getRequestTokenParams() }, function(err, response, body) {
+      request.post({ url: twitterUtils.getRequestTokenURL(), oauth: twitterUtils.getRequestTokenParams() }, function(err, response, body) {
         var oauthToken = qs.parse(body);
 
         logger.info('Twitter oauth_token: ' + JSON.stringify(oauthToken));
@@ -88,10 +84,10 @@ module.exports.linkAccount = function(req, res) {
 // Maneja la lógica principal del login con Twitter
 var handleTokenRequest = function(req, res) {
   // Intercambiamos el oauth token y el oauth verifier para obtener el access token
-  var oauth = getAccessTokenParams(req);
+  var oauth = twitterUtils.getAccessTokenParams(req);
   logger.info('Access token params: ' + JSON.stringify(oauth));
 
-  request.post({ url: ACCESS_TOKEN_URL, oauth: oauth }, function(err, response, access_token) {
+  request.post({ url: twitterUtils.getAccessTokenURL(), oauth: oauth }, function(err, response, access_token) {
 
     var oauthError = twitterErrors.hasError(err, response);
     if (oauthError.hasError) {
@@ -103,9 +99,13 @@ var handleTokenRequest = function(req, res) {
     logger.info('Access token: ' + JSON.stringify(access_token));
 
     // Una vez tenemos el access token, obtenemos la información del usuario a vincular
-    var profileOauth = getProfileParams(access_token.oauth_token);
+    var profileOauth = twitterUtils.getProfileParams(access_token.oauth_token);
 
-    request.get({ url: PROFILE_URL + access_token.screen_name, oauth: profileOauth, json: true }, function(err, response, profile) {
+    var query = { screen_name: access_token.screen_name };
+    var url = twitterUtils.getProfileURL();
+    logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
+
+    request.get({ url: url, oauth: profileOauth, qs: query, json: true }, function(err, response, profile) {
 
       var profileError = twitterErrors.hasError(err, response);
       if (profileError.hasError) {
@@ -241,32 +241,4 @@ var linkTwitterData = function(unifyUser, twitterProfile, access_token) {
   unifyUser.twitter.picture = twitterProfile.profile_image_url.replace('_normal', '_bigger');
   unifyUser.twitter.display_name = twitterProfile.name;
   unifyUser.twitter.username = twitterProfile.screen_name;
-};
-
-// Devuelve un objeto para obtener el oauth token
-var getRequestTokenParams = function() {
-  return {
-    consumer_key: config.TWITTER_KEY,
-    consumer_secret: config.TWITTER_SECRET,
-    callback: config.TWITTER_CALLBACK
-  };
-};
-
-// Devuelve un objeto para obtener el access token
-var getAccessTokenParams = function(req) {
-  return {
-    consumer_key: config.TWITTER_KEY,
-    consumer_secret: config.TWITTER_SECRET,
-    token: req.query.oauth_token || req.body.oauth_token,
-    verifier: req.query.oauth_verifier || req.body.oauth_verifier
-  };
-};
-
-// Devuelve un objeto para obtener información del perfil del usuario de Twitter
-var getProfileParams = function(oauthToken) {
-  return {
-    consumer_key: config.TWITTER_KEY,
-    consumer_secret: config.TWITTER_SECRET,
-    oauth_token: oauthToken
-  };
 };

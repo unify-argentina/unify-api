@@ -252,8 +252,8 @@ var doPublishContent = function(req, res, user) {
   }
 
   async.parallel({
-    facebook: publishFacebookContent.bind(null, user, req.file, req.body.text, req.body.facebook === 'true'),
-    twitter: publishTwitterContent.bind(null, user, req.file, req.body.text, req.body.twitter === 'true')
+    facebook: publishFacebookContent.bind(null, user, req.file, req.body.text, req.body.facebook === 'true' || req.body.facebook === true),
+    twitter: publishTwitterContent.bind(null, user, req.file, req.body.text, req.body.twitter === 'true' || req.body.twitter === true)
   },
   function(err) {
     if (err) {

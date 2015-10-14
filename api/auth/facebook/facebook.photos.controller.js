@@ -70,7 +70,7 @@ module.exports.publishPhoto = function(access_token, text, file, callback) {
     source: fs.createReadStream(file.path)
   };
 
-  request.post({ url: url, formData: formData, json: true }, function(err, response) {
+  request.post({ url: url, form: formData, json: true }, function(err, response) {
 
     var result = facebookErrors.hasError(err, response);
     if (result.hasError) {

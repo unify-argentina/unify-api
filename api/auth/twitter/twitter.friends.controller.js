@@ -10,11 +10,8 @@ var async = require('async');
 var _ = require('lodash');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
-var twitterOAuthHelper = require('./twitter.auth.helper');
+var twitterUtils = require('./twitter.utils');
 var twitterErrors = require('./twitter.errors');
-
-// constantes
-var TWITTER_USER_FOLLOWS_URL = 'https://api.twitter.com/1.1/friends/list.json';
 
 // Devuelve las personas a las que sigue en Instagram el usuario loggeado
 module.exports.getFriends = function(access_token, twitterId, callback) {
@@ -22,7 +19,7 @@ module.exports.getFriends = function(access_token, twitterId, callback) {
 // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Twitter
   var users = [];
 
-  getTwitterData(TWITTER_USER_FOLLOWS_URL, -1, access_token, twitterId, users, function(err, twitterUsers) {
+  getTwitterData(twitterUtils.getUserFollowsURL(), -1, access_token, twitterId, users, function(err, twitterUsers) {
     if (err) {
       callback(null, err);
     }
@@ -66,7 +63,7 @@ var getTwitterData = function(url, cursor, access_token, twitterId, users, callb
   };
 
   logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
-  request.get({ url: url, oauth: twitterOAuthHelper.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
+  request.get({ url: url, oauth: twitterUtils.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
 
     var result = twitterErrors.hasError(err, response);
     if (result.hasError) {
@@ -75,7 +72,7 @@ var getTwitterData = function(url, cursor, access_token, twitterId, users, callb
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.next_cursor !== 0) {
       users.push.apply(users, response.body.users);
-      getTwitterData(TWITTER_USER_FOLLOWS_URL, response.body.next_cursor, access_token, twitterId, users, callback);
+      getTwitterData(twitterUtils.getUserFollowsURL(), response.body.next_cursor, access_token, twitterId, users, callback);
     }
     // Sino, ya tengo los usuarios y los devuelvo en el callback
     else {
