@@ -66,7 +66,7 @@ module.exports.publishPhoto = function(access_token, text, file, callback) {
   logger.info('URL: ' + url);
 
   var formData = {
-    caption: text,
+    caption: text ? text : '',
     source: fs.createReadStream(file.path)
   };
 
