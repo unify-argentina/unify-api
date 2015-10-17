@@ -65,12 +65,7 @@ module.exports.getMedia = function(access_token, facebookId, callback) {
       }
     }
 
-    if (photos.length > 0) {
-      var uniquePhotos = _.uniq(photos, function(photo) {
-        return photo.id;
-      });
-      result.totalResults.push.apply(result.totalResults, uniquePhotos);
-    }
+    result.totalResults.push.apply(result.totalResults, photos);
 
     if (mediaResults.videos) {
       if (mediaResults.videos.constructor === Array) {
@@ -91,6 +86,12 @@ module.exports.getMedia = function(access_token, facebookId, callback) {
         result.statuses = mediaResults.statuses;
       }
     }
+
+    // Filtramos los contenidos duplicados dentro de Facebook, priorizando las fotos por sobre los estados
+    // (Al estar primero las fotos y después los estados, si encuentra alguno duplicado se va a quedar con la foto)
+    result.totalResults = _.uniq(result.totalResults, function(media) {
+      return media.created_time;
+    });
 
     callback(null, result);
   });
