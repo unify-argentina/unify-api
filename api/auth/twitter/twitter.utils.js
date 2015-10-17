@@ -123,5 +123,5 @@ module.exports.getUserUploadMediaURL = function() {
 
 // Devuelve la URL de los estados de Twitter
 module.exports.getTwitterStatusURL = function() {
-  return this.getTwitterURL() + '/statuses/';
+  return this.getTwitterURL() + 'statuses/';
 };
