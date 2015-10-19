@@ -13,7 +13,7 @@ var ObjectId = mongoose.Schema.ObjectId;
 var contactSchema = mongoose.Schema({
 
   name: { type: String, required: true },
-  picture: { type: String, required: true },
+  picture: String,
 
   facebook: {
     id: String,

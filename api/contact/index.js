@@ -123,6 +123,32 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
 contactRoutes.post('/', contactController.create);
 
 /**
+ * @api {post} /api/user/:user_id/contact/multiple Crear multiples contactos
+ * @apiGroup Contactos
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {Array} user_ids Ids de los usuarios a agregar como contacto
+ *
+ * @apiParamExample {json} Ejemplo de request
+ *     {
+ *       "user_ids": [
+ *         "560a94bd65555903007a1973",
+ *         "55f38c2a8770f003006647f3"
+ *       ]
+ *     }
+ *     
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ */
+contactRoutes.post('/multiple', contactController.createMultiple);
+
+/**
  * @api {get} /api/user/:user_id/contact/:contact_id Obtener contacto
  * @apiGroup Contactos
  *

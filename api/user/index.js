@@ -341,6 +341,81 @@ userRoutes.put('/:user_id/password', userController.updatePassword);
 userRoutes.get('/:user_id/friends', friendsController.getFriends);
 
 /**
+ * @api {get} /api/user/:user_id/recomended_friends Obtener los amigos recomendados
+ * @apiGroup Usuarios
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ *
+ * @apiSuccess {Object} recomended_friends Listado de amigos recomendados
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "recomended_friends": {
+ *             "list": [
+ *                 {
+ *                     "_id": "55f38c2a8770f003006647f3",
+ *                     "name": "Alejo García",
+ *                     "picture": "https://lh4.googleusercontent.com/-Sg1IRuU7yOs/AAAAAAAAAAI/AAAAAAAAAHs/e6gAnjsbU_U/photo.jpg?sz=200"
+ *                 },
+ *                 {
+ *                     "_id": "55f31b2bdb2c420300835540",
+ *                     "name": "Rorro Cistaro",
+ *                     "picture": "https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/s150x150/11336015_808366015944479_1405066425_a.jpg"
+ *                 },
+ *                 {
+ *                     "_id": "560529dbdf40800300815659",
+ *                     "name": "Cristian Mastronardi",
+ *                     "picture": "https://graph.facebook.com/v2.3/10206313793314092/picture?type=large"
+ *                 },
+ *                 {
+ *                     "_id": "55f233608f0de90300f4ee62",
+ *                     "name": "Nicolas Brahim",
+ *                     "picture": "https://graph.facebook.com/v2.3/10206664185514438/picture?type=large"
+ *                 }
+ *             ],
+ *             "count": 4
+ *         }
+ *     }
+ *
+ * @apiErrorExample Respuesta invalida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "friends": {
+ *         },
+ *         "errors": {
+ *             "facebook_friends": {
+ *                 "code": 190,
+ *                 "msg": "Error validating access token: The user has not authorized application 805638479520745."
+ *             },
+ *             "facebook_pages": {
+ *                 "code": 190,
+ *                 "msg": "Error validating access token: The user has not authorized application 805638479520745."
+ *             },
+ *             "instagram": {
+ *                 "code": 400,
+ *                 "msg": "The access_token provided is invalid."
+ *             },
+ *             "twitter": {
+ *                 "code": 89,
+ *                 "msg": "Invalid or expired token."
+ *             },
+ *             "google": {
+ *                 "code": 89,
+ *                 "msg": "Invalid credentials"
+ *             }
+ *         }
+ *     }
+ */
+userRoutes.get('/:user_id/recomended_friends', friendsController.getRecomendedFriends);
+
+/**
  * @api {get} /api/user/:user_id/media Obtener contenido del usuario
  * @apiGroup Usuarios
  *

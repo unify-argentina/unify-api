@@ -6,6 +6,7 @@
 
 // requires
 var logger = require('../../config/logger');
+var _ = require('lodash');
 
 // modelos
 var Contact = require('./contact.model');
@@ -44,6 +45,84 @@ module.exports.create = function(req, res) {
           else {
             var contact = new Contact();
             saveContactData(req, res, contact, circles, false);
+          }
+        });
+      }
+    });
+  });
+};
+
+// Crea múltiples contactos en el círculo principal basándose en los user ids pasados por parámetro
+module.exports.createMultiple = function (req, res) {
+
+  process.nextTick(function () {
+    req.assert('user_ids', 'Ids de usuarios válidos requeridos').isStringArray();
+
+    // Validamos errores
+    if (req.validationErrors()) {
+      logger.warn('Validation errors: ' + req.validationErrors());
+      return res.status(400).send({ errors: req.validationErrors()});
+    }
+
+    User.findOne({ _id: req.user_id })
+      .populate('main_circle')
+      .exec(function(err, user) {
+      if (err || !user) {
+        logger.warn('User not found: ' + req.user_id);
+        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
+      }
+      // Una vez que encontramos el usuario logueado, buscamos los usuarios con los ids pasados pos parámetro
+      else {
+        var userIdsQuery = _.map(req.body.user_ids, function(userId) { return { _id: userId }; });
+
+        User.find({ $or: userIdsQuery }, User.socialFields(), function(err, users) {
+          if (err || !users || users.length === 0) {
+            logger.warn('Users not found');
+            return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar los usuarios buscados' }] });
+          }
+          else {
+            var circle = user.main_circle;
+
+            // Una vez que los encontramos, los mapeamos a un contacto de Unify para crearlos como contactos del usuario
+            var contactsToCreate = _.map(users, function(user) {
+
+              var contact = new Contact();
+
+              contact.name = user.name;
+              contact.picture = user.picture || '';
+              contact.user = req.user_id;
+              contact.parents = Contact.getContactParentsFromCircles([circle]);
+
+              if (user.hasLinkedAccount('facebook')) {
+                contact.facebook.id = user.facebook.id;
+                contact.facebook.display_name = user.facebook.display_name;
+              }
+              if (user.hasLinkedAccount('twitter')) {
+                contact.twitter.id = user.twitter.id;
+                contact.twitter.username = user.twitter.username;
+              }
+              if (user.hasLinkedAccount('instagram')) {
+                contact.instagram.id = user.instagram.id;
+                contact.instagram.username = user.instagram.username;
+              }
+              if (user.hasLinkedAccount('google')) {
+                contact.google.email = user.google.email;
+              }
+
+              return contact;
+            });
+
+            // Por último los insertamos a todos
+            logger.debug('contacts to create: ' + JSON.stringify(contactsToCreate));
+            Contact.create(contactsToCreate, function(err, contacts) {
+              if (err || !contacts || contacts.length !== contactsToCreate.length) {
+                logger.warn("Couldn't create multiple contacts for user: " + req.user_id);
+                return res.status(400).send({ errors: [{ msg: 'No hemos podido agregar los contactos solicitados' }] });
+              }
+              else {
+                return res.sendStatus(200);
+              }
+            });
           }
         });
       }

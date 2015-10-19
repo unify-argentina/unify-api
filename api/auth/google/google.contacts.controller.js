@@ -24,13 +24,13 @@ module.exports.getContacts = function(refresh_token, googleId, callback) {
   googleAuth.getAccessToken(refresh_token, function(err, access_token) {
 
     if (err) {
-      callback(null, err);
+      callback(null, err.errors[0]);
     }
     else {
       getGoogleData(url, access_token, contacts, function(err, googleContacts) {
 
         if (err) {
-          callback(null, err);
+          callback(null, err.errors[0]);
         }
         else {
           // Filtramos los usuarios que no tengan email
