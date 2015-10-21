@@ -177,7 +177,6 @@ var doPublishPhotoTweet = function(access_token, text, file, callback) {
   var rawFile = fs.createReadStream(file.path);
 
   var formData = {
-    media_data: new Buffer(rawFile).toString('base64'),
     media: rawFile
   };
 
