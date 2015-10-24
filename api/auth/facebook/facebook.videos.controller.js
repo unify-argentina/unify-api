@@ -9,6 +9,7 @@ var util = require('util');
 var async = require('async');
 var moment = require('moment');
 var fs = require('fs');
+var fse = require('fs-extra');
 var logger = require('../../../config/logger');
 var config = require('../../../config');
 var facebookUtils = require('./facebook.utils');
@@ -60,7 +61,7 @@ module.exports.getVideos = function(access_token, facebookId, callback) {
 };
 
 // Publica el video en partes a Facebook hasta que termina
-module.exports.publishVideo = function(access_token, text, file, callback) {
+module.exports.publishVideo = function(access_token, text, file) {
 
   var stats = fs.statSync(file.path);
 
@@ -71,19 +72,14 @@ module.exports.publishVideo = function(access_token, text, file, callback) {
   };
 
   logger.info('URL: ' + USER_PUBLISH_VIDEO_URL);
+  logger.debug('Facebook form data: ' + JSON.stringify(formData));
 
   // Primer paso, enviamos el tamaño del video
   request.post({ url: USER_PUBLISH_VIDEO_URL, form: formData, json: true }, function(err, response, body) {
-    if (err) {
-      callback(err);
-    }
-    else {
+    if (!err) {
       // Con lo que nos responde, comenzamos a hacer la transferencia del video
       transferProcess(undefined, file, access_token, body, function(err, currentUploadSession) {
-        if (err) {
-          callback(err);
-        }
-        else {
+        if (!err) {
 
           var formData = {
             access_token: access_token,
@@ -92,15 +88,10 @@ module.exports.publishVideo = function(access_token, text, file, callback) {
             description: text
           };
 
+          logger.debug('Facebook form data: ' + JSON.stringify(formData));
+
           // Una vez que terminó la transferencia, publicamos el video
-          request.post({ url: USER_PUBLISH_VIDEO_URL, form: formData, json: true }, function(err, response, body) {
-            if (err || body.error) {
-              callback(err ? err : body.error);
-            }
-            else {
-              callback(null);
-            }
-          });
+          request.post({ url: USER_PUBLISH_VIDEO_URL, form: formData, json: true });
         }
       });
     }
@@ -110,7 +101,10 @@ module.exports.publishVideo = function(access_token, text, file, callback) {
 // Va procesando cada parte del video a subir hasta que termina
 var transferProcess = function(uploadSession, file, access_token, body, callback) {
 
-  var fd = fs.openSync(file.path, 'r');
+  var copyFileName = file.path + '-facebook';
+  fse.copySync(file.path, copyFileName);
+
+  var fd = fs.openSync(copyFileName, 'r');
 
   var bytesRead, data, bufferLength = 1000000000;
   var buffer = new Buffer(bufferLength);
@@ -121,8 +115,7 @@ var transferProcess = function(uploadSession, file, access_token, body, callback
   bytesRead = fs.readSync(fd, buffer, body.start_offset, offset, null);
   data = bytesRead < bufferLength ? buffer.slice(0, bytesRead) : buffer;
 
-  var parts = file.originalname.split('.');
-  var chunkFileName = file.destination + '/' + parts[0] + '-chunked-' + body.start_offset + '.' + parts[1];
+  var chunkFileName = copyFileName + '-chunked-' + body.start_offset;
   logger.debug('Uploading chunk: ' + chunkFileName);
 
   // Creamos el archivo para luego leerlo y enviarlo
@@ -142,7 +135,7 @@ var transferProcess = function(uploadSession, file, access_token, body, callback
         access_token: access_token
       };
 
-      logger.debug('Form data: ' + JSON.stringify(formData));
+      logger.debug('Facebook form data: ' + JSON.stringify(formData));
 
       formData.video_file_chunk = fs.createReadStream(chunkFileName);
 

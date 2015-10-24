@@ -134,9 +134,8 @@ module.exports.publishContent = function(access_token, file, text, callback) {
   if (file) {
     // Video
     if (file.mimetype.indexOf('image') < 0) {
-      facebookVideos.publishVideo(access_token, text, file, function(err) {
-        callback(err);
-      });
+      facebookVideos.publishVideo(access_token, text, file);
+      callback(null);
     }
     // Foto
     else {
