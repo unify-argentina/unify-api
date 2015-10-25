@@ -242,9 +242,12 @@ var doPublishVideoTweet = function(access_token, text, file) {
 // Va procesando cada parte del video a subir hasta que termina
 var transferProcess = function(index, mediaId, file, fileSize, access_token, callback) {
 
+  // Primero generamos una copia del archivo para que sea independiente a la original ya que
+  // puede tener problemas al abrirlo si es que el controller de facebook también lo abre
   var copyFileName = file.path + '-twitter';
   fse.copySync(file.path, copyFileName);
 
+  // Una vez que tenemos la copia, la abrimos
   var fd = fs.openSync(copyFileName, 'r');
 
   var bytesRead, data, bufferLength = 268435456;
@@ -255,10 +258,14 @@ var transferProcess = function(index, mediaId, file, fileSize, access_token, cal
 
   logger.debug('File size: ' + fileSize + ' startOffset: ' + startOffset + ' length: ' + length);
 
+  // Leemos la cantidad de bytes especificada desde startOffset hasta length
   bytesRead = fs.readSync(fd, buffer, startOffset, length, null);
+
+  // El completed nos va a servir para saber si se está transfiriendo la última parte o no
   var completed  = bytesRead < bufferLength;
   data = completed ? buffer.slice(0, bytesRead) : buffer;
 
+  // Generamos un archivo con los datos leídos recientemente, y con un nombre de tipo archivooriginal-chunked-0
   var chunkFileName = copyFileName + '-chunked-' + index;
   logger.debug('Uploading chunk: ' + chunkFileName);
 
@@ -279,14 +286,17 @@ var transferProcess = function(index, mediaId, file, fileSize, access_token, cal
 
       formData.media = fs.createReadStream(chunkFileName);
 
+      // Una vez que tenemos el archivo escrito, lo subimos
       request.post({ url: twitterUtils.getUserUploadMediaURL(), oauth: twitterUtils.getOauthParam(access_token),
         formData: formData, json: true }, function (err, response) {
+        // Si hubo error o la lectura del archivo se completó, volvemos al proceso inicial para finalizar la subida
         if (err) {
           callback(err);
         }
         else if (completed) {
           callback(null);
         }
+        // Sino, debemos continuar leyendo el archivo, incrementando el índice de lectura
         else {
           transferProcess(index + 1, mediaId, file, fileSize, access_token, callback);
         }
