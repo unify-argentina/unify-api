@@ -33,6 +33,20 @@ module.exports.getMedia = function(req, res) {
   });
 };
 
+// Obtiene más contenido del usuario
+module.exports.getMoreMedia = function (req, res) {
+
+  process.nextTick(function () {
+    res.send({
+      user_id: req.user_id,
+      media: {
+        count: 0,
+        list: []
+      }
+    });
+  });
+};
+
 // Una vez que encontramos al usuario, mandamos a consultar su contenido por cada red social que tenga asociada
 var doGetMedia = function(res, user) {
   async.parallel({

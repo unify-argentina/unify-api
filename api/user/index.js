@@ -518,6 +518,108 @@ userRoutes.get('/:user_id/recomended_friends', friendsController.getRecomendedFr
 userRoutes.get('/:user_id/media', mediaController.getMedia);
 
 /**
+ * @api {get} /api/user/:user_id/media/more Obtener más contenido del usuario
+ * @apiGroup Usuarios
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ *
+ * @apiSuccess {Object} user Usuario
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "user_id": "55da99dff7c2a1864235b6fb",
+ *         "media": {
+ *             "count": 4,
+ *             "list": [
+ *                 {
+ *                     "provider": "twitter",
+ *                     "id": "596020075393642496",
+ *                     "type": "text",
+ *                     "created_time": 1430937234,
+ *                     "link": "https://twitter.com/statuses/596020075393642496",
+ *                     "likes": 0,
+ *                     "text": "LIVE on #Periscope: Working @ Etermax https://t.co/4cS15HwDk1",
+ *                     "user_has_liked": false
+ *                 },
+ *                 {
+ *                     "provider": "instagram",
+ *                     "id": "960103625562621136_993803680",
+ *                     "type": "image",
+ *                     "created_time": 1428673292,
+ *                     "link": "https://instagram.com/p/1S-SkdOYTQfgPBMEYnQ3vXzQw0u5-zsRlm9XY0/",
+ *                     "likes": 6,
+ *                     "media_url": "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11084974_830219477014557_2002237000_n.jpg",
+ *                     "text": "Máquina de snacks y de cafe en el laburo, cartón lleno!",
+ *                     "user_has_liked": ""
+ *                 },
+ *                 {
+ *                     "provider": "facebook",
+ *                     "id": "10153184467399738",
+ *                     "type": "image",
+ *                     "created_time": 1427824794,
+ *                     "link": "https://www.facebook.com/photo.php?fbid=10153184467399738&set=a.36885379737.45118.826764737&type=1",
+ *                     "likes": 11,
+ *                     "media_url": "https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-xpt1/t31.0-8/10856832_10153184467399738_425179179183655076_o.jpg",
+ *                     "text": "Google te pasás loco.."
+ *                 },
+ *                 {
+ *                     "provider": "facebook",
+ *                     "id": "104231789737",
+ *                     "type": "video",
+ *                     "created_time": 1248316817,
+ *                     "link": "",
+ *                     "likes": 0,
+ *                     "media_url": "https://video.xx.fbcdn.net/hvideo-xpa1/v/t42.1790-2/1128968_10151770969524738_48281_n.mp4?oh=5292d676428908d8e4c12316c9c3fd81&oe=55CE3C64",
+ *                     "text": ""
+ *                 }
+ *             ]
+ *         }
+ *     }
+ *
+ * @apiErrorExample Respuesta invalida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "media": {
+ *             "count": 0,
+ *             "list": [
+ *             ]
+ *         },
+ *         "errors": {
+ *             "facebook": {
+ *                 "photos": {
+ *                     "code": 190,
+ *                     "msg": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 },
+ *                 "videos": {
+ *                     "code": 190,
+ *                     "msg": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 },
+ *                 "statuses": {
+ *                     "code": 190,
+ *                     "msg": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 }
+ *             },
+ *             "instagram": {
+ *                 "code": 400,
+ *                 "msg": "The access_token provided is invalid."
+ *             },
+ *             "twitter": {
+ *                 "code": 89,
+ *                 "msg": "Invalid or expired token."
+ *             }
+ *         }
+ *     }
+ */
+userRoutes.get('/:user_id/media/more', mediaController.getMoreMedia);
+
+/**
  * @api {post} /api/user/:user_id/media/like Dar like
  * @apiGroup Usuarios
  *

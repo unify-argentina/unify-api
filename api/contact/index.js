@@ -398,4 +398,97 @@ contactRoutes.delete('/:contact_id', contactController.delete);
  */
 contactRoutes.get('/:contact_id/media', mediaController.getMedia);
 
+/**
+ * @api {get} /api/user/:user_id/contact/:contact_id/media/more Obtener más contenido de un contacto
+ * @apiGroup Contactos
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} contact_id Id del contacto
+ *
+ * @apiSuccess {Object} contact Contacto
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "contact_id": "55da99dff7c2a1864235b6fb",
+ *         "media": {
+ *             "count": 3,
+ *             "list": [
+ *                 {
+ *                     "provider": "instagram",
+ *                     "id": "1045056700312632485_1244524526",
+ *                     "type": "image",
+ *                     "created_time": 1438800488,
+ *                     "link": "https://instagram.com/p/6AyYgwRryl/",
+ *                     "likes": 21,
+ *                     "media_url": "https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e15/11821140_1458199127814596_2044349920_n.jpg",
+ *                     "text": "40 meses y más a tu lado. \nGracias por estar a mi lado y amarme como lo haces. \nNo existe nadie como vos! Te amo para siempre 💕\n\"Ahora cambiemos el mundo, amigo, que tu ya has cambiado el mio\"",
+ *                     "user_has_liked": true
+ *                 },
+ *                 {
+ *                     "provider": "twitter",
+ *                     "id": "628942328963702784",
+ *                     "type": "text",
+ *                     "created_time": 1438786511,
+ *                     "link": "https://twitter.com/statuses/628942328963702784",
+ *                     "likes": 0,
+ *                     "text": "@eugeniiazarco no te rias del niño acento que el viernes voy a pasar a ser yo ``````````",
+ *                     "user_has_liked": false
+ *                 },
+ *                 {
+ *                     "provider": "twitter",
+ *                     "id": "628927833134530560",
+ *                     "type": "video",
+ *                     "created_time": 1438783054,
+ *                     "link": "https://twitter.com/statuses/628927833134530560",
+ *                     "likes": 0,
+ *                     "text": "@eugeniiazarco euchi don't goooo http://t.co/vabQtQzV1Y",
+ *                     "user_has_liked": false
+ *                 }
+ *             ]
+ *         }
+ *     }
+ *
+ * @apiErrorExample Respuesta invalida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "media": {
+ *             "count": 0,
+ *             "list": [
+ *             ]
+ *         },
+ *         "errors": {
+ *             "facebook": {
+ *                 "photos": {
+ *                     "code": 190,
+ *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 },
+ *                 "videos": {
+ *                     "code": 190,
+ *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 },
+ *                 "statuses": {
+ *                     "code": 190,
+ *                     "message": "Error validating access token: The user has not authorized application 805638479520745."
+ *                 }
+ *             },
+ *             "instagram": {
+ *                 "code": 400,
+ *                 "message": "The access_token provided is invalid."
+ *             },
+ *             "twitter": {
+ *                 "code": 89,
+ *                 "message": "Invalid or expired token."
+ *             }
+ *         }
+ *     }
+ */
+contactRoutes.get('/:contact_id/media/more', mediaController.getMoreMedia);
+
 module.exports = contactRoutes;

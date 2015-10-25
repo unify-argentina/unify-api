@@ -18,19 +18,32 @@ var contactSchema = mongoose.Schema({
   facebook: {
     id: String,
     display_name: String,
-    valid: { type: Boolean, default: true }
+    valid: { type: Boolean, default: true },
+
+    photos_last_content_date: Date,
+    photos_next_url: String,
+    videos_last_content_date: Date,
+    videos_next_url: String,
+    status_last_content_date: Date,
+    status_next_url: String
   },
 
   twitter: {
     id: String,
     username: String,
-    valid: { type: Boolean, default: true }
+    valid: { type: Boolean, default: true },
+
+    last_content_date: Date,
+    next_url: String
   },
 
   instagram: {
     id: String,
     username: String,
-    valid: { type: Boolean, default: true }
+    valid: { type: Boolean, default: true },
+
+    last_content_date: Date,
+    next_url: String,
   },
 
   google: {

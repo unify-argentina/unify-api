@@ -1076,6 +1076,81 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/api/user/:user_id/circle/:circle_id/media/more",
+    "title": "Obtener más contenido de un circulo",
+    "group": "Circulos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "circle_id",
+            "description": "<p>Id del circulo</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "circle",
+            "description": "<p>Circulo</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"circle_id\": \"55da99dff7c2a1864235b6fb\",\n    \"media\": {\n        \"count\": 4,\n        \"list\": [\n            {\n                \"provider\": \"facebook\",\n                \"id\": \"1078735248812735\",\n                \"type\": \"image\",\n                \"created_time\": 1439410963,\n                \"link\": \"https://www.facebook.com/LeoMessi/photos/a.1078734215479505.1073741903.176063032413299/1078735248812735/?type=1\",\n                \"likes\": 7896,\n                \"media_url\": \"https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xft1/t31.0-8/11872298_1078735248812735_5228412966569443985_o.jpg\",\n                \"text\": \"FC BARCELONA vs SEVILLA CF / UEFA SUPER CUP\",\n                \"contact\": {\n                    \"id\": \"55c778f417d75075277f3b48\",\n                    \"name\": \"Leo Messi\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/176063032413299/picture?type=large\"\n                }\n            },\n            {\n                \"provider\": \"twitter\",\n                \"id\": \"631552235424600064\",\n                \"type\": \"video\",\n                \"created_time\": 1439408761,\n                \"link\": \"https://twitter.com/statuses/631552235424600064\",\n                \"likes\": 0,\n                \"text\": \"RT @sergiolapegue: RT Esta imagen duele.Se llama Gabriel Márquez de Areco, muchos están así. Los ayudamos? Escriban a @VergaraFernando. htt…\",\n                \"user_has_liked\": false,\n                \"contact\": {\n                    \"id\": \"55cab7542337df552818e540\",\n                    \"name\": \"Flore Joffré\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/10206413202905994/picture?type=large\"\n                }\n            },\n            {\n                \"provider\": \"instagram\",\n                \"id\": \"1029692922439453727_427553890\",\n                \"type\": \"video\",\n                \"created_time\": 1436968983,\n                \"link\": \"https://instagram.com/p/5KNEHlvMwf/\",\n                \"likes\": 761575,\n                \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xfa1/t50.2886-16/11758526_1461106840851005_793099058_n.mp4\",\n                \"text\": \"\",\n                \"user_has_liked\": \"\",\n                \"contact\": {\n                    \"id\": \"55c778f417d75075277f3b48\",\n                    \"name\": \"Leo Messi\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/176063032413299/picture?type=large\"\n                }\n            },\n            {\n                \"provider\": \"instagram\",\n                \"id\": \"1028328237861489912_427553890\",\n                \"type\": \"image\",\n                \"created_time\": 1436806300,\n                \"link\": \"https://instagram.com/p/5FWxWCPMz4/\",\n                \"likes\": 1318361,\n                \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xpf1/t51.2885-15/s640x640/sh0.08/e35/10005235_1454738444829608_2103646408_n.jpg\",\n                \"text\": \"\",\n                \"user_has_liked\": \"\",\n                \"contact\": {\n                    \"id\": \"55c778f417d75075277f3b48\",\n                    \"name\": \"Leo Messi\",\n                    \"picture\": \"https://graph.facebook.com/v2.3/176063032413299/picture?type=large\"\n                }\n            }\n        ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/circle/index.js",
+    "groupTitle": "Circulos",
+    "name": "GetApiUserUser_idCircleCircle_idMediaMore",
+    "sampleRequest": [
+      {
+        "url": "http://api.myunify.io/api/user/:user_id/circle/:circle_id/media/more"
+      }
+    ]
+  },
+  {
+    "type": "get",
     "url": "/api/user/:user_id/circle/:circle_id/tree",
     "title": "Obtener subcirculos",
     "group": "Circulos",
@@ -1579,6 +1654,90 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://api.myunify.io/api/user/:user_id/contact/:contact_id/media"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/api/user/:user_id/contact/:contact_id/media/more",
+    "title": "Obtener más contenido de un contacto",
+    "group": "Contactos",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "contact_id",
+            "description": "<p>Id del contacto</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "contact",
+            "description": "<p>Contacto</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"contact_id\": \"55da99dff7c2a1864235b6fb\",\n    \"media\": {\n        \"count\": 3,\n        \"list\": [\n            {\n                \"provider\": \"instagram\",\n                \"id\": \"1045056700312632485_1244524526\",\n                \"type\": \"image\",\n                \"created_time\": 1438800488,\n                \"link\": \"https://instagram.com/p/6AyYgwRryl/\",\n                \"likes\": 21,\n                \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e15/11821140_1458199127814596_2044349920_n.jpg\",\n                \"text\": \"40 meses y más a tu lado. \\nGracias por estar a mi lado y amarme como lo haces. \\nNo existe nadie como vos! Te amo para siempre 💕\\n\\\"Ahora cambiemos el mundo, amigo, que tu ya has cambiado el mio\\\"\",\n                \"user_has_liked\": true\n            },\n            {\n                \"provider\": \"twitter\",\n                \"id\": \"628942328963702784\",\n                \"type\": \"text\",\n                \"created_time\": 1438786511,\n                \"link\": \"https://twitter.com/statuses/628942328963702784\",\n                \"likes\": 0,\n                \"text\": \"@eugeniiazarco no te rias del niño acento que el viernes voy a pasar a ser yo ``````````\",\n                \"user_has_liked\": false\n            },\n            {\n                \"provider\": \"twitter\",\n                \"id\": \"628927833134530560\",\n                \"type\": \"video\",\n                \"created_time\": 1438783054,\n                \"link\": \"https://twitter.com/statuses/628927833134530560\",\n                \"likes\": 0,\n                \"text\": \"@eugeniiazarco euchi don't goooo http://t.co/vabQtQzV1Y\",\n                \"user_has_liked\": false\n            }\n        ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Respuesta invalida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"media\": {\n        \"count\": 0,\n        \"list\": [\n        ]\n    },\n    \"errors\": {\n        \"facebook\": {\n            \"photos\": {\n                \"code\": 190,\n                \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            },\n            \"videos\": {\n                \"code\": 190,\n                \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            },\n            \"statuses\": {\n                \"code\": 190,\n                \"message\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            }\n        },\n        \"instagram\": {\n            \"code\": 400,\n            \"message\": \"The access_token provided is invalid.\"\n        },\n        \"twitter\": {\n            \"code\": 89,\n            \"message\": \"Invalid or expired token.\"\n        }\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/contact/index.js",
+    "groupTitle": "Contactos",
+    "name": "GetApiUserUser_idContactContact_idMediaMore",
+    "sampleRequest": [
+      {
+        "url": "http://api.myunify.io/api/user/:user_id/contact/:contact_id/media/more"
       }
     ]
   },
@@ -2869,6 +3028,83 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://api.myunify.io/api/user/:user_id/media"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/api/user/:user_id/media/more",
+    "title": "Obtener más contenido del usuario",
+    "group": "Usuarios",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id del usuario</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "user",
+            "description": "<p>Usuario</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Respuesta valida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"user_id\": \"55da99dff7c2a1864235b6fb\",\n    \"media\": {\n        \"count\": 4,\n        \"list\": [\n            {\n                \"provider\": \"twitter\",\n                \"id\": \"596020075393642496\",\n                \"type\": \"text\",\n                \"created_time\": 1430937234,\n                \"link\": \"https://twitter.com/statuses/596020075393642496\",\n                \"likes\": 0,\n                \"text\": \"LIVE on #Periscope: Working @ Etermax https://t.co/4cS15HwDk1\",\n                \"user_has_liked\": false\n            },\n            {\n                \"provider\": \"instagram\",\n                \"id\": \"960103625562621136_993803680\",\n                \"type\": \"image\",\n                \"created_time\": 1428673292,\n                \"link\": \"https://instagram.com/p/1S-SkdOYTQfgPBMEYnQ3vXzQw0u5-zsRlm9XY0/\",\n                \"likes\": 6,\n                \"media_url\": \"https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11084974_830219477014557_2002237000_n.jpg\",\n                \"text\": \"Máquina de snacks y de cafe en el laburo, cartón lleno!\",\n                \"user_has_liked\": \"\"\n            },\n            {\n                \"provider\": \"facebook\",\n                \"id\": \"10153184467399738\",\n                \"type\": \"image\",\n                \"created_time\": 1427824794,\n                \"link\": \"https://www.facebook.com/photo.php?fbid=10153184467399738&set=a.36885379737.45118.826764737&type=1\",\n                \"likes\": 11,\n                \"media_url\": \"https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-xpt1/t31.0-8/10856832_10153184467399738_425179179183655076_o.jpg\",\n                \"text\": \"Google te pasás loco..\"\n            },\n            {\n                \"provider\": \"facebook\",\n                \"id\": \"104231789737\",\n                \"type\": \"video\",\n                \"created_time\": 1248316817,\n                \"link\": \"\",\n                \"likes\": 0,\n                \"media_url\": \"https://video.xx.fbcdn.net/hvideo-xpa1/v/t42.1790-2/1128968_10151770969524738_48281_n.mp4?oh=5292d676428908d8e4c12316c9c3fd81&oe=55CE3C64\",\n                \"text\": \"\"\n            }\n        ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Respuesta invalida",
+          "content": "HTTP/1.1 200 OK\n{\n    \"media\": {\n        \"count\": 0,\n        \"list\": [\n        ]\n    },\n    \"errors\": {\n        \"facebook\": {\n            \"photos\": {\n                \"code\": 190,\n                \"msg\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            },\n            \"videos\": {\n                \"code\": 190,\n                \"msg\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            },\n            \"statuses\": {\n                \"code\": 190,\n                \"msg\": \"Error validating access token: The user has not authorized application 805638479520745.\"\n            }\n        },\n        \"instagram\": {\n            \"code\": 400,\n            \"msg\": \"The access_token provided is invalid.\"\n        },\n        \"twitter\": {\n            \"code\": 89,\n            \"msg\": \"Invalid or expired token.\"\n        }\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/user/index.js",
+    "groupTitle": "Usuarios",
+    "name": "GetApiUserUser_idMediaMore",
+    "sampleRequest": [
+      {
+        "url": "http://api.myunify.io/api/user/:user_id/media/more"
       }
     ]
   },

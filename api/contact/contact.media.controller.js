@@ -41,6 +41,20 @@ module.exports.getMedia = function(req, res) {
   });
 };
 
+// Obtiene más contenido del contacto
+module.exports.getMoreMedia = function (req, res) {
+
+  process.nextTick(function () {
+    res.send({
+      contact_id: req.contact._id,
+      media: {
+        count: 0,
+        list: []
+      }
+    });
+  });
+};
+
 // Obtiene el contenido del contacto por cada red social que tenga asociada el usuario
 module.exports.doGetMedia = function(user, contact, callback) {
   async.parallel({

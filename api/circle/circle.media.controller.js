@@ -50,6 +50,20 @@ module.exports.getMedia = function(req, res) {
   });
 };
 
+// Obtiene más contenido del círculo
+module.exports.getMoreMedia = function (req, res) {
+
+  process.nextTick(function () {
+    res.send({
+      circle_id: req.circle._id,
+      media: {
+        count: 0,
+        list: []
+      }
+    });
+  });
+};
+
 // Obtiene el contenido de cada contacto
 var doGetMedia = function(res, user, contacts, mediaCallback) {
 

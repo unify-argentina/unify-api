@@ -23,7 +23,6 @@ var Contact = require('../../contact/contact.model');
 module.exports.getMedia = function(access_token, twitterId, callback) {
 
   var qs = {
-    //cursor: cursor,
     user_id: twitterId,
     count: config.TWITTER_MAX_MEDIA_COUNT
   };

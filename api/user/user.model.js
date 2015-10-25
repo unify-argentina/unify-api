@@ -33,7 +33,14 @@ var userSchema = mongoose.Schema({
     email: String,
     access_token: { type: String, select: false },
     picture: String,
-    display_name: String
+    display_name: String,
+
+    photos_last_content_date: Date,
+    photos_next_url: String,
+    videos_last_content_date: Date,
+    videos_next_url: String,
+    status_last_content_date: Date,
+    status_next_url: String
   },
 
   twitter: {
@@ -44,7 +51,10 @@ var userSchema = mongoose.Schema({
     },
     picture: String,
     display_name: String,
-    username: String
+    username: String,
+
+    last_content_date: Date,
+    next_url: String
   },
 
   instagram: {
@@ -52,7 +62,10 @@ var userSchema = mongoose.Schema({
     access_token: { type: String, select: false },
     picture: String,
     display_name: String,
-    username: String
+    username: String,
+
+    last_content_date: Date,
+    next_url: String
   },
 
   google: {

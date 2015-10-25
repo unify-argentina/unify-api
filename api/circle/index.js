@@ -416,4 +416,94 @@ circleRoutes.delete('/:circle_id', circleController.delete);
  */
 circleRoutes.get('/:circle_id/media', mediaController.getMedia);
 
+/**
+ * @api {get} /api/user/:user_id/circle/:circle_id/media/more Obtener más contenido de un circulo
+ * @apiGroup Circulos
+ *
+ * @apiHeader {String} Authorization Bearer token
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOizMTIsImV4cCI6MTQzNzM2NTMxMn0"
+ *     }
+ *
+ * @apiParam {String} user_id Id del usuario
+ * @apiParam {String} circle_id Id del circulo
+ *
+ * @apiSuccess {Object} circle Circulo
+ *
+ * @apiSuccessExample Respuesta valida
+ *     HTTP/1.1 200 OK
+ *     {
+ *         "circle_id": "55da99dff7c2a1864235b6fb",
+ *         "media": {
+ *             "count": 4,
+ *             "list": [
+ *                 {
+ *                     "provider": "facebook",
+ *                     "id": "1078735248812735",
+ *                     "type": "image",
+ *                     "created_time": 1439410963,
+ *                     "link": "https://www.facebook.com/LeoMessi/photos/a.1078734215479505.1073741903.176063032413299/1078735248812735/?type=1",
+ *                     "likes": 7896,
+ *                     "media_url": "https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xft1/t31.0-8/11872298_1078735248812735_5228412966569443985_o.jpg",
+ *                     "text": "FC BARCELONA vs SEVILLA CF / UEFA SUPER CUP",
+ *                     "contact": {
+ *                         "id": "55c778f417d75075277f3b48",
+ *                         "name": "Leo Messi",
+ *                         "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
+ *                     }
+ *                 },
+ *                 {
+ *                     "provider": "twitter",
+ *                     "id": "631552235424600064",
+ *                     "type": "video",
+ *                     "created_time": 1439408761,
+ *                     "link": "https://twitter.com/statuses/631552235424600064",
+ *                     "likes": 0,
+ *                     "text": "RT @sergiolapegue: RT Esta imagen duele.Se llama Gabriel Márquez de Areco, muchos están así. Los ayudamos? Escriban a @VergaraFernando. htt…",
+ *                     "user_has_liked": false,
+ *                     "contact": {
+ *                         "id": "55cab7542337df552818e540",
+ *                         "name": "Flore Joffré",
+ *                         "picture": "https://graph.facebook.com/v2.3/10206413202905994/picture?type=large"
+ *                     }
+ *                 },
+ *                 {
+ *                     "provider": "instagram",
+ *                     "id": "1029692922439453727_427553890",
+ *                     "type": "video",
+ *                     "created_time": 1436968983,
+ *                     "link": "https://instagram.com/p/5KNEHlvMwf/",
+ *                     "likes": 761575,
+ *                     "media_url": "https://scontent.cdninstagram.com/hphotos-xfa1/t50.2886-16/11758526_1461106840851005_793099058_n.mp4",
+ *                     "text": "",
+ *                     "user_has_liked": "",
+ *                     "contact": {
+ *                         "id": "55c778f417d75075277f3b48",
+ *                         "name": "Leo Messi",
+ *                         "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
+ *                     }
+ *                 },
+ *                 {
+ *                     "provider": "instagram",
+ *                     "id": "1028328237861489912_427553890",
+ *                     "type": "image",
+ *                     "created_time": 1436806300,
+ *                     "link": "https://instagram.com/p/5FWxWCPMz4/",
+ *                     "likes": 1318361,
+ *                     "media_url": "https://scontent.cdninstagram.com/hphotos-xpf1/t51.2885-15/s640x640/sh0.08/e35/10005235_1454738444829608_2103646408_n.jpg",
+ *                     "text": "",
+ *                     "user_has_liked": "",
+ *                     "contact": {
+ *                         "id": "55c778f417d75075277f3b48",
+ *                         "name": "Leo Messi",
+ *                         "picture": "https://graph.facebook.com/v2.3/176063032413299/picture?type=large"
+ *                     }
+ *                 }
+ *             ]
+ *         }
+ *     }
+ */
+circleRoutes.get('/:circle_id/media/more', mediaController.getMoreMedia);
+
 module.exports = circleRoutes;
