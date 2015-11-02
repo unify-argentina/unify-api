@@ -63,7 +63,7 @@ var getInstagramData = function(url, users, callback) {
       callback(result.error, null);
     }
     // Si hay un paginado, vuelvo a llamar a la función
-    else if (response.body.pagination.next_url) {
+    else if (response.body.pagination && response.body.pagination.next_url) {
       users.push.apply(users, response.body.data);
       getInstagramData(response.body.pagination.next_url, users, callback);
     }
