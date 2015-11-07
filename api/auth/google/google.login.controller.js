@@ -9,16 +9,12 @@ var jwt = require('./../util/jwt');
 var request = require('request');
 var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
-var googleErrors = require('./google.errors');
-var googleAuth = require('./google.auth.helper');
 var notificationsController = require('../../email/notifications.controller');
+var googleErrors = require('./google.errors');
+var googleUtils = require('./google.utils');
 
 // modelos
 var User = require('../../user/user.model');
-
-// constantes
-var REFRESH_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token';
-var PEOPLE_API_URL = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
 
 // Desconecta la cuenta de Google de la de Unify
 module.exports.unlinkAccount = function(req, res) {
@@ -52,11 +48,11 @@ module.exports.linkAccount = function(req, res) {
 
   process.nextTick(function() {
 
-    var qs = googleAuth.getAccessTokenParams(req);
+    var qs = googleUtils.getAccessTokenParams(req);
     logger.info('Access token params: ' + JSON.stringify(qs));
 
     // Primero intercambiamos el código de autorización para obtener el access token
-    request.post(REFRESH_TOKEN_URL, { json: true, form: qs }, function(err, response, token) {
+    request.post(googleUtils.getOauthURL(), { json: true, form: qs }, function(err, response, token) {
 
       var oauthError = googleErrors.hasError(err, response);
       if (oauthError.hasError) {
@@ -73,7 +69,7 @@ module.exports.linkAccount = function(req, res) {
       var headers = { Authorization: 'Bearer ' + access_token };
 
       // Una vez que tenemos el access_token, obtenemos información del usuario actual
-      request.get({ url: PEOPLE_API_URL, headers: headers, json: true }, function(err, response, profile) {
+      request.get({ url: googleUtils.getUserProfileURL(), headers: headers, json: true }, function(err, response, profile) {
 
         var profileError = googleErrors.hasError(err, response);
         if (profileError.hasError) {

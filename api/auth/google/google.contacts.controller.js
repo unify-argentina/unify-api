@@ -11,23 +11,27 @@ var async = require('async');
 var _ = require('lodash');
 var logger = require('../../../config/logger');
 var googleErrors = require('./google.errors');
-var googleAuth = require('./google.auth.helper');
+var googleUtils = require('./google.utils');
 
 // Devuelve los amigos de Google del usuario loggeado
 module.exports.getContacts = function(refresh_token, googleId, callback) {
 
-  var url = 'https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=10000';
-
   // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Google
   var contacts = [];
 
-  googleAuth.getAccessToken(refresh_token, function(err, access_token) {
+  googleUtils.getAccessToken(refresh_token, function(err, access_token) {
 
     if (err) {
       callback(null, err.errors[0]);
     }
     else {
-      getGoogleData(url, access_token, contacts, function(err, googleContacts) {
+
+      var qs = {
+        alt: 'json',
+        'max-results': 10000
+      };
+
+      getGoogleData(googleUtils.getContactsURL(), qs, access_token, contacts, function(err, googleContacts) {
 
         if (err) {
           callback(null, err.errors[0]);
@@ -64,13 +68,13 @@ module.exports.getContacts = function(refresh_token, googleId, callback) {
 
 // Le pega a la API de Google y en el response, si fue exitoso, van a estar los contactos del usuario
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
-var getGoogleData = function(url, access_token, contacts, callback) {
+var getGoogleData = function(url, qs, access_token, contacts, callback) {
 
-  logger.info('URL: ' + url);
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   var headers = { Authorization: 'Bearer ' + access_token };
 
-  request.get({ url: url, headers: headers, json: true }, function(err, response) {
+  request.get({ url: url, qs: qs, headers: headers, json: true }, function(err, response) {
 
     var result = googleErrors.hasError(err, response);
     if (result.hasError) {

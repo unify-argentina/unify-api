@@ -11,12 +11,10 @@ var config = require('../../../config');
 var randomstring = require('randomstring');
 var logger = require('../../../config/logger');
 var instagramErrors = require('./instagram.errors');
+var instagramUtils = require('./instagram.utils');
 
 // modelos
 var User = require('../../user/user.model');
-
-// constantes
-var ACCESS_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
 
 // Desconecta la cuenta de Instagram de la de Unify
 module.exports.unlinkAccount = function(req, res) {
@@ -60,7 +58,7 @@ module.exports.linkAccount = function(req, res) {
     logger.info('Access token params: ' + JSON.stringify(qs));
 
     // Intercambiamos el código de autorización para obtener el access token
-    request.post({ url: ACCESS_TOKEN_URL, form: qs, json: true }, function(err, response, body) {
+    request.post({ url: instagramUtils.getOauthURL(), form: qs, json: true }, function(err, response, body) {
 
       var oauthError = instagramErrors.hasError(err, response);
       if (oauthError.hasError) {

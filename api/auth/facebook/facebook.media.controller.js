@@ -18,23 +18,23 @@ var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
 
 // constantes
-var USER_LIKE_URL = facebookUtils.getBaseURL() + '/%s/likes?access_token=%s';
+var USER_LIKE_URL = facebookUtils.getBaseURL() + '/%s/likes?=%s';
 
 // Se encarga de llamar a los módulos de fotos, videos y estados y luego devuelve los resultados
-module.exports.getMedia = function(access_token, facebookId, callback) {
+module.exports.getMedia = function(access_token, facebook, facebookId, callback) {
 
   async.parallel({
     uploadedPhotos: function(callback) {
-      facebookPhotos.getPhotos(access_token, facebookId, true, callback);
+      facebookPhotos.getPhotos(access_token, facebook, facebookId, true, callback);
     },
     taggedPhotos: function(callback) {
-      facebookPhotos.getPhotos(access_token, facebookId, false, callback);
+      facebookPhotos.getPhotos(access_token, facebook, facebookId, false, callback);
     },
     videos: function(callback) {
-      facebookVideos.getVideos(access_token, facebookId, callback);
+      facebookVideos.getVideos(access_token, facebook, facebookId, callback);
     },
     statuses: function(callback) {
-      facebookStatuses.getStatuses(access_token, facebookId, callback);
+      facebookStatuses.getStatuses(access_token, facebook, facebookId, callback);
     }
   },
 
@@ -100,11 +100,13 @@ module.exports.getMedia = function(access_token, facebookId, callback) {
 // Esta función hace un post con un like a un contenido de Facebook
 module.exports.toggleLike = function(access_token, facebookMediaId, toggleLike, callback) {
 
-  var url = util.format(USER_LIKE_URL, facebookMediaId, access_token);
-  logger.info('URL: ' + url);
+  var qs = { access_token: access_token };
+
+  var url = util.format(facebookUtils.getUserLikeURL(), facebookMediaId);
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   if (toggleLike) {
-    request.post({ url: url, json: true }, function(err, response) {
+    request.post({ url: url, qs: qs, json: true }, function(err, response) {
       var result = facebookErrors.hasError(err, response);
       if (result.hasError) {
         callback(result.error);
@@ -115,7 +117,7 @@ module.exports.toggleLike = function(access_token, facebookMediaId, toggleLike, 
     });
   }
   else {
-    request.del({ url: url, json: true }, function(err, response) {
+    request.del({ url: url, qs: qs, json: true }, function(err, response) {
       var result = facebookErrors.hasError(err, response);
       if (result.hasError) {
         callback(result.error);

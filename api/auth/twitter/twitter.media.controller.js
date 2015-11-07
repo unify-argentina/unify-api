@@ -11,6 +11,7 @@ var async = require('async');
 var moment = require('moment');
 var fs = require('fs');
 var fse = require('fs-extra');
+var bignum = require('bignum');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
 var twitterUtils = require('./twitter.utils');
@@ -20,14 +21,21 @@ var twitterErrors = require('./twitter.errors');
 var Contact = require('../../contact/contact.model');
 
 // Devuelve los tweets conteniendo sólo texto, foto o video del usuario pasado por parámetro
-module.exports.getMedia = function(access_token, twitterId, callback) {
+module.exports.getMedia = function(access_token, twitter, twitterId, callback) {
 
   var qs = {
     user_id: twitterId,
     count: config.TWITTER_MAX_MEDIA_COUNT
   };
+
+  var lastTweetId = twitter.last_content_id;
+  if (lastTweetId) {
+    // https://dev.twitter.com/rest/public/timelines
+    qs.max_id = bignum(lastTweetId).sub('1').toString();
+  }
+
   var url = twitterUtils.getUserMediaURL();
-  logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   request.get({ url: url, oauth: twitterUtils.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
     var result = twitterErrors.hasError(err, response);
@@ -104,7 +112,7 @@ module.exports.toggleLike = function(access_token, twitterMediaId, toggleLike, c
 
   var qs = { id: twitterMediaId };
   var url = toggleLike ? twitterUtils.getUserFavURL() : twitterUtils.getUserUnfavURL();
-  logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   request.post({ url: url, oauth: twitterUtils.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
 
@@ -153,7 +161,7 @@ var doPublishTweet = function(access_token, text, mediaId, callback) {
     qs.media_ids = mediaId;
   }
   var url = twitterUtils.getUserPublishContentURL();
-  logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   request.post({ url: url, oauth: twitterUtils.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
 

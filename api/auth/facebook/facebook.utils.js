@@ -14,17 +14,22 @@ module.exports.getBaseURL = function() {
   return 'https://graph.facebook.com/' + this.getVersion();
 };
 
-// Devuelve la URL Base de la API para subir videos de Facebook
-module.exports.getBasePublishVideoURL = function() {
-  return 'https://graph-video.facebook.com/' + this.getVersion();
-};
-
 // Devuelve la URL principal de Facebook
 module.exports.getFacebookURL = function() {
   return 'https://www.facebook.com/';
 };
 
-// Devuelve la url de la imagen del perfil del usuario con id = profileId
+// Devuelve la URL de OAuth de Facebook
+module.exports.getOauthURL = function() {
+  return this.getBaseURL() + '/oauth/access_token';
+};
+
+// Devuelve la URL del perfil del usuario de Facebook
+module.exports.getUserProfileURL = function() {
+  return this.getBaseURL() + '/me';
+};
+
+// Devuelve la URL de la imagen del perfil del usuario con id = profileId
 module.exports.getFacebookPicture = function(profileId) {
   return module.exports.getBaseURL() + '/' + profileId + '/picture?type=large';
 };
@@ -32,4 +37,49 @@ module.exports.getFacebookPicture = function(profileId) {
 // Devuelve el formato de fecha de Facebook
 module.exports.getFacebookDateFormat = function() {
   return 'YYYY-MM-DD[T]HH:mm:ssZZ';
+};
+
+// Devuelve la URL para obtener las fotos de Facebook
+module.exports.getUserPhotosURL = function() {
+  return this.getBaseURL() + '/%s/photos';
+};
+
+// Devuelve la URL para obtener los videos de Facebook
+module.exports.getUserVideosURL = function() {
+  return this.getBaseURL() + '/%s/videos';
+};
+
+// Devuelve la URL para obtener los estados de Facebook
+module.exports.getUserStatusesURL = function() {
+  return this.getBaseURL() + '/%s/statuses';
+};
+
+// Devuelve la URL de la API para publicar fotos de Facebook
+module.exports.getUserPublishPhotoURL = function() {
+  return this.getBaseURL() + '/me/photos';
+};
+
+// Devuelve la URL de la API para publicar videos de Facebook
+module.exports.getUserPublishVideoURL = function() {
+  return 'https://graph-video.facebook.com/' + this.getVersion() + '/me/videos';
+};
+
+// Devuelve la URL de la API para publicar estados de Facebook
+module.exports.getUserPublishStatusesURL = function() {
+  return this.getBaseURL() + '/me/feed';
+};
+
+// Devuelve la URL de la API para dar likes de Facebook
+module.exports.getUserLikeURL = function() {
+  return this.getBaseURL() + '/%s/likes';
+};
+
+// Devuelve la URL de la API para obtener los likes de un usuario de Facebook
+module.exports.getUserLikesURL = function() {
+  return this.getBaseURL() + '/%s/likes';
+};
+
+// Devuelve la URL de la API para obtener los amigos de un usuario de Facebook
+module.exports.getUserFriendsURL = function() {
+  return this.getBaseURL() + '/%s/friends';
 };

@@ -103,7 +103,7 @@ var handleTokenRequest = function(req, res) {
 
     var query = { screen_name: access_token.screen_name };
     var url = twitterUtils.getProfileURL();
-    logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
+    logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
     request.get({ url: url, oauth: profileOauth, qs: query, json: true }, function(err, response, profile) {
 

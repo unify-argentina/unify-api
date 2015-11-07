@@ -11,18 +11,24 @@ var async = require('async');
 var _ = require('lodash');
 var logger = require('../../../config/logger');
 var instagramErrors = require('./instagram.errors');
+var instagramUtils = require('./instagram.utils');
 
 // Devuelve las personas a las que sigue en Instagram el usuario loggeado
 module.exports.getFriends = function(access_token, instagramId, callback) {
 
   // El límite de la API de Instagram es de 100 usuarios por request. No lo dice, pero probando
   // descubrimos que es 100. https://instagram.com/developer/endpoints/
-  var url = util.format('https://api.instagram.com/v1/users/%s/follows?access_token=%s&count=100', instagramId, access_token);
+  var qs = {
+    count: 100,
+    access_token: access_token
+  };
+
+  var url = util.format(instagramUtils.getUserFollowsURL(), instagramId);
 
   // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Instagram
   var users = [];
 
-  getInstagramData(url, users, function(err, instagramUsers) {
+  getInstagramData(url, qs, users, function(err, instagramUsers) {
     if (err) {
       callback(null, err);
     }
@@ -53,10 +59,11 @@ module.exports.getFriends = function(access_token, instagramId, callback) {
 
 // Le pega a la API de Instagram y en el response, si fue exitoso, van a estar las personas a las que sigue de
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
-var getInstagramData = function(url, users, callback) {
+var getInstagramData = function(url, qs, users, callback) {
 
-  logger.info('URL: ' + url);
-  request.get({ url: url, json: true }, function(err, response) {
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
+
+  request.get({ url: url, qs: qs, json: true }, function(err, response) {
 
     var result = instagramErrors.hasError(err, response);
     if (result.hasError) {
@@ -65,7 +72,7 @@ var getInstagramData = function(url, users, callback) {
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.pagination && response.body.pagination.next_url) {
       users.push.apply(users, response.body.data);
-      getInstagramData(response.body.pagination.next_url, users, callback);
+      getInstagramData(response.body.pagination.next_url, {}, users, callback);
     }
     // Sino, ya tengo los usuarios y los devuelvo en el callback
     else {

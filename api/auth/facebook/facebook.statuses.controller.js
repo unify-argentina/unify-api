@@ -14,17 +14,24 @@ var config = require('../../../config');
 var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
 
-// constantes
-var USER_STATUSES_URL = facebookUtils.getBaseURL() + '/%s/statuses?fields=id,message,updated_time,likes.limit(0).summary(true),comments.limit(0).summary(true)&limit=%s&access_token=%s';
-var USER_PUBLISH_STATUS_URL = facebookUtils.getBaseURL() + '/me/feed?access_token=%s';
-
 // Devuelve los estados del usuario pasado por parámetro
-module.exports.getStatuses = function(access_token, facebookId, callback) {
+module.exports.getStatuses = function(access_token, facebook, facebookId, callback) {
 
-  var url = util.format(USER_STATUSES_URL, facebookId, config.FACEBOOK_STATUSES_MAX_MEDIA_COUNT, access_token);
-  logger.info('URL: ' + url);
+  var qs = {
+    fields: 'id,message,updated_time,likes.limit(0).summary(true),comments.limit(0).summary(true)',
+    limit: config.FACEBOOK_STATUSES_MAX_MEDIA_COUNT,
+    access_token: access_token
+  };
 
-  request.get({ url: url, json: true }, function(err, response) {
+  var lastStatus = facebook.last_content_date_status;
+  if (lastStatus) {
+    qs.until = lastStatus - 1;
+  }
+
+  var url = util.format(facebookUtils.getUserStatusesURL(), facebookId);
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
+
+  request.get({ url: url, qs: qs, json: true }, function(err, response) {
 
     var result = facebookErrors.hasError(err, response);
     if (result.hasError) {
@@ -67,14 +74,16 @@ var filter = function(facebookMedia, callback) {
 // Publica un estado a Facebook
 module.exports.publishStatus = function(access_token, text, callback) {
 
-  var url = util.format(USER_PUBLISH_STATUS_URL, access_token);
-  logger.info('URL: ' + url);
+  var qs = { access_token: access_token };
+  var url = facebookUtils.getUserPublishStatusesURL();
+
+  logger.info('URL: ' + url + ' qs: ' + qs);
 
   var body = {
     message: text
   };
 
-  request.post({ url: url, json: body }, function(err, response) {
+  request.post({ url: url, qs: qs, json: body }, function(err, response) {
 
     var result = facebookErrors.hasError(err, response);
     if (result.hasError) {

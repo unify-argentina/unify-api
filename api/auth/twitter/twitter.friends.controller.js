@@ -16,7 +16,7 @@ var twitterErrors = require('./twitter.errors');
 // Devuelve las personas a las que sigue en Instagram el usuario loggeado
 module.exports.getFriends = function(access_token, twitterId, callback) {
 
-// Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Twitter
+  // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Twitter
   var users = [];
 
   getTwitterData(twitterUtils.getUserFollowsURL(), -1, access_token, twitterId, users, function(err, twitterUsers) {
@@ -62,7 +62,7 @@ var getTwitterData = function(url, cursor, access_token, twitterId, users, callb
     include_user_entities: false
   };
 
-  logger.info('URL: ' + url + 'qs=' + JSON.stringify(qs));
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
   request.get({ url: url, oauth: twitterUtils.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
 
     var result = twitterErrors.hasError(err, response);

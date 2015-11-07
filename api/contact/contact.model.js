@@ -20,12 +20,9 @@ var contactSchema = mongoose.Schema({
     display_name: String,
     valid: { type: Boolean, default: true },
 
-    photos_last_content_date: Date,
-    photos_next_url: String,
-    videos_last_content_date: Date,
-    videos_next_url: String,
-    status_last_content_date: Date,
-    status_next_url: String
+    last_content_date_photo: String,
+    last_content_date_video: String,
+    last_content_date_status: String
   },
 
   twitter: {
@@ -33,8 +30,7 @@ var contactSchema = mongoose.Schema({
     username: String,
     valid: { type: Boolean, default: true },
 
-    last_content_date: Date,
-    next_url: String
+    last_content_id: String
   },
 
   instagram: {
@@ -42,8 +38,7 @@ var contactSchema = mongoose.Schema({
     username: String,
     valid: { type: Boolean, default: true },
 
-    last_content_date: Date,
-    next_url: String,
+    last_content_date: String
   },
 
   google: {
@@ -157,6 +152,58 @@ contactSchema.methods.cleanSocialAccounts = function() {
   this.twitter = undefined;
   this.instagram = undefined;
   this.google = undefined;
+};
+
+// Elimina el last_content_date de todas las redes del usuario
+contactSchema.methods.removeLastContentDate = function(callback) {
+  this.facebook.last_content_date_photo = undefined;
+  this.facebook.last_content_date_video = undefined;
+  this.facebook.last_content_date_status = undefined;
+  this.twitter.last_content_id = undefined;
+  this.instagram.last_content_date = undefined;
+  this.save(callback);
+};
+
+// Guarda los last_content_date de cada red social
+contactSchema.methods.saveLastContentDates = function(slicedMedia, callback) {
+
+  // Buscamos el último contenido de cada red social para guardarlo
+  var facebookStatus = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'facebook' && media.type === 'text';
+  });
+  if (facebookStatus) {
+    this.facebook.last_content_date_status = facebookStatus.created_time;
+  }
+
+  var facebookPhoto = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'facebook' && media.type === 'image';
+  });
+  if (facebookPhoto) {
+    this.facebook.last_content_date_photo = facebookPhoto.created_time;
+  }
+
+  var facebookVideo = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'facebook' && media.type === 'video';
+  });
+  if (facebookVideo) {
+    this.facebook.last_content_date_video = facebookVideo.created_time;
+  }
+
+  var instagramMedia = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'instagram';
+  });
+  if (instagramMedia) {
+    this.instagram.last_content_date = instagramMedia.created_time;
+  }
+
+  var twitterMedia = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'twitter';
+  });
+  if (twitterMedia) {
+    this.twitter.last_content_id = twitterMedia.id;
+  }
+
+  this.save(callback);
 };
 
 // Este método genera los ancestros de un contacto (el grupo en el cual fue creado más los ancestros del grupo)

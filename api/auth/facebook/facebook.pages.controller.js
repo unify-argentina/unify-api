@@ -17,12 +17,17 @@ var facebookErrors = require('./facebook.errors');
 // Devuelve las páginas de Facebook del usuario loggeado
 module.exports.getPages = function(access_token, facebookId, callback) {
 
-  var url = util.format('%s/%s/likes?access_token=%s&limit=1000', facebookUtils.getBaseURL(), facebookId, access_token);
+  var qs = {
+    limit: 1000,
+    access_token: access_token
+  };
+
+  var url = util.format(facebookUtils.getUserLikesURL(), facebookId);
 
   // Aquí iremos almacenando las páginas que nos devuelva el servicio paginado de Facebook
   var pages = [];
 
-  getFacebookData(url, pages, function(err, facebookPages) {
+  getFacebookData(url, qs, pages, function(err, facebookPages) {
     if (err) {
       callback(null, err);
     }
@@ -52,10 +57,11 @@ module.exports.getPages = function(access_token, facebookId, callback) {
 
 // Le pega a la API de Facebook y en el response, si fue exitoso, van a estar las páginas que le gustan al usuario
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
-var getFacebookData = function(url, pages, callback) {
+var getFacebookData = function(url, qs, pages, callback) {
 
-  logger.info('URL: ' + url);
-  request.get({ url: url, json: true }, function(err, response) {
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
+
+  request.get({ url: url, qs: qs, json: true }, function(err, response) {
 
     var result = facebookErrors.hasError(err, response);
     if (result.hasError) {
@@ -67,7 +73,7 @@ var getFacebookData = function(url, pages, callback) {
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.paging.next) {
       pages.push.apply(pages, response.body.data);
-      getFacebookData(response.body.paging.next, pages, callback);
+      getFacebookData(response.body.paging.next, {}, pages, callback);
     }
     // Sino, ya tengo las páginas y los devuelvo en el callback
     else {

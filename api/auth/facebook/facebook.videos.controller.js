@@ -16,17 +16,25 @@ var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
 var request = require('request');
 
-// constantes
-var USER_VIDEOS_URL = facebookUtils.getBaseURL() + '/%s/videos?type=uploaded&fields=id,description,length,source,picture,created_time,likes.limit(0).summary(true),comments.limit(0).summary(true)&limit=%s&access_token=%s';
-var USER_PUBLISH_VIDEO_URL = facebookUtils.getBasePublishVideoURL() + '/me/videos';
-
 // Devuelve los videos del usuario pasado por parámetro
-module.exports.getVideos = function(access_token, facebookId, callback) {
+module.exports.getVideos = function(access_token, facebook, facebookId, callback) {
 
-  var url = util.format(USER_VIDEOS_URL, facebookId, config.FACEBOOK_VIDEOS_MAX_MEDIA_COUNT, access_token);
-  logger.info('URL: ' + url);
+  var qs = {
+    type: 'uploaded',
+    fields: 'id,description,length,source,picture,created_time,likes.limit(0).summary(true),comments.limit(0).summary(true)',
+    limit: config.FACEBOOK_VIDEOS_MAX_MEDIA_COUNT,
+    access_token: access_token
+  };
 
-  request.get({ url: url, json: true }, function(err, response) {
+  var lastVideo = facebook.last_content_date_video;
+  if (lastVideo) {
+    qs.until = lastVideo - 1;
+  }
+
+  var url = util.format(facebookUtils.getUserVideosURL(), facebookId);
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
+
+  request.get({ url: url, qs: qs, json: true }, function(err, response) {
 
     var result = facebookErrors.hasError(err, response);
     if (result.hasError) {
@@ -71,11 +79,12 @@ module.exports.publishVideo = function(access_token, text, file) {
     file_size: stats.size
   };
 
-  logger.info('URL: ' + USER_PUBLISH_VIDEO_URL);
+  var url = facebookUtils.getUserPublishVideoURL();
+  logger.info('URL: ' + url);
   logger.debug('Facebook form data: ' + JSON.stringify(formData));
 
   // Primer paso, enviamos el tamaño del video
-  request.post({ url: USER_PUBLISH_VIDEO_URL, form: formData, json: true }, function(err, response, body) {
+  request.post({ url: url, form: formData, json: true }, function(err, response, body) {
     if (!err) {
       // Con lo que nos responde, comenzamos a hacer la transferencia del video
       transferProcess(undefined, file, access_token, body, function(err, currentUploadSession) {
@@ -91,7 +100,7 @@ module.exports.publishVideo = function(access_token, text, file) {
           logger.debug('Facebook form data: ' + JSON.stringify(formData));
 
           // Una vez que terminó la transferencia, publicamos el video
-          request.post({ url: USER_PUBLISH_VIDEO_URL, form: formData, json: true });
+          request.post({ url: url, form: formData, json: true });
         }
       });
     }
@@ -113,7 +122,7 @@ var transferProcess = function(uploadSession, file, access_token, body, callback
   var buffer = new Buffer(bufferLength);
 
   var length = body.end_offset - body.start_offset;
-  logger.debug('Start offset: ' + body.start_offset + ' End offset: ' + body.end_offset + ' Offset: ' + offset);
+  logger.debug('Start offset: ' + body.start_offset + ' End offset: ' + body.end_offset + ' Length: ' + length);
 
   // Leemos la cantidad de bytes especificada desde body.start_offset hasta length
   bytesRead = fs.readSync(fd, buffer, body.start_offset, length, null);
@@ -145,7 +154,7 @@ var transferProcess = function(uploadSession, file, access_token, body, callback
       formData.video_file_chunk = fs.createReadStream(chunkFileName);
 
       // Una vez que tenemos el archivo escrito, lo subimos
-      request.post({ url: USER_PUBLISH_VIDEO_URL, formData: formData, json: true }, function (err, response, body) {
+      request.post({ url: facebookUtils.getUserPublishVideoURL(), formData: formData, json: true }, function (err, response, body) {
         // Si hubo error, devolvemos enviándolo
         if (err || body.error) {
           callback(err ? err : body.error, null);

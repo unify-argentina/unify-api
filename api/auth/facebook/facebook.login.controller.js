@@ -17,10 +17,6 @@ var notificationsController = require('../../email/notifications.controller');
 // modelos
 var User = require('../../user/user.model');
 
-// constantes
-var ACCESS_TOKEN_URL = facebookUtils.getBaseURL() + '/oauth/access_token';
-var GRAPH_USER_URL = facebookUtils.getBaseURL() + '/me';
-
 // Desconecta la cuenta de Facebook de la de Unify
 module.exports.unlinkAccount = function(req, res) {
 
@@ -57,7 +53,7 @@ module.exports.linkAccount = function(req, res) {
     logger.info('Access token params: ' + JSON.stringify(qs));
 
     // Primero intercambiamos el código de autorización para obtener el access token
-    request.get({ url: ACCESS_TOKEN_URL, qs: qs, json: true }, function(err, response, access_token) {
+    request.get({ url: facebookUtils.getOauthURL(), qs: qs, json: true }, function(err, response, access_token) {
 
       var oauthError = facebookErrors.hasError(err, response);
       if (oauthError.hasError) {
@@ -68,7 +64,7 @@ module.exports.linkAccount = function(req, res) {
       logger.info('Access token: ' + JSON.stringify(access_token));
 
       // Una vez que tenemos el access_token, obtenemos información del usuario actual
-      request.get({ url: GRAPH_USER_URL, qs: access_token, json: true }, function(err, response, profile) {
+      request.get({ url: facebookUtils.getUserProfileURL(), qs: access_token, json: true }, function(err, response, profile) {
 
         var profileError = facebookErrors.hasError(err, response);
         if (profileError.hasError) {
@@ -118,7 +114,7 @@ var handleAuthenticatedUser = function(res, unifyToken, facebookProfile, access_
     // Si existe un usuario de Unify, nos fijamos si no tiene su cuenta asociada con Facebook
     else if (!unifyUser.hasLinkedAccount('facebook')) {
 
-      // Y si no la tiene, nos fijamos que no haya otro usuario en Unifycon ese Facebook id
+      // Y si no la tiene, nos fijamos que no haya otro usuario en Unify con ese Facebook id
       User.findOne({ 'facebook.id': facebookProfile.id })
         .populate('main_circle')
         .exec(function(err, existingUser) {

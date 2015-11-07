@@ -12,65 +12,32 @@ var _ = require('lodash');
 var moment = require('moment');
 var logger = require('../../../config/logger');
 var googleErrors = require('./google.errors');
-var googleAuth = require('./google.auth.helper');
-
-// constantes
-
-// listado de emails
-var USER_EMAIL_GENERIC_LIST_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages?labelIds=%s';
-
-// detalle de un email
-var USER_EMAIL_DETAIL_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s';
-
-// detalle de un label
-var USER_EMAIL_LABELS_URL = 'https://www.googleapis.com/gmail/v1/users/me/labels/%s';
-
-// envío de email
-var USER_EMAIL_SEND_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/send';
-
-// marcar como visto un email
-var USER_EMAIL_MODIFY_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s/modify';
-
-// borra un email
-var USER_EMAIL_DELETE_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/%s';
-
-// formato de fecha de gmail
-var GMAIL_DATE_FORMAT = 'dd[,] DD MMM YYYY HH:mm:ss ZZ';
-
-// mimetypes
-var MIMETYPES = {
-  TEXT: 'text/plain',
-  HTML: 'text/html'
-};
+var googleUtils = require('./google.utils');
 
 // Lista los mensajes de la bandeja de entrada
 module.exports.listInbox = function(refresh_token, callback) {
-
-  list(refresh_token, 'INBOX', callback);
+  list(refresh_token, googleUtils.getInboxName(), callback);
 };
 
 // Lista los mensajes enviados
 module.exports.listSent = function(refresh_token, callback) {
-
-  list(refresh_token, 'SENT', callback);
+  list(refresh_token, googleUtils.getSentName(), callback);
 };
 
 // Lista los mensajes borradores
 module.exports.listDraft = function(refresh_token, callback) {
-
-  list(refresh_token, 'DRAFT', callback);
+  list(refresh_token, googleUtils.getDraftName(), callback);
 };
 
 // Lista los mensajes de la papelera de reciclaje
 module.exports.listTrash = function(refresh_token, callback) {
-
-  list(refresh_token, 'TRASH', callback);
+  list(refresh_token, googleUtils.getTrashName(), callback);
 };
 
 // Devuelve los emails de la cuenta de Google del usuario loggeado
 var list = function(refresh_token, labelId, callback) {
 
-  googleAuth.getAccessToken(refresh_token, function(err, access_token) {
+  googleUtils.getAccessToken(refresh_token, function(err, access_token) {
 
     if (err) {
       callback(null, err);
@@ -80,10 +47,10 @@ var list = function(refresh_token, labelId, callback) {
       // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Google
       var emails = [];
 
-      var url = util.format(USER_EMAIL_GENERIC_LIST_URL, labelId);
+      var qs = { labelIds: labelId };
 
       // Primero obtenemos los emails con el labelId correspondiente
-      getGoogleData(url, access_token, emails, function(err, googleEmails) {
+      getGoogleData(googleUtils.getUserEmailGenericListURL(), qs, access_token, emails, function(err, googleEmails) {
 
         if (err) {
           callback(null, err);
@@ -95,7 +62,7 @@ var list = function(refresh_token, labelId, callback) {
           // Una vez que los tenemos, mapeamos la lista de ids de emails al email propiamente dicho
           async.map(googleEmails, function(email, mapCallback) {
 
-            var url = util.format(USER_EMAIL_DETAIL_URL, email.id);
+            var url = util.format(googleUtils.getUserEmailDetailURL(), email.id);
 
             // Haciendo un request por cada email
             request.get({ url: url, headers: headers, json: true }, function(err, response) {
@@ -112,7 +79,7 @@ var list = function(refresh_token, labelId, callback) {
 
             logger.debug('Google emails count: ' + googleDetailedEmails.length);
 
-            var url = util.format(USER_EMAIL_LABELS_URL, labelId);
+            var url = util.format(googleUtils.getUserEmailLabelsURL(), labelId);
             logger.info('URL: ' + url);
 
             // Por último, una vez que tenemos la lista de todos los emails, pedimos la info de ese labelId
@@ -139,13 +106,13 @@ var list = function(refresh_token, labelId, callback) {
 };
 
 // Le pega a la API de Google y en el response, si fue exitoso, van a estar los emails del usuario
-var getGoogleData = function(url, access_token, emails, callback) {
+var getGoogleData = function(url, qs, access_token, emails, callback) {
 
-  logger.info('URL: ' + url);
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   var headers = { Authorization: 'Bearer ' + access_token };
 
-  request.get({ url: url, headers: headers, json: true }, function(err, response) {
+  request.get({ url: url, qs: qs, headers: headers, json: true }, function(err, response) {
 
     var result = googleErrors.hasError(err, response);
     if (result.hasError) {
@@ -206,7 +173,7 @@ var getValuesFromPayload = function(googleEmail, name) {
     if (headers && headers.length > 0) {
 
       var date = ensureValue(headers, 'Date');
-      result.date = moment(date, GMAIL_DATE_FORMAT, 'en').unix();
+      result.date = moment(date, googleUtils.getGmailDateFormat(), 'en').unix();
       result.from = ensureValue(headers, 'From');
       result.to = ensureArrayValue(headers, 'To');
       result.cc = ensureArrayValue(headers, 'Cc');
@@ -245,11 +212,11 @@ var getBodyFromPayload = function(googleEmail, contentType) {
       var parts = payload.parts;
 
       if (parts && parts.length > 0) {
-        result.text = findPartValue(parts, MIMETYPES.TEXT);
-        result.html = findPartValue(parts, MIMETYPES.HTML);
+        result.text = findPartValue(parts, googleUtils.MIMETYPES.TEXT);
+        result.html = findPartValue(parts, googleUtils.MIMETYPES.HTML);
       }
     }
-    else if (payload.mimeType === MIMETYPES.HTML || payload.mimeType === MIMETYPES.TEXT) {
+    else if (payload.mimeType === googleUtils.MIMETYPES.HTML || payload.mimeType === googleUtils.MIMETYPES.TEXT) {
       result.html = payload.body.data;
       result.text = payload.body.data;
     }
@@ -282,7 +249,7 @@ var findPartValue = function(parts, mimeType) {
 // Create a Gmail email
 module.exports.create = function(refresh_token, from, body, callback) {
 
-  googleAuth.getAccessToken(refresh_token, function(err, access_token) {
+  googleUtils.getAccessToken(refresh_token, function(err, access_token) {
 
     if (err) {
       callback(err);
@@ -323,11 +290,11 @@ module.exports.create = function(refresh_token, from, body, callback) {
       var emailEncodedBase64 = new Buffer(email).toString('base64');
       var emailEncodedURLBase64 = emailEncodedBase64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
-      logger.info('URL: ' + USER_EMAIL_SEND_URL);
+      logger.info('URL: ' + googleUtils.getUserEmailSendURL());
       var headers = { Authorization: 'Bearer ' + access_token };
 
       // Enviamos el email en formato url base 64
-      request.post({ url: USER_EMAIL_SEND_URL, headers: headers, json: { raw: emailEncodedURLBase64 } }, function(err, response) {
+      request.post({ url: googleUtils.getUserEmailSendURL(), headers: headers, json: { raw: emailEncodedURLBase64 } }, function(err, response) {
 
         var result = googleErrors.hasError(err, response);
         if (result.hasError) {
@@ -344,13 +311,13 @@ module.exports.create = function(refresh_token, from, body, callback) {
 // Elimina un email de google
 module.exports.delete = function(refresh_token, emailId, callback) {
 
-  googleAuth.getAccessToken(refresh_token, function(err, access_token) {
+  googleUtils.getAccessToken(refresh_token, function(err, access_token) {
 
     if (err) {
       callback(err);
     }
     else {
-      var url = util.format(USER_EMAIL_DELETE_URL, emailId);
+      var url = util.format(googleUtils.getUserEmailDeleteURL(), emailId);
       logger.info('URL: ' + url);
 
       var headers = { Authorization: 'Bearer ' + access_token };
@@ -371,7 +338,7 @@ module.exports.delete = function(refresh_token, emailId, callback) {
 // Marca el emailId como leído
 module.exports.toggleEmailSeen = function(refresh_token, emailIds, toggle, callback) {
 
-  googleAuth.getAccessToken(refresh_token, function(err, access_token) {
+  googleUtils.getAccessToken(refresh_token, function(err, access_token) {
 
     if (err) {
       callback(err);
@@ -387,7 +354,7 @@ module.exports.toggleEmailSeen = function(refresh_token, emailIds, toggle, callb
       emailIds.forEach(function(emailId) {
 
         count++;
-        var url = util.format(USER_EMAIL_MODIFY_URL, emailId);
+        var url = util.format(googleUtils.getUserEmailModifyURL(), emailId);
         logger.info('URL: ' + url);
 
         var body = {};
@@ -417,7 +384,7 @@ module.exports.toggleEmailSeen = function(refresh_token, emailIds, toggle, callb
 // Mueve a la papelera de reciclaje un email
 module.exports.toggleEmailTrash = function(refresh_token, emailIds, toggle, callback) {
 
-  googleAuth.getAccessToken(refresh_token, function(err, access_token) {
+  googleUtils.getAccessToken(refresh_token, function(err, access_token) {
 
     if (err) {
       callback(err);
@@ -433,7 +400,7 @@ module.exports.toggleEmailTrash = function(refresh_token, emailIds, toggle, call
       emailIds.forEach(function(emailId) {
 
         count++;
-        var url = util.format(USER_EMAIL_MODIFY_URL, emailId);
+        var url = util.format(googleUtils.getUserEmailModifyURL(), emailId);
         logger.info('URL: ' + url);
 
         var body = {};

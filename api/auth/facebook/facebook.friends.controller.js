@@ -16,12 +16,17 @@ var facebookErrors = require('./facebook.errors');
 // Devuelve los amigos de Facebook del usuario loggeado
 module.exports.getFriends = function(access_token, facebookId, callback) {
 
-  var url = util.format('%s/%s/friends?access_token=%s&limit=1000', facebookUtils.getBaseURL(), facebookId, access_token);
+  var qs = {
+    limit: 1000,
+    access_token: access_token
+  };
+
+  var url = util.format(facebookUtils.getUserFriendsURL(), facebookId);
 
   // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Facebook
   var friends = [];
 
-  getFacebookData(url, friends, function(err, facebookUsers) {
+  getFacebookData(url, qs, friends, function(err, facebookUsers) {
     if (err) {
       callback(null, err);
     }
@@ -51,10 +56,11 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
 
 // Le pega a la API de Facebook y en el response, si fue exitoso, van a estar los amigos del usuario
 // forma paginada, por lo que será recursiva hasta que ya no haya paginado
-var getFacebookData = function(url, friends, callback) {
+var getFacebookData = function(url, qs, friends, callback) {
 
-  logger.info('URL: ' + url);
-  request.get({ url: url, json: true }, function(err, response) {
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
+
+  request.get({ url: url, qs: qs, json: true }, function(err, response) {
 
     var result = facebookErrors.hasError(err, response);
     if (result.hasError) {
@@ -66,7 +72,7 @@ var getFacebookData = function(url, friends, callback) {
     // Si hay un paginado, vuelvo a llamar a la función
     else if (response.body.paging.next) {
       friends.push.apply(friends, response.body.data);
-      getFacebookData(response.body.paging.next, friends, callback);
+      getFacebookData(response.body.paging.next, {}, friends, callback);
     }
     // Sino, ya tengo los usuarios y los devuelvo en el callback
     else {

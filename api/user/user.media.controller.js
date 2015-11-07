@@ -5,12 +5,13 @@
 'use strict';
 
 // requires
+var async = require('async');
+var _ = require('lodash');
 var instagramMedia = require('../auth/instagram/instagram.media.controller');
 var twitterMedia = require('../auth/twitter/twitter.media.controller');
 var facebookMedia = require('../auth/facebook/facebook.media.controller');
 var logger = require('../../config/logger');
-var async = require('async');
-var _ = require('lodash');
+var config = require('../../config');
 var errorHelper = require('../auth/util/error.helper.js');
 
 // modelos
@@ -20,16 +21,7 @@ var User = require('../user/user.model');
 module.exports.getMedia = function(req, res) {
 
   process.nextTick(function() {
-
-    User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
-      if (err || !user) {
-        logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
-      }
-      else {
-        doGetMedia(res, user);
-      }
-    });
+    getUserMedia(req, res, false);
   });
 };
 
@@ -37,13 +29,25 @@ module.exports.getMedia = function(req, res) {
 module.exports.getMoreMedia = function (req, res) {
 
   process.nextTick(function () {
-    res.send({
-      user_id: req.user_id,
-      media: {
-        count: 0,
-        list: []
+    getUserMedia(req, res, true);
+  });
+};
+
+var getUserMedia = function(req, res, shouldGetMore) {
+
+  User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
+    if (err || !user) {
+      logger.warn('User not found: ' + req.user_id);
+      return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
+    }
+    else {
+
+      if (!shouldGetMore) {
+        user.removeLastContentDate();
       }
-    });
+
+      doGetMedia(res, user);
+    }
   });
 };
 
@@ -61,14 +65,14 @@ var doGetMedia = function(res, user) {
       return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del usuario actual' }] });
     }
     else {
-      sendMediaResponseFromResults(res, results, user._id);
+      sendMediaResponseFromResults(res, results, user);
     }
   });
 };
 
 var getFacebookMedia = function(user, callback) {
   if (user.hasLinkedAccount('facebook')) {
-    facebookMedia.getMedia(user.facebook.access_token, user.facebook.id, function(err, results) {
+    facebookMedia.getMedia(user.facebook.access_token, user.facebook, user.facebook.id, function(err, results) {
       callback(err, results);
     });
   }
@@ -80,7 +84,7 @@ var getFacebookMedia = function(user, callback) {
 
 var getInstagramMedia = function(user, callback) {
   if (user.hasLinkedAccount('instagram')) {
-    instagramMedia.getMedia(user.instagram.access_token, user.instagram.id, function(err, results) {
+    instagramMedia.getMedia(user.instagram.access_token, user.instagram, user.instagram.id, function(err, results) {
       callback(err, results);
     });
   }
@@ -92,7 +96,7 @@ var getInstagramMedia = function(user, callback) {
 
 var getTwitterMedia = function(user, callback) {
   if (user.hasLinkedAccount('twitter')) {
-    twitterMedia.getMedia(user.twitter.access_token, user.twitter.id, function(err, results) {
+    twitterMedia.getMedia(user.twitter.access_token, user.twitter, user.twitter.id, function(err, results) {
       callback(err, results);
     });
   }
@@ -103,7 +107,7 @@ var getTwitterMedia = function(user, callback) {
 };
 
 // Envía al cliente el contenido del usuario
-var sendMediaResponseFromResults = function(res, results, userId) {
+var sendMediaResponseFromResults = function(res, results, user) {
 
   var mediaResults = errorHelper.checkMediaErrors(results);
 
@@ -114,19 +118,31 @@ var sendMediaResponseFromResults = function(res, results, userId) {
     // Una vez que los ordenamos, los enviamos
   }, function(err, sortedMedia) {
 
-    var response = {
-      user_id: userId,
-      media: {
-        count: sortedMedia.length,
-        list: sortedMedia
+    // Nos quedamos con los primeros 5
+    var slicedMedia = _.take(sortedMedia, config.MAX_FILTER_MEDIA_COUNT);
+
+    // Y después salvamos para así el próximo pedido de contenido tenemos las últimas fechas
+    user.saveLastContentDates(slicedMedia, function(err) {
+      if (err) {
+        logger.warn('Error searching media ' + JSON.stringify(err));
+        return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del usuario actual' }] });
       }
-    };
+      else {
+        var response = {
+          user_id: user._id,
+          media: {
+            count: slicedMedia.length,
+            list: slicedMedia
+          }
+        };
 
-    if (mediaResults.errors) {
-      response.errors = mediaResults.errors;
-    }
+        if (mediaResults.errors) {
+          response.errors = mediaResults.errors;
+        }
 
-    return res.send(response);
+        return res.send(response);
+      }
+    });
   });
 };
 

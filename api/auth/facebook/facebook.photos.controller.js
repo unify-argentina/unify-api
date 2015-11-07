@@ -15,18 +15,28 @@ var config = require('../../../config');
 var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
 
-// constantes
-var USER_PHOTOS_URL = facebookUtils.getBaseURL() + '/%s/photos?%sfields=id,name,created_time,album,images,link,likes.limit(0).summary(true),comments.limit(0).summary(true)&limit=%s&access_token=%s';
-var USER_PUBLISH_PHOTO_URL = facebookUtils.getBaseURL() + '/me/photos?access_token=%s&debug=all';
-
 // Devuelve las fotos del usuario pasado por parámetro
-module.exports.getPhotos = function(access_token, facebookId, uploaded, callback) {
+module.exports.getPhotos = function(access_token, facebook, facebookId, uploaded, callback) {
 
-  var uploadedString = uploaded ? 'type=uploaded&' : '';
-  var url = util.format(USER_PHOTOS_URL, facebookId, uploadedString, config.FACEBOOK_PHOTOS_MAX_MEDIA_COUNT, access_token);
-  logger.info('URL: ' + url);
+  var qs = {
+    fields: 'id,name,created_time,album,images,link,likes.limit(0).summary(true),comments.limit(0).summary(true)',
+    limit: config.FACEBOOK_PHOTOS_MAX_MEDIA_COUNT,
+    access_token: access_token
+  };
 
-  request.get({ url: url, json: true }, function(err, response) {
+  var lastPhoto = facebook.last_content_date_photo;
+  if (lastPhoto) {
+    qs.until = lastPhoto - 1;
+  }
+
+  if (uploaded) {
+    qs.type = 'uploaded';
+  }
+
+  var url = util.format(facebookUtils.getUserPhotosURL(), facebookId);
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
+
+  request.get({ url: url, qs: qs, json: true }, function(err, response) {
 
     var result = facebookErrors.hasError(err, response);
     if (result.hasError) {
@@ -62,15 +72,16 @@ var mapPhoto = function(facebookMedia, callback) {
 // Sube una foto a Facebook
 module.exports.publishPhoto = function(access_token, text, file, callback) {
 
-  var url = util.format(USER_PUBLISH_PHOTO_URL, access_token);
-  logger.info('URL: ' + url);
+  var url = facebookUtils.getUserPublishPhotoURL();
+  var qs = { access_token: access_token };
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   var formData = {
     caption: text ? text : '',
     source: fs.createReadStream(file.path)
   };
 
-  request.post({ url: url, formData: formData, json: true }, function(err, response) {
+  request.post({ url: url, qs: qs, formData: formData, json: true }, function(err, response) {
 
     var result = facebookErrors.hasError(err, response);
     if (result.hasError) {

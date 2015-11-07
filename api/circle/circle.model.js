@@ -6,6 +6,8 @@
 
 // requires
 var async = require('async');
+var _ = require('lodash');
+var logger = require('../../config/logger');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
 
@@ -194,6 +196,77 @@ circleSchema.methods.hasAncestor = function(ancestor) {
     }
   }
   return false;
+};
+
+// Guarda los last_content_date de cada red social
+circleSchema.methods.saveLastContentDates = function(slicedMedia, contacts, callback) {
+
+  var contact = {};
+  // slicedContacts va a ser un array en donde guardaremos los contactos que luego vamos a tener que salvar sus datos
+  var slicedContacts = [];
+
+  /*
+  * La lógica acá cambia. Lo que debemos hacer es buscar por cada contacto, si tiene un contenido en la lista, guardar el último de ese tipo
+  * */
+
+  contacts.forEach(function(contact) {
+    // Buscamos el último contenido de cada red social para guardarlo
+    var facebookStatus = _.findLast(slicedMedia, function(media) {
+      return media.provider === 'facebook' && media.type === 'text' && contact._id.equals(media.contact.id);
+    });
+    if (facebookStatus) {
+      // Si hay un contenido, le asignamos la fecha del ultimo contenido de ese tipo
+      contact.facebook.last_content_date_status = facebookStatus.created_time;
+      slicedContacts.push(contact);
+    }
+
+    var facebookPhoto = _.findLast(slicedMedia, function(media) {
+      return media.provider === 'facebook' && media.type === 'image' && contact._id.equals(media.contact.id);
+    });
+    if (facebookPhoto) {
+        contact.facebook.last_content_date_photo = facebookPhoto.created_time;
+        slicedContacts.push(contact);
+    }
+
+    var facebookVideo = _.findLast(slicedMedia, function(media) {
+      return media.provider === 'facebook' && media.type === 'video' && contact._id.equals(media.contact.id);
+    });
+    if (facebookVideo) {
+      contact.facebook.last_content_date_video = facebookVideo.created_time;
+      slicedContacts.push(contact);
+    }
+
+    var instagramMedia = _.findLast(slicedMedia, function(media) {
+      return media.provider === 'instagram' && contact._id.equals(media.contact.id);
+    });
+    if (instagramMedia) {
+      contact.instagram.last_content_date = instagramMedia.created_time;
+      slicedContacts.push(contact);
+    }
+
+    var twitterMedia = _.findLast(slicedMedia, function(media) {
+      return media.provider === 'twitter';
+    });
+    if (twitterMedia) {
+      contact.twitter.last_content_id = twitterMedia.id;
+      slicedContacts.push(contact);
+    }
+  });
+
+  logger.debug('Sliced contacts count: ' + slicedContacts.length);
+  // Por último salvamos solamente aquellos contactos que fueron modificados
+  async.forEachSeries(slicedContacts, function(slicedContact, callback) {
+    logger.debug('Contact: ' + slicedContact);
+    slicedContact.save(function(err) {
+      if (err) {
+        logger.debug('error saving contact: ' + JSON.stringify(err));
+        callback(err);
+      }
+      else {
+        callback(null);
+      }
+    });
+  }, callback);
 };
 
 module.exports = mongoose.model('Circle', circleSchema);

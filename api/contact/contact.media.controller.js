@@ -5,12 +5,12 @@
 'use strict';
 
 // requires
-var instagramMedia = require('../auth/instagram/instagram.media.controller');
+var async = require('async');
+var _ = require('lodash');var instagramMedia = require('../auth/instagram/instagram.media.controller');
 var twitterMedia = require('../auth/twitter/twitter.media.controller');
 var facebookMedia = require('../auth/facebook/facebook.media.controller');
 var logger = require('../../config/logger');
-var async = require('async');
-var _ = require('lodash');
+var config = require('../../config');
 var errorHelper = require('../auth/util/error.helper');
 
 // modelos
@@ -20,24 +20,7 @@ var User = require('../user/user.model');
 module.exports.getMedia = function(req, res) {
 
   process.nextTick(function() {
-
-    User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
-      if (err || !user) {
-        logger.warn('User not found: ' + req.user_id);
-        return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
-      }
-      else {
-        module.exports.doGetMedia(user, req.contact, function(err, results) {
-          if (err) {
-            logger.warn('Error searching media ' + JSON.stringify(err));
-            return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del contacto especificado' }] });
-          }
-          else {
-            sendMediaResponseFromResults(res, results, req.contact._id);
-          }
-        });
-      }
-    });
+    getContactMedia(req, res, false);
   });
 };
 
@@ -45,13 +28,35 @@ module.exports.getMedia = function(req, res) {
 module.exports.getMoreMedia = function (req, res) {
 
   process.nextTick(function () {
-    res.send({
-      contact_id: req.contact._id,
-      media: {
-        count: 0,
-        list: []
+    getContactMedia(req, res, true);
+  });
+};
+
+var getContactMedia = function(req, res, shouldGetMore) {
+
+  User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
+    if (err || !user) {
+      logger.warn('User not found: ' + req.user_id);
+      return res.status(400).send({ errors: [{ msg: 'No pudimos encontrar el usuario que estás buscando' }] });
+    }
+    else {
+
+      var contact = req.contact;
+
+      if (!shouldGetMore) {
+        contact.removeLastContentDate();
       }
-    });
+
+      module.exports.doGetMedia(user, contact, function(err, results) {
+        if (err) {
+          logger.warn('Error searching media ' + JSON.stringify(err));
+          return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del contacto especificado' }] });
+        }
+        else {
+          sendMediaResponseFromResults(res, results, contact);
+        }
+      });
+    }
   });
 };
 
@@ -75,7 +80,7 @@ module.exports.doGetMedia = function(user, contact, callback) {
 
 var getFacebookMedia = function(user, contact, callback) {
   if (user.hasLinkedAccount('facebook') && contact.hasLinkedAccount('facebook') && contact.hasValidAccount('facebook')) {
-    facebookMedia.getMedia(user.facebook.access_token, contact.facebook.id, function(err, results) {
+    facebookMedia.getMedia(user.facebook.access_token, contact.facebook, contact.facebook.id, function(err, results) {
       callback(err, results);
     });
   }
@@ -87,7 +92,7 @@ var getFacebookMedia = function(user, contact, callback) {
 
 var getInstagramMedia = function(user, contact, callback) {
   if (user.hasLinkedAccount('instagram') && contact.hasLinkedAccount('instagram') && contact.hasValidAccount('instagram')) {
-    instagramMedia.getMedia(user.instagram.access_token, contact.instagram.id, function(err, results) {
+    instagramMedia.getMedia(user.instagram.access_token, contact.instagram, contact.instagram.id, function(err, results) {
       callback(err, results);
     });
   }
@@ -99,7 +104,7 @@ var getInstagramMedia = function(user, contact, callback) {
 
 var getTwitterMedia = function(user, contact, callback) {
   if (user.hasLinkedAccount('twitter') && contact.hasLinkedAccount('twitter') && contact.hasValidAccount('twitter')) {
-    twitterMedia.getMedia(user.twitter.access_token, contact.twitter.id, function(err, results) {
+    twitterMedia.getMedia(user.twitter.access_token, contact.twitter, contact.twitter.id, function(err, results) {
       callback(err, results);
     });
   }
@@ -110,7 +115,7 @@ var getTwitterMedia = function(user, contact, callback) {
 };
 
 // Envía al cliente el contenido del contacto
-var sendMediaResponseFromResults = function(res, results, contactId) {
+var sendMediaResponseFromResults = function(res, results, contact) {
 
   var mediaResults = errorHelper.checkMediaErrors(results);
 
@@ -121,18 +126,30 @@ var sendMediaResponseFromResults = function(res, results, contactId) {
   // Una vez que los ordenamos, los enviamos
   }, function(err, sortedMedia) {
 
-    var response = {
-      contact_id: contactId,
-      media: {
-        count: sortedMedia.length,
-        list: sortedMedia
+    // Nos quedamos con los primeros 5
+    var slicedMedia = _.take(sortedMedia, config.MAX_FILTER_MEDIA_COUNT);
+
+    // Y después salvamos para así el próximo pedido de contenido tenemos las últimas fechas
+    contact.saveLastContentDates(slicedMedia, function(err) {
+      if (err) {
+        logger.warn('Error searching media ' + JSON.stringify(err));
+        return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar obtener el contenido del contacto especificado' }] });
       }
-    };
+      else {
+        var response = {
+          contact_id: contact._id,
+          media: {
+            count: slicedMedia.length,
+            list: slicedMedia
+          }
+        };
 
-    if (mediaResults.errors) {
-      response.errors = mediaResults.errors;
-    }
+        if (mediaResults.errors) {
+          response.errors = mediaResults.errors;
+        }
 
-    return res.send(response);
+        return res.send(response);
+      }
+    });
   });
 };

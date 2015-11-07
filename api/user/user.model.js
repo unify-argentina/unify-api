@@ -11,6 +11,7 @@
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
 var bcrypt = require('bcryptjs');
+var _ = require('lodash');
 var logger = require('../../config/logger');
 
 // modelos
@@ -35,12 +36,9 @@ var userSchema = mongoose.Schema({
     picture: String,
     display_name: String,
 
-    photos_last_content_date: Date,
-    photos_next_url: String,
-    videos_last_content_date: Date,
-    videos_next_url: String,
-    status_last_content_date: Date,
-    status_next_url: String
+    last_content_date_photo: String,
+    last_content_date_video: String,
+    last_content_date_status: String
   },
 
   twitter: {
@@ -53,8 +51,7 @@ var userSchema = mongoose.Schema({
     display_name: String,
     username: String,
 
-    last_content_date: Date,
-    next_url: String
+    last_content_id: String
   },
 
   instagram: {
@@ -64,8 +61,7 @@ var userSchema = mongoose.Schema({
     display_name: String,
     username: String,
 
-    last_content_date: Date,
-    next_url: String
+    last_content_date: String
   },
 
   google: {
@@ -227,6 +223,57 @@ userSchema.methods.toggleSocialAccount = function(account, toggle, callback) {
 // Controla que el email no sea el mismo del usuario y que en el request haya venido el email
 userSchema.methods.shouldResetVerificatedAccount = function(email) {
   return typeof email !== undefined && this.email !== email;
+};
+
+// Elimina el last_content_date de todas las redes del usuario
+userSchema.methods.removeLastContentDate = function() {
+  this.facebook.last_content_date_photo = undefined;
+  this.facebook.last_content_date_video = undefined;
+  this.facebook.last_content_date_status = undefined;
+  this.twitter.last_content_id = undefined;
+  this.instagram.last_content_date = undefined;
+};
+
+// Guarda los last_content_date de cada red social
+userSchema.methods.saveLastContentDates = function(slicedMedia, callback) {
+
+  // Buscamos el último contenido de cada red social para guardarlo
+  var facebookStatus = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'facebook' && media.type === 'text';
+  });
+  if (facebookStatus) {
+    this.facebook.last_content_date_status = facebookStatus.created_time;
+  }
+
+  var facebookPhoto = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'facebook' && media.type === 'image';
+  });
+  if (facebookPhoto) {
+    this.facebook.last_content_date_photo = facebookPhoto.created_time;
+  }
+
+  var facebookVideo = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'facebook' && media.type === 'video';
+  });
+  if (facebookVideo) {
+    this.facebook.last_content_date_video = facebookVideo.created_time;
+  }
+
+  var instagramMedia = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'instagram';
+  });
+  if (instagramMedia) {
+    this.instagram.last_content_date = instagramMedia.created_time;
+  }
+
+  var twitterMedia = _.findLast(slicedMedia, function(media) {
+    return media.provider === 'twitter';
+  });
+  if (twitterMedia) {
+    this.twitter.last_content_id = twitterMedia.id;
+  }
+
+  this.save(callback);
 };
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales

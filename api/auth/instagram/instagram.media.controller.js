@@ -11,27 +11,32 @@ var async = require('async');
 var logger = require('../../../config/logger');
 var config = require('../../../config');
 var instagramErrors = require('./instagram.errors');
+var instagramUtils = require('./instagram.utils');
 
 // modelos
 var Contact = require('../../contact/contact.model');
 
 // constantes
-var USER_MEDIA_URL = 'https://api.instagram.com/v1/users/%s/media/recent/?count=%s&access_token=%s';
 var USER_LIKE_URL = 'https://api.instagram.com/v1/media/%s/likes/?access_token=%s';
 var MEDIA_URL = 'https://api.instagram.com/v1/media/%s?access_token=%s';
 
-var ACCESS_TOKEN = '';
-
 // Devuelve las fotos y los videos del usuario pasado por parámetro
-module.exports.getMedia = function(access_token, instagramId, callback) {
+module.exports.getMedia = function(access_token, instagram, instagramId, callback) {
 
-  // FIXME Chanchada, ver como se puede mejorar
-  ACCESS_TOKEN = access_token;
+  var qs = {
+    count: config.INSTAGRAM_MAX_MEDIA_COUNT,
+    access_token: access_token
+  };
 
-  var url = util.format(USER_MEDIA_URL, instagramId, config.INSTAGRAM_MAX_MEDIA_COUNT, access_token);
-  logger.info('URL: ' + url);
+  var lastMedia = instagram.last_content_date;
+  if (lastMedia) {
+    qs.max_timestamp = lastMedia;
+  }
 
-  request.get({ url: url, json: true }, function(err, response) {
+  var url = util.format(instagramUtils.getUserMediaURL(), instagramId);
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
+
+  request.get({ url: url, qs: qs, json: true }, function(err, response) {
 
     var result = instagramErrors.hasError(err, response);
     if (result.hasError) {
@@ -68,15 +73,7 @@ var mapVideo = function(instagramVideo, callback) {
     callback(null, doMapVideo(instagramVideo, instagramVideo.videos.standard_resolution.url));
   }
   else {
-    // Sino tenemos que ir a pedirla al endpoint de media
-    getVideoURL(instagramVideo.id, function(err, videoURL) {
-      if (err) {
-        callback(err, null);
-      }
-      else {
-        callback(null, doMapVideo(instagramVideo, videoURL));
-      }
-    });
+    callback(null, doMapVideo(instagramVideo, ''));
   }
 };
 
@@ -93,24 +90,6 @@ var doMapVideo = function(instagramVideo, videoURL) {
     text: instagramVideo.caption ? instagramVideo.caption.text : '',
     user_has_liked: instagramVideo.user_has_liked || ''
   };
-};
-
-// Obtener la URL con el endpoint -> https://instagram.com/developer/endpoints/media/
-var getVideoURL = function(videoId, callback) {
-  var mediaURL = util.format(MEDIA_URL, videoId, ACCESS_TOKEN);
-  request.get({ url: mediaURL, json: true }, function(err, response) {
-    if (err || response.body.meta.error_type) {
-      logger.error('Error: ' + err ? err : response.body.meta.error_message);
-      callback(err ? err : response.body.meta.error_message, null);
-    }
-    else if (!response.body.data.videos.standard_resolution) {
-      logger.error('Error: Instagram video with id=' + videoId + ' not found');
-      callback(new Error('Instagram video URL not found'), null);
-    }
-    else {
-      callback(null, response.body.data.videos.standard_resolution.url);
-    }
-  });
 };
 
 // Recibe un objeto de tipo imagen y devuelve uno homogéneo a las 3 redes sociales
