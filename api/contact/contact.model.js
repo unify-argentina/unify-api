@@ -155,13 +155,12 @@ contactSchema.methods.cleanSocialAccounts = function() {
 };
 
 // Elimina el last_content_date de todas las redes del usuario
-contactSchema.methods.removeLastContentDate = function(callback) {
+contactSchema.methods.removeLastContentDate = function() {
   this.facebook.last_content_date_photo = undefined;
   this.facebook.last_content_date_video = undefined;
   this.facebook.last_content_date_status = undefined;
   this.twitter.last_content_id = undefined;
   this.instagram.last_content_date = undefined;
-  this.save(callback);
 };
 
 // Guarda los last_content_date de cada red social

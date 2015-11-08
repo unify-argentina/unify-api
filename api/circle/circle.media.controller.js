@@ -63,72 +63,41 @@ var getCircleMedia = function(req, res, shouldGetMore) {
   });
 };
 
-// TODO MEJORAR (SACAR EL DUPLICADO)
 // Obtiene el contenido de cada contacto
 var doGetMedia = function(res, user, contacts, shouldGetMore, mediaCallback) {
 
-  if (!shouldGetMore) {
-    async.forEachSeries(contacts, function(contact, callback) {
-      contact.removeLastContentDate(callback);
-    }, function(err) {
-      // Por cada contacto obtenemos el contenido de sus cuentas asociadas
-      async.map(contacts, function(contact, mapCallback) {
+  // Por cada contacto obtenemos el contenido de sus cuentas asociadas
+  async.map(contacts, function(contact, mapCallback) {
 
-        contactMediaController.doGetMedia(user, contact, function(err, result) {
+    // Si no va a buscar más contenido, eliminamos las fechas de último contenido del contacto
+    if (!shouldGetMore) {
+      contact.removeLastContentDate();
+    }
 
-          var mediaObjects = buildMediaArray(result);
+    contactMediaController.doGetMedia(user, contact, function(err, result) {
 
-          // Por cada mediaObject, le asociamos los datos del contacto
-          async.map(mediaObjects, function(mediaObject, contactCallback) {
+      var mediaObjects = buildMediaArray(result);
 
-            mediaObject.contact = {
-              id: contact._id,
-              name: contact.name,
-              picture: contact.picture
-            };
-            contactCallback(null, mediaObject);
+      // Por cada mediaObject, le asociamos los datos del contacto
+      async.map(mediaObjects, function(mediaObject, contactCallback) {
 
-          }, function(err, contactMediaObjects) {
+        mediaObject.contact = {
+          id: contact._id,
+          name: contact.name,
+          picture: contact.picture
+        };
+        contactCallback(null, mediaObject);
 
-            mapCallback(null, contactMediaObjects);
-          });
-        });
+      }, function(err, contactMediaObjects) {
 
-      }, function(err, contactsMedia) {
-
-        mediaCallback(err, contactsMedia);
+        mapCallback(null, contactMediaObjects);
       });
     });
-  }
-  else {
-    // Por cada contacto obtenemos el contenido de sus cuentas asociadas
-    async.map(contacts, function(contact, mapCallback) {
 
-      contactMediaController.doGetMedia(user, contact, function(err, result) {
+  }, function(err, contactsMedia) {
 
-        var mediaObjects = buildMediaArray(result);
-
-        // Por cada mediaObject, le asociamos los datos del contacto
-        async.map(mediaObjects, function(mediaObject, contactCallback) {
-
-          mediaObject.contact = {
-            id: contact._id,
-            name: contact.name,
-            picture: contact.picture
-          };
-          contactCallback(null, mediaObject);
-
-        }, function(err, contactMediaObjects) {
-
-          mapCallback(null, contactMediaObjects);
-        });
-      });
-
-    }, function(err, contactsMedia) {
-
-      mediaCallback(err, contactsMedia);
-    });
-  }
+    mediaCallback(err, contactsMedia);
+  });
 };
 
 // Arma el array de contenido chequeando si contiene contenido por cada red social

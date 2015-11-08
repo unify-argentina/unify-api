@@ -202,13 +202,8 @@ circleSchema.methods.hasAncestor = function(ancestor) {
 circleSchema.methods.saveLastContentDates = function(slicedMedia, contacts, callback) {
 
   var contact = {};
-  // slicedContacts va a ser un array en donde guardaremos los contactos que luego vamos a tener que salvar sus datos
-  var slicedContacts = [];
 
-  /*
-  * La lógica acá cambia. Lo que debemos hacer es buscar por cada contacto, si tiene un contenido en la lista, guardar el último de ese tipo
-  * */
-
+  // La lógica acá cambia. Lo que debemos hacer es buscar por cada contacto, si tiene un contenido en la lista, guardar el último de ese tipo
   contacts.forEach(function(contact) {
     // Buscamos el último contenido de cada red social para guardarlo
     var facebookStatus = _.findLast(slicedMedia, function(media) {
@@ -217,15 +212,13 @@ circleSchema.methods.saveLastContentDates = function(slicedMedia, contacts, call
     if (facebookStatus) {
       // Si hay un contenido, le asignamos la fecha del ultimo contenido de ese tipo
       contact.facebook.last_content_date_status = facebookStatus.created_time;
-      slicedContacts.push(contact);
     }
 
     var facebookPhoto = _.findLast(slicedMedia, function(media) {
       return media.provider === 'facebook' && media.type === 'image' && contact._id.equals(media.contact.id);
     });
     if (facebookPhoto) {
-        contact.facebook.last_content_date_photo = facebookPhoto.created_time;
-        slicedContacts.push(contact);
+      contact.facebook.last_content_date_photo = facebookPhoto.created_time;
     }
 
     var facebookVideo = _.findLast(slicedMedia, function(media) {
@@ -233,7 +226,6 @@ circleSchema.methods.saveLastContentDates = function(slicedMedia, contacts, call
     });
     if (facebookVideo) {
       contact.facebook.last_content_date_video = facebookVideo.created_time;
-      slicedContacts.push(contact);
     }
 
     var instagramMedia = _.findLast(slicedMedia, function(media) {
@@ -241,7 +233,6 @@ circleSchema.methods.saveLastContentDates = function(slicedMedia, contacts, call
     });
     if (instagramMedia) {
       contact.instagram.last_content_date = instagramMedia.created_time;
-      slicedContacts.push(contact);
     }
 
     var twitterMedia = _.findLast(slicedMedia, function(media) {
@@ -249,23 +240,13 @@ circleSchema.methods.saveLastContentDates = function(slicedMedia, contacts, call
     });
     if (twitterMedia) {
       contact.twitter.last_content_id = twitterMedia.id;
-      slicedContacts.push(contact);
     }
   });
 
-  logger.debug('Sliced contacts count: ' + slicedContacts.length);
-  // Por último salvamos solamente aquellos contactos que fueron modificados
-  async.forEachSeries(slicedContacts, function(slicedContact, callback) {
-    logger.debug('Contact: ' + slicedContact);
-    slicedContact.save(function(err) {
-      if (err) {
-        logger.debug('error saving contact: ' + JSON.stringify(err));
-        callback(err);
-      }
-      else {
-        callback(null);
-      }
-    });
+  // Por último guardamos todos los contactos ya que los que no fueron modificados acá adentro,
+  // fueron modificados por ahí antes al borrarles la última fecha de contenido
+  async.forEachSeries(contacts, function(contact, callback) {
+    contact.save(callback);
   }, callback);
 };
 
