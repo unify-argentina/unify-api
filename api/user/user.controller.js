@@ -156,6 +156,7 @@ module.exports.updatePassword = function(req, res) {
           });
         }
         else {
+          user.password = req.body.password;
           user.valid_local_user = true;
           user.save(function(err) {
             if (err) {
