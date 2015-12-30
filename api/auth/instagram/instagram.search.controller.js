@@ -3,3 +3,7 @@
  * @author Joel Márquez
  * */
 'use strict';
+
+module.exports.search = function(access_token, query, callback) {
+
+};
