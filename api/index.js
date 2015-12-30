@@ -39,4 +39,7 @@ apiRoutes.use('/user', require('./user'));
 // Rutas para subida de archivos
 apiRoutes.use('/file', require('./files'));
 
+// Rutas para busqueda
+apiRoutes.use('/search', require('./search'));
+
 module.exports = apiRoutes;
