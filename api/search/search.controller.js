@@ -58,6 +58,8 @@ module.exports.searchMore = function (req, res) {
 };
 
 var sendSearchResponseFromResults = function(res, results) {
+
+  // TODO chequear errores y unificar respuesta ordenada cronológicamente
   res.send(results);
 };
 
@@ -72,7 +74,7 @@ var doSearch = function(req, res, user, callback) {
 };
 
 var getFacebookSearch = function(user, req, callback) {
-  if (user.hasLinkedAccount('facebook')) {
+  if (user.hasLinkedAccount('facebook') && hasProvider(req, 'facebook')) {
     facebookSearch.search(user.facebook.access_token, user.facebook, req.query.q, function(err, results) {
       callback(err, results);
     });
@@ -84,7 +86,7 @@ var getFacebookSearch = function(user, req, callback) {
 };
 
 var getInstagramSearch = function(user, req, callback) {
-  if (user.hasLinkedAccount('instagram')) {
+  if (user.hasLinkedAccount('instagram') && hasProvider(req, 'instagram')) {
     instagramSearch.search(user.instagram.access_token, user.instagram, req.query.q, function(err, results) {
       callback(err, results);
     });
@@ -96,7 +98,7 @@ var getInstagramSearch = function(user, req, callback) {
 };
 
 var getTwitterSearch = function(user, req, callback) {
-  if (user.hasLinkedAccount('twitter')) {
+  if (user.hasLinkedAccount('twitter') && hasProvider(req, 'twitter')) {
     twitterSearch.search(user.twitter.access_token, user.twitter, req.query.q, function(err, results) {
       callback(err, results);
     });
@@ -105,4 +107,9 @@ var getTwitterSearch = function(user, req, callback) {
   else {
     callback(null, null);
   }
+};
+
+var hasProvider = function (req, provider) {
+  var providers = req.query.providers.split(',');
+  return providers.indexOf(provider) > -1;
 };
