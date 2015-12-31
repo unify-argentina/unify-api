@@ -13,6 +13,9 @@ var logger = require('../../config/logger');
 var _ = require('lodash');
 var async = require('async');
 
+// modelos
+var User = require('../user/user.model.js');
+
 module.exports.search = function (req, res) {
 
   process.nextTick(function () {
@@ -31,23 +34,29 @@ module.exports.search = function (req, res) {
           return res.status(400).send({errors: [{msg: 'No pudimos encontrar el usuario que estás buscando'}]});
         }
         else {
-          doSearch(req, res, user);
+          doSearch(req, res, user, function(err, results) {
+            if (err) {
+              logger.warn('Error searching ' + err);
+              return res.status(400).send({errors: [{msg: 'No pudimos encontrar el usuario que estás buscando'}]});
+            }
+            else {
+              res.send(results);
+            }
+          });
         }
       });
     }
   });
 };
 
-var doSearch = function(req, res, user) {
+var doSearch = function(req, res, user, callback) {
   async.parallel({
     facebook: getFacebookSearch.bind(null, user, req),
     instagram: getInstagramSearch.bind(null, user, req),
     twitter: getTwitterSearch.bind(null, user, req)
   },
   // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
-  function(err, results) {
-    callback(err, results);
-  });
+  callback);
 };
 
 var getFacebookSearch = function(user, req, callback) {

@@ -5,5 +5,5 @@
 'use strict';
 
 module.exports.search = function(access_token, query, callback) {
-
+  callback(null, {});
 };
