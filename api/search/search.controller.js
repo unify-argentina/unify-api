@@ -21,6 +21,7 @@ module.exports.search = function (req, res) {
   process.nextTick(function () {
 
     req.assert('providers', 'Proveedores sociales requeridos').isStringArray();
+    req.assert('q', 'Consulta requerida').isString();
 
     // Validamos errores
     if (req.validationErrors()) {
@@ -49,6 +50,13 @@ module.exports.search = function (req, res) {
   });
 };
 
+module.exports.searchMore = function (req, res) {
+
+  process.nextTick(function () {
+    return res.sendStatus(200);
+  });
+};
+
 var sendSearchResponseFromResults = function(res, results) {
   res.send(results);
 };
@@ -65,7 +73,7 @@ var doSearch = function(req, res, user, callback) {
 
 var getFacebookSearch = function(user, req, callback) {
   if (user.hasLinkedAccount('facebook')) {
-    facebookSearch.search(user.facebook.access_token, user.facebook, req.params.query, function(err, results) {
+    facebookSearch.search(user.facebook.access_token, user.facebook, req.query.q, function(err, results) {
       callback(err, results);
     });
   }
@@ -77,7 +85,7 @@ var getFacebookSearch = function(user, req, callback) {
 
 var getInstagramSearch = function(user, req, callback) {
   if (user.hasLinkedAccount('instagram')) {
-    instagramSearch.search(user.instagram.access_token, user.instagram, req.params.query, function(err, results) {
+    instagramSearch.search(user.instagram.access_token, user.instagram, req.query.q, function(err, results) {
       callback(err, results);
     });
   }
@@ -89,7 +97,7 @@ var getInstagramSearch = function(user, req, callback) {
 
 var getTwitterSearch = function(user, req, callback) {
   if (user.hasLinkedAccount('twitter')) {
-    twitterSearch.search(user.twitter.access_token, user.twitter, req.params.query, function(err, results) {
+    twitterSearch.search(user.twitter.access_token, user.twitter, req.query.q, function(err, results) {
       callback(err, results);
     });
   }

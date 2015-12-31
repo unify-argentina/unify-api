@@ -7,6 +7,7 @@
 
 // requires
 var config = require('../../../config');
+var moment = require('moment');
 
 // Devuelve un objeto para obtener el oauth token
 module.exports.getRequestTokenParams = function() {
@@ -146,8 +147,8 @@ module.exports.mapMedia = function(tweet, callback) {
   var mappedMedia = {
     provider: 'twitter',
     id: tweet.id_str || '',
-    created_time: moment(tweet.created_at, twitterUtils.getDateFormat(), 'en').unix() || '',
-    link: twitterUtils.getTwitterStatusURL() + tweet.id_str || '',
+    created_time: moment(tweet.created_at, module.exports.getDateFormat(), 'en').unix() || '',
+    link: module.exports.getTwitterStatusURL() + tweet.id_str || '',
     likes: tweet.favorite_count,
     text: text,
     user_has_liked: tweet.favorited

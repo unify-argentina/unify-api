@@ -10,4 +10,6 @@ var searchController = require('./search.controller');
 
 searchRoutes.get('/', searchController.search);
 
+searchRoutes.get('/more', searchController.searchMore);
+
 module.exports = searchRoutes;

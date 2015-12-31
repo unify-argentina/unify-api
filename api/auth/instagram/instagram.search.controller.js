@@ -4,6 +4,6 @@
  * */
 'use strict';
 
-module.exports.search = function(access_token, query, callback) {
+module.exports.search = function(access_token, instagram, query, callback) {
   callback(null, {});
 };

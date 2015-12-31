@@ -7,7 +7,6 @@
 var util = require('util');
 var request = require('request');
 var async = require('async');
-var moment = require('moment');
 var bignum = require('bignum');
 var config = require('../../../config');
 var logger = require('../../../config/logger');
@@ -17,7 +16,6 @@ var twitterErrors = require('./twitter.errors');
 module.exports.search = function(access_token, twitter, query, callback) {
 
   var qs = {
-    user_id: twitterId,
     count: config.TWITTER_MAX_SEARCH_COUNT,
     q: query
   };
