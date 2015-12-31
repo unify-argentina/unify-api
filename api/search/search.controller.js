@@ -40,13 +40,17 @@ module.exports.search = function (req, res) {
               return res.status(400).send({errors: [{msg: 'No pudimos encontrar el usuario que estás buscando'}]});
             }
             else {
-              res.send(results);
+              sendSearchResponseFromResults(res, results);
             }
           });
         }
       });
     }
   });
+};
+
+var sendSearchResponseFromResults = function(res, results) {
+
 };
 
 var doSearch = function(req, res, user, callback) {
