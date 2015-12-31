@@ -38,7 +38,9 @@ var userSchema = mongoose.Schema({
 
     last_content_date_photo: String,
     last_content_date_video: String,
-    last_content_date_status: String
+    last_content_date_status: String,
+
+    last_search_date: String
   },
 
   twitter: {
@@ -51,7 +53,9 @@ var userSchema = mongoose.Schema({
     display_name: String,
     username: String,
 
-    last_content_id: String
+    last_content_id: String,
+
+    last_search_id: String
   },
 
   instagram: {
@@ -61,7 +65,9 @@ var userSchema = mongoose.Schema({
     display_name: String,
     username: String,
 
-    last_content_date: String
+    last_content_date: String,
+
+    last_search_date: String
   },
 
   google: {
