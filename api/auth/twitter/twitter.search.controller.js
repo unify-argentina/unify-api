@@ -36,7 +36,7 @@ module.exports.search = function(access_token, twitter, query, callback) {
     }
     // Si no hubo error, tenemos que mapear el response
     else {
-      async.map(response.body, twitterUtils.mapMedia, function(err, mappedMedia) {
+      async.map(response.body.statuses, twitterUtils.mapMedia, function(err, mappedMedia) {
         logger.debug('Media: ' + JSON.stringify(mappedMedia));
         callback(err, mappedMedia);
       });
