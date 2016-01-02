@@ -313,6 +313,10 @@ userSchema.methods.removeLastSearchDate = function() {
   this.instagram.last_search_term = undefined;
 };
 
+userSchema.methods.hasSavedSearch = function(provider) {
+  return typeof this[provider].last_search_id === 'string' && typeof this[provider].last_search_term  === 'string';
+};
+
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 userSchema.statics.socialFields = function() {
   return '+twitter.id +twitter.access_token.token +twitter.access_token.token_secret +facebook.id ' +

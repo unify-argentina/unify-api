@@ -117,7 +117,7 @@ var doSearch = function(req, res, user, callback) {
 };
 
 var getInstagramSearch = function(user, req, callback) {
-  if (user.hasLinkedAccount('instagram') && hasProvider(req, 'instagram')) {
+  if (user.hasLinkedAccount('instagram') && hasProvider(req, 'instagram', user)) {
     instagramSearch.search(user.instagram.access_token, user.instagram, req.query.q, function(err, results) {
       callback(err, results);
     });
@@ -129,7 +129,7 @@ var getInstagramSearch = function(user, req, callback) {
 };
 
 var getTwitterSearch = function(user, req, callback) {
-  if (user.hasLinkedAccount('twitter') && hasProvider(req, 'twitter')) {
+  if (user.hasLinkedAccount('twitter') && hasProvider(req, 'twitter', user)) {
     twitterSearch.search(user.twitter.access_token, user.twitter, req.query.q, function(err, results) {
       callback(err, results);
     });
@@ -140,7 +140,13 @@ var getTwitterSearch = function(user, req, callback) {
   }
 };
 
-var hasProvider = function (req, provider) {
-  var providers = req.query.providers.split(',');
-  return providers.indexOf(provider) > -1;
+var hasProvider = function (req, provider, user) {
+  if (req.query.providers) {
+    var providers = req.query.providers.split(',');
+    return providers.indexOf(provider) > -1;
+  }
+  // Si no tiene los providers en la query, me fijo si en el usuario está salvada la búsqueda de ese proveedor
+  else {
+    return user.hasSavedSearch(provider);
+  }
 };
