@@ -38,9 +38,7 @@ var userSchema = mongoose.Schema({
 
     last_content_date_photo: String,
     last_content_date_video: String,
-    last_content_date_status: String,
-
-    last_search_date: String
+    last_content_date_status: String
   },
 
   twitter: {
@@ -55,7 +53,8 @@ var userSchema = mongoose.Schema({
 
     last_content_id: String,
 
-    last_search_id: String
+    last_search_id: String,
+    last_search_term: String
   },
 
   instagram: {
@@ -67,7 +66,8 @@ var userSchema = mongoose.Schema({
 
     last_content_date: String,
 
-    last_search_date: String
+    last_search_id: String,
+    last_search_term: String
   },
 
   google: {
@@ -277,6 +277,29 @@ userSchema.methods.saveLastContentDates = function(slicedMedia, callback) {
   });
   if (twitterMedia) {
     this.twitter.last_content_id = twitterMedia.id;
+  }
+
+  this.save(callback);
+};
+
+// Guarda los last_search_date de cada red social
+userSchema.methods.saveLastSearchDates = function(slicedSearches, query, callback) {
+
+  // Buscamos el último contenido de cada red social para guardarlo
+  var instagramSearch = _.findLast(slicedSearches, function(media) {
+    return media.provider === 'instagram';
+  });
+  if (instagramSearch) {
+    this.instagram.last_search_id = instagramSearch.created_time;
+    this.instagram.last_search_term = query;
+  }
+
+  var twitterSearch = _.findLast(slicedSearches, function(media) {
+    return media.provider === 'twitter';
+  });
+  if (twitterSearch) {
+    this.twitter.last_search_id = twitterSearch.id;
+    this.twitter.last_search_term = query;
   }
 
   this.save(callback);

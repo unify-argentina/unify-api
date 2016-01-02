@@ -5,11 +5,11 @@
 'use strict';
 
 // requires
-var facebookSearch = require('../auth/facebook/facebook.search.controller');
 var instagramSearch = require('../auth/instagram/instagram.search.controller');
 var twitterSearch = require('../auth/twitter/twitter.search.controller');
 var logger = require('../../config/logger');
-
+var errorHelper = require('../auth/util/error.helper');
+var config = require('../../config');
 var _ = require('lodash');
 var async = require('async');
 
@@ -41,7 +41,7 @@ module.exports.search = function (req, res) {
               return res.status(400).send({errors: [{msg: 'No pudimos encontrar el usuario que estás buscando'}]});
             }
             else {
-              sendSearchResponseFromResults(res, results);
+              sendSearchResponseFromResults(res, results, user, req.query.q);
             }
           });
         }
@@ -57,32 +57,52 @@ module.exports.searchMore = function (req, res) {
   });
 };
 
-var sendSearchResponseFromResults = function(res, results) {
+var sendSearchResponseFromResults = function(res, results, user, query) {
 
-  // TODO chequear errores y unificar respuesta ordenada cronológicamente
-  res.send(results);
+  var searchResults = errorHelper.checkSearchErrors(results);
+
+  // Una vez que tenemos los resultados de búsqueda
+  async.sortBy(searchResults.searches, function(search, callback) {
+    // los ordenamos por fecha de creación (los más nuevos primero)
+    callback(null, -search.created_time);
+    // Una vez que los ordenamos, los enviamos
+  }, function(err, sortedSearches) {
+
+    // Nos quedamos con los primeros 5
+    var slicedSearches = _.take(sortedSearches, config.MAX_FILTER_SEARCH_COUNT);
+
+    // Y después salvamos para así el próximo pedido de búsqueda tenemos las últimas fechas
+    user.saveLastSearchDates(slicedSearches, function(err) {
+      if (err) {
+        logger.warn('Error searching ' + JSON.stringify(err));
+        return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar realizar la búsqueda' }] });
+      }
+      else {
+        var response = {
+          user_id: user._id,
+          search: {
+            count: sortedSearches.length,
+            list: sortedSearches
+          }
+        };
+
+        if (sortedSearches.errors) {
+          response.errors = sortedSearches.errors;
+        }
+
+        return res.send(response);
+      }
+    });
+  });
 };
 
 var doSearch = function(req, res, user, callback) {
   async.parallel({
-    facebook: getFacebookSearch.bind(null, user, req),
     instagram: getInstagramSearch.bind(null, user, req),
     twitter: getTwitterSearch.bind(null, user, req)
   },
   // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
   callback);
-};
-
-var getFacebookSearch = function(user, req, callback) {
-  if (user.hasLinkedAccount('facebook') && hasProvider(req, 'facebook')) {
-    facebookSearch.search(user.facebook.access_token, user.facebook, req.query.q, function(err, results) {
-      callback(err, results);
-    });
-  }
-  // Si no tiene linkeada la cuenta de Facebook, no devolvemos nada
-  else {
-    callback(null, null);
-  }
 };
 
 var getInstagramSearch = function(user, req, callback) {
