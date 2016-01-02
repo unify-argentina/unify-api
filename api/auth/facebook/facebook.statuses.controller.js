@@ -28,7 +28,7 @@ module.exports.getStatuses = function(access_token, facebook, facebookId, callba
     qs.until = lastStatus - 1;
   }
 
-  var url = util.format(facebookUtils.getUserStatusesURL(), facebookId);
+  var url = facebookUtils.getUserStatusesURL(facebookId);
   logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   request.get({ url: url, qs: qs, json: true }, function(err, response) {

@@ -33,7 +33,7 @@ module.exports.getPhotos = function(access_token, facebook, facebookId, uploaded
     qs.type = 'uploaded';
   }
 
-  var url = util.format(facebookUtils.getUserPhotosURL(), facebookId);
+  var url = facebookUtils.getUserPhotosURL(facebookId);
   logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   request.get({ url: url, qs: qs, json: true }, function(err, response) {
