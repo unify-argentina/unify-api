@@ -305,6 +305,14 @@ userSchema.methods.saveLastSearchDates = function(slicedSearches, query, callbac
   this.save(callback);
 };
 
+// Elimina el last_content_date de todas las redes del usuario
+userSchema.methods.removeLastSearchDate = function() {
+  this.twitter.last_search_id = undefined;
+  this.twitter.last_search_term = undefined;
+  this.instagram.last_search_id = undefined;
+  this.instagram.last_search_term = undefined;
+};
+
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales
 userSchema.statics.socialFields = function() {
   return '+twitter.id +twitter.access_token.token +twitter.access_token.token_secret +facebook.id ' +

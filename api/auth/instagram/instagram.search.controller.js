@@ -20,11 +20,14 @@ module.exports.search = function(access_token, instagram, query, callback) {
     access_token: access_token
   };
 
-  // TODO
-  /*var lastMedia = instagram.last_search_date;
+  var lastMedia = instagram.last_search_id;
   if (lastMedia) {
-    qs.max_timestamp = lastMedia;
-  }*/
+    qs.min_tag_id = lastMedia;
+  }
+
+  if (!query) {
+    query = instagram.last_search_term;
+  }
 
   var url = instagramUtils.getSearchURL(query);
   logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));

@@ -19,42 +19,53 @@ var User = require('../user/user.model.js');
 module.exports.search = function (req, res) {
 
   process.nextTick(function () {
-
-    req.assert('providers', 'Proveedores sociales requeridos').isStringArray();
-    req.assert('q', 'Consulta requerida').isString();
-
-    // Validamos errores
-    if (req.validationErrors()) {
-      logger.warn('Validation errors: ' + req.validationErrors());
-      return res.status(400).send({ errors: req.validationErrors()});
-    }
-    else {
-      User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
-        if (err || !user) {
-          logger.warn('User not found: ' + req.user_id);
-          return res.status(400).send({errors: [{msg: 'No pudimos encontrar el usuario que estás buscando'}]});
-        }
-        else {
-          doSearch(req, res, user, function(err, results) {
-            if (err) {
-              logger.warn('Error searching ' + err);
-              return res.status(400).send({errors: [{msg: 'No pudimos encontrar el usuario que estás buscando'}]});
-            }
-            else {
-              sendSearchResponseFromResults(res, results, user, req.query.q);
-            }
-          });
-        }
-      });
-    }
+    userSearch(req, res, false);
   });
 };
 
 module.exports.searchMore = function (req, res) {
 
   process.nextTick(function () {
-    return res.sendStatus(200);
+    userSearch(req, res, true);
   });
+};
+
+var userSearch = function(req, res, shouldSearchMore) {
+
+  if (!shouldSearchMore) {
+    req.assert('providers', 'Proveedores sociales requeridos').isStringArray();
+    req.assert('q', 'Consulta requerida').isString();
+  }
+
+  // Validamos errores
+  if (req.validationErrors()) {
+    logger.warn('Validation errors: ' + req.validationErrors());
+    return res.status(400).send({ errors: req.validationErrors()});
+  }
+  else {
+    User.findOne({ _id: req.user_id }, User.socialFields(), function(err, user) {
+      if (err || !user) {
+        logger.warn('User not found: ' + req.user_id);
+        return res.status(400).send({errors: [{msg: 'No pudimos encontrar el usuario que estás buscando'}]});
+      }
+      else {
+
+        if (!shouldSearchMore) {
+          user.removeLastSearchDate();
+        }
+
+        doSearch(req, res, user, function(err, results) {
+          if (err) {
+            logger.warn('Error searching ' + err);
+            return res.status(400).send({errors: [{msg: 'No pudimos encontrar el usuario que estás buscando'}]});
+          }
+          else {
+            sendSearchResponseFromResults(res, results, user, req.query.q);
+          }
+        });
+      }
+    });
+  }
 };
 
 var sendSearchResponseFromResults = function(res, results, user, query) {
@@ -72,7 +83,7 @@ var sendSearchResponseFromResults = function(res, results, user, query) {
     var slicedSearches = _.take(sortedSearches, config.MAX_FILTER_SEARCH_COUNT);
 
     // Y después salvamos para así el próximo pedido de búsqueda tenemos las últimas fechas
-    user.saveLastSearchDates(slicedSearches, function(err) {
+    user.saveLastSearchDates(slicedSearches, query, function(err) {
       if (err) {
         logger.warn('Error searching ' + JSON.stringify(err));
         return res.status(400).send({ errors: [{ msg: 'Hubo un error al intentar realizar la búsqueda' }] });

@@ -15,6 +15,10 @@ var twitterErrors = require('./twitter.errors');
 
 module.exports.search = function(access_token, twitter, query, callback) {
 
+  if (!query) {
+    query = twitter.last_search_term;
+  }
+
   var qs = {
     count: config.TWITTER_MAX_SEARCH_COUNT,
     q: query
