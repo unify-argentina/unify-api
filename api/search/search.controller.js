@@ -91,9 +91,10 @@ var sendSearchResponseFromResults = function(res, results, user, query) {
       else {
         var response = {
           user_id: user._id,
+          query: query,
           search: {
-            count: sortedSearches.length,
-            list: sortedSearches
+            count: slicedSearches.length,
+            list: slicedSearches
           }
         };
 
@@ -109,8 +110,8 @@ var sendSearchResponseFromResults = function(res, results, user, query) {
 
 var doSearch = function(req, res, user, callback) {
   async.parallel({
-    instagram: getInstagramSearch.bind(null, user, req),
-    twitter: getTwitterSearch.bind(null, user, req)
+    twitter: getTwitterSearch.bind(null, user, req),
+    instagram: getInstagramSearch.bind(null, user, req)
   },
   // Una vez tenemos todos los resultados, devolvemos un JSON con los mismos
   callback);
@@ -147,6 +148,7 @@ var hasProvider = function (req, provider, user) {
   }
   // Si no tiene los providers en la query, me fijo si en el usuario está salvada la búsqueda de ese proveedor
   else {
-    return user.hasSavedSearch(provider);
+    var result = user.hasSavedSearch(provider);
+    return result;
   }
 };

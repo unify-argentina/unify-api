@@ -45,7 +45,7 @@ module.exports = {
   // Search limits
   TWITTER_MAX_SEARCH_COUNT: process.env.TWITTER_MAX_SEARCH_COUNT || 5,
   INSTAGRAM_MAX_SEARCH_COUNT: process.env.INSTAGRAM_MAX_SEARCH_COUNT || 5,
-  MAX_FILTER_SEARCH_COUNT: process.env.MAX_FILTER_SEARCH_COUNT || 5,
+  MAX_FILTER_SEARCH_COUNT: process.env.MAX_FILTER_SEARCH_COUNT || 10,
 
   // Logger
   LOG_LEVEL: process.env.LOG_LEVEL || 'debug',

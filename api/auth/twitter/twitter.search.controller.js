@@ -34,6 +34,7 @@ module.exports.search = function(access_token, twitter, query, callback) {
   logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   request.get({ url: url, oauth: twitterUtils.getOauthParam(access_token), qs: qs, json: true }, function(err, response) {
+
     var result = twitterErrors.hasError(err, response);
     if (result.hasError) {
       callback(null, result.error);

@@ -291,7 +291,9 @@ userSchema.methods.saveLastSearchDates = function(slicedSearches, query, callbac
   });
   if (instagramSearch) {
     this.instagram.last_search_id = instagramSearch.created_time;
-    this.instagram.last_search_term = query;
+    if (query) {
+      this.instagram.last_search_term = query;
+    }
   }
 
   var twitterSearch = _.findLast(slicedSearches, function(media) {
@@ -299,7 +301,9 @@ userSchema.methods.saveLastSearchDates = function(slicedSearches, query, callbac
   });
   if (twitterSearch) {
     this.twitter.last_search_id = twitterSearch.id;
-    this.twitter.last_search_term = query;
+    if (query) {
+      this.twitter.last_search_term = query;
+    }
   }
 
   this.save(callback);
