@@ -21,7 +21,7 @@ module.exports.getFriends = function(access_token, facebookId, callback) {
     access_token: access_token
   };
 
-  var url = util.format(facebookUtils.getUserFriendsURL(), facebookId);
+  var url = facebookUtils.getUserFriendsURL(facebookId);
 
   // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Facebook
   var friends = [];

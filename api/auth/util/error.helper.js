@@ -137,3 +137,22 @@ var checkEmailsArrayResultsList = function(errors, list, results, count, account
     }
   }
 };
+
+module.exports.checkSearchErrors = function(results) {
+
+  var errors = {};
+  var searches = [];
+
+  checkArrayResultsList(errors, searches, results, 'instagram');
+  checkArrayResultsList(errors, searches, results, 'twitter');
+
+  var result = {
+    searches: searches
+  };
+
+  if (!_.isEmpty(errors)) {
+    result.errors = errors;
+  }
+
+  return result;
+};

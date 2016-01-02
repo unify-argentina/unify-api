@@ -42,6 +42,8 @@ contactRoutes.param('contact_id', function(req, res, next, contactId) {
   });
 });
 
+contactRoutes.get('/', contactController.list);
+
 /**
  * @api {post} /api/user/:user_id/contact Crear un contacto
  * @apiGroup Contactos

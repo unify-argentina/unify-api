@@ -31,7 +31,7 @@ module.exports.getVideos = function(access_token, facebook, facebookId, callback
     qs.until = lastVideo - 1;
   }
 
-  var url = util.format(facebookUtils.getUserVideosURL(), facebookId);
+  var url = facebookUtils.getUserVideosURL(facebookId);
   logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   request.get({ url: url, qs: qs, json: true }, function(err, response) {

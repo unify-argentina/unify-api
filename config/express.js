@@ -48,9 +48,22 @@ var isEmailArray = function(possibleArray) {
 var isStringArray = function(possibleArray) {
   var isStringArray = possibleArray !== undefined && possibleArray.constructor === Array;
   var i = 0;
+  // Viene por body como un JSON array de strings
   while (isStringArray && i < possibleArray.length) {
     isStringArray = typeof possibleArray[i] === 'string';
     i++;
+  }
+  // Viene por un GET un array del tipo clave=valor1,valor2,valor3
+  if (!isStringArray && typeof possibleArray === 'string') {
+    var values = possibleArray.split(',');
+    if (values !== undefined && values.constructor === Array) {
+      i = 0;
+      isStringArray = true;
+      while (isStringArray && i < values.length) {
+        isStringArray = typeof values[i] === 'string';
+        i++;
+      }
+    }
   }
   return isStringArray;
 };

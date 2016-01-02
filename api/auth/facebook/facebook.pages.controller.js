@@ -22,7 +22,7 @@ module.exports.getPages = function(access_token, facebookId, callback) {
     access_token: access_token
   };
 
-  var url = util.format(facebookUtils.getUserLikesURL(), facebookId);
+  var url = facebookUtils.getUserLikesURL(facebookId);
 
   // Aquí iremos almacenando las páginas que nos devuelva el servicio paginado de Facebook
   var pages = [];

@@ -17,9 +17,6 @@ var facebookStatuses = require('./facebook.statuses.controller');
 var facebookUtils = require('./facebook.utils');
 var facebookErrors = require('./facebook.errors');
 
-// constantes
-var USER_LIKE_URL = facebookUtils.getBaseURL() + '/%s/likes?=%s';
-
 // Se encarga de llamar a los módulos de fotos, videos y estados y luego devuelve los resultados
 module.exports.getMedia = function(access_token, facebook, facebookId, callback) {
 
@@ -102,7 +99,7 @@ module.exports.toggleLike = function(access_token, facebookMediaId, toggleLike, 
 
   var qs = { access_token: access_token };
 
-  var url = util.format(facebookUtils.getUserLikeURL(), facebookMediaId);
+  var url = facebookUtils.getUserLikeURL(facebookMediaId);
   logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   if (toggleLike) {

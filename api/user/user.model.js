@@ -51,7 +51,10 @@ var userSchema = mongoose.Schema({
     display_name: String,
     username: String,
 
-    last_content_id: String
+    last_content_id: String,
+
+    last_search_id: String,
+    last_search_term: String
   },
 
   instagram: {
@@ -61,7 +64,10 @@ var userSchema = mongoose.Schema({
     display_name: String,
     username: String,
 
-    last_content_date: String
+    last_content_date: String,
+
+    last_search_id: String,
+    last_search_term: String
   },
 
   google: {
@@ -274,6 +280,45 @@ userSchema.methods.saveLastContentDates = function(slicedMedia, callback) {
   }
 
   this.save(callback);
+};
+
+// Guarda los last_search_date de cada red social
+userSchema.methods.saveLastSearchDates = function(slicedSearches, query, callback) {
+
+  // Buscamos el último contenido de cada red social para guardarlo
+  var instagramSearch = _.findLast(slicedSearches, function(media) {
+    return media.provider === 'instagram';
+  });
+  if (instagramSearch) {
+    this.instagram.last_search_id = instagramSearch.created_time;
+    if (query) {
+      this.instagram.last_search_term = query;
+    }
+  }
+
+  var twitterSearch = _.findLast(slicedSearches, function(media) {
+    return media.provider === 'twitter';
+  });
+  if (twitterSearch) {
+    this.twitter.last_search_id = twitterSearch.id;
+    if (query) {
+      this.twitter.last_search_term = query;
+    }
+  }
+
+  this.save(callback);
+};
+
+// Elimina el last_content_date de todas las redes del usuario
+userSchema.methods.removeLastSearchDate = function() {
+  this.twitter.last_search_id = undefined;
+  this.twitter.last_search_term = undefined;
+  this.instagram.last_search_id = undefined;
+  this.instagram.last_search_term = undefined;
+};
+
+userSchema.methods.hasSavedSearch = function(provider) {
+  return typeof this[provider].last_search_id === 'string' && typeof this[provider].last_search_term  === 'string';
 };
 
 // Devuelve los campos del usuario que van a servir para traer a los amigos de las redes sociales

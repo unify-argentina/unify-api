@@ -4,6 +4,8 @@
  * */
 'use strict';
 
+var util = require('util');
+
 // Devuelve la versión actual soportada de la API de Facebook
 module.exports.getVersion = function() {
   return 'v2.3';
@@ -40,18 +42,18 @@ module.exports.getFacebookDateFormat = function() {
 };
 
 // Devuelve la URL para obtener las fotos de Facebook
-module.exports.getUserPhotosURL = function() {
-  return this.getBaseURL() + '/%s/photos';
+module.exports.getUserPhotosURL = function(facebookId) {
+  return util.format(this.getBaseURL() + '/%s/photos', facebookId);
 };
 
 // Devuelve la URL para obtener los videos de Facebook
-module.exports.getUserVideosURL = function() {
-  return this.getBaseURL() + '/%s/videos';
+module.exports.getUserVideosURL = function(facebookId) {
+  return util.format(this.getBaseURL() + '/%s/videos', facebookId);
 };
 
 // Devuelve la URL para obtener los estados de Facebook
-module.exports.getUserStatusesURL = function() {
-  return this.getBaseURL() + '/%s/statuses';
+module.exports.getUserStatusesURL = function(facebookId) {
+  return util.format(this.getBaseURL() + '/%s/statuses', facebookId);
 };
 
 // Devuelve la URL de la API para publicar fotos de Facebook
@@ -70,16 +72,16 @@ module.exports.getUserPublishStatusesURL = function() {
 };
 
 // Devuelve la URL de la API para dar likes de Facebook
-module.exports.getUserLikeURL = function() {
-  return this.getBaseURL() + '/%s/likes';
+module.exports.getUserLikeURL = function(facebookId) {
+  return util.format(this.getBaseURL() + '/%s/likes', facebookId);
 };
 
 // Devuelve la URL de la API para obtener los likes de un usuario de Facebook
-module.exports.getUserLikesURL = function() {
-  return this.getBaseURL() + '/%s/likes';
+module.exports.getUserLikesURL = function(facebookId) {
+  return util.format(this.getBaseURL() + '/%s/likes', facebookId);
 };
 
 // Devuelve la URL de la API para obtener los amigos de un usuario de Facebook
-module.exports.getUserFriendsURL = function() {
-  return this.getBaseURL() + '/%s/friends';
+module.exports.getUserFriendsURL = function(facebookId) {
+  return util.format(this.getBaseURL() + '/%s/friends', facebookId);
 };

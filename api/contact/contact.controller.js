@@ -13,6 +13,30 @@ var Contact = require('./contact.model');
 var User = require('../user/user.model');
 var Circle = require('../circle/circle.model');
 
+module.exports.list = function (req, res) {
+
+  process.nextTick(function () {
+    Contact.find({ user: req.user_id })
+      .populate('parents.circle')
+      .populate('parents.ancestors')
+      .exec(function(err, contacts) {
+        if (err || !contacts) {
+          logger.warn("You are trying to find a contact=" + contactId + " that doesn't belong to you");
+          return res.status(400).send({ errors: [{ msg: 'Estás queriendo acceder a un contacto que no te pertenece' }] });
+        }
+        // Si pertenece, incorporamos el id al request y continuamos
+        else {
+          return res.send({
+            contacts: {
+              count: contacts.length,
+              list: contacts
+            }
+          });
+        }
+      });
+  });
+};
+
 // Crea un contacto
 module.exports.create = function(req, res) {
 

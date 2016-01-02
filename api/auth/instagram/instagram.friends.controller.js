@@ -23,7 +23,8 @@ module.exports.getFriends = function(access_token, instagramId, callback) {
     access_token: access_token
   };
 
-  var url = util.format(instagramUtils.getUserFollowsURL(), instagramId);
+  var url = instagramUtils.getUserFollowsURL(instagramId);
+  logger.info('URL: ' + url + ' qs: ' + JSON.stringify(qs));
 
   // Aquí iremos almacenando los usuarios que nos devuelva el servicio paginado de Instagram
   var users = [];

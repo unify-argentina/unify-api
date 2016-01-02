@@ -44,65 +44,10 @@ module.exports.getMedia = function(access_token, twitter, twitterId, callback) {
     }
     // Si no hubo error, tenemos que mapear el response
     else {
-      async.map(response.body, mapMedia, function(err, mappedMedia) {
+      async.map(response.body, twitterUtils.mapMedia, function(err, mappedMedia) {
         logger.debug('Media: ' + JSON.stringify(mappedMedia));
         callback(err, mappedMedia);
       });
-    }
-  });
-};
-
-var mapMedia = function(tweet, callback) {
-
-  // Si es un retweet, tenemos que agarrar el texto original del tweet porque puede llegar a truncarse
-  var text = '';
-  if (tweet.retweeted_status) {
-    var retweet = tweet.retweeted_status;
-    text = 'RT @' + retweet.user.screen_name + ': ' + retweet.text;
-  }
-  else {
-    text = tweet.text;
-  }
-
-  var mappedMedia = {
-    provider: 'twitter',
-    id: tweet.id_str || '',
-    created_time: moment(tweet.created_at, twitterUtils.getDateFormat(), 'en').unix() || '',
-    link: twitterUtils.getTwitterStatusURL() + tweet.id_str || '',
-    likes: tweet.favorite_count,
-    text: text,
-    user_has_liked: tweet.favorited
-  };
-
-  if (tweet.extended_entities) {
-    mapTweetMedia(mappedMedia, tweet.extended_entities.media[0]);
-  }
-  else {
-    mappedMedia.type = 'text';
-  }
-
-  callback(null, mappedMedia);
-};
-
-// Mapea o una imagen o un video de Twitter al formato unificado
-var mapTweetMedia = function(mappedMedia, tweetMedia) {
-
-  var type = tweetMedia.type;
-  if (type === 'video') {
-    mapTweetVideo(mappedMedia, tweetMedia.video_info.variants);
-  }
-  else {
-    mappedMedia.media_url = tweetMedia.media_url;
-  }
-  mappedMedia.type = type;
-};
-
-// Mapea un video de Twitter
-var mapTweetVideo = function(mappedMedia, videoInfoArray) {
-
-  videoInfoArray.forEach(function(videoInfo) {
-    if (videoInfo.content_type === 'video/mp4') {
-      mappedMedia.media_url = videoInfo.url;
     }
   });
 };

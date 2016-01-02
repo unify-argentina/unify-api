@@ -714,4 +714,7 @@ userRoutes.use('/:user_id/contact', require('../contact'));
 // Rutas de los emails
 userRoutes.use('/:user_id/email', require('../email'));
 
+// Rutas para busqueda
+userRoutes.use('/:user_id/search', require('../search'));
+
 module.exports = userRoutes;

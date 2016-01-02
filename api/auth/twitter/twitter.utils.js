@@ -7,6 +7,7 @@
 
 // requires
 var config = require('../../../config');
+var moment = require('moment');
 
 // Devuelve un objeto para obtener el oauth token
 module.exports.getRequestTokenParams = function() {
@@ -111,6 +112,11 @@ module.exports.getUserMediaURL = function() {
   return this.getBaseURL() + '/statuses/user_timeline.json';
 };
 
+// Devuelve la URL para buscar contenido de Twitter
+module.exports.getSearchURL = function() {
+  return this.getBaseURL() + '/search/tweets.json';
+};
+
 // Devuelve la URL para publicar contenido de Twitter
 module.exports.getUserPublishContentURL = function() {
   return this.getBaseURL() + '/statuses/update.json';
@@ -124,4 +130,59 @@ module.exports.getUserUploadMediaURL = function() {
 // Devuelve la URL de los estados de Twitter
 module.exports.getTwitterStatusURL = function() {
   return this.getTwitterURL() + 'statuses/';
+};
+
+module.exports.mapMedia = function(tweet, callback) {
+
+  // Si es un retweet, tenemos que agarrar el texto original del tweet porque puede llegar a truncarse
+  var text = '';
+  if (tweet.retweeted_status) {
+    var retweet = tweet.retweeted_status;
+    text = 'RT @' + retweet.user.screen_name + ': ' + retweet.text;
+  }
+  else {
+    text = tweet.text;
+  }
+
+  var mappedMedia = {
+    provider: 'twitter',
+    id: tweet.id_str || '',
+    created_time: moment(tweet.created_at, module.exports.getDateFormat(), 'en').unix() || '',
+    link: module.exports.getTwitterStatusURL() + tweet.id_str || '',
+    likes: tweet.favorite_count,
+    text: text,
+    user_has_liked: tweet.favorited
+  };
+
+  if (tweet.extended_entities) {
+    mapTweetMedia(mappedMedia, tweet.extended_entities.media[0]);
+  }
+  else {
+    mappedMedia.type = 'text';
+  }
+
+  callback(null, mappedMedia);
+};
+
+// Mapea o una imagen o un video de Twitter al formato unificado
+var mapTweetMedia = function(mappedMedia, tweetMedia) {
+
+  var type = tweetMedia.type;
+  if (type === 'video') {
+    mapTweetVideo(mappedMedia, tweetMedia.video_info.variants);
+  }
+  else {
+    mappedMedia.media_url = tweetMedia.media_url;
+  }
+  mappedMedia.type = type;
+};
+
+// Mapea un video de Twitter
+var mapTweetVideo = function(mappedMedia, videoInfoArray) {
+
+  videoInfoArray.forEach(function(videoInfo) {
+    if (videoInfo.content_type === 'video/mp4') {
+      mappedMedia.media_url = videoInfo.url;
+    }
+  });
 };
